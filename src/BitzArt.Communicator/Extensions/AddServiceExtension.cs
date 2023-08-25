@@ -6,7 +6,7 @@ public static class AddServiceExtension
 {
     public static ICommunicatorServicePreBuilder AddService(this ICommunicatorBuilder builder, string? name = null)
     {
-        var service = new CommunicatorServicePreBuilder(builder.Factory, name);
+        var service = new CommunicatorServicePreBuilder(builder.Services, builder.Factory, name);
 
         return service;
     }

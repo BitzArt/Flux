@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace BitzArt.Communicator;
+﻿namespace BitzArt.Communicator;
 
 public interface ICommunicatorServiceFactory
 {
-    public IServiceCollection Services { get; }
-    public void AddService(ICommunicatorServiceBuilder builder);
+    public ICollection<ICommunicatorServiceProvider> Providers { get; }
+
+    public IEntityCommunicator<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string endpoint, string? serviceName = null)
+        where TEntity : class;
 }

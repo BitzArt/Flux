@@ -7,7 +7,7 @@ public static class AddCommunicatorExtension
 {
     public static IServiceCollection AddCommunicator(this IServiceCollection services, Action<ICommunicatorBuilder> configure)
     {
-        var builder = new CommunicatorBuilder();
+        var builder = new CommunicatorBuilder(services);
         configure(builder);
 
         services.AddSingleton(builder.Factory);
