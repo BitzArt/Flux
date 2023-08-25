@@ -11,9 +11,9 @@ public class CommunicatorTests
 
         services.AddCommunicator(x =>
         {
-            var service = x.AddService("SomeExternalService");
-            var rest = service.UsingRest("http://localhost");
-            var entity = rest.AddEntity<TestEntity, int>("test");
+            x.AddService("SomeExternalService")
+            .UsingRest("http://localhost")
+            .AddEntity<TestEntity, int>("test");
         });
 
         var serviceProvider = services.BuildServiceProvider();
