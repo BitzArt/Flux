@@ -17,6 +17,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BitzArt.LinqExtensions" Version="1.1.2" />
 		<PackageReference Include="BitzArt.Pagination" Version="1.13.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
