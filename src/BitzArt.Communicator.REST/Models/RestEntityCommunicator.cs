@@ -23,7 +23,7 @@ internal class RestEntityCommunicator<TEntity> : IEntityCommunicator<TEntity>
         Endpoint = endpoint;
     }
 
-    public virtual async Task<IEnumerable<TEntity>> GetAll()
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         var path = Endpoint is not null ? Endpoint : string.Empty;
         var response = await HttpClient.GetAsync(path);
