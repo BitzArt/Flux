@@ -1,3 +1,3 @@
 ﻿namespace BitzArt.Communicator;
 
-public record CommunicatorEntitySignature(Type EntityType, Type KeyType);
+public record CommunicatorEntitySignature(Type EntityType, Type? KeyType = null);

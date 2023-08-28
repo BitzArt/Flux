@@ -7,6 +7,7 @@ public interface IEntityCommunicator { }
 public interface IEntityCommunicator<TEntity> : IEntityCommunicator
     where TEntity : class
 {
+    public Task<IEnumerable<TEntity>> GetAll();
     public Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest);
     public Task<TEntity> GetAsync(object id);
 }

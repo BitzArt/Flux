@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>BitzArt.Communicator</RootNamespace>
 
-		<PackageId>BitzArt.Communicator</PackageId>
+		<PackageId>BitzArt.Communicator.REST</PackageId>
 		<Authors>BitzArt</Authors>
 		<Description>Communicator's default RESTful client implementation</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -21,6 +21,12 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BitzArt.Communicator\BitzArt.Communicator.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>BitzArt.Communicator.REST.Tests</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
 
 </Project>

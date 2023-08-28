@@ -9,7 +9,20 @@ internal class CommunicatorServiceFactory : ICommunicatorServiceFactory
         Providers = new HashSet<ICommunicatorServiceProvider>();
     }
 
-    public IEntityCommunicator<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string endpoint, string? serviceName = null) where TEntity : class
+    public IEntityCommunicator<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint, string? serviceName = null) where TEntity : class
+    {
+        var provider = Providers
+            .AsQueryable()
+            .WhereIf(serviceName is not null, x => x.ServiceName == serviceName)
+            .Where(x => x.ContainsSignature(new (typeof(TEntity), null)))
+            .FirstOrDefault();
+
+        if (provider is null) throw new Exception("Communicator Provider not found.");
+
+        return provider.GetEntityCommunicator<TEntity>(services, endpoint);
+    }
+
+    public IEntityCommunicator<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint, string? serviceName = null) where TEntity : class
     {
         var provider = Providers
             .AsQueryable()

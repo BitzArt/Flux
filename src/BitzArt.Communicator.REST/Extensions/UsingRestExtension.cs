@@ -15,6 +15,9 @@ public static class UsingRestExtension
         builder.Services.AddHttpClient(provider.ServiceName, x =>
         {
             x.BaseAddress = new Uri(baseUrl);
+
+            var configureHttpClient = builder.HttpClientConfiguration;
+            if (configureHttpClient is not null) configureHttpClient(x);
         });
 
         builder.Services.AddSingleton(provider);

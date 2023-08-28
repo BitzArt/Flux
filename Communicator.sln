@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A0FAE66D-557
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Communicator.Tests", "tests\BitzArt.Communicator.Tests\BitzArt.Communicator.Tests.csproj", "{AEA2C975-E99C-4E44-B121-0CF3D4956732}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Communicator.REST.Tests", "tests\BitzArt.Communicator.REST.Tests\BitzArt.Communicator.REST.Tests.csproj", "{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{AEA2C975-E99C-4E44-B121-0CF3D4956732}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEA2C975-E99C-4E44-B121-0CF3D4956732}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEA2C975-E99C-4E44-B121-0CF3D4956732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{FE9CED3F-83D8-43DA-BB05-93F5807F746E} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
 		{E78BC020-AC54-4F92-8628-14EE6FF9EDBF} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
 		{AEA2C975-E99C-4E44-B121-0CF3D4956732} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
+		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}
