@@ -5,6 +5,14 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>BitzArt.Communicator</RootNamespace>
+
+		<PackageId>BitzArt.Communicator</PackageId>
+		<Authors>BitzArt</Authors>
+		<Description>Communicator's default RESTful client implementation</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/BitzArt/Communicator</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/BitzArt/Communicator</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

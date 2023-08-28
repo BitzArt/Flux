@@ -5,6 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>BitzArt.Communicator</RootNamespace>
+
+		<PackageId>BitzArt.Communicator</PackageId>
+		<Authors>BitzArt</Authors>
+		<Description>A package that allows communicating with external services easily</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/BitzArt/Communicator</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/BitzArt/Communicator</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>

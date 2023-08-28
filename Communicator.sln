@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3976FBB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A0FAE66D-5574-463E-8723-E28ECEE565EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Communicator.Tests", "tests\BitzArt.Communicator.Tests\BitzArt.Communicator.Tests.csproj", "{AEA2C975-E99C-4E44-B121-0CF3D4956732}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Communicator.Tests", "tests\BitzArt.Communicator.Tests\BitzArt.Communicator.Tests.csproj", "{AEA2C975-E99C-4E44-B121-0CF3D4956732}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
