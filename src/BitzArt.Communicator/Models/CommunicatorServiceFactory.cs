@@ -9,7 +9,7 @@ internal class CommunicatorServiceFactory : ICommunicatorServiceFactory
         Providers = new HashSet<ICommunicatorServiceProvider>();
     }
 
-    public IEntityCommunicator<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint, string? serviceName = null) where TEntity : class
+    public IEntityContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint, string? serviceName = null) where TEntity : class
     {
         var provider = Providers
             .AsQueryable()
@@ -22,7 +22,7 @@ internal class CommunicatorServiceFactory : ICommunicatorServiceFactory
         return provider.GetEntityCommunicator<TEntity>(services, endpoint);
     }
 
-    public IEntityCommunicator<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint, string? serviceName = null) where TEntity : class
+    public IEntityContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint, string? serviceName = null) where TEntity : class
     {
         var provider = Providers
             .AsQueryable()

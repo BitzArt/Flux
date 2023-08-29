@@ -5,7 +5,7 @@ namespace BitzArt;
 
 public static class AddEntityExtension
 {
-    public static IRestCommunicatorServiceBuilder AddEntity<TEntity>(this IRestCommunicatorServiceBuilder builder, string? endpoint = null)
+    public static ICommunicatorRestEntityBuilder AddEntity<TEntity>(this ICommunicatorRestServiceBuilder builder, string? endpoint = null)
         where TEntity : class
     {
         var services = builder.Services;
@@ -19,10 +19,10 @@ public static class AddEntityExtension
             return factory.GetEntityCommunicator<TEntity>(x, endpoint);
         });
 
-        return builder;
+        return new CommunicatorRestEntityBuilder(builder);
     }
 
-    public static IRestCommunicatorServiceBuilder AddEntity<TEntity, TKey>(this IRestCommunicatorServiceBuilder builder, string? endpoint = null)
+    public static ICommunicatorRestServiceBuilder AddEntity<TEntity, TKey>(this ICommunicatorRestServiceBuilder builder, string? endpoint = null)
         where TEntity : class
     {
         var services = builder.Services;
@@ -36,7 +36,7 @@ public static class AddEntityExtension
             return factory.GetEntityCommunicator<TEntity, TKey>(x, endpoint);
         });
 
-        services.AddScoped<IEntityCommunicator<TEntity>>(x =>
+        services.AddScoped<IEntityContext<TEntity>>(x =>
         {
             var factory = x.GetRequiredService<ICommunicatorServiceFactory>();
             return factory.GetEntityCommunicator<TEntity, TKey>(x, endpoint);

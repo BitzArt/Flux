@@ -21,19 +21,26 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddCommunicator_EmptyAndTwice_AddsEmptyFactoryTwice()
+    public void AddCommunicator_Twice_ThrowsOnSecondAdd()
     {
         var services = new ServiceCollection();
 
         services.AddCommunicator(x => { });
+
+        Assert.ThrowsAny<Exception>(() => services.AddCommunicator(x => { }));
+    }
+    
+    [Fact]
+    public void AddCommunicator_Empty_AddsCommunicationContext()
+    {
+        var services = new ServiceCollection();
         services.AddCommunicator(x => { });
-
         var serviceProvider = services.BuildServiceProvider();
-        var factories = serviceProvider.GetService<IEnumerable<ICommunicatorServiceFactory>>();
 
-        Assert.NotNull(factories);
-        Assert.True(factories.Count() == 2);
+        var communicationContext = serviceProvider.GetService<ICommunicationContext>();
+        Assert.NotNull(communicationContext);
 
-        foreach (var factory in factories) Assert.Empty(factory.Providers);
+        var communicationContextByDirectType = serviceProvider.GetService<CommunicationContext>();
+        Assert.Null(communicationContextByDirectType);
     }
 }

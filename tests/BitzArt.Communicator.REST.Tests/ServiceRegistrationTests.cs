@@ -35,7 +35,7 @@ public class ServiceRegistrationTests
 
         Assert.Equal(serviceName, provider.ServiceName);
 
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityCommunicator<TestEntity, int>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<TestEntity, int>>();
         Assert.NotNull(entityCommunicator);
     }
 
@@ -58,7 +58,7 @@ public class ServiceRegistrationTests
         });
 
         var serviceProvider = services.BuildServiceProvider();
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityCommunicator<TestEntity, int>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<TestEntity, int>>();
         Assert.NotNull(entityCommunicator);
 
         var communicatorCasted = (RestEntityCommunicator<TestEntity, int>)entityCommunicator;
@@ -91,7 +91,7 @@ public class ServiceRegistrationTests
         Assert.True(configUsed);
 
         var serviceProvider = services.BuildServiceProvider();
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityCommunicator<TestEntity, int>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<TestEntity, int>>();
         Assert.NotNull(entityCommunicator);
 
         var communicatorCasted = (RestEntityCommunicator<TestEntity, int>)entityCommunicator;

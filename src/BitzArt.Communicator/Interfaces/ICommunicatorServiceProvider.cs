@@ -7,9 +7,9 @@ public interface ICommunicatorServiceProvider
     public void AddSignature(CommunicatorEntitySignature entitySignature);
     public bool ContainsSignature(CommunicatorEntitySignature entitySignature);
 
-    IEntityCommunicator<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint)
+    IEntityContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint)
         where TEntity : class;
 
-    IEntityCommunicator<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint)
+    IEntityContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint)
         where TEntity : class;
 }

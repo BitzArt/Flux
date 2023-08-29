@@ -25,7 +25,7 @@ public class MockedRestServiceTests
 
         var serviceProvider = services.BuildServiceProvider();
 
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityCommunicator<Country>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<Country>>();
         Assert.NotNull(entityCommunicator);
 
         var countries = await entityCommunicator.GetAllAsync();

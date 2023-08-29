@@ -3,11 +3,11 @@ using System.Text.Json;
 
 namespace BitzArt.Communicator;
 
-internal class RestEntityCommunicator<TEntity> : IEntityCommunicator<TEntity>
+internal class RestEntityContext<TEntity> : IEntityContext<TEntity>
     where TEntity : class
 {
     internal readonly HttpClient HttpClient;
-    internal readonly RestCommunicatorServiceOptions Options;
+    internal readonly CommunicatorRestServiceOptions Options;
     internal readonly string? Endpoint;
 
     private class KeyNotFoundException : Exception
@@ -16,7 +16,7 @@ internal class RestEntityCommunicator<TEntity> : IEntityCommunicator<TEntity>
         public KeyNotFoundException() : base(Msg) { }
     }
 
-    public RestEntityCommunicator(HttpClient httpClient, RestCommunicatorServiceOptions options, string? endpoint)
+    public RestEntityContext(HttpClient httpClient, CommunicatorRestServiceOptions options, string? endpoint)
     {
         HttpClient = httpClient;
         Options = options;
@@ -45,11 +45,11 @@ internal class RestEntityCommunicator<TEntity> : IEntityCommunicator<TEntity>
     }
 }
 
-internal sealed class RestEntityCommunicator<TEntity, TKey> : RestEntityCommunicator<TEntity>, IEntityCommunicator<TEntity, TKey>
+internal sealed class RestEntityCommunicator<TEntity, TKey> : RestEntityContext<TEntity>, IEntityContext<TEntity, TKey>
     where TEntity : class
 {
 
-    public RestEntityCommunicator(HttpClient httpClient, RestCommunicatorServiceOptions options, string? endpoint)
+    public RestEntityCommunicator(HttpClient httpClient, CommunicatorRestServiceOptions options, string? endpoint)
         : base(httpClient, options, endpoint) { }
 
     public override async Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest)

@@ -2,11 +2,11 @@
 
 namespace BitzArt.Communicator;
 
-public class RestCommunicatorServiceOptions
+public class CommunicatorRestServiceOptions
 {
     public JsonSerializerOptions SerializerOptions { get; set; }
 
-	public RestCommunicatorServiceOptions()
+	public CommunicatorRestServiceOptions()
 	{
 		SerializerOptions = new JsonSerializerOptions();
 	}

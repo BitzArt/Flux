@@ -2,15 +2,15 @@
 
 namespace BitzArt.Communicator;
 
-public class RestCommunicatorServiceProvider : ICommunicatorServiceProvider
+public class CommunicatorRestServiceProvider : ICommunicatorServiceProvider
 {
     private ICollection<CommunicatorEntitySignature> _entitySignatures;
-    private RestCommunicatorServiceOptions _options;
+    private CommunicatorRestServiceOptions _options;
 
     public string ServiceName { get; private set; }
     public string BaseUrl { get; private set; }
 
-    public RestCommunicatorServiceProvider(RestCommunicatorServiceOptions options, string serviceName, string baseUrl)
+    public CommunicatorRestServiceProvider(CommunicatorRestServiceOptions options, string serviceName, string baseUrl)
     {
         _options = options;
         ServiceName = serviceName;
@@ -28,16 +28,16 @@ public class RestCommunicatorServiceProvider : ICommunicatorServiceProvider
         return _entitySignatures.Contains(entitySignature);
     }
 
-    public IEntityCommunicator<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint)
+    public IEntityContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint)
         where TEntity : class
     {
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ServiceName);
 
-        return new RestEntityCommunicator<TEntity>(httpClient, _options, endpoint);
+        return new RestEntityContext<TEntity>(httpClient, _options, endpoint);
     }
 
-    public IEntityCommunicator<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint)
+    public IEntityContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint)
         where TEntity : class
     {
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();

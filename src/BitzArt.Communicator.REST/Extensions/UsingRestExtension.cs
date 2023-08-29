@@ -5,9 +5,9 @@ namespace BitzArt;
 
 public static class UsingRestExtension
 {
-    public static IRestCommunicatorServiceBuilder UsingRest(this ICommunicatorServicePreBuilder prebuilder, string baseUrl)
+    public static ICommunicatorRestServiceBuilder UsingRest(this ICommunicatorServicePreBuilder prebuilder, string baseUrl)
     {
-        var builder = new RestCommunicatorServiceBuilder(prebuilder, baseUrl);
+        var builder = new CommunicatorRestServiceBuilder(prebuilder, baseUrl);
 
         var provider = builder.Provider;
         builder.Factory.Providers.Add(provider);

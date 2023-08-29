@@ -2,9 +2,9 @@
 
 namespace BitzArt.Communicator;
 
-public interface IEntityCommunicator { }
+public interface IEntityContext { }
 
-public interface IEntityCommunicator<TEntity> : IEntityCommunicator
+public interface IEntityContext<TEntity> : IEntityContext
     where TEntity : class
 {
     public Task<IEnumerable<TEntity>> GetAllAsync();
@@ -12,7 +12,7 @@ public interface IEntityCommunicator<TEntity> : IEntityCommunicator
     public Task<TEntity> GetAsync(object id);
 }
 
-public interface IEntityCommunicator<TEntity, TKey> : IEntityCommunicator<TEntity>
+public interface IEntityContext<TEntity, TKey> : IEntityContext<TEntity>
     where TEntity : class
 {
     public Task<TEntity> GetAsync(TKey id);
