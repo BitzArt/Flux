@@ -19,13 +19,13 @@ public class MockedRestServiceTests
         services.AddCommunicator(x =>
         {
             x.AddService("RestCountries")
-            .UsingRest("https://restcountries.com/v3.1/all?fields=cca3")
-            .AddEntity<Country>();
+            .UsingRest("https://restcountries.com/v3.1")
+            .AddEntity<Country>().WithEndpoint("all?fields=cca3");
         });
 
         var serviceProvider = services.BuildServiceProvider();
 
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<Country>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<ICommunicationContext<Country>>();
         Assert.NotNull(entityCommunicator);
 
         var countries = await entityCommunicator.GetAllAsync();

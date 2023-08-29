@@ -35,7 +35,7 @@ public class ServiceRegistrationTests
 
         Assert.Equal(serviceName, provider.ServiceName);
 
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<TestEntity, int>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<ICommunicationContext<TestEntity, int>>();
         Assert.NotNull(entityCommunicator);
     }
 
@@ -58,10 +58,10 @@ public class ServiceRegistrationTests
         });
 
         var serviceProvider = services.BuildServiceProvider();
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<TestEntity, int>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<ICommunicationContext<TestEntity, int>>();
         Assert.NotNull(entityCommunicator);
 
-        var communicatorCasted = (RestEntityCommunicator<TestEntity, int>)entityCommunicator;
+        var communicatorCasted = (CommunicatorRestEntityContext<TestEntity, int>)entityCommunicator;
 
         Assert.Contains(communicatorCasted.HttpClient.DefaultRequestHeaders,
             x => x.Key == testHeader.Key && x.Value.Single() == testHeader.Value);
@@ -91,11 +91,11 @@ public class ServiceRegistrationTests
         Assert.True(configUsed);
 
         var serviceProvider = services.BuildServiceProvider();
-        var entityCommunicator = serviceProvider.GetRequiredService<IEntityContext<TestEntity, int>>();
+        var entityCommunicator = serviceProvider.GetRequiredService<ICommunicationContext<TestEntity, int>>();
         Assert.NotNull(entityCommunicator);
 
-        var communicatorCasted = (RestEntityCommunicator<TestEntity, int>)entityCommunicator;
-        var serializerOptions = communicatorCasted.Options.SerializerOptions;
+        var communicatorCasted = (CommunicatorRestEntityContext<TestEntity, int>)entityCommunicator;
+        var serializerOptions = communicatorCasted.ServiceOptions.SerializerOptions;
 
         Assert.True(serializerOptions.WriteIndented);
         Assert.Equal(JsonIgnoreCondition.WhenWritingNull, serializerOptions.DefaultIgnoreCondition);

@@ -5,7 +5,7 @@ namespace BitzArt;
 
 public static class UsingRestExtension
 {
-    public static ICommunicatorRestServiceBuilder UsingRest(this ICommunicatorServicePreBuilder prebuilder, string baseUrl)
+    public static ICommunicatorRestServiceBuilder UsingRest(this ICommunicatorServicePreBuilder prebuilder, string? baseUrl = null)
     {
         var builder = new CommunicatorRestServiceBuilder(prebuilder, baseUrl);
 
@@ -14,7 +14,7 @@ public static class UsingRestExtension
 
         builder.Services.AddHttpClient(provider.ServiceName, x =>
         {
-            x.BaseAddress = new Uri(baseUrl);
+            if (builder.ServiceOptions.BaseUrl is not null) x.BaseAddress = new Uri(builder.ServiceOptions.BaseUrl!);
 
             var configureHttpClient = builder.HttpClientConfiguration;
             if (configureHttpClient is not null) configureHttpClient(x);

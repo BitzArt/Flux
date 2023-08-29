@@ -10,15 +10,14 @@ internal class CommunicatorRestServiceBuilder : ICommunicatorRestServiceBuilder
     public CommunicatorRestServiceOptions ServiceOptions { get; init; }
     public Action<HttpClient>? HttpClientConfiguration { get; set; }
 
-    public CommunicatorRestServiceBuilder(ICommunicatorServicePreBuilder prebuilder, string baseUrl)
+    public CommunicatorRestServiceBuilder(ICommunicatorServicePreBuilder prebuilder, string? baseUrl)
     {
         Services = prebuilder.Services;
         Factory = prebuilder.Factory;
-        ServiceOptions = new();
+        ServiceOptions = new(baseUrl);
         HttpClientConfiguration = null;
 
         if (prebuilder.Name is null) throw new Exception("Missing Name in Communication Service configuration. Consider using .WithName() when configuring external services.");
-        if (string.IsNullOrWhiteSpace(baseUrl)) throw new Exception($"Missing BaseUrl for service '{prebuilder.Name}'");
-        Provider = new CommunicatorRestServiceProvider(ServiceOptions, prebuilder.Name, baseUrl);
+        Provider = new CommunicatorRestServiceProvider(ServiceOptions, prebuilder.Name);
     }
 }

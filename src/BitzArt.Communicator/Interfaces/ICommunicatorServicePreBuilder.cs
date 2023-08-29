@@ -4,7 +4,7 @@ namespace BitzArt.Communicator;
 
 public interface ICommunicatorServicePreBuilder
 {
-    public string? Name { get; set; }
-    public IServiceCollection Services { get; }
-    public ICommunicatorServiceFactory Factory { get; }
+    internal string? Name { get; set; }
+    internal IServiceCollection Services { get; }
+    internal ICommunicatorServiceFactory Factory { get; }
 }

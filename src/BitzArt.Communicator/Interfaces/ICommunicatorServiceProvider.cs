@@ -1,15 +1,15 @@
 ﻿namespace BitzArt.Communicator;
 
-public interface ICommunicatorServiceProvider
+internal interface ICommunicatorServiceProvider
 {
-    public string ServiceName { get; }
+    internal string ServiceName { get; }
 
-    public void AddSignature(CommunicatorEntitySignature entitySignature);
-    public bool ContainsSignature(CommunicatorEntitySignature entitySignature);
+    internal void AddSignature(CommunicatorEntitySignature entitySignature);
+    internal bool ContainsSignature(CommunicatorEntitySignature entitySignature);
 
-    IEntityContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint)
+    ICommunicationContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, object? options)
         where TEntity : class;
 
-    IEntityContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint)
+    ICommunicationContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, object? options)
         where TEntity : class;
 }

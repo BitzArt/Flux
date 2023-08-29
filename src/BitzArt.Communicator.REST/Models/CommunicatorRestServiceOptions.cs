@@ -4,10 +4,12 @@ namespace BitzArt.Communicator;
 
 public class CommunicatorRestServiceOptions
 {
+	public string? BaseUrl { get; set; }
     public JsonSerializerOptions SerializerOptions { get; set; }
 
-	public CommunicatorRestServiceOptions()
+    public CommunicatorRestServiceOptions(string? baseUrl)
 	{
+		BaseUrl = baseUrl;
 		SerializerOptions = new JsonSerializerOptions();
 	}
 }

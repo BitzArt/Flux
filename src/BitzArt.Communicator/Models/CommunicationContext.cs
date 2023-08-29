@@ -11,11 +11,11 @@ internal class CommunicationContext : ICommunicationContext
         _serviceProvider = serviceProvider;
     }
 
-    public IEntityContext<TEntity, TKey> Entity<TEntity, TKey>()
+    public ICommunicationContext<TEntity, TKey> Entity<TEntity, TKey>()
         where TEntity : class
-        => _serviceProvider.GetRequiredService<IEntityContext<TEntity, TKey>>();
+        => _serviceProvider.GetRequiredService<ICommunicationContext<TEntity, TKey>>();
 
-    public IEntityContext<TEntity> Entity<TEntity>()
+    public ICommunicationContext<TEntity> Entity<TEntity>()
         where TEntity : class
-        => _serviceProvider.GetRequiredService<IEntityContext<TEntity>>();
+        => _serviceProvider.GetRequiredService<ICommunicationContext<TEntity>>();
 }

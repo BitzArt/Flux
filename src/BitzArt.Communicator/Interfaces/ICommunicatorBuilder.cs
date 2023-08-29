@@ -4,6 +4,6 @@ namespace BitzArt.Communicator;
 
 public interface ICommunicatorBuilder
 {
-    public ICommunicatorServiceFactory Factory { get; }
-    public IServiceCollection Services { get; }
+    internal ICommunicatorServiceFactory Factory { get; }
+    internal IServiceCollection Services { get; }
 }

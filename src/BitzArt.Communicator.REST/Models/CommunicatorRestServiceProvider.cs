@@ -2,19 +2,17 @@
 
 namespace BitzArt.Communicator;
 
-public class CommunicatorRestServiceProvider : ICommunicatorServiceProvider
+internal class CommunicatorRestServiceProvider : ICommunicatorServiceProvider
 {
-    private ICollection<CommunicatorEntitySignature> _entitySignatures;
-    private CommunicatorRestServiceOptions _options;
+    private readonly ICollection<CommunicatorEntitySignature> _entitySignatures;
+    private readonly CommunicatorRestServiceOptions _serviceOptions;
 
     public string ServiceName { get; private set; }
-    public string BaseUrl { get; private set; }
 
-    public CommunicatorRestServiceProvider(CommunicatorRestServiceOptions options, string serviceName, string baseUrl)
+    public CommunicatorRestServiceProvider(CommunicatorRestServiceOptions options, string serviceName)
     {
-        _options = options;
+        _serviceOptions = options;
         ServiceName = serviceName;
-        BaseUrl = baseUrl;
         _entitySignatures = new HashSet<CommunicatorEntitySignature>();
     }
 
@@ -28,21 +26,25 @@ public class CommunicatorRestServiceProvider : ICommunicatorServiceProvider
         return _entitySignatures.Contains(entitySignature);
     }
 
-    public IEntityContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint)
+    public ICommunicationContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, object? options)
         where TEntity : class
     {
+        if (options is not CommunicatorRestEntityOptions<TEntity> optionsCasted) throw new Exception("Wrong options type");
+
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ServiceName);
 
-        return new RestEntityContext<TEntity>(httpClient, _options, endpoint);
+        return new CommunicatorRestEntityContext<TEntity>(httpClient, _serviceOptions, optionsCasted);
     }
 
-    public IEntityContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint)
+    public ICommunicationContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, object? options)
         where TEntity : class
     {
+        if (options is not CommunicatorRestEntityOptions<TEntity, TKey> optionsCasted) throw new Exception("Wrong options type");
+
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ServiceName);
 
-        return new RestEntityCommunicator<TEntity, TKey>(httpClient, _options, endpoint);
+        return new CommunicatorRestEntityContext<TEntity, TKey>(httpClient, _serviceOptions, optionsCasted);
     }
 }

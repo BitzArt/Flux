@@ -1,12 +1,12 @@
 ﻿namespace BitzArt.Communicator;
 
-public interface ICommunicatorServiceFactory
+internal interface ICommunicatorServiceFactory
 {
-    public ICollection<ICommunicatorServiceProvider> Providers { get; }
+    internal ICollection<ICommunicatorServiceProvider> Providers { get; }
 
-    public IEntityContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, string? endpoint, string? serviceName = null)
+    internal ICommunicationContext<TEntity> GetEntityCommunicator<TEntity>(IServiceProvider services, object? options)
         where TEntity : class;
 
-    public IEntityContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, string? endpoint, string? serviceName = null)
+    internal ICommunicationContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, object? options)
         where TEntity : class;
 }
