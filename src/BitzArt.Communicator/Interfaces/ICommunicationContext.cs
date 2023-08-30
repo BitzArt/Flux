@@ -12,6 +12,7 @@ public interface ICommunicationContext<TEntity>
     where TEntity : class
 {
     public Task<IEnumerable<TEntity>> GetAllAsync();
+    public Task<PageResult<TEntity>> GetPageAsync(int offset, int limit);
     public Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest);
     public Task<TEntity> GetAsync(object id);
 }

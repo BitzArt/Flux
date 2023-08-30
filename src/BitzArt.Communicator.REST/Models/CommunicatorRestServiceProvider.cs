@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Communicator;
 
@@ -33,8 +34,10 @@ internal class CommunicatorRestServiceProvider : ICommunicatorServiceProvider
 
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ServiceName);
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("Communicator");
 
-        return new CommunicatorRestEntityContext<TEntity>(httpClient, _serviceOptions, optionsCasted);
+        return new CommunicatorRestEntityContext<TEntity>(httpClient, _serviceOptions, logger, optionsCasted);
     }
 
     public ICommunicationContext<TEntity, TKey> GetEntityCommunicator<TEntity, TKey>(IServiceProvider services, object? options)
@@ -44,7 +47,9 @@ internal class CommunicatorRestServiceProvider : ICommunicatorServiceProvider
 
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ServiceName);
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("Communicator");
 
-        return new CommunicatorRestEntityContext<TEntity, TKey>(httpClient, _serviceOptions, optionsCasted);
+        return new CommunicatorRestEntityContext<TEntity, TKey>(httpClient, _serviceOptions, logger, optionsCasted);
     }
 }
