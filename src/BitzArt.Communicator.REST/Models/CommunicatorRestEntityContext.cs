@@ -64,8 +64,8 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
 
         _logger.LogInformation("GetAll {type}: {path}", typeof(TEntity).Name, GetFullPath(path));
 
-        var msg = new HttpRequestMessage(HttpMethod.Get, path);
-        var result = await HandleRequestAsync<IEnumerable<TEntity>>(msg);
+        var message = new HttpRequestMessage(HttpMethod.Get, path);
+        var result = await HandleRequestAsync<IEnumerable<TEntity>>(message);
 
         return result;
     }
@@ -89,11 +89,8 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
 
         _logger.LogInformation("GetPage {type}: {path}", typeof(TEntity).Name, GetFullPath(path));
 
-        var response = await HttpClient.GetAsync(path);
-
-        if (!response.IsSuccessStatusCode) throw new Exception($"External REST Service responded with http status code '{response.StatusCode}'.");
-        var content = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<PageResult<TEntity>>(content, ServiceOptions.SerializerOptions)!;
+        var message = new HttpRequestMessage(HttpMethod.Get, path);
+        var result = await HandleRequestAsync<PageResult<TEntity>>(message);
 
         return result;
     }
@@ -104,11 +101,9 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
 
         var idEndpoint = EntityOptions.GetIdEndpointAction(id);
         _logger.LogInformation("Get {type}[{id}]: {path}", typeof(TEntity).Name, id.ToString(), GetFullPath(idEndpoint));
-        var response = await HttpClient.GetAsync(idEndpoint);
 
-        if (!response.IsSuccessStatusCode) throw new Exception($"External REST Service responded with http status code '{response.StatusCode}'.");
-        var content = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<TEntity>(content, ServiceOptions.SerializerOptions)!;
+        var message = new HttpRequestMessage(HttpMethod.Get, idEndpoint);
+        var result = await HandleRequestAsync<TEntity>(message);
 
         return result;
     }
@@ -143,10 +138,8 @@ internal class CommunicatorRestEntityContext<TEntity, TKey> : CommunicatorRestEn
 
         _logger.LogInformation("Get {type}[{id}]: {path}", typeof(TEntity).Name, id!.ToString(), GetFullPath(idEndpoint));
 
-        var response = await HttpClient.GetAsync(idEndpoint);
-        if (!response.IsSuccessStatusCode) throw new Exception($"External REST Service responded with http status code '{response.StatusCode}'.");
-        var content = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<TEntity>(content, ServiceOptions.SerializerOptions)!;
+        var message = new HttpRequestMessage(HttpMethod.Get, idEndpoint);
+        var result = await HandleRequestAsync<TEntity>(message);
 
         return result;
     }
