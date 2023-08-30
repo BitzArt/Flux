@@ -4,9 +4,11 @@
 The **Communicator** NuGet package introduces an intuitive way to simplify how your software communicates with external systems. Imagine effortlessly working with various external services without getting lost in the technical details, whether it's REST, SOAP, or something else. That's exactly what **Communicator** does for you.
 
 **1. Easy Setup: Configure Once, Use Anywhere**
+
 Start by setting up the configuration. Instead of dealing with the intricacies of each external service, configure everything in one place. Define communication rules, endpoints, and other essentials. This step keeps your domain code clean and free from the complexities of different services and communication methods.
 
 **2. Natural Interaction: Forget Protocols, Focus on Results**
+
 Once the setup is done, interaction becomes a breeze. With the groundwork laid out, you can focus on getting things done. Fetch data, send updates, or perform other tasks without worrying about HTTP, REST, SOAP, or any other protocol. **Communicator** handles the technicalities seamlessly in the background.
 
 **Key Features:**
