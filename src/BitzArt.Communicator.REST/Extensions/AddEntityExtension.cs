@@ -27,7 +27,7 @@ public static class AddEntityExtension
         return builder;
     }
 
-    public static ICommunicatorRestServiceBuilder AddEntity<TEntity, TKey>(this ICommunicatorRestServiceBuilder serviceBuilder, string? endpoint = null)
+    public static ICommunicatorRestEntityBuilder<TEntity, TKey> AddEntity<TEntity, TKey>(this ICommunicatorRestServiceBuilder serviceBuilder, string? endpoint = null)
         where TEntity : class
     {
         var builder = new CommunicatorRestEntityBuilder<TEntity, TKey>(serviceBuilder);
