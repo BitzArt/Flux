@@ -1,7 +1,5 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Web;
 
@@ -22,8 +20,8 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
     }
 
     internal string GetFullPath(string path)
-        => HttpClient.BaseAddress is not null ?
-        Path.Combine(HttpClient.BaseAddress.ToString(), path) :
+        => ServiceOptions.BaseUrl is not null ?
+        Path.Combine(ServiceOptions.BaseUrl.ToString(), path) :
         path;
 
     internal async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message) where TResult : class
@@ -54,7 +52,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         HttpClient = httpClient;
         ServiceOptions = serviceOptions;
         _logger = logger;
-        EntityOptions = entityOptions;
+        _entityOptions = entityOptions;
     }
 
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -64,7 +62,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
 
         _logger.LogInformation("GetAll {type}: {path}", typeof(TEntity).Name, GetFullPath(path));
 
-        var message = new HttpRequestMessage(HttpMethod.Get, path);
+        var message = new HttpRequestMessage(HttpMethod.Get, GetFullPath(path));
         var result = await HandleRequestAsync<IEnumerable<TEntity>>(message);
 
         return result;
@@ -89,7 +87,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
 
         _logger.LogInformation("GetPage {type}: {path}", typeof(TEntity).Name, GetFullPath(path));
 
-        var message = new HttpRequestMessage(HttpMethod.Get, path);
+        var message = new HttpRequestMessage(HttpMethod.Get, GetFullPath(path));
         var result = await HandleRequestAsync<PageResult<TEntity>>(message);
 
         return result;
@@ -102,7 +100,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         var idEndpoint = EntityOptions.GetIdEndpointAction(id);
         _logger.LogInformation("Get {type}[{id}]: {path}", typeof(TEntity).Name, id.ToString(), GetFullPath(idEndpoint));
 
-        var message = new HttpRequestMessage(HttpMethod.Get, idEndpoint);
+        var message = new HttpRequestMessage(HttpMethod.Get, GetFullPath(idEndpoint));
         var result = await HandleRequestAsync<TEntity>(message);
 
         return result;
@@ -138,7 +136,7 @@ internal class CommunicatorRestEntityContext<TEntity, TKey> : CommunicatorRestEn
 
         _logger.LogInformation("Get {type}[{id}]: {path}", typeof(TEntity).Name, id!.ToString(), GetFullPath(idEndpoint));
 
-        var message = new HttpRequestMessage(HttpMethod.Get, idEndpoint);
+        var message = new HttpRequestMessage(HttpMethod.Get, GetFullPath(idEndpoint));
         var result = await HandleRequestAsync<TEntity>(message);
 
         return result;
