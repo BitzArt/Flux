@@ -14,8 +14,6 @@ public static class UsingRestExtension
 
         builder.Services.AddHttpClient(provider.ServiceName, x =>
         {
-            if (builder.ServiceOptions.BaseUrl is not null) x.BaseAddress = new Uri(builder.ServiceOptions.BaseUrl!);
-
             var configureHttpClient = builder.HttpClientConfiguration;
             if (configureHttpClient is not null) configureHttpClient(x);
         });

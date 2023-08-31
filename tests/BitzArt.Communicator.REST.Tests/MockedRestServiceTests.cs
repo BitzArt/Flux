@@ -1,6 +1,3 @@
-using BitzArt.Pagination;
-using Castle.Components.DictionaryAdapter.Xml;
-using Microsoft.Extensions.Logging;
 using RichardSzalay.MockHttp;
 using System.Net.Http.Json;
 using System.Net;
@@ -17,9 +14,11 @@ public class MockedRestServiceTests
     [InlineData(1000)]
     public async Task GetAllAsync_MockedHttpClient_ReturnsAll(int entityCount)
     {
-        var entityContext = TestEntityContext.GetTestEntityContext(entityCount, x =>
+        var baseUrl = "https://mocked.service";
+
+        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
         {
-            x.When($"{MockedService.BaseUrl}/entity")
+            x.When($"{baseUrl.TrimEnd('/')}/entity")
             .Respond(HttpStatusCode.OK,
             JsonContent.Create(TestEntity.GetAll(entityCount)));
         });
@@ -40,9 +39,11 @@ public class MockedRestServiceTests
     [InlineData(100, 1, 100)]
     public async Task GetPageAsync_MockedHttpClient_ReturnsPage(int entityCount, int offset, int limit)
     {
-        var entityContext = TestEntityContext.GetTestEntityContext(entityCount, x =>
+        var baseUrl = "https://mocked.service";
+
+        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
         {
-            x.When($"{MockedService.BaseUrl}/entity?offset={offset}&limit={limit}")
+            x.When($"{baseUrl.TrimEnd('/')}/entity?offset={offset}&limit={limit}")
             .Respond(HttpStatusCode.OK,
             JsonContent.Create(TestEntity.GetPage(entityCount, offset, limit)));
         });
@@ -59,15 +60,23 @@ public class MockedRestServiceTests
         }
     }
 
-    [Fact]
-    public async Task GetAsync_MockedHttpClient_ReturnsEntity()
+    [Theory]
+    [InlineData("http://mockedservice")]
+    [InlineData("http://mocked.service/")]
+    [InlineData("https://mockedservice")]
+    [InlineData("https://mockedservice/")]
+    [InlineData("https://mocked.service")]
+    [InlineData("https://mockedservice/test/")]
+    [InlineData("https://mockedservice/test")]
+    [InlineData("https://mocked.service/second.segment/third.segment/test.test/test/")]
+    public async Task GetAsync_MockedHttpClient_ReturnsEntity(string baseUrl)
     {
         var entityCount = 10;
         var id = 1;
 
-        var entityContext = TestEntityContext.GetTestEntityContext(entityCount, x =>
+        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
         {
-            x.When($"{MockedService.BaseUrl}/entity/{id}")
+            x.When($"{baseUrl.TrimEnd('/')}/entity/{id}")
             .Respond(HttpStatusCode.OK,
             JsonContent.Create(
                 TestEntity.GetAll(entityCount).FirstOrDefault(x => x.Id == id)));
@@ -79,14 +88,22 @@ public class MockedRestServiceTests
         Assert.Equal(id, result.Id);
     }
 
-    [Fact]
-    public async Task GetAsync_CustomIdEndpointLogic_ReturnsEntity()
+    [Theory]
+    [InlineData("http://mockedservice")]
+    [InlineData("http://mocked.service/")]
+    [InlineData("https://mockedservice")]
+    [InlineData("https://mockedservice/")]
+    [InlineData("https://mocked.service")]
+    [InlineData("https://mockedservice/test/")]
+    [InlineData("https://mockedservice/test")]
+    [InlineData("https://mocked.service/second.segment/third.segment/test.test/test/")]
+    public async Task GetAsync_CustomIdEndpointLogic_ReturnsEntity(string baseUrl)
     {
         var entityCount = 1;
 
-        var entityContext = TestEntityContext.GetTestEntityContext(entityCount, x =>
+        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
         {
-            x.When($"{MockedService.BaseUrl}/entity/specific")
+            x.When($"{baseUrl.TrimEnd('/')}/entity/specific")
             .Respond(HttpStatusCode.OK,
             JsonContent.Create(
                 TestEntity.GetAll(entityCount).FirstOrDefault(x => x.Id == 1)));

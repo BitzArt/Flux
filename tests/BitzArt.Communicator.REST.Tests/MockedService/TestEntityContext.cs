@@ -5,13 +5,13 @@ namespace BitzArt.Communicator;
 
 internal static class TestEntityContext
 {
-    public static ICommunicationContext<TestEntity> GetTestEntityContext(int entityCount, Action<MockHttpMessageHandler>? configureMockWebApi = null)
+    public static ICommunicationContext<TestEntity> GetTestEntityContext(string baseUrl, Action<MockHttpMessageHandler>? configureMockWebApi = null)
     {
-        var mockedService = MockedService.GetService(entityCount, configureMockWebApi);
+        var mockedService = MockedService.GetService(configureMockWebApi);
 
         var entityContext = new CommunicatorRestEntityContext<TestEntity, int>
             (mockedService.GetHttpClient(),
-            new CommunicatorRestServiceOptions(MockedService.BaseUrl),
+            new CommunicatorRestServiceOptions(baseUrl),
             LoggerFactory.Create(x => { }).CreateLogger("Communicator"),
             new CommunicatorRestEntityOptions<TestEntity, int>
             {
