@@ -18,6 +18,22 @@ public static class ICommunicatorRestEntityBuilderExtensions
         return builder;
     }
 
+    public static ICommunicatorRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this ICommunicatorRestEntityBuilder<TEntity> builder, string endpoint)
+        where TEntity : class
+    {
+        builder.EntityOptions.GetIdEndpointAction = (key) => endpoint;
+
+        return builder;
+    }
+
+    public static ICommunicatorRestEntityBuilder<TEntity, TKey> WithIdEndpoint<TEntity, TKey>(this ICommunicatorRestEntityBuilder<TEntity, TKey> builder, string endpoint)
+        where TEntity : class
+    {
+        builder.EntityOptions.GetIdEndpointAction = (key) => endpoint;
+
+        return builder;
+    }
+
     public static ICommunicatorRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this ICommunicatorRestEntityBuilder<TEntity> builder, Func<string> getEndpoint)
         where TEntity : class
     {
@@ -34,7 +50,7 @@ public static class ICommunicatorRestEntityBuilderExtensions
         return builder;
     }
 
-    public static ICommunicatorRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this ICommunicatorRestEntityBuilder<TEntity> builder, Func<object, string> getEndpoint)
+    public static ICommunicatorRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this ICommunicatorRestEntityBuilder<TEntity> builder, Func<object?, string> getEndpoint)
         where TEntity : class
     {
         builder.EntityOptions.GetIdEndpointAction = getEndpoint;
@@ -42,7 +58,7 @@ public static class ICommunicatorRestEntityBuilderExtensions
         return builder;
     }
 
-    public static ICommunicatorRestEntityBuilder<TEntity, TKey> WithIdEndpoint<TEntity, TKey>(this ICommunicatorRestEntityBuilder<TEntity, TKey> builder, Func<TKey, string> getEndpoint)
+    public static ICommunicatorRestEntityBuilder<TEntity, TKey> WithIdEndpoint<TEntity, TKey>(this ICommunicatorRestEntityBuilder<TEntity, TKey> builder, Func<TKey?, string> getEndpoint)
         where TEntity : class
     {
         builder.EntityOptions.GetIdEndpointAction = getEndpoint;

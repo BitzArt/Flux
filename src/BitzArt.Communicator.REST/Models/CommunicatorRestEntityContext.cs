@@ -99,13 +99,13 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         return result;
     }
 
-    public virtual async Task<TEntity> GetAsync(object id)
+    public virtual async Task<TEntity> GetAsync(object? id)
     {
         if (EntityOptions.GetIdEndpointAction is null) throw new KeyNotFoundException();
 
         var idEndpoint = EntityOptions.GetIdEndpointAction(id);
         var route = GetFullPath(idEndpoint);
-        _logger.LogInformation("Get {type}[{id}]: {route}", typeof(TEntity).Name, id.ToString(), route);
+        _logger.LogInformation("Get {type}[{id}]: {route}", typeof(TEntity).Name, id is not null ? id.ToString() : "_", route);
 
         var message = new HttpRequestMessage(HttpMethod.Get, route);
         var result = await HandleRequestAsync<TEntity>(message);
@@ -132,9 +132,9 @@ internal class CommunicatorRestEntityContext<TEntity, TKey> : CommunicatorRestEn
         EntityOptions = entityOptions;
     }
 
-    public override Task<TEntity> GetAsync(object id) => GetAsync((TKey)id);
+    public override Task<TEntity> GetAsync(object? id) => GetAsync((TKey?)id);
 
-    public async Task<TEntity> GetAsync(TKey id)
+    public async Task<TEntity> GetAsync(TKey? id)
     {
         string idEndpoint;
 

@@ -4,8 +4,8 @@ public class CommunicatorRestEntityOptions<TEntity>
 	where TEntity : class
 {
 	public string? Endpoint { get; set; }
-	protected Func<object, string>? _getIdEndpointAction;
-    public Func<object, string>? GetIdEndpointAction
+	protected Func<object?, string>? _getIdEndpointAction;
+    public Func<object?, string>? GetIdEndpointAction
 	{
 		get => _getIdEndpointAction;
 		set => _getIdEndpointAction = value;
@@ -20,7 +20,7 @@ public class CommunicatorRestEntityOptions<TEntity>
 public class CommunicatorRestEntityOptions<TEntity, TKey> : CommunicatorRestEntityOptions<TEntity>
     where TEntity : class
 {
-	public new Func<TKey, string>? GetIdEndpointAction
+	public new Func<TKey?, string>? GetIdEndpointAction
 	{
 		get
 		{
@@ -34,7 +34,7 @@ public class CommunicatorRestEntityOptions<TEntity, TKey> : CommunicatorRestEnti
                 _getIdEndpointAction = null;
 				return;
             }
-            _getIdEndpointAction = (key) => value!((TKey)key);
+            _getIdEndpointAction = (key) => value!((TKey?)key);
 		}
     }
 
