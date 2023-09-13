@@ -110,7 +110,7 @@ public class MockedRestServiceTests
         });
 
         ((CommunicatorRestEntityContext<TestEntity>)entityContext)
-            .EntityOptions.GetIdEndpointAction = (key) => "entity/specific";
+            .EntityOptions.GetIdEndpointAction = (key, parameters) => "entity/specific";
 
         var result = await entityContext.GetAsync(1);
 

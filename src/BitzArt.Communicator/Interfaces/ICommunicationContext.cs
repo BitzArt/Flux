@@ -11,14 +11,14 @@ public interface ICommunicationContext
 public interface ICommunicationContext<TEntity>
     where TEntity : class
 {
-    public Task<IEnumerable<TEntity>> GetAllAsync();
-    public Task<PageResult<TEntity>> GetPageAsync(int offset, int limit);
-    public Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest);
-    public Task<TEntity> GetAsync(object? id);
+    public Task<IEnumerable<TEntity>> GetAllAsync(params object[]? parameters);
+    public Task<PageResult<TEntity>> GetPageAsync(int offset, int limit, params object[]? parameters);
+    public Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest, params object[]? parameters);
+    public Task<TEntity> GetAsync(object? id, params object[]? parameters);
 }
 
 public interface ICommunicationContext<TEntity, TKey> : ICommunicationContext<TEntity>
     where TEntity : class
 {
-    public Task<TEntity> GetAsync(TKey? id);
+    public Task<TEntity> GetAsync(TKey? id, params object[]? parameters);
 }

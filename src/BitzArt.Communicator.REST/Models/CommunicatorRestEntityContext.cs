@@ -60,7 +60,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         _entityOptions = entityOptions;
     }
 
-    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync(params object[]? parameters)
     {
         var path = EntityOptions.Endpoint is not null ? EntityOptions.Endpoint : string.Empty;
         var route = GetFullPath(path);
@@ -73,9 +73,9 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         return result;
     }
 
-    public virtual async Task<PageResult<TEntity>> GetPageAsync(int offset, int limit) => await GetPageAsync(new PageRequest(offset, limit));
+    public virtual async Task<PageResult<TEntity>> GetPageAsync(int offset, int limit, params object[]? parameters) => await GetPageAsync(new PageRequest(offset, limit), parameters);
 
-    public virtual async Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest)
+    public virtual async Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
         var path = EntityOptions.Endpoint is not null ? EntityOptions.Endpoint : string.Empty;
         var queryIndex = path.IndexOf('?');
@@ -99,11 +99,11 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         return result;
     }
 
-    public virtual async Task<TEntity> GetAsync(object? id)
+    public virtual async Task<TEntity> GetAsync(object? id, params object[]? parameters)
     {
         if (EntityOptions.GetIdEndpointAction is null) throw new KeyNotFoundException();
 
-        var idEndpoint = EntityOptions.GetIdEndpointAction(id);
+        var idEndpoint = EntityOptions.GetIdEndpointAction(id, parameters);
         var route = GetFullPath(idEndpoint);
         _logger.LogInformation("Get {type}[{id}]: {route}", typeof(TEntity).Name, id is not null ? id.ToString() : "_", route);
 
@@ -132,13 +132,13 @@ internal class CommunicatorRestEntityContext<TEntity, TKey> : CommunicatorRestEn
         EntityOptions = entityOptions;
     }
 
-    public override Task<TEntity> GetAsync(object? id) => GetAsync((TKey?)id);
+    public override Task<TEntity> GetAsync(object? id, params object[]? parameters) => GetAsync((TKey?)id, parameters);
 
-    public async Task<TEntity> GetAsync(TKey? id)
+    public async Task<TEntity> GetAsync(TKey? id, params object[]? parameters)
     {
         string idEndpoint;
 
-        if (EntityOptions.GetIdEndpointAction is not null) idEndpoint = EntityOptions.GetIdEndpointAction(id);
+        if (EntityOptions.GetIdEndpointAction is not null) idEndpoint = EntityOptions.GetIdEndpointAction(id, parameters);
         else idEndpoint = EntityOptions.Endpoint is not null ? Path.Combine(EntityOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
         var route = GetFullPath(idEndpoint);
 
