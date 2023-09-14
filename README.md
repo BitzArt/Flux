@@ -1,7 +1,6 @@
-# Flex.Net
-# PRELEASE, Work In Progress
+# Flex.Net | PRELEASE, Work In Progress
 
-This nuget package introduces an intuitive way to simplify how your software communicates with external systems. Imagine effortlessly working with various external services without getting lost in the technical details, whether it's REST, SOAP, or something else. That's exactly what **Flex.Net** does for you.
+**Flex.Net** is a universal WebAPI Client. It introduces an intuitive way to simplify how your software communicates with external systems. It allows effortlessly working with external services whether they use REST, SOAP, or something else.
 
 **1. Easy Setup: Configure Once, Use Anywhere**
 
