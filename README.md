@@ -1,7 +1,7 @@
-# Communicator
+# Flex.Net
 # PRELEASE, Work In Progress
 
-The **Communicator** NuGet package introduces an intuitive way to simplify how your software communicates with external systems. Imagine effortlessly working with various external services without getting lost in the technical details, whether it's REST, SOAP, or something else. That's exactly what **Communicator** does for you.
+This nuget package introduces an intuitive way to simplify how your software communicates with external systems. Imagine effortlessly working with various external services without getting lost in the technical details, whether it's REST, SOAP, or something else. That's exactly what **Flex.Net** does for you.
 
 **1. Easy Setup: Configure Once, Use Anywhere**
 
@@ -9,11 +9,11 @@ Start by setting up the configuration. Instead of dealing with the intricacies o
 
 **2. Natural Interaction: Forget Protocols, Focus on Results**
 
-Once the setup is done, interaction becomes a breeze. With the groundwork laid out, you can focus on getting things done. Fetch data, send updates, or perform other tasks without worrying about HTTP, REST, SOAP, or any other protocol. **Communicator** handles the technicalities seamlessly in the background.
+Once the setup is done, interaction becomes a breeze. With the groundwork laid out, you can focus on getting things done. Fetch data, send updates, or perform other tasks without worrying about HTTP, REST, SOAP, or any other protocol. **Flex.Net** handles the technicalities seamlessly in the background.
 
 **Key Features:**
 
-- **Practical Abstraction:** **Communicator** simplifies your workflow by making interactions with external services straightforward. It's not tied to any specific technology – its goal is to make your work easier.
+- **Practical Abstraction:** **Flex.Net** simplifies your workflow by making interactions with external services straightforward. It's not tied to any specific technology – its goal is to make your work easier.
 
 - **Cleaner Code:** Maintain a clean and organized codebase. With the configuration handling the heavy lifting, your interactions remain consistent and easy to manage.
 
@@ -23,4 +23,4 @@ Once the setup is done, interaction becomes a breeze. With the groundwork laid o
 
 **Developer-Focused:** This package is designed to save you time and effort. It's all about enhancing simplicity in your work and making coding a more enjoyable experience.
 
-**In a Nutshell:** **Communicator** is about practicality. It empowers you to navigate the challenges of external communications effortlessly, letting you concentrate on achieving results. Consider this package your dependable ally for managing the intricacies of interacting with external systems.
+**In a Nutshell:** **Flex.Net** is about practicality. It empowers you to navigate the challenges of external communications effortlessly, letting you concentrate on achieving results. Consider this package your dependable ally for managing the intricacies of interacting with external systems.
