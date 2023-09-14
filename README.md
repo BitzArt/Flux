@@ -1,6 +1,6 @@
 # Flex.Net | PRELEASE, Work In Progress
 
-**Flex.Net** is a universal WebAPI Client. It introduces an intuitive way to simplify how your software communicates with external systems. It allows effortlessly working with external services whether they use REST, SOAP, or something else.
+**Flex.Net** is a universal WebAPI Client. It introduces an intuitive way for your software to communicate with external systems, whether they use REST, SOAP, or something else.
 
 **1. Easy Setup: Configure Once, Use Anywhere**
 
