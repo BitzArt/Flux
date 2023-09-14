@@ -16,7 +16,7 @@ Once the setup is done, interaction becomes a breeze. With the groundwork laid o
 
 - **Cleaner Code:** Maintain a clean and organized codebase. With the configuration handling the heavy lifting, your interactions remain consistent and easy to manage. This is Dependency Inversion at it's finest.
 
-- **Flexible Services:** Whether you're working with APIs, messaging systems, or other external dependencies, your code follows a unified approach. The package manages the intricacies behind the scenes. Switching from one service to another or adapting to different protocols becomes hassle-free. The configuration takes care of the adaptation, sparing your code from unnecessary complexities.
+- **Flexible Services:** Your code working with external dependencies follows a unified approach. The package manages the intricacies behind the scenes. Switching from one service to another or adapting to different protocols becomes hassle-free. The configuration takes care of the adaptation, sparing your code from unnecessary complexities.
 
 - **Unit Tests _(Work In Progress)_:** Easily create a mock external service and use it in your unit tests.
 
