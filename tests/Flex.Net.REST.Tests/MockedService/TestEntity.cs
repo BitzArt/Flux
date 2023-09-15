@@ -1,7 +1,7 @@
 ﻿using BitzArt.Pagination;
 using System.Text.Json.Serialization;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 internal class TestEntity
 {

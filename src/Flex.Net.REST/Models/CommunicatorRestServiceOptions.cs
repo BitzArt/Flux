@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 public class CommunicatorRestServiceOptions
 {

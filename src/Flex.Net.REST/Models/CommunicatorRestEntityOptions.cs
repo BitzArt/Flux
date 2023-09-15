@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Communicator;
+﻿namespace Flex;
 
 public class CommunicatorRestEntityOptions<TEntity>
 	where TEntity : class

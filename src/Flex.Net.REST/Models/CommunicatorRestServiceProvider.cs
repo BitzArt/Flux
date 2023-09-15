@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 internal class CommunicatorRestServiceProvider : ICommunicatorServiceProvider
 {

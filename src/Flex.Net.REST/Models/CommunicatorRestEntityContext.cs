@@ -1,10 +1,9 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
-using System.Text;
 using System.Text.Json;
 using System.Web;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TEntity>
     where TEntity : class

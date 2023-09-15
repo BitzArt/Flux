@@ -1,6 +1,4 @@
-﻿using BitzArt.Communicator;
-
-namespace BitzArt;
+﻿namespace Flex;
 
 public static class AddServiceExtension
 {

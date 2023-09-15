@@ -6,9 +6,9 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>Flex</RootNamespace>
 
-		<PackageId>Flex.Net</PackageId>
+		<PackageId>Flex.Net.Rest</PackageId>
 		<Authors>BitzArt</Authors>
-		<Description>Flex.Net REST client implementation</Description>
+		<Description>Flex.Net - REST Api client implementation</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/BitzArt/Flex.Net</RepositoryUrl>
@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Flex.Net\Flex.Net.csproj" />
+	  <ProjectReference Include="..\Flex.Net\Flex.Net.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

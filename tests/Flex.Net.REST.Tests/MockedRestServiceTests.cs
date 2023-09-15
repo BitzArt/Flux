@@ -2,7 +2,7 @@ using RichardSzalay.MockHttp;
 using System.Net.Http.Json;
 using System.Net;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 public class MockedRestServiceTests
 {

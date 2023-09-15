@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A0FAE66D-557
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flex.Net.Tests", "tests\Flex.Net.Tests\Flex.Net.Tests.csproj", "{AEA2C975-E99C-4E44-B121-0CF3D4956732}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flex.Net.REST.Tests", "tests\Flex.Net.REST.Tests\Flex.Net.REST.Tests.csproj", "{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flex.Net.REST.Tests", "tests\Flex.Net.REST.Tests\Flex.Net.REST.Tests.csproj", "{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1CF88BCF-544C-463E-A639-594ADE0A9F15}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,8 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1CF8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{ABC1CAE6-C4A2-42AB-8F24-9A32299CC512}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Publish Communicator.yml = .github\workflows\Publish Communicator.yml
 		.github\workflows\Tests.yml = .github\workflows\Tests.yml
+		.github\workflows\Publish Flex.Net.yml = .github\workflows\Publish Flex.Net.yml
 	EndProjectSection
 EndProject
 Global

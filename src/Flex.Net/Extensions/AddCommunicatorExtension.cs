@@ -1,8 +1,6 @@
-﻿using BitzArt.Communicator;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt;
+namespace Flex;
 
 public static class AddCommunicatorExtension
 {

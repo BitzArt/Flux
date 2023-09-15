@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 file class TestEntity
 {

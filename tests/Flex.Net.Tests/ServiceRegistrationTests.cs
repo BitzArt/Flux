@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json.Serialization;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 public class ServiceRegistrationTests
 {

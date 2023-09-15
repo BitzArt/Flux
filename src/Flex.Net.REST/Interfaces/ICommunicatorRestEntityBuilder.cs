@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Communicator;
+﻿namespace Flex;
 
 public interface ICommunicatorRestEntityBuilder<TEntity> : ICommunicatorEntityBuilder, ICommunicatorRestServiceBuilder
     where TEntity : class

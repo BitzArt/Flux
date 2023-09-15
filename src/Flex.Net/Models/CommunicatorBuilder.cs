@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 internal class CommunicatorBuilder : ICommunicatorBuilder
 {

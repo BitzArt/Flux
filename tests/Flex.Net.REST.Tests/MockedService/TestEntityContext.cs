@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using RichardSzalay.MockHttp;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 internal static class TestEntityContext
 {

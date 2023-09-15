@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Communicator;
+﻿namespace Flex;
 
 public static class WithIdEndpointExtension
 {

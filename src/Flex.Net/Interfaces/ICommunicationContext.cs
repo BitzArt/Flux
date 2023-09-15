@@ -1,6 +1,6 @@
 ﻿using BitzArt.Pagination;
 
-namespace BitzArt.Communicator;
+namespace Flex;
 
 public interface ICommunicationContext
 {
