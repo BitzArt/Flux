@@ -19,13 +19,17 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         set => _entityOptions = value;
     }
 
-    internal string GetFullPath(string path)
+    internal string GetFullPath(string path, bool handleParameters, object[]? parameters = null)
     {
         if (ServiceOptions.BaseUrl is null) return path;
         
         var p1 = ServiceOptions.BaseUrl.TrimEnd('/');
         var p2 = path.TrimStart('/');
-        return $"{p1}/{p2}";
+        var result = $"{p1}/{p2}";
+
+        if (handleParameters) result = RequestParameterParsingUtility.ParseRequestUrl(_logger, result, parameters);
+        
+        return result;
     }
 
     internal async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message) where TResult : class
@@ -62,7 +66,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync(params object[]? parameters)
     {
         var path = EntityOptions.Endpoint is not null ? EntityOptions.Endpoint : string.Empty;
-        var route = GetFullPath(path);
+        var route = GetFullPath(path, true, parameters);
 
         _logger.LogInformation("GetAll {type}: {path}", typeof(TEntity).Name, route);
 
@@ -89,7 +93,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         if (queryIndex != -1) path = path[..queryIndex];
         path = path + "?" + query.ToString();
 
-        var route = GetFullPath(path);
+        var route = GetFullPath(path, true, parameters);
         _logger.LogInformation("GetPage {type}: {route}", typeof(TEntity).Name, route);
 
         var message = new HttpRequestMessage(HttpMethod.Get, route);
@@ -103,7 +107,7 @@ internal class CommunicatorRestEntityContext<TEntity> : ICommunicationContext<TE
         if (EntityOptions.GetIdEndpointAction is null) throw new KeyNotFoundException();
 
         var idEndpoint = EntityOptions.GetIdEndpointAction(id, parameters);
-        var route = GetFullPath(idEndpoint);
+        var route = GetFullPath(idEndpoint, false);
         _logger.LogInformation("Get {type}[{id}]: {route}", typeof(TEntity).Name, id is not null ? id.ToString() : "_", route);
 
         var message = new HttpRequestMessage(HttpMethod.Get, route);
@@ -137,9 +141,17 @@ internal class CommunicatorRestEntityContext<TEntity, TKey> : CommunicatorRestEn
     {
         string idEndpoint;
 
-        if (EntityOptions.GetIdEndpointAction is not null) idEndpoint = EntityOptions.GetIdEndpointAction(id, parameters);
-        else idEndpoint = EntityOptions.Endpoint is not null ? Path.Combine(EntityOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
-        var route = GetFullPath(idEndpoint);
+        bool handleParameters = false;
+        if (EntityOptions.GetIdEndpointAction is not null)
+        {
+            idEndpoint = EntityOptions.GetIdEndpointAction(id, parameters);
+        }
+        else
+        {
+            idEndpoint = EntityOptions.Endpoint is not null ? Path.Combine(EntityOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
+            handleParameters = true;
+        }
+        var route = GetFullPath(idEndpoint, handleParameters, parameters);
 
         _logger.LogInformation("Get {type}[{id}]: {route}", typeof(TEntity).Name, id!.ToString(), route);
 

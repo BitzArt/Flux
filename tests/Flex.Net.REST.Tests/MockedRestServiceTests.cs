@@ -117,4 +117,60 @@ public class MockedRestServiceTests
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
     }
+
+    [Fact]
+    public async Task GetAsyncWithParameters_MockedHttpClient_Returns()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+
+        var database = TestEntity.GetAll(100);
+        var changedName = "Changed Name";
+        var defaultEntity = database.First(x => x.Id == id);
+        var defaultName = defaultEntity.Name;
+        var changedEntity = new TestEntity() { Id = id, Name = changedName };
+
+        var entityContext = (CommunicatorRestEntityContext<TestEntity, int>)
+            TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/entity/{id}?changeName=False")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(defaultEntity));
+
+            x.When($"{baseUrl.TrimEnd('/')}/entity/{id}?changeName=True")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(changedEntity));
+        });
+
+        entityContext.EntityOptions.GetIdEndpointAction = (id, parameters) =>
+        {
+            return $"entity/{id}?changeName={parameters!.First()}";
+        };
+
+        var resultWithParameterFalse = await entityContext.GetAsync(id, false);
+        Assert.Equal(defaultName, resultWithParameterFalse.Name);
+
+        var resultWithParameterTrue = await entityContext.GetAsync(id, true);
+        Assert.Equal(changedName, resultWithParameterTrue.Name);
+    }
+
+    [Fact]
+    public async Task GetPageAsyncWithParameters_MockedHttpClient_Returns()
+    {
+        var baseUrl = "https://mocked.service";
+
+        var entityContext = (CommunicatorRestEntityContext<TestEntity, int>)
+            TestEntityContext.GetTestEntityContext(baseUrl, x =>
+            {
+                x.When($"{baseUrl.TrimEnd('/')}/test-1?offset=0&limit=10")
+                .Respond(HttpStatusCode.OK,
+                JsonContent.Create(TestEntity.GetPage(100, 0, 10)));
+            });
+
+        entityContext.EntityOptions.Endpoint = "test-{number}";
+
+        var result = await entityContext.GetPageAsync(0, 10, 1);
+        Assert.NotNull(result);
+        Assert.True(result.Data!.Count() == 10);
+    }
 }
