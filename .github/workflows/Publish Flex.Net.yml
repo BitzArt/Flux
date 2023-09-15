@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  repository_dispatch:
+  push:
+    tags:
+    - "Flex.Net-v[0-9]+.[0-9]+.[0-9]+*"
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NUGET_APIKEY: ${{ secrets.NUGET_APIKEY}}
+
+jobs:
+
+  Release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Verify commit
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          git branch --remote --contains | grep origin/main
+
+      - name: Set version
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/Flex.Net-v/}" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          dotnet build Flex.Net.sln --configuration Release /p:Version=${VERSION}
+          dotnet pack Flex.Net.sln --configuration Release /p:Version=${VERSION} --no-build --output .
+
+      - name: Push
+        run: |
+          dotnet nuget push Flex.Net.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
+          dotnet nuget push Flex.Net.REST.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}

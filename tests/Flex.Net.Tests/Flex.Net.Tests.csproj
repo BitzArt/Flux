@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<RootNamespace>BitzArt.Communicator</RootNamespace>
+		<RootNamespace>Flex</RootNamespace>
 
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\BitzArt.Communicator\BitzArt.Communicator.csproj" />
+	  <ProjectReference Include="..\..\src\Flex.Net\Flex.Net.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

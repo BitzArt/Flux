@@ -4,15 +4,15 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<RootNamespace>BitzArt.Communicator</RootNamespace>
+		<RootNamespace>Flex</RootNamespace>
 
-		<PackageId>BitzArt.Communicator.REST</PackageId>
+		<PackageId>Flex.Net</PackageId>
 		<Authors>BitzArt</Authors>
-		<Description>Communicator's default RESTful client implementation</Description>
+		<Description>Flex.Net REST client implementation</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/BitzArt/Communicator</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/BitzArt/Communicator</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/BitzArt/Flex.Net</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/BitzArt/Flex.Net</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,12 +20,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BitzArt.Communicator\BitzArt.Communicator.csproj" />
+		<ProjectReference Include="..\Flex.Net\Flex.Net.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-			<_Parameter1>BitzArt.Communicator.REST.Tests</_Parameter1>
+			<_Parameter1>Flex.Net.REST.Tests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 

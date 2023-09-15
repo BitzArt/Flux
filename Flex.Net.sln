@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Communicator", "src\BitzArt.Communicator\BitzArt.Communicator.csproj", "{FE9CED3F-83D8-43DA-BB05-93F5807F746E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flex.Net", "src\Flex.Net\Flex.Net.csproj", "{FE9CED3F-83D8-43DA-BB05-93F5807F746E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Communicator.REST", "src\BitzArt.Communicator.REST\BitzArt.Communicator.REST.csproj", "{E78BC020-AC54-4F92-8628-14EE6FF9EDBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flex.Net.REST", "src\Flex.Net.REST\Flex.Net.REST.csproj", "{E78BC020-AC54-4F92-8628-14EE6FF9EDBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3976FBB-F37A-4468-955D-8B2FCC79ACD0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A0FAE66D-5574-463E-8723-E28ECEE565EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Communicator.Tests", "tests\BitzArt.Communicator.Tests\BitzArt.Communicator.Tests.csproj", "{AEA2C975-E99C-4E44-B121-0CF3D4956732}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flex.Net.Tests", "tests\Flex.Net.Tests\Flex.Net.Tests.csproj", "{AEA2C975-E99C-4E44-B121-0CF3D4956732}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Communicator.REST.Tests", "tests\BitzArt.Communicator.REST.Tests\BitzArt.Communicator.REST.Tests.csproj", "{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flex.Net.REST.Tests", "tests\Flex.Net.REST.Tests\Flex.Net.REST.Tests.csproj", "{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1CF88BCF-544C-463E-A639-594ADE0A9F15}"
 	ProjectSection(SolutionItems) = preProject
