@@ -80,7 +80,8 @@ internal class FluxRestEntityContext<TEntity> : IFluxEntityContext<TEntity>
 
     public virtual async Task<PageResult<TEntity>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
-        var path = EntityOptions.Endpoint is not null ? EntityOptions.Endpoint : string.Empty;
+        var path = GetPageEndpoint();
+
         var queryIndex = path.IndexOf('?');
 
         var query = queryIndex == -1 ?
@@ -114,6 +115,18 @@ internal class FluxRestEntityContext<TEntity> : IFluxEntityContext<TEntity>
         var result = await HandleRequestAsync<TEntity>(message);
 
         return result;
+    }
+
+    protected string GetPageEndpoint()
+    {
+        if (EntityOptions.PageEndpoint is not null) return EntityOptions.PageEndpoint;
+        return GetEndpoint();
+    }
+
+    protected string GetEndpoint()
+    {
+        if (EntityOptions.Endpoint is null) return string.Empty;
+        return EntityOptions.Endpoint;
     }
 }
 

@@ -173,4 +173,24 @@ public class MockedRestServiceTests
         Assert.NotNull(result);
         Assert.True(result.Data!.Count() == 10);
     }
+
+    [Fact]
+    public async Task GetPageAsyncWithPageEndpoint_MockedHttpClient_Returns()
+    {
+        var baseUrl = "https://mocked.service";
+
+        var entityContext = (FluxRestEntityContext<TestEntity, int>)
+            TestEntityContext.GetTestEntityContext(baseUrl, x =>
+            {
+                x.When($"{baseUrl.TrimEnd('/')}/1/entities?offset=0&limit=10")
+                .Respond(HttpStatusCode.OK,
+                JsonContent.Create(TestEntity.GetPage(100, 0, 10)));
+            });
+
+        entityContext.EntityOptions.PageEndpoint = "{parentId}/entities";
+
+        var result = await entityContext.GetPageAsync(0, 10, 1);
+        Assert.NotNull(result);
+        Assert.True(result.Data!.Count() == 10);
+    }
 }

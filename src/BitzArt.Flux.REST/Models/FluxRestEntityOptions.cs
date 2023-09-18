@@ -4,6 +4,7 @@ public class FluxRestEntityOptions<TEntity>
 	where TEntity : class
 {
 	public string? Endpoint { get; set; }
+	public string? PageEndpoint { get; set; }
 	protected Func<object?, object[]?, string>? _getIdEndpointAction;
     public Func<object?, object[]?, string>? GetIdEndpointAction
 	{
