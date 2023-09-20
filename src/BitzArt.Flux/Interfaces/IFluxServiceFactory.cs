@@ -2,11 +2,11 @@
 
 internal interface IFluxServiceFactory
 {
-    internal ICollection<IFluxServiceProvider> Providers { get; }
+    internal ICollection<IFluxServiceContext> ServiceContexts { get; }
 
-    internal IFluxEntityContext<TEntity> GetEntityContext<TEntity>(IServiceProvider services, object? options)
+    internal IFluxEntityContext<TEntity> GetEntityContext<TEntity>(IServiceProvider services, string? serviceName = null)
         where TEntity : class;
 
-    internal IFluxEntityContext<TEntity, TKey> GetEntityContext<TEntity, TKey>(IServiceProvider services, object? options)
+    internal IFluxEntityContext<TEntity, TKey> GetEntityContext<TEntity, TKey>(IServiceProvider services, string? serviceName = null)
         where TEntity : class;
 }

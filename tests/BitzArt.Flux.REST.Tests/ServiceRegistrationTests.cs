@@ -28,10 +28,10 @@ public class ServiceRegistrationTests
 
         var factory = serviceProvider.GetRequiredService<IFluxServiceFactory>();
         Assert.NotNull(factory);
-        Assert.True(factory.Providers.Count > 0);
+        Assert.True(factory.ServiceContexts.Count > 0);
 
-        Assert.True(factory.Providers.Count == 1);
-        var provider = factory.Providers.Single();
+        Assert.True(factory.ServiceContexts.Count == 1);
+        var provider = factory.ServiceContexts.Single();
 
         Assert.Equal(serviceName, provider.ServiceName);
 

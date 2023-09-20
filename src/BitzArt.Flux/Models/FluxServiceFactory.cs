@@ -2,42 +2,72 @@
 
 internal class FluxServiceFactory : IFluxServiceFactory
 {
-    public ICollection<IFluxServiceProvider> Providers { get; private set; }
+    public ICollection<IFluxServiceContext> ServiceContexts { get; private set; }
 
     public FluxServiceFactory()
     {
-        Providers = new HashSet<IFluxServiceProvider>();
+        ServiceContexts = new HashSet<IFluxServiceContext>();
     }
 
     public IFluxEntityContext<TEntity> GetEntityContext<TEntity>(
         IServiceProvider services,
-        object? options)
+        string? serviceName = null)
         where TEntity : class
     {
-        var provider = Providers
-            .AsQueryable()
-            //.WhereIf(serviceName is not null, x => x.ServiceName == serviceName)
-            .Where(x => x.ContainsSignature(new (typeof(TEntity), null)))
-            .FirstOrDefault();
+        IFluxServiceContext? serviceContext;
+        var q = ServiceContexts.AsQueryable();
 
-        if (provider is null) throw new Exception("Flux Service Provider not found.");
+        if (serviceName is not null)
+        {
+            serviceContext = q.FirstOrDefault(x => x.ServiceName == serviceName);
+            if (serviceContext is null) throw new FluxServiceContextNotFoundException();
+        }
+        else
+        {
+            var serviceContexts = q.Where(x => x.ContainsSignature<TEntity>()).ToList();
+            if (!serviceContexts.Any()) throw new FluxServiceContextNotFoundException();
+            if (serviceContexts.Count > 1) throw new MultipleFluxServiceContextFoundException();
+            serviceContext = serviceContexts.First();
+        }
 
-        return provider.GetEntityContext<TEntity>(services, options);
+        return serviceContext.CreateEntityContext<TEntity>(services);
     }
 
     public IFluxEntityContext<TEntity, TKey> GetEntityContext<TEntity, TKey>(
         IServiceProvider services,
-        object? options)
+        string? serviceName = null)
         where TEntity : class
     {
-        var provider = Providers
-            .AsQueryable()
-            //.WhereIf(serviceName is not null, x => x.ServiceName == serviceName)
-            .Where(x => x.ContainsSignature(new(typeof(TEntity), typeof(TKey))))
-            .FirstOrDefault();
+        IFluxServiceContext? serviceContext;
+        var q = ServiceContexts.AsQueryable();
 
-        if (provider is null) throw new Exception("Flux Service Provider not found.");
+        if (serviceName is not null)
+        {
+            serviceContext = q.FirstOrDefault(x => x.ServiceName == serviceName);
+            if (serviceContext is null) throw new FluxServiceContextNotFoundException();
+        }
+        else
+        {
+            var serviceContexts = q.Where(x => x.ContainsSignature<TEntity>()).ToList();
+            if (!serviceContexts.Any()) throw new FluxServiceContextNotFoundException();
+            if (serviceContexts.Count > 1) throw new MultipleFluxServiceContextFoundException();
+            serviceContext = serviceContexts.First();
+        }
 
-        return provider.GetEntityContext<TEntity, TKey>(services, options);
+        return serviceContext.CreateEntityContext<TEntity, TKey>(services);
     }
+}
+
+file class FluxServiceContextNotFoundException : Exception
+{
+    public FluxServiceContextNotFoundException()
+        : base("Requested Service Context was not found.")
+        { }
+}
+
+file class MultipleFluxServiceContextFoundException : Exception
+{
+    public MultipleFluxServiceContextFoundException()
+        : base("Multiple matching Service Contexts were found.")
+    { }
 }

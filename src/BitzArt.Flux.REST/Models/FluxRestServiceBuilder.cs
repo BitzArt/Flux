@@ -5,7 +5,7 @@ namespace BitzArt.Flux;
 internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
 {
     public IServiceCollection Services { get; private set; }
-    public IFluxServiceProvider Provider { get; set; }
+    public IFluxServiceContext ServiceContext { get; set; }
     public IFluxServiceFactory Factory { get; init; }
     public FluxRestServiceOptions ServiceOptions { get; init; }
     public Action<HttpClient>? HttpClientConfiguration { get; set; }
@@ -17,7 +17,7 @@ internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
         ServiceOptions = new(baseUrl);
         HttpClientConfiguration = null;
 
-        if (prebuilder.Name is null) throw new Exception("Missing Name in Communication Service configuration. Consider using .WithName() when configuring external services.");
-        Provider = new FluxRestServiceProvider(ServiceOptions, prebuilder.Name);
+        if (prebuilder.Name is null) throw new Exception("Missing Name in Flux Service configuration. Consider using .WithName() when configuring external services.");
+        ServiceContext = new FluxRestServiceContext(ServiceOptions, prebuilder.Name);
     }
 }

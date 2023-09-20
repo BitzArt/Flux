@@ -5,10 +5,12 @@ namespace BitzArt.Flux;
 internal class Flux : IFlux
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly IFluxServiceFactory _serviceFactory;
 
     public Flux(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
+        _serviceFactory = serviceProvider.GetRequiredService<IFluxServiceFactory>();
     }
 
     public IFluxEntityContext<TEntity, TKey> Entity<TEntity, TKey>()
