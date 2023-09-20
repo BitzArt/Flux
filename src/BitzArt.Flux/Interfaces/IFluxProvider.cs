@@ -1,8 +1,10 @@
 ﻿namespace BitzArt.Flux;
 
-internal interface IFluxServiceFactory
+internal interface IFluxProvider
 {
-    internal ICollection<IFluxServiceContext> ServiceContexts { get; }
+    internal ICollection<IFluxServiceProvider> ServiceContexts { get; }
+
+    internal IFluxServiceProvider GetServiceContext(string name);
 
     internal IFluxEntityContext<TEntity> GetEntityContext<TEntity>(IServiceProvider services, string? serviceName = null)
         where TEntity : class;

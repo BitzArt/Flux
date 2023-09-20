@@ -1,12 +1,19 @@
 ﻿namespace BitzArt.Flux;
 
-internal class FluxServiceFactory : IFluxServiceFactory
+internal class FluxProvider : IFluxProvider
 {
-    public ICollection<IFluxServiceContext> ServiceContexts { get; private set; }
+    public ICollection<IFluxServiceProvider> ServiceContexts { get; private set; }
 
-    public FluxServiceFactory()
+    public FluxProvider()
     {
-        ServiceContexts = new HashSet<IFluxServiceContext>();
+        ServiceContexts = new HashSet<IFluxServiceProvider>();
+    }
+
+    public IFluxServiceProvider GetServiceContext(string name)
+    {
+        var serviceContext = ServiceContexts.AsQueryable().FirstOrDefault(x => x.ServiceName == name);
+        if (serviceContext is null) throw new FluxServiceContextNotFoundException();
+        return serviceContext;
     }
 
     public IFluxEntityContext<TEntity> GetEntityContext<TEntity>(
@@ -14,7 +21,7 @@ internal class FluxServiceFactory : IFluxServiceFactory
         string? serviceName = null)
         where TEntity : class
     {
-        IFluxServiceContext? serviceContext;
+        IFluxServiceProvider? serviceContext;
         var q = ServiceContexts.AsQueryable();
 
         if (serviceName is not null)
@@ -38,7 +45,7 @@ internal class FluxServiceFactory : IFluxServiceFactory
         string? serviceName = null)
         where TEntity : class
     {
-        IFluxServiceContext? serviceContext;
+        IFluxServiceProvider? serviceContext;
         var q = ServiceContexts.AsQueryable();
 
         if (serviceName is not null)

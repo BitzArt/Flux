@@ -1,11 +1,11 @@
 ﻿namespace BitzArt.Flux;
 
-public interface IFluxServiceContext
+public interface IFluxServiceProvider
 {
     internal string ServiceName { get; }
 
-    IFluxEntityContext<TEntity> CreateEntityContext<TEntity>(IServiceProvider services) where TEntity : class;
-    IFluxEntityContext<TEntity, TKey> CreateEntityContext<TEntity, TKey>(IServiceProvider services) where TEntity : class;
+    internal IFluxEntityContext<TEntity> CreateEntityContext<TEntity>(IServiceProvider services) where TEntity : class;
+    internal IFluxEntityContext<TEntity, TKey> CreateEntityContext<TEntity, TKey>(IServiceProvider services) where TEntity : class;
     internal void AddEntity<TEntity>(object options) where TEntity : class;
     internal void AddEntity<TEntity, TKey>(object options) where TEntity : class;
 

@@ -8,8 +8,8 @@ internal class FluxRestEntityBuilder<TEntity> : IFluxRestEntityBuilder<TEntity>
     public IFluxRestServiceBuilder ServiceBuilder { get; init; }
 
     public IServiceCollection Services => ServiceBuilder.Services;
-    public IFluxServiceContext ServiceContext => ServiceBuilder.ServiceContext;
-    public IFluxServiceFactory Factory => ServiceBuilder.Factory;
+    public IFluxServiceProvider ServiceContext => ServiceBuilder.ServiceContext;
+    public IFluxProvider Factory => ServiceBuilder.Factory;
     public FluxRestServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
 
     public Action<HttpClient>? HttpClientConfiguration

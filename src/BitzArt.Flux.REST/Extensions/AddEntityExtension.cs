@@ -16,7 +16,7 @@ public static class AddEntityExtension
 
         services.AddScoped(x =>
         {
-            var factory = x.GetRequiredService<IFluxServiceFactory>();
+            var factory = x.GetRequiredService<IFluxProvider>();
             return factory.GetEntityContext<TEntity>(x, serviceContext.ServiceName);
         });
 
@@ -37,13 +37,13 @@ public static class AddEntityExtension
 
         services.AddScoped(x =>
         {
-            var factory = x.GetRequiredService<IFluxServiceFactory>();
+            var factory = x.GetRequiredService<IFluxProvider>();
             return factory.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
         });
 
         services.AddScoped<IFluxEntityContext<TEntity>>(x =>
         {
-            var factory = x.GetRequiredService<IFluxServiceFactory>();
+            var factory = x.GetRequiredService<IFluxProvider>();
             return factory.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
         });
 

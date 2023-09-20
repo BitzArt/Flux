@@ -8,7 +8,7 @@ public static class AddFluxExtension
     {
         var alreadyRegistered = services
             .Any(x => x.Lifetime == ServiceLifetime.Singleton &&
-            x.ServiceType == typeof(IFluxServiceFactory));
+            x.ServiceType == typeof(IFluxProvider));
 
         if (alreadyRegistered) throw new FluxAlreadyRegisteredException();
 

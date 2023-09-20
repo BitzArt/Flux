@@ -2,17 +2,16 @@
 
 namespace BitzArt.Flux;
 
-internal class Flux : IFlux
+internal class FluxServiceContext
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly string _serviceName;
 
-    public Flux(IServiceProvider serviceProvider)
+    public FluxServiceContext(IServiceProvider serviceProvider, string serviceName)
     {
         _serviceProvider = serviceProvider;
+        _serviceName = serviceName;
     }
-
-    //public IFluxServiceProvider Service(string serviceName)
-    //    =>
 
     public IFluxEntityContext<TEntity, TKey> Entity<TEntity, TKey>()
         where TEntity : class

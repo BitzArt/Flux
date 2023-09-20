@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestServiceContext : IFluxServiceContext
+internal class FluxRestServiceProvider : IFluxServiceProvider
 {
     private readonly FluxRestServiceOptions _serviceOptions;
 
@@ -11,7 +11,7 @@ internal class FluxRestServiceContext : IFluxServiceContext
 
     public string ServiceName { get; private set; }
 
-    public FluxRestServiceContext(FluxRestServiceOptions options, string serviceName)
+    public FluxRestServiceProvider(FluxRestServiceOptions options, string serviceName)
     {
         _serviceOptions = options;
         ServiceName = serviceName;

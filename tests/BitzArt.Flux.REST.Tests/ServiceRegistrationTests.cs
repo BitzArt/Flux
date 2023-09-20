@@ -26,7 +26,7 @@ public class ServiceRegistrationTests
 
         var serviceProvider = services.BuildServiceProvider();
 
-        var factory = serviceProvider.GetRequiredService<IFluxServiceFactory>();
+        var factory = serviceProvider.GetRequiredService<IFluxProvider>();
         Assert.NotNull(factory);
         Assert.True(factory.ServiceContexts.Count > 0);
 
@@ -99,5 +99,22 @@ public class ServiceRegistrationTests
 
         Assert.True(serializerOptions.WriteIndented);
         Assert.Equal(JsonIgnoreCondition.WhenWritingNull, serializerOptions.DefaultIgnoreCondition);
+    }
+
+    [Fact]
+    public void UsingRest_WithService_AddsServiceContext()
+    {
+        var services = new ServiceCollection();
+
+        services.AddFlux(flux =>
+        {
+            flux.AddService("Service1")
+            .UsingRest("http://localhost")
+            .AddEntity<TestEntity>("test-entity");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var flux = serviceProvider.GetRequiredService<IFlux>();
     }
 }

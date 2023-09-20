@@ -6,5 +6,5 @@ public interface IFluxServicePreBuilder
 {
     internal string? Name { get; set; }
     internal IServiceCollection Services { get; }
-    internal IFluxServiceFactory Factory { get; }
+    internal IFluxProvider Factory { get; }
 }

@@ -5,6 +5,6 @@ namespace BitzArt.Flux;
 public interface IFluxServiceBuilder
 {
     internal IServiceCollection Services { get; }
-    internal IFluxServiceContext ServiceContext { get; }
-    internal IFluxServiceFactory Factory { get; }
+    internal IFluxServiceProvider ServiceContext { get; }
+    internal IFluxProvider Factory { get; }
 }

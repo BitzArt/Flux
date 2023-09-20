@@ -12,7 +12,7 @@ public class ServiceRegistrationTests
         services.AddFlux(x => { });
 
         var serviceProvider = services.BuildServiceProvider();
-        var factory = serviceProvider.GetService<IFluxServiceFactory>();
+        var factory = serviceProvider.GetService<IFluxProvider>();
 
         Assert.NotNull(factory);
         Assert.NotNull(factory.ServiceContexts);
@@ -36,10 +36,10 @@ public class ServiceRegistrationTests
         services.AddFlux(x => { });
         var serviceProvider = services.BuildServiceProvider();
 
-        var communicationContext = serviceProvider.GetService<IFlux>();
-        Assert.NotNull(communicationContext);
+        var fluxByInterface = serviceProvider.GetService<IFlux>();
+        Assert.NotNull(fluxByInterface);
 
-        var communicationContextByDirectType = serviceProvider.GetService<Flux>();
-        Assert.Null(communicationContextByDirectType);
+        var fluxByType = serviceProvider.GetService<Flux>();
+        Assert.Null(fluxByType);
     }
 }
