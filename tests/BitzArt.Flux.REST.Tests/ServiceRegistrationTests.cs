@@ -140,13 +140,17 @@ public class ServiceRegistrationTests
         var provider = ((FluxServiceContext)service).Provider;
         Assert.True(provider is FluxRestServiceProvider);
 
-        var entity = service.Entity<TestEntity>();
-        Assert.NotNull(entity);
-        Assert.True(entity is FluxRestEntityContext<TestEntity>);
+        var entityContextFromService = service.Entity<TestEntity>();
+        Assert.NotNull(entityContextFromService);
+        Assert.True(entityContextFromService is FluxRestEntityContext<TestEntity>);
+
+        var entityContextFromFluxContext = fluxContext.Entity<TestEntity>();
+        Assert.NotNull(entityContextFromFluxContext);
+        Assert.True(entityContextFromFluxContext is FluxRestEntityContext<TestEntity>);
     }
 
     [Fact]
-    public void AddFlux_GetAllPackageSignatureElementsFromDiContainer_ReturnsAll()
+    public void AddFlux2Services_GetServiceContextsFromDiContainer_Returns()
     {
         var services = new ServiceCollection();
         services.AddFlux(flux =>

@@ -14,11 +14,11 @@ internal class FluxContext : IFluxContext
     public IFluxServiceContext Service(string serviceName)
         => new FluxServiceContext(_provider.GetServiceProvider(serviceName), _serviceProvider);
 
-    public IFluxEntityContext<TEntity, TKey> Entity<TEntity, TKey>()
+    public IFluxEntityContext<TEntity, TKey> Entity<TEntity, TKey>(string? serviceName = null)
         where TEntity : class
-        => _provider.GetEntityContext<TEntity, TKey>(_serviceProvider);
+        => _provider.GetEntityContext<TEntity, TKey>(_serviceProvider, serviceName);
 
-    public IFluxEntityContext<TEntity> Entity<TEntity>()
+    public IFluxEntityContext<TEntity> Entity<TEntity>(string? serviceName = null)
         where TEntity : class
-        => _provider.GetEntityContext<TEntity>(_serviceProvider);
+        => _provider.GetEntityContext<TEntity>(_serviceProvider, serviceName);
 }
