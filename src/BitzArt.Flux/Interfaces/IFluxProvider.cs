@@ -4,7 +4,7 @@ internal interface IFluxProvider
 {
     internal ICollection<IFluxServiceProvider> ServiceContexts { get; }
 
-    internal IFluxServiceProvider GetServiceContext(string name);
+    internal IFluxServiceProvider GetServiceProvider(string name);
 
     internal IFluxEntityContext<TEntity> GetEntityContext<TEntity>(IServiceProvider services, string? serviceName = null)
         where TEntity : class;

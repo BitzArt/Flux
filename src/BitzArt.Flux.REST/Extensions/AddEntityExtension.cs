@@ -10,7 +10,7 @@ public static class AddEntityExtension
         var builder = new FluxRestEntityBuilder<TEntity>(serviceBuilder);
 
         var services = serviceBuilder.Services;
-        var serviceContext = builder.ServiceContext;
+        var serviceContext = builder.ServiceProvider;
 
         serviceContext.AddEntity<TEntity>(builder.EntityOptions);
 
@@ -31,20 +31,20 @@ public static class AddEntityExtension
         var builder = new FluxRestEntityBuilder<TEntity, TKey>(serviceBuilder);
 
         var services = serviceBuilder.Services;
-        var serviceContext = serviceBuilder.ServiceContext;
+        var serviceContext = serviceBuilder.ServiceProvider;
 
         serviceContext.AddEntity<TEntity, TKey>(builder.EntityOptions);
 
         services.AddScoped(x =>
         {
-            var factory = x.GetRequiredService<IFluxProvider>();
-            return factory.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
+            var provider = x.GetRequiredService<IFluxProvider>();
+            return provider.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
         });
 
         services.AddScoped<IFluxEntityContext<TEntity>>(x =>
         {
-            var factory = x.GetRequiredService<IFluxProvider>();
-            return factory.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
+            var provider = x.GetRequiredService<IFluxProvider>();
+            return provider.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
         });
 
         if (endpoint is not null) return builder.WithEndpoint(endpoint);

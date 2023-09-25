@@ -1,23 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿namespace BitzArt.Flux;
 
-namespace BitzArt.Flux;
-
-internal class FluxServiceContext
+internal class FluxServiceContext : IFluxServiceContext
 {
+    internal readonly IFluxServiceProvider Provider;
     private readonly IServiceProvider _serviceProvider;
-    private readonly string _serviceName;
 
-    public FluxServiceContext(IServiceProvider serviceProvider, string serviceName)
+    public FluxServiceContext(IFluxServiceProvider provider, IServiceProvider serviceProvider)
     {
+        Provider = provider;
         _serviceProvider = serviceProvider;
-        _serviceName = serviceName;
     }
 
     public IFluxEntityContext<TEntity, TKey> Entity<TEntity, TKey>()
         where TEntity : class
-        => _serviceProvider.GetRequiredService<IFluxEntityContext<TEntity, TKey>>();
+        => Provider.CreateEntityContext<TEntity, TKey>(_serviceProvider);
 
     public IFluxEntityContext<TEntity> Entity<TEntity>()
         where TEntity : class
-        => _serviceProvider.GetRequiredService<IFluxEntityContext<TEntity>>();
+        => Provider.CreateEntityContext<TEntity>(_serviceProvider);
 }

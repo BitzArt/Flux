@@ -9,10 +9,10 @@ internal class FluxProvider : IFluxProvider
         ServiceContexts = new HashSet<IFluxServiceProvider>();
     }
 
-    public IFluxServiceProvider GetServiceContext(string name)
+    public IFluxServiceProvider GetServiceProvider(string name)
     {
         var serviceContext = ServiceContexts.AsQueryable().FirstOrDefault(x => x.ServiceName == name);
-        if (serviceContext is null) throw new FluxServiceContextNotFoundException();
+        if (serviceContext is null) throw new FluxServiceProviderNotFoundException();
         return serviceContext;
     }
 
@@ -27,13 +27,13 @@ internal class FluxProvider : IFluxProvider
         if (serviceName is not null)
         {
             serviceContext = q.FirstOrDefault(x => x.ServiceName == serviceName);
-            if (serviceContext is null) throw new FluxServiceContextNotFoundException();
+            if (serviceContext is null) throw new FluxServiceProviderNotFoundException();
         }
         else
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TEntity>()).ToList();
-            if (!serviceContexts.Any()) throw new FluxServiceContextNotFoundException();
-            if (serviceContexts.Count > 1) throw new MultipleFluxServiceContextFoundException();
+            if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
+            if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 
@@ -51,13 +51,13 @@ internal class FluxProvider : IFluxProvider
         if (serviceName is not null)
         {
             serviceContext = q.FirstOrDefault(x => x.ServiceName == serviceName);
-            if (serviceContext is null) throw new FluxServiceContextNotFoundException();
+            if (serviceContext is null) throw new FluxServiceProviderNotFoundException();
         }
         else
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TEntity>()).ToList();
-            if (!serviceContexts.Any()) throw new FluxServiceContextNotFoundException();
-            if (serviceContexts.Count > 1) throw new MultipleFluxServiceContextFoundException();
+            if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
+            if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 
@@ -65,16 +65,16 @@ internal class FluxProvider : IFluxProvider
     }
 }
 
-file class FluxServiceContextNotFoundException : Exception
+file class FluxServiceProviderNotFoundException : Exception
 {
-    public FluxServiceContextNotFoundException()
-        : base("Requested Service Context was not found.")
+    public FluxServiceProviderNotFoundException()
+        : base("Requested Flux Service Provider was not found.")
         { }
 }
 
-file class MultipleFluxServiceContextFoundException : Exception
+file class MultipleFluxServiceProviderFoundException : Exception
 {
-    public MultipleFluxServiceContextFoundException()
-        : base("Multiple matching Service Contexts were found.")
+    public MultipleFluxServiceProviderFoundException()
+        : base("Multiple matching Flux Service Providers were found.")
     { }
 }

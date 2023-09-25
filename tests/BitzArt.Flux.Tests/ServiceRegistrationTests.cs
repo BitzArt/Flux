@@ -36,10 +36,10 @@ public class ServiceRegistrationTests
         services.AddFlux(x => { });
         var serviceProvider = services.BuildServiceProvider();
 
-        var fluxByInterface = serviceProvider.GetService<IFlux>();
+        var fluxByInterface = serviceProvider.GetService<IFluxContext>();
         Assert.NotNull(fluxByInterface);
 
-        var fluxByType = serviceProvider.GetService<Flux>();
+        var fluxByType = serviceProvider.GetService<FluxContext>();
         Assert.Null(fluxByType);
     }
 }

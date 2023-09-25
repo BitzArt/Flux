@@ -115,6 +115,56 @@ public class ServiceRegistrationTests
 
         var serviceProvider = services.BuildServiceProvider();
 
-        var flux = serviceProvider.GetRequiredService<IFlux>();
+        var flux = serviceProvider.GetRequiredService<IFluxContext>();
+    }
+
+    [Fact]
+    public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
+    {
+        var services = new ServiceCollection();
+        services.AddFlux(flux =>
+        {
+            flux.AddService("service")
+            .UsingRest("http://localhost")
+                .AddEntity<TestEntity>("test");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var fluxContext = serviceProvider.GetRequiredService<IFluxContext>();
+
+        var service = fluxContext.Service("service");
+        Assert.NotNull(service);
+        Assert.True(service is FluxServiceContext);
+
+        var provider = ((FluxServiceContext)service).Provider;
+        Assert.True(provider is FluxRestServiceProvider);
+
+        var entity = service.Entity<TestEntity>();
+        Assert.NotNull(entity);
+        Assert.True(entity is FluxRestEntityContext<TestEntity>);
+    }
+
+    [Fact]
+    public void AddFlux_GetAllPackageSignatureElementsFromDiContainer_ReturnsAll()
+    {
+        var services = new ServiceCollection();
+        services.AddFlux(flux =>
+        {
+            flux.AddService("service1")
+            .UsingRest("http://localhost1")
+                .AddEntity<TestEntity>("test");
+
+            flux.AddService("service2")
+            .UsingRest("http://localhost2")
+                .AddEntity<TestEntity>("test");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var serviceContexts = serviceProvider.GetRequiredService<IEnumerable<IFluxServiceContext>>();
+        Assert.NotNull(serviceContexts);
+        Assert.True(serviceContexts.Any());
+        Assert.True(serviceContexts.Count() == 2);
     }
 }

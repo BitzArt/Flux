@@ -8,13 +8,18 @@ public static class UsingRestExtension
     {
         var builder = new FluxRestServiceBuilder(prebuilder, baseUrl);
 
-        var serviceContext = builder.ServiceContext;
-        builder.Factory.ServiceContexts.Add(serviceContext);
+        var fluxServiceProvider = builder.ServiceProvider;
+        builder.Provider.ServiceContexts.Add(fluxServiceProvider);
 
-        builder.Services.AddHttpClient(serviceContext.ServiceName, x =>
+        builder.Services.AddHttpClient(fluxServiceProvider.ServiceName, x =>
         {
             var configureHttpClient = builder.HttpClientConfiguration;
             if (configureHttpClient is not null) configureHttpClient(x);
+        });
+
+        builder.Services.AddScoped<IFluxServiceContext>(x =>
+        {
+            return new FluxServiceContext(fluxServiceProvider, x);
         });
 
         return builder;
