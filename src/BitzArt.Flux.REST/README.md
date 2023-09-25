@@ -2,9 +2,9 @@
 
 ## Installation
 
-To use a REST client in your project, add the nuget package:
+To use a REST client in your project, add the nuget package **(The package is currently prerelease)**
 ```
-dotnet add package BitzArt.Flux.REST
+dotnet add package BitzArt.Flux.REST --prerelease
 ```
 
 ## Usage
@@ -73,4 +73,25 @@ Provide variable values when calling an appropriate method:
 var a = "first";
 var b = "second";
 var entity = await entityContext.GetAsync(1, a, b); // Will make an http request to https://test.com/first/second/1
+```
+
+### Custom Page endpoint with parent id example:
+
+Flux configuration:
+```csharp
+services.AddFlux(flux =>
+{
+    flux.AddService("service1")
+    .UsingRest("https://test.com")
+        .AddEntity<Book>()
+        .WithPageEndpoint("authors/{authorId}/books");
+});
+```
+
+Usage:
+```csharp
+var books = fluxContext.Entity<Book>();
+
+var authorId = 15;
+var booksPage = await books.GetPage(0, 10, authorId); // https://test.com/authors/15/books?offset=0&limit=10
 ```
