@@ -28,7 +28,7 @@ public class ServiceRegistrationTests
 
         Assert.ThrowsAny<Exception>(() => services.AddFlux(x => { }));
     }
-    
+
     [Fact]
     public void AddFlux_Empty_AddsCommunicationContext()
     {

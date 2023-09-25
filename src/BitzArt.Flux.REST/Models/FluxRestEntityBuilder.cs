@@ -21,10 +21,10 @@ internal class FluxRestEntityBuilder<TEntity> : IFluxRestEntityBuilder<TEntity>
     public FluxRestEntityOptions<TEntity> EntityOptions { get; set; }
 
     public FluxRestEntityBuilder(IFluxRestServiceBuilder serviceBuilder)
-	{
-		ServiceBuilder = serviceBuilder;
+    {
+        ServiceBuilder = serviceBuilder;
         EntityOptions = new();
-	}
+    }
 }
 
 internal class FluxRestEntityBuilder<TEntity, TKey> : FluxRestEntityBuilder<TEntity>, IFluxRestEntityBuilder<TEntity, TKey>

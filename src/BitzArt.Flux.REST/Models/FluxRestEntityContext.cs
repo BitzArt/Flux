@@ -22,13 +22,13 @@ internal class FluxRestEntityContext<TEntity> : IFluxEntityContext<TEntity>
     internal string GetFullPath(string path, bool handleParameters, object[]? parameters = null)
     {
         if (ServiceOptions.BaseUrl is null) return path;
-        
+
         var p1 = ServiceOptions.BaseUrl.TrimEnd('/');
         var p2 = path.TrimStart('/');
         var result = $"{p1}/{p2}";
 
         if (handleParameters) result = RequestParameterParsingUtility.ParseRequestUrl(_logger, result, parameters);
-        
+
         return result;
     }
 

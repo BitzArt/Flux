@@ -23,7 +23,7 @@ internal class FluxRestServiceProvider : IFluxServiceProvider
         where TEntity : class
     {
         if (options is not FluxRestEntityOptions<TEntity> optionsCasted) throw new Exception("Wrong options type");
-        
+
         var signature = new FluxEntitySignature(typeof(TEntity));
 
         if (_entityOptions.ContainsKey(signature)) throw new EntityAlreadyRegisteredException(nameof(TEntity));
@@ -34,7 +34,7 @@ internal class FluxRestServiceProvider : IFluxServiceProvider
         where TEntity : class
     {
         if (options is not FluxRestEntityOptions<TEntity, TKey> optionsCasted) throw new Exception("Wrong options type");
-        
+
         var signatureFull = new FluxEntitySignature(typeof(TEntity), typeof(TKey));
         var signatureMinimal = new FluxEntitySignature(typeof(TEntity));
 
