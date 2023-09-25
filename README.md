@@ -22,4 +22,4 @@ Once the setup is done, interaction becomes a breeze. With the groundwork laid o
 
 ## Documentation
 
-**Flux.REST**
+[**Flux.REST - installation and usage**](https://github.com/BitzArt/Flux/tree/main/src/BitzArt.Flux.REST#readme)
