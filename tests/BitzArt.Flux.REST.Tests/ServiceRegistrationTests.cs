@@ -26,7 +26,7 @@ public class ServiceRegistrationTests
 
         var serviceProvider = services.BuildServiceProvider();
 
-        var factory = serviceProvider.GetRequiredService<IFluxProvider>();
+        var factory = serviceProvider.GetRequiredService<IFluxFactory>();
         Assert.NotNull(factory);
         Assert.True(factory.ServiceContexts.Count > 0);
 
@@ -138,7 +138,7 @@ public class ServiceRegistrationTests
         Assert.True(service is FluxServiceContext);
 
         var provider = ((FluxServiceContext)service).Provider;
-        Assert.True(provider is FluxRestServiceProvider);
+        Assert.True(provider is FluxRestServiceFactory);
 
         var entityContextFromService = service.Entity<TestEntity>();
         Assert.NotNull(entityContextFromService);

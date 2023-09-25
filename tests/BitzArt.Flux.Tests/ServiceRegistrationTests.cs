@@ -12,7 +12,7 @@ public class ServiceRegistrationTests
         services.AddFlux(x => { });
 
         var serviceProvider = services.BuildServiceProvider();
-        var factory = serviceProvider.GetService<IFluxProvider>();
+        var factory = serviceProvider.GetService<IFluxFactory>();
 
         Assert.NotNull(factory);
         Assert.NotNull(factory.ServiceContexts);
