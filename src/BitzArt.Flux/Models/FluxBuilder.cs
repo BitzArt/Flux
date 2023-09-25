@@ -4,12 +4,12 @@ namespace BitzArt.Flux;
 
 internal class FluxBuilder : IFluxBuilder
 {
-	public IServiceCollection Services { get; private set; }
-	public IFluxServiceFactory Factory { get; init; }
+    public IServiceCollection Services { get; private set; }
+    public IFluxProvider Provider { get; init; }
 
     public FluxBuilder(IServiceCollection services)
-	{
-		Services = services;
-		Factory = new FluxServiceFactory();
-	}
+    {
+        Services = services;
+        Provider = new FluxProvider();
+    }
 }

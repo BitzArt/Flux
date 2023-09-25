@@ -26,12 +26,12 @@ public class ServiceRegistrationTests
 
         var serviceProvider = services.BuildServiceProvider();
 
-        var factory = serviceProvider.GetRequiredService<IFluxServiceFactory>();
+        var factory = serviceProvider.GetRequiredService<IFluxProvider>();
         Assert.NotNull(factory);
-        Assert.True(factory.Providers.Count > 0);
+        Assert.True(factory.ServiceContexts.Count > 0);
 
-        Assert.True(factory.Providers.Count == 1);
-        var provider = factory.Providers.Single();
+        Assert.True(factory.ServiceContexts.Count == 1);
+        var provider = factory.ServiceContexts.Single();
 
         Assert.Equal(serviceName, provider.ServiceName);
 
@@ -99,5 +99,72 @@ public class ServiceRegistrationTests
 
         Assert.True(serializerOptions.WriteIndented);
         Assert.Equal(JsonIgnoreCondition.WhenWritingNull, serializerOptions.DefaultIgnoreCondition);
+    }
+
+    [Fact]
+    public void UsingRest_WithService_AddsServiceContext()
+    {
+        var services = new ServiceCollection();
+
+        services.AddFlux(flux =>
+        {
+            flux.AddService("Service1")
+            .UsingRest("http://localhost")
+            .AddEntity<TestEntity>("test-entity");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var flux = serviceProvider.GetRequiredService<IFluxContext>();
+    }
+
+    [Fact]
+    public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
+    {
+        var services = new ServiceCollection();
+        services.AddFlux(flux =>
+        {
+            flux.AddService("service")
+            .UsingRest("http://localhost")
+                .AddEntity<TestEntity>("test");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var fluxContext = serviceProvider.GetRequiredService<IFluxContext>();
+
+        var service = fluxContext.Service("service");
+        Assert.NotNull(service);
+        Assert.True(service is FluxServiceContext);
+
+        var provider = ((FluxServiceContext)service).Provider;
+        Assert.True(provider is FluxRestServiceProvider);
+
+        var entity = service.Entity<TestEntity>();
+        Assert.NotNull(entity);
+        Assert.True(entity is FluxRestEntityContext<TestEntity>);
+    }
+
+    [Fact]
+    public void AddFlux_GetAllPackageSignatureElementsFromDiContainer_ReturnsAll()
+    {
+        var services = new ServiceCollection();
+        services.AddFlux(flux =>
+        {
+            flux.AddService("service1")
+            .UsingRest("http://localhost1")
+                .AddEntity<TestEntity>("test");
+
+            flux.AddService("service2")
+            .UsingRest("http://localhost2")
+                .AddEntity<TestEntity>("test");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var serviceContexts = serviceProvider.GetRequiredService<IEnumerable<IFluxServiceContext>>();
+        Assert.NotNull(serviceContexts);
+        Assert.True(serviceContexts.Any());
+        Assert.True(serviceContexts.Count() == 2);
     }
 }

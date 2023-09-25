@@ -8,17 +8,17 @@ public static class AddFluxExtension
     {
         var alreadyRegistered = services
             .Any(x => x.Lifetime == ServiceLifetime.Singleton &&
-            x.ServiceType == typeof(IFluxServiceFactory));
+            x.ServiceType == typeof(IFluxProvider));
 
         if (alreadyRegistered) throw new FluxAlreadyRegisteredException();
 
         var builder = new FluxBuilder(services);
         configure(builder);
 
-        var factory = builder.Factory;
-        services.AddSingleton(factory);
+        var provider = builder.Provider;
+        services.AddSingleton(provider);
 
-        services.AddScoped<IFlux>(x => new Flux(x));
+        services.AddScoped<IFluxContext>(x => new FluxContext(provider, x));
 
         return services;
     }

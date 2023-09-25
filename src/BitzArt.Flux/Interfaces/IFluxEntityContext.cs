@@ -2,7 +2,9 @@
 
 namespace BitzArt.Flux;
 
-public interface IFluxEntityContext<TEntity>
+public interface IFluxEntityContext { }
+
+public interface IFluxEntityContext<TEntity> : IFluxEntityContext
     where TEntity : class
 {
     public Task<IEnumerable<TEntity>> GetAllAsync(params object[]? parameters);

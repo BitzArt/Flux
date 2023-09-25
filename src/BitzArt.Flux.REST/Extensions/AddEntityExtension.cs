@@ -9,15 +9,15 @@ public static class AddEntityExtension
     {
         var builder = new FluxRestEntityBuilder<TEntity>(serviceBuilder);
 
-        var services = builder.Services;
-        var provider = builder.Provider;
+        var services = serviceBuilder.Services;
+        var serviceContext = builder.ServiceProvider;
 
-        provider.AddSignature(new(typeof(TEntity)));
+        serviceContext.AddEntity<TEntity>(builder.EntityOptions);
 
         services.AddScoped(x =>
         {
-            var factory = x.GetRequiredService<IFluxServiceFactory>();
-            return factory.GetEntityContext<TEntity>(x, builder.EntityOptions);
+            var factory = x.GetRequiredService<IFluxProvider>();
+            return factory.GetEntityContext<TEntity>(x, serviceContext.ServiceName);
         });
 
         if (endpoint is not null) return builder.WithEndpoint(endpoint);
@@ -31,20 +31,20 @@ public static class AddEntityExtension
         var builder = new FluxRestEntityBuilder<TEntity, TKey>(serviceBuilder);
 
         var services = serviceBuilder.Services;
-        var provider = serviceBuilder.Provider;
+        var serviceContext = serviceBuilder.ServiceProvider;
 
-        provider.AddSignature(new(typeof(TEntity), typeof(TKey)));
+        serviceContext.AddEntity<TEntity, TKey>(builder.EntityOptions);
 
         services.AddScoped(x =>
         {
-            var factory = x.GetRequiredService<IFluxServiceFactory>();
-            return factory.GetEntityContext<TEntity, TKey>(x, builder.EntityOptions);
+            var provider = x.GetRequiredService<IFluxProvider>();
+            return provider.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
         });
 
         services.AddScoped<IFluxEntityContext<TEntity>>(x =>
         {
-            var factory = x.GetRequiredService<IFluxServiceFactory>();
-            return factory.GetEntityContext<TEntity, TKey>(x, builder.EntityOptions);
+            var provider = x.GetRequiredService<IFluxProvider>();
+            return provider.GetEntityContext<TEntity, TKey>(x, serviceContext.ServiceName);
         });
 
         if (endpoint is not null) return builder.WithEndpoint(endpoint);

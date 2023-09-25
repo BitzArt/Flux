@@ -1,15 +1,14 @@
 ﻿namespace BitzArt.Flux;
 
-internal interface IFluxServiceProvider
+public interface IFluxServiceProvider
 {
     internal string ServiceName { get; }
 
-    internal void AddSignature(FluxEntitySignature entitySignature);
-    internal bool ContainsSignature(FluxEntitySignature entitySignature);
+    internal IFluxEntityContext<TEntity> CreateEntityContext<TEntity>(IServiceProvider services) where TEntity : class;
+    internal IFluxEntityContext<TEntity, TKey> CreateEntityContext<TEntity, TKey>(IServiceProvider services) where TEntity : class;
+    internal void AddEntity<TEntity>(object options) where TEntity : class;
+    internal void AddEntity<TEntity, TKey>(object options) where TEntity : class;
 
-    IFluxEntityContext<TEntity> GetEntityContext<TEntity>(IServiceProvider services, object? options)
-        where TEntity : class;
-
-    IFluxEntityContext<TEntity, TKey> GetEntityContext<TEntity, TKey>(IServiceProvider services, object? options)
-        where TEntity : class;
+    internal bool ContainsSignature<TEntity>();
+    internal bool ContainsSignature<TEntity, TKey>();
 }
