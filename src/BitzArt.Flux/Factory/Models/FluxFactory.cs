@@ -16,10 +16,10 @@ internal class FluxFactory : IFluxFactory
         return serviceContext;
     }
 
-    public IFluxEntityContext<TEntity> GetEntityContext<TEntity>(
+    public IFluxModelContext<TModel> GetModelContext<TModel>(
         IServiceProvider services,
         string? serviceName = null)
-        where TEntity : class
+        where TModel : class
     {
         IFluxServiceFactory? serviceContext;
         var q = ServiceContexts.AsQueryable();
@@ -31,19 +31,19 @@ internal class FluxFactory : IFluxFactory
         }
         else
         {
-            var serviceContexts = q.Where(x => x.ContainsSignature<TEntity>()).ToList();
+            var serviceContexts = q.Where(x => x.ContainsSignature<TModel>()).ToList();
             if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
             if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 
-        return serviceContext.CreateEntityContext<TEntity>(services);
+        return serviceContext.CreateModelContext<TModel>(services);
     }
 
-    public IFluxEntityContext<TEntity, TKey> GetEntityContext<TEntity, TKey>(
+    public IFluxModelContext<TModel, TKey> GetModelContext<TModel, TKey>(
         IServiceProvider services,
         string? serviceName = null)
-        where TEntity : class
+        where TModel : class
     {
         IFluxServiceFactory? serviceContext;
         var q = ServiceContexts.AsQueryable();
@@ -55,13 +55,13 @@ internal class FluxFactory : IFluxFactory
         }
         else
         {
-            var serviceContexts = q.Where(x => x.ContainsSignature<TEntity>()).ToList();
+            var serviceContexts = q.Where(x => x.ContainsSignature<TModel>()).ToList();
             if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
             if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 
-        return serviceContext.CreateEntityContext<TEntity, TKey>(services);
+        return serviceContext.CreateModelContext<TModel, TKey>(services);
     }
 }
 

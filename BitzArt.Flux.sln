@@ -22,9 +22,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1CF8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{ABC1CAE6-C4A2-42AB-8F24-9A32299CC512}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Tests.yml = .github\workflows\Tests.yml
 		.github\workflows\Publish Flux.yml = .github\workflows\Publish Flux.yml
+		.github\workflows\Tests.yml = .github\workflows\Tests.yml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{83E6C753-C4C4-4C4E-8627-E9077F557159}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.SampleApp", "sample\BitzArt.Flux.SampleApp\BitzArt.Flux.SampleApp.csproj", "{2D85CE63-7FB6-4D97-81EF-44351A94A883}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +52,10 @@ Global
 		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D85CE63-7FB6-4D97-81EF-44351A94A883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D85CE63-7FB6-4D97-81EF-44351A94A883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D85CE63-7FB6-4D97-81EF-44351A94A883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D85CE63-7FB6-4D97-81EF-44351A94A883}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +66,7 @@ Global
 		{AEA2C975-E99C-4E44-B121-0CF3D4956732} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
 		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
 		{ABC1CAE6-C4A2-42AB-8F24-9A32299CC512} = {1CF88BCF-544C-463E-A639-594ADE0A9F15}
+		{2D85CE63-7FB6-4D97-81EF-44351A94A883} = {83E6C753-C4C4-4C4E-8627-E9077F557159}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}

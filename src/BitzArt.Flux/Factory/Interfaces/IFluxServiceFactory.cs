@@ -4,11 +4,11 @@ public interface IFluxServiceFactory
 {
     internal string ServiceName { get; }
 
-    internal IFluxEntityContext<TEntity> CreateEntityContext<TEntity>(IServiceProvider services) where TEntity : class;
-    internal IFluxEntityContext<TEntity, TKey> CreateEntityContext<TEntity, TKey>(IServiceProvider services) where TEntity : class;
-    internal void AddEntity<TEntity>(object options) where TEntity : class;
-    internal void AddEntity<TEntity, TKey>(object options) where TEntity : class;
+    internal IFluxModelContext<TModel> CreateModelContext<TModel>(IServiceProvider services) where TModel : class;
+    internal IFluxModelContext<TModel, TKey> CreateModelContext<TModel, TKey>(IServiceProvider services) where TModel : class;
+    internal void AddModel<TModel>(object options) where TModel : class;
+    internal void AddModel<TModel, TKey>(object options) where TModel : class;
 
-    internal bool ContainsSignature<TEntity>();
-    internal bool ContainsSignature<TEntity, TKey>();
+    internal bool ContainsSignature<TModel>();
+    internal bool ContainsSignature<TModel, TKey>();
 }

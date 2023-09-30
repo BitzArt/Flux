@@ -2,6 +2,6 @@
 
 public interface IFluxServiceContext
 {
-    public IFluxEntityContext<TEntity, TKey> Entity<TEntity, TKey>() where TEntity : class;
-    public IFluxEntityContext<TEntity> Entity<TEntity>() where TEntity : class;
+    public IFluxModelContext<TModel, TKey> Model<TModel, TKey>() where TModel : class;
+    public IFluxModelContext<TModel> Model<TModel>() where TModel : class;
 }

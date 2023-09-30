@@ -2,66 +2,66 @@
 
 public static class WithIdEndpointExtension
 {
-    public static IFluxRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this IFluxRestEntityBuilder<TEntity> builder, string endpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel> WithIdEndpoint<TModel>(this IFluxRestModelBuilder<TModel> builder, string endpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = (key, parameters) => endpoint;
+        builder.ModelOptions.GetIdEndpointAction = (key, parameters) => endpoint;
 
         return builder;
     }
 
-    public static IFluxRestEntityBuilder<TEntity, TKey> WithIdEndpoint<TEntity, TKey>(this IFluxRestEntityBuilder<TEntity, TKey> builder, string endpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(this IFluxRestModelBuilder<TModel, TKey> builder, string endpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = (key, parameters) => endpoint;
+        builder.ModelOptions.GetIdEndpointAction = (key, parameters) => endpoint;
 
         return builder;
     }
 
-    public static IFluxRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this IFluxRestEntityBuilder<TEntity> builder, Func<string> getEndpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel> WithIdEndpoint<TModel>(this IFluxRestModelBuilder<TModel> builder, Func<string> getEndpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = (key, parameters) => getEndpoint();
+        builder.ModelOptions.GetIdEndpointAction = (key, parameters) => getEndpoint();
 
         return builder;
     }
 
-    public static IFluxRestEntityBuilder<TEntity, TKey> WithIdEndpoint<TEntity, TKey>(this IFluxRestEntityBuilder<TEntity, TKey> builder, Func<string> getEndpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(this IFluxRestModelBuilder<TModel, TKey> builder, Func<string> getEndpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = (key, parameters) => getEndpoint();
+        builder.ModelOptions.GetIdEndpointAction = (key, parameters) => getEndpoint();
 
         return builder;
     }
 
-    public static IFluxRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this IFluxRestEntityBuilder<TEntity> builder, Func<object?, string> getEndpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel> WithIdEndpoint<TModel>(this IFluxRestModelBuilder<TModel> builder, Func<object?, string> getEndpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = (key, parameters) => getEndpoint(key);
+        builder.ModelOptions.GetIdEndpointAction = (key, parameters) => getEndpoint(key);
 
         return builder;
     }
 
-    public static IFluxRestEntityBuilder<TEntity, TKey> WithIdEndpoint<TEntity, TKey>(this IFluxRestEntityBuilder<TEntity, TKey> builder, Func<TKey?, string> getEndpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(this IFluxRestModelBuilder<TModel, TKey> builder, Func<TKey?, string> getEndpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = (key, parameters) => getEndpoint(key);
+        builder.ModelOptions.GetIdEndpointAction = (key, parameters) => getEndpoint(key);
 
         return builder;
     }
 
-    public static IFluxRestEntityBuilder<TEntity> WithIdEndpoint<TEntity>(this IFluxRestEntityBuilder<TEntity> builder, Func<object?, object[]?, string> getEndpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel> WithIdEndpoint<TModel>(this IFluxRestModelBuilder<TModel> builder, Func<object?, object[]?, string> getEndpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = getEndpoint;
+        builder.ModelOptions.GetIdEndpointAction = getEndpoint;
 
         return builder;
     }
 
-    public static IFluxRestEntityBuilder<TEntity, TKey> WithIdEndpoint<TEntity, TKey>(this IFluxRestEntityBuilder<TEntity, TKey> builder, Func<TKey?, object[]?, string> getEndpoint)
-        where TEntity : class
+    public static IFluxRestModelBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(this IFluxRestModelBuilder<TModel, TKey> builder, Func<TKey?, object[]?, string> getEndpoint)
+        where TModel : class
     {
-        builder.EntityOptions.GetIdEndpointAction = getEndpoint;
+        builder.ModelOptions.GetIdEndpointAction = getEndpoint;
 
         return builder;
     }

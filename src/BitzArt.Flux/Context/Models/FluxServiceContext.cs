@@ -11,11 +11,11 @@ internal class FluxServiceContext : IFluxServiceContext
         _serviceProvider = serviceProvider;
     }
 
-    public IFluxEntityContext<TEntity, TKey> Entity<TEntity, TKey>()
-        where TEntity : class
-        => Provider.CreateEntityContext<TEntity, TKey>(_serviceProvider);
+    public IFluxModelContext<TModel, TKey> Model<TModel, TKey>()
+        where TModel : class
+        => Provider.CreateModelContext<TModel, TKey>(_serviceProvider);
 
-    public IFluxEntityContext<TEntity> Entity<TEntity>()
-        where TEntity : class
-        => Provider.CreateEntityContext<TEntity>(_serviceProvider);
+    public IFluxModelContext<TModel> Model<TModel>()
+        where TModel : class
+        => Provider.CreateModelContext<TModel>(_serviceProvider);
 }

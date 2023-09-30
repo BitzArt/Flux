@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace BitzArt.Flux;
 
-file class TestEntity
+file class TestModel
 {
     public int Id { get; set; }
 }
@@ -11,7 +11,7 @@ file class TestEntity
 public class ServiceRegistrationTests
 {
     [Fact]
-    public void UsingRest_WithEntity_AddsFactoryAndEntityContext()
+    public void UsingRest_WithModel_AddsFactoryAndModelContext()
     {
         var services = new ServiceCollection();
 
@@ -21,7 +21,7 @@ public class ServiceRegistrationTests
         {
             flux.AddService(serviceName)
             .UsingRest("http://localhost")
-            .AddEntity<TestEntity, int>("test");
+            .AddModel<TestModel, int>("test");
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -35,8 +35,8 @@ public class ServiceRegistrationTests
 
         Assert.Equal(serviceName, provider.ServiceName);
 
-        var entityContext = serviceProvider.GetRequiredService<IFluxEntityContext<TestEntity, int>>();
-        Assert.NotNull(entityContext);
+        var modelContext = serviceProvider.GetRequiredService<IFluxModelContext<TestModel, int>>();
+        Assert.NotNull(modelContext);
     }
 
     [Fact]
@@ -54,16 +54,16 @@ public class ServiceRegistrationTests
             {
                 client.DefaultRequestHeaders.Add(testHeader.Key, testHeader.Value);
             })
-            .AddEntity<TestEntity, int>("test");
+            .AddModel<TestModel, int>("test");
         });
 
         var serviceProvider = services.BuildServiceProvider();
-        var entityContext = serviceProvider.GetRequiredService<IFluxEntityContext<TestEntity, int>>();
-        Assert.NotNull(entityContext);
+        var modelContext = serviceProvider.GetRequiredService<IFluxModelContext<TestModel, int>>();
+        Assert.NotNull(modelContext);
 
-        var entityContextCasted = (FluxRestEntityContext<TestEntity, int>)entityContext;
+        var modelContextCasted = (FluxRestModelContext<TestModel, int>)modelContext;
 
-        Assert.Contains(entityContextCasted.HttpClient.DefaultRequestHeaders,
+        Assert.Contains(modelContextCasted.HttpClient.DefaultRequestHeaders,
             x => x.Key == testHeader.Key && x.Value.Single() == testHeader.Value);
     }
 
@@ -85,17 +85,17 @@ public class ServiceRegistrationTests
                 x.WriteIndented = true;
                 x.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             })
-            .AddEntity<TestEntity, int>("test");
+            .AddModel<TestModel, int>("test");
         });
 
         Assert.True(configUsed);
 
         var serviceProvider = services.BuildServiceProvider();
-        var entityContext = serviceProvider.GetRequiredService<IFluxEntityContext<TestEntity, int>>();
-        Assert.NotNull(entityContext);
+        var modelContext = serviceProvider.GetRequiredService<IFluxModelContext<TestModel, int>>();
+        Assert.NotNull(modelContext);
 
-        var entityContextCasted = (FluxRestEntityContext<TestEntity, int>)entityContext;
-        var serializerOptions = entityContextCasted.ServiceOptions.SerializerOptions;
+        var modelContextCasted = (FluxRestModelContext<TestModel, int>)modelContext;
+        var serializerOptions = modelContextCasted.ServiceOptions.SerializerOptions;
 
         Assert.True(serializerOptions.WriteIndented);
         Assert.Equal(JsonIgnoreCondition.WhenWritingNull, serializerOptions.DefaultIgnoreCondition);
@@ -110,7 +110,7 @@ public class ServiceRegistrationTests
         {
             flux.AddService("Service1")
             .UsingRest("http://localhost")
-            .AddEntity<TestEntity>("test-entity");
+            .AddModel<TestModel>("test-model");
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -126,7 +126,7 @@ public class ServiceRegistrationTests
         {
             flux.AddService("service")
             .UsingRest("http://localhost")
-                .AddEntity<TestEntity>("test");
+                .AddModel<TestModel>("test");
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -140,13 +140,13 @@ public class ServiceRegistrationTests
         var provider = ((FluxServiceContext)service).Provider;
         Assert.True(provider is FluxRestServiceFactory);
 
-        var entityContextFromService = service.Entity<TestEntity>();
-        Assert.NotNull(entityContextFromService);
-        Assert.True(entityContextFromService is FluxRestEntityContext<TestEntity>);
+        var modelContextFromService = service.Model<TestModel>();
+        Assert.NotNull(modelContextFromService);
+        Assert.True(modelContextFromService is FluxRestModelContext<TestModel>);
 
-        var entityContextFromFluxContext = fluxContext.Entity<TestEntity>();
-        Assert.NotNull(entityContextFromFluxContext);
-        Assert.True(entityContextFromFluxContext is FluxRestEntityContext<TestEntity>);
+        var modelContextFromFluxContext = fluxContext.Model<TestModel>();
+        Assert.NotNull(modelContextFromFluxContext);
+        Assert.True(modelContextFromFluxContext is FluxRestModelContext<TestModel>);
     }
 
     [Fact]
@@ -157,11 +157,11 @@ public class ServiceRegistrationTests
         {
             flux.AddService("service1")
             .UsingRest("http://localhost1")
-                .AddEntity<TestEntity>("test");
+                .AddModel<TestModel>("test");
 
             flux.AddService("service2")
             .UsingRest("http://localhost2")
-                .AddEntity<TestEntity>("test");
+                .AddModel<TestModel>("test");
         });
 
         var serviceProvider = services.BuildServiceProvider();

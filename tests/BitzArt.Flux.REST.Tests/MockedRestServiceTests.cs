@@ -12,22 +12,22 @@ public class MockedRestServiceTests
     [InlineData(10)]
     [InlineData(100)]
     [InlineData(1000)]
-    public async Task GetAllAsync_MockedHttpClient_ReturnsAll(int entityCount)
+    public async Task GetAllAsync_MockedHttpClient_ReturnsAll(int modelCount)
     {
         var baseUrl = "https://mocked.service";
 
-        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
         {
-            x.When($"{baseUrl.TrimEnd('/')}/entity")
+            x.When($"{baseUrl.TrimEnd('/')}/model")
             .Respond(HttpStatusCode.OK,
-            JsonContent.Create(TestEntity.GetAll(entityCount)));
+            JsonContent.Create(TestModel.GetAll(modelCount)));
         });
 
-        var result = await entityContext.GetAllAsync();
+        var result = await modelContext.GetAllAsync();
 
         Assert.NotNull(result);
-        if (entityCount > 0) Assert.True(result.Any());
-        Assert.True(result.Count() == entityCount);
+        if (modelCount > 0) Assert.True(result.Any());
+        Assert.True(result.Count() == modelCount);
     }
 
     [Theory]
@@ -37,25 +37,25 @@ public class MockedRestServiceTests
     [InlineData(1000, 0, 10)]
     [InlineData(10, 5, 10)]
     [InlineData(100, 1, 100)]
-    public async Task GetPageAsync_MockedHttpClient_ReturnsPage(int entityCount, int offset, int limit)
+    public async Task GetPageAsync_MockedHttpClient_ReturnsPage(int modelCount, int offset, int limit)
     {
         var baseUrl = "https://mocked.service";
 
-        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
         {
-            x.When($"{baseUrl.TrimEnd('/')}/entity?offset={offset}&limit={limit}")
+            x.When($"{baseUrl.TrimEnd('/')}/model?offset={offset}&limit={limit}")
             .Respond(HttpStatusCode.OK,
-            JsonContent.Create(TestEntity.GetPage(entityCount, offset, limit)));
+            JsonContent.Create(TestModel.GetPage(modelCount, offset, limit)));
         });
 
-        var result = await entityContext.GetPageAsync(offset, limit);
+        var result = await modelContext.GetPageAsync(offset, limit);
 
         Assert.NotNull(result);
         Assert.NotNull(result.Data);
-        if (offset < entityCount) Assert.True(result.Data.Any());
-        if (offset + limit > entityCount)
+        if (offset < modelCount) Assert.True(result.Data.Any());
+        if (offset + limit > modelCount)
         {
-            var shouldCount = entityCount - offset;
+            var shouldCount = modelCount - offset;
             Assert.Equal(shouldCount, result.Data.Count());
         }
     }
@@ -69,20 +69,20 @@ public class MockedRestServiceTests
     [InlineData("https://mockedservice/test/")]
     [InlineData("https://mockedservice/test")]
     [InlineData("https://mocked.service/second.segment/third.segment/test.test/test/")]
-    public async Task GetAsync_MockedHttpClient_ReturnsEntity(string baseUrl)
+    public async Task GetAsync_MockedHttpClient_ReturnsModel(string baseUrl)
     {
-        var entityCount = 10;
+        var modelCount = 10;
         var id = 1;
 
-        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
         {
-            x.When($"{baseUrl.TrimEnd('/')}/entity/{id}")
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}")
             .Respond(HttpStatusCode.OK,
             JsonContent.Create(
-                TestEntity.GetAll(entityCount).FirstOrDefault(x => x.Id == id)));
+                TestModel.GetAll(modelCount).FirstOrDefault(x => x.Id == id)));
         });
 
-        var result = await entityContext.GetAsync(id);
+        var result = await modelContext.GetAsync(id);
 
         Assert.NotNull(result);
         Assert.Equal(id, result.Id);
@@ -97,22 +97,22 @@ public class MockedRestServiceTests
     [InlineData("https://mockedservice/test/")]
     [InlineData("https://mockedservice/test")]
     [InlineData("https://mocked.service/second.segment/third.segment/test.test/test/")]
-    public async Task GetAsync_CustomIdEndpointLogic_ReturnsEntity(string baseUrl)
+    public async Task GetAsync_CustomIdEndpointLogic_ReturnsModel(string baseUrl)
     {
-        var entityCount = 1;
+        var modelCount = 1;
 
-        var entityContext = TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
         {
-            x.When($"{baseUrl.TrimEnd('/')}/entity/specific")
+            x.When($"{baseUrl.TrimEnd('/')}/model/specific")
             .Respond(HttpStatusCode.OK,
             JsonContent.Create(
-                TestEntity.GetAll(entityCount).FirstOrDefault(x => x.Id == 1)));
+                TestModel.GetAll(modelCount).FirstOrDefault(x => x.Id == 1)));
         });
 
-        ((FluxRestEntityContext<TestEntity>)entityContext)
-            .EntityOptions.GetIdEndpointAction = (key, parameters) => "entity/specific";
+        ((FluxRestModelContext<TestModel>)modelContext)
+            .ModelOptions.GetIdEndpointAction = (key, parameters) => "model/specific";
 
-        var result = await entityContext.GetAsync(1);
+        var result = await modelContext.GetAsync(1);
 
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
@@ -124,33 +124,33 @@ public class MockedRestServiceTests
         var baseUrl = "https://mocked.service";
         var id = 1;
 
-        var database = TestEntity.GetAll(100);
+        var database = TestModel.GetAll(100);
         var changedName = "Changed Name";
-        var defaultEntity = database.First(x => x.Id == id);
-        var defaultName = defaultEntity.Name;
-        var changedEntity = new TestEntity() { Id = id, Name = changedName };
+        var defaultModel = database.First(x => x.Id == id);
+        var defaultName = defaultModel.Name;
+        var changedModel = new TestModel() { Id = id, Name = changedName };
 
-        var entityContext = (FluxRestEntityContext<TestEntity, int>)
-            TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        var modelContext = (FluxRestModelContext<TestModel, int>)
+            TestModelContext.GetTestModelContext(baseUrl, x =>
         {
-            x.When($"{baseUrl.TrimEnd('/')}/entity/{id}?changeName=False")
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}?changeName=False")
             .Respond(HttpStatusCode.OK,
-            JsonContent.Create(defaultEntity));
+            JsonContent.Create(defaultModel));
 
-            x.When($"{baseUrl.TrimEnd('/')}/entity/{id}?changeName=True")
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}?changeName=True")
             .Respond(HttpStatusCode.OK,
-            JsonContent.Create(changedEntity));
+            JsonContent.Create(changedModel));
         });
 
-        entityContext.EntityOptions.GetIdEndpointAction = (id, parameters) =>
+        modelContext.ModelOptions.GetIdEndpointAction = (id, parameters) =>
         {
-            return $"entity/{id}?changeName={parameters!.First()}";
+            return $"model/{id}?changeName={parameters!.First()}";
         };
 
-        var resultWithParameterFalse = await entityContext.GetAsync(id, false);
+        var resultWithParameterFalse = await modelContext.GetAsync(id, false);
         Assert.Equal(defaultName, resultWithParameterFalse.Name);
 
-        var resultWithParameterTrue = await entityContext.GetAsync(id, true);
+        var resultWithParameterTrue = await modelContext.GetAsync(id, true);
         Assert.Equal(changedName, resultWithParameterTrue.Name);
     }
 
@@ -159,17 +159,17 @@ public class MockedRestServiceTests
     {
         var baseUrl = "https://mocked.service";
 
-        var entityContext = (FluxRestEntityContext<TestEntity, int>)
-            TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        var modelContext = (FluxRestModelContext<TestModel, int>)
+            TestModelContext.GetTestModelContext(baseUrl, x =>
             {
                 x.When($"{baseUrl.TrimEnd('/')}/test-1?offset=0&limit=10")
                 .Respond(HttpStatusCode.OK,
-                JsonContent.Create(TestEntity.GetPage(100, 0, 10)));
+                JsonContent.Create(TestModel.GetPage(100, 0, 10)));
             });
 
-        entityContext.EntityOptions.Endpoint = "test-{number}";
+        modelContext.ModelOptions.Endpoint = "test-{number}";
 
-        var result = await entityContext.GetPageAsync(0, 10, 1);
+        var result = await modelContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
         Assert.True(result.Data!.Count() == 10);
     }
@@ -179,17 +179,17 @@ public class MockedRestServiceTests
     {
         var baseUrl = "https://mocked.service";
 
-        var entityContext = (FluxRestEntityContext<TestEntity, int>)
-            TestEntityContext.GetTestEntityContext(baseUrl, x =>
+        var modelContext = (FluxRestModelContext<TestModel, int>)
+            TestModelContext.GetTestModelContext(baseUrl, x =>
             {
-                x.When($"{baseUrl.TrimEnd('/')}/1/entities?offset=0&limit=10")
+                x.When($"{baseUrl.TrimEnd('/')}/1/models?offset=0&limit=10")
                 .Respond(HttpStatusCode.OK,
-                JsonContent.Create(TestEntity.GetPage(100, 0, 10)));
+                JsonContent.Create(TestModel.GetPage(100, 0, 10)));
             });
 
-        entityContext.EntityOptions.PageEndpoint = "{parentId}/entities";
+        modelContext.ModelOptions.PageEndpoint = "{parentId}/models";
 
-        var result = await entityContext.GetPageAsync(0, 10, 1);
+        var result = await modelContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
         Assert.True(result.Data!.Count() == 10);
     }

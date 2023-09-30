@@ -7,7 +7,7 @@ internal class FluxRestServiceFactory : IFluxServiceFactory
 {
     private readonly FluxRestServiceOptions _serviceOptions;
 
-    private readonly IDictionary<FluxEntitySignature, object> _entityOptions;
+    private readonly IDictionary<FluxModelSignature, object> _modelOptions;
 
     public string ServiceName { get; private set; }
 
@@ -16,99 +16,99 @@ internal class FluxRestServiceFactory : IFluxServiceFactory
         _serviceOptions = options;
         ServiceName = serviceName;
 
-        _entityOptions = new Dictionary<FluxEntitySignature, object>();
+        _modelOptions = new Dictionary<FluxModelSignature, object>();
     }
 
-    public void AddEntity<TEntity>(object options)
-        where TEntity : class
+    public void AddModel<TModel>(object options)
+        where TModel : class
     {
-        if (options is not FluxRestEntityOptions<TEntity> optionsCasted) throw new Exception("Wrong options type");
+        if (options is not FluxRestModelOptions<TModel> optionsCasted) throw new Exception("Wrong options type");
 
-        var signature = new FluxEntitySignature(typeof(TEntity));
+        var signature = new FluxModelSignature(typeof(TModel));
 
-        if (_entityOptions.ContainsKey(signature)) throw new EntityAlreadyRegisteredException(nameof(TEntity));
-        _entityOptions.Add(signature, optionsCasted);
+        if (_modelOptions.ContainsKey(signature)) throw new ModelAlreadyRegisteredException(nameof(TModel));
+        _modelOptions.Add(signature, optionsCasted);
     }
 
-    public void AddEntity<TEntity, TKey>(object options)
-        where TEntity : class
+    public void AddModel<TModel, TKey>(object options)
+        where TModel : class
     {
-        if (options is not FluxRestEntityOptions<TEntity, TKey> optionsCasted) throw new Exception("Wrong options type");
+        if (options is not FluxRestModelOptions<TModel, TKey> optionsCasted) throw new Exception("Wrong options type");
 
-        var signatureFull = new FluxEntitySignature(typeof(TEntity), typeof(TKey));
-        var signatureMinimal = new FluxEntitySignature(typeof(TEntity));
+        var signatureFull = new FluxModelSignature(typeof(TModel), typeof(TKey));
+        var signatureMinimal = new FluxModelSignature(typeof(TModel));
 
-        if (_entityOptions.ContainsKey(signatureFull)) throw new EntityAlreadyRegisteredException(nameof(TEntity));
-        _entityOptions.Add(signatureFull, optionsCasted);
-        if (_entityOptions.ContainsKey(signatureMinimal)) throw new EntityAlreadyRegisteredException(nameof(TEntity));
-        _entityOptions.Add(signatureMinimal, optionsCasted);
+        if (_modelOptions.ContainsKey(signatureFull)) throw new ModelAlreadyRegisteredException(nameof(TModel));
+        _modelOptions.Add(signatureFull, optionsCasted);
+        if (_modelOptions.ContainsKey(signatureMinimal)) throw new ModelAlreadyRegisteredException(nameof(TModel));
+        _modelOptions.Add(signatureMinimal, optionsCasted);
     }
 
-    private FluxRestEntityOptions<TEntity> GetOptions<TEntity>()
-        where TEntity : class
+    private FluxRestModelOptions<TModel> GetOptions<TModel>()
+        where TModel : class
     {
-        var signature = new FluxEntitySignature(typeof(TEntity));
-        var found = _entityOptions.TryGetValue(signature, out var options);
-        if (!found) throw new EntityConfigurationNotFoundException();
-        return (FluxRestEntityOptions<TEntity>)options!;
+        var signature = new FluxModelSignature(typeof(TModel));
+        var found = _modelOptions.TryGetValue(signature, out var options);
+        if (!found) throw new ModelConfigurationNotFoundException();
+        return (FluxRestModelOptions<TModel>)options!;
     }
 
-    private FluxRestEntityOptions<TEntity, TKey> GetOptions<TEntity, TKey>()
-        where TEntity : class
+    private FluxRestModelOptions<TModel, TKey> GetOptions<TModel, TKey>()
+        where TModel : class
     {
-        var signature = new FluxEntitySignature(typeof(TEntity), typeof(TKey));
-        var found = _entityOptions.TryGetValue(signature, out var options);
-        if (!found) throw new EntityConfigurationNotFoundException();
-        return (FluxRestEntityOptions<TEntity, TKey>)options!;
+        var signature = new FluxModelSignature(typeof(TModel), typeof(TKey));
+        var found = _modelOptions.TryGetValue(signature, out var options);
+        if (!found) throw new ModelConfigurationNotFoundException();
+        return (FluxRestModelOptions<TModel, TKey>)options!;
     }
 
-    public bool ContainsSignature<TEntity>()
+    public bool ContainsSignature<TModel>()
     {
-        var signature = new FluxEntitySignature(typeof(TEntity));
-        return _entityOptions.ContainsKey(signature);
+        var signature = new FluxModelSignature(typeof(TModel));
+        return _modelOptions.ContainsKey(signature);
     }
 
-    public bool ContainsSignature<TEntity, TKey>()
+    public bool ContainsSignature<TModel, TKey>()
     {
-        var signature = new FluxEntitySignature(typeof(TEntity), typeof(TKey));
-        return _entityOptions.ContainsKey(signature);
+        var signature = new FluxModelSignature(typeof(TModel), typeof(TKey));
+        return _modelOptions.ContainsKey(signature);
     }
 
-    public IFluxEntityContext<TEntity> CreateEntityContext<TEntity>(IServiceProvider services)
-        where TEntity : class
-    {
-        var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
-        var httpClient = httpClientFactory.CreateClient(ServiceName);
-        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger("Flux");
-
-        var options = GetOptions<TEntity>();
-
-        return new FluxRestEntityContext<TEntity>(httpClient, _serviceOptions, logger, options);
-    }
-
-    public IFluxEntityContext<TEntity, TKey> CreateEntityContext<TEntity, TKey>(IServiceProvider services)
-        where TEntity : class
+    public IFluxModelContext<TModel> CreateModelContext<TModel>(IServiceProvider services)
+        where TModel : class
     {
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ServiceName);
         var loggerFactory = services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger("Flux");
 
-        var options = GetOptions<TEntity, TKey>();
+        var options = GetOptions<TModel>();
 
-        return new FluxRestEntityContext<TEntity, TKey>(httpClient, _serviceOptions, logger, options);
+        return new FluxRestModelContext<TModel>(httpClient, _serviceOptions, logger, options);
+    }
+
+    public IFluxModelContext<TModel, TKey> CreateModelContext<TModel, TKey>(IServiceProvider services)
+        where TModel : class
+    {
+        var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
+        var httpClient = httpClientFactory.CreateClient(ServiceName);
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("Flux");
+
+        var options = GetOptions<TModel, TKey>();
+
+        return new FluxRestModelContext<TModel, TKey>(httpClient, _serviceOptions, logger, options);
     }
 }
 
-file class EntityConfigurationNotFoundException : Exception
+file class ModelConfigurationNotFoundException : Exception
 {
-    public EntityConfigurationNotFoundException() : base("Requested Entity Configuration was not found.")
+    public ModelConfigurationNotFoundException() : base("Requested Model Configuration was not found.")
     { }
 }
 
-file class EntityAlreadyRegisteredException : Exception
+file class ModelAlreadyRegisteredException : Exception
 {
-    public EntityAlreadyRegisteredException(string name) : base($"Flux Entity {name} was already registered previously")
+    public ModelAlreadyRegisteredException(string name) : base($"Flux Model {name} was already registered previously")
     { }
 }

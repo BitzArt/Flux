@@ -2,8 +2,8 @@
 
 namespace BitzArt.Flux;
 
-internal class FluxRestEntityBuilder<TEntity> : IFluxRestEntityBuilder<TEntity>
-    where TEntity : class
+internal class FluxRestModelBuilder<TModel> : IFluxRestModelBuilder<TModel>
+    where TModel : class
 {
     public IFluxRestServiceBuilder ServiceBuilder { get; init; }
 
@@ -18,22 +18,22 @@ internal class FluxRestEntityBuilder<TEntity> : IFluxRestEntityBuilder<TEntity>
         set => ServiceBuilder.HttpClientConfiguration = value;
     }
 
-    public FluxRestEntityOptions<TEntity> EntityOptions { get; set; }
+    public FluxRestModelOptions<TModel> ModelOptions { get; set; }
 
-    public FluxRestEntityBuilder(IFluxRestServiceBuilder serviceBuilder)
+    public FluxRestModelBuilder(IFluxRestServiceBuilder serviceBuilder)
     {
         ServiceBuilder = serviceBuilder;
-        EntityOptions = new();
+        ModelOptions = new();
     }
 }
 
-internal class FluxRestEntityBuilder<TEntity, TKey> : FluxRestEntityBuilder<TEntity>, IFluxRestEntityBuilder<TEntity, TKey>
-    where TEntity : class
+internal class FluxRestModelBuilder<TModel, TKey> : FluxRestModelBuilder<TModel>, IFluxRestModelBuilder<TModel, TKey>
+    where TModel : class
 {
-    public new FluxRestEntityOptions<TEntity, TKey> EntityOptions { get; set; }
+    public new FluxRestModelOptions<TModel, TKey> ModelOptions { get; set; }
 
-    public FluxRestEntityBuilder(IFluxRestServiceBuilder serviceBuilder) : base(serviceBuilder)
+    public FluxRestModelBuilder(IFluxRestServiceBuilder serviceBuilder) : base(serviceBuilder)
     {
-        EntityOptions = new();
+        ModelOptions = new();
     }
 }

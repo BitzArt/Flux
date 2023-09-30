@@ -6,9 +6,9 @@ internal interface IFluxFactory
 
     internal IFluxServiceFactory GetServiceProvider(string name);
 
-    internal IFluxEntityContext<TEntity> GetEntityContext<TEntity>(IServiceProvider services, string? serviceName = null)
-        where TEntity : class;
+    internal IFluxModelContext<TModel> GetModelContext<TModel>(IServiceProvider services, string? serviceName = null)
+        where TModel : class;
 
-    internal IFluxEntityContext<TEntity, TKey> GetEntityContext<TEntity, TKey>(IServiceProvider services, string? serviceName = null)
-        where TEntity : class;
+    internal IFluxModelContext<TModel, TKey> GetModelContext<TModel, TKey>(IServiceProvider services, string? serviceName = null)
+        where TModel : class;
 }

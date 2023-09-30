@@ -1,7 +1,7 @@
 ﻿namespace BitzArt.Flux;
 
-public class FluxRestEntityOptions<TEntity>
-    where TEntity : class
+public class FluxRestModelOptions<TModel>
+    where TModel : class
 {
     public string? Endpoint { get; set; }
     public string? PageEndpoint { get; set; }
@@ -12,14 +12,14 @@ public class FluxRestEntityOptions<TEntity>
         set => _getIdEndpointAction = value;
     }
 
-    public FluxRestEntityOptions()
+    public FluxRestModelOptions()
     {
         GetIdEndpointAction = null;
     }
 }
 
-public class FluxRestEntityOptions<TEntity, TKey> : FluxRestEntityOptions<TEntity>
-    where TEntity : class
+public class FluxRestModelOptions<TModel, TKey> : FluxRestModelOptions<TModel>
+    where TModel : class
 {
     public new Func<TKey?, object[]?, string>? GetIdEndpointAction
     {
@@ -39,7 +39,7 @@ public class FluxRestEntityOptions<TEntity, TKey> : FluxRestEntityOptions<TEntit
         }
     }
 
-    public FluxRestEntityOptions()
+    public FluxRestModelOptions()
     {
         GetIdEndpointAction = null;
     }
