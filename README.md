@@ -2,6 +2,9 @@
 
 **Flux** is a universal WebAPI Client. It introduces an intuitive way for your software to communicate with external systems, whether they use REST, SOAP, or some other communication standard.
 
+> ℹ️
+> Note: BitzArt.Flux has no relation to the [Flux Architecture](https://www.freecodecamp.org/news/an-introduction-to-the-flux-architectural-pattern-674ea74775c9/) proposed by facebook. BitzArt.Flux is a WebAPI Client, and not a state management library. BitzArt.Flux can work in conjunction with state management libraries inspired by Flux Architecture, such as [Redux](https://redux.js.org/), [Fluxor](https://github.com/mrpmorris/Fluxor), and others.
+
 **1. Easy Setup: Configure Once, Use Anywhere**
 
 Start by setting up the configuration. Instead of dealing with the intricacies of each external service, configure everything in one place. Define communication rules, endpoints, and other essentials. This step keeps your domain code clean and free from the complexities of different services and communication methods.
