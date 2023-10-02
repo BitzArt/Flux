@@ -15,14 +15,14 @@ internal class Program
         {
             x.AddService("library-api")
             .UsingRest("http://your-backend-url")
+
             .AddSet<Author>()
                 .WithEndpoint("authors")
+
             .AddSet<Book>()
                 .WithEndpoint("books")
-                .WithPageEndpoint("authors/{authorId}/books");
+                .WithPageEndpoint("authors/{authorId}/books")
 
-            x.AddService("library-api")
-            .UsingRest("http://your-backend-url")
             .ConfigureHttpClient(client =>
             {
                 client.DefaultRequestHeaders.Add("X-Api-Key", "MyApiKey");
