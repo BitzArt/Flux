@@ -13,9 +13,19 @@ internal class TestController : ControllerBase
     }
 
     [HttpGet]
+    public async Task<IActionResult> GetBooksForAuthorAsync(int authorId)
+    {
+        var offset = 0;
+        var limit = 10;
+        var page = await _flux.Set<Book>().GetPageAsync(offset, limit, authorId);
+        return Ok(page);
+    }
+
+    [HttpGet]
     public async Task<IActionResult> GetBookAsync()
     {
-        var book = await _flux.Set<Book>().GetAsync(1);
+        var id = 1;
+        var book = await _flux.Set<Book>().GetAsync(id);
 
         return Ok(book);
     }
