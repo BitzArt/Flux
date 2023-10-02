@@ -11,11 +11,11 @@ internal class FluxServiceContext : IFluxServiceContext
         _serviceProvider = serviceProvider;
     }
 
-    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>()
+    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? name = null)
         where TModel : class
-        => Provider.CreateSetContext<TModel, TKey>(_serviceProvider);
+        => Provider.CreateSetContext<TModel, TKey>(_serviceProvider, name);
 
-    public IFluxSetContext<TModel> Set<TModel>()
+    public IFluxSetContext<TModel> Set<TModel>(string? name = null)
         where TModel : class
-        => Provider.CreateSetContext<TModel>(_serviceProvider);
+        => Provider.CreateSetContext<TModel>(_serviceProvider, name);
 }
