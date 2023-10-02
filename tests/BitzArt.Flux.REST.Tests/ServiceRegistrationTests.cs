@@ -216,4 +216,22 @@ public class ServiceRegistrationTests
             var setNoNameFromFlux = flux.Set<TestModel>();
         });
     }
+
+    [Fact]
+    public void AddSet_SameModelTwiceNoName_Throws()
+    {
+        var services = new ServiceCollection();
+
+        services.AddFlux(flux =>
+        {
+            var builder = flux.AddService("service1").UsingRest();
+
+            builder.AddSet<TestModel>();
+
+            Assert.Throws<SetAlreadyRegisteredException>(() =>
+            {
+                builder.AddSet<TestModel>();
+            });
+        });
+    }
 }
