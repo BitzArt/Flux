@@ -2,9 +2,9 @@
 
 namespace BitzArt.Flux;
 
-public interface IFluxModelContext { }
+public interface IFluxSetContext { }
 
-public interface IFluxModelContext<TModel> : IFluxModelContext
+public interface IFluxSetContext<TModel> : IFluxSetContext
     where TModel : class
 {
     public Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters);
@@ -13,7 +13,7 @@ public interface IFluxModelContext<TModel> : IFluxModelContext
     public Task<TModel> GetAsync(object? id, params object[]? parameters);
 }
 
-public interface IFluxModelContext<TModel, TKey> : IFluxModelContext<TModel>
+public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
     where TModel : class
 {
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters);

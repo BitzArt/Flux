@@ -5,18 +5,18 @@ using System.Web;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestModelContext<TModel> : IFluxModelContext<TModel>
+internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
     where TModel : class
 {
     internal readonly HttpClient HttpClient;
     internal readonly FluxRestServiceOptions ServiceOptions;
     internal readonly ILogger _logger;
 
-    protected FluxRestModelOptions<TModel> _modelOptions;
-    internal virtual FluxRestModelOptions<TModel> ModelOptions
+    protected FluxRestSetOptions<TModel> _setOptions;
+    internal virtual FluxRestSetOptions<TModel> SetOptions
     {
-        get => _modelOptions;
-        set => _modelOptions = value;
+        get => _setOptions;
+        set => _setOptions = value;
     }
 
     internal RequestUrlParameterParsingResult GetFullPath(string path, bool handleParameters, object[]? parameters = null)
@@ -51,21 +51,21 @@ internal class FluxRestModelContext<TModel> : IFluxModelContext<TModel>
 
     private class KeyNotFoundException : Exception
     {
-        private static readonly string Msg = $"Unable to find TKey for type '{typeof(TModel).Name}'. Consider specifying a key when registering the model.";
+        private static readonly string Msg = $"Unable to find TKey for type '{typeof(TModel).Name}'. Consider specifying a key when registering the set.";
         public KeyNotFoundException() : base(Msg) { }
     }
 
-    public FluxRestModelContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestModelOptions<TModel> modelOptions)
+    public FluxRestSetContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel> setOptions)
     {
         HttpClient = httpClient;
         ServiceOptions = serviceOptions;
         _logger = logger;
-        _modelOptions = modelOptions;
+        _setOptions = setOptions;
     }
 
     public virtual async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        var path = ModelOptions.Endpoint is not null ? ModelOptions.Endpoint : string.Empty;
+        var path = SetOptions.Endpoint is not null ? SetOptions.Endpoint : string.Empty;
         var parse = GetFullPath(path, true, parameters);
 
         _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
@@ -105,9 +105,9 @@ internal class FluxRestModelContext<TModel> : IFluxModelContext<TModel>
 
     public virtual async Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
-        if (ModelOptions.GetIdEndpointAction is null) throw new KeyNotFoundException();
+        if (SetOptions.GetIdEndpointAction is null) throw new KeyNotFoundException();
 
-        var idEndpoint = ModelOptions.GetIdEndpointAction(id, parameters);
+        var idEndpoint = SetOptions.GetIdEndpointAction(id, parameters);
         var parse = GetFullPath(idEndpoint, false);
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id is not null ? id.ToString() : "_", parse.Result, parse.Log);
 
@@ -119,33 +119,33 @@ internal class FluxRestModelContext<TModel> : IFluxModelContext<TModel>
 
     protected string GetPageEndpoint()
     {
-        if (ModelOptions.PageEndpoint is not null) return ModelOptions.PageEndpoint;
+        if (SetOptions.PageEndpoint is not null) return SetOptions.PageEndpoint;
         return GetEndpoint();
     }
 
     protected string GetEndpoint()
     {
-        if (ModelOptions.Endpoint is null) return string.Empty;
-        return ModelOptions.Endpoint;
+        if (SetOptions.Endpoint is null) return string.Empty;
+        return SetOptions.Endpoint;
     }
 }
 
-internal class FluxRestModelContext<TModel, TKey> : FluxRestModelContext<TModel>, IFluxModelContext<TModel, TKey>
+internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IFluxSetContext<TModel, TKey>
     where TModel : class
 {
-    internal new FluxRestModelOptions<TModel, TKey> ModelOptions
+    internal new FluxRestSetOptions<TModel, TKey> SetOptions
     {
-        get => (FluxRestModelOptions<TModel, TKey>)_modelOptions;
+        get => (FluxRestSetOptions<TModel, TKey>)_setOptions;
         set
         {
-            _modelOptions = value;
+            _setOptions = value;
         }
     }
 
-    public FluxRestModelContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestModelOptions<TModel, TKey> modelOptions)
-        : base(httpClient, serviceOptions, logger, modelOptions)
+    public FluxRestSetContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel, TKey> setOptions)
+        : base(httpClient, serviceOptions, logger, setOptions)
     {
-        ModelOptions = modelOptions;
+        SetOptions = setOptions;
     }
 
     public override Task<TModel> GetAsync(object? id, params object[]? parameters) => GetAsync((TKey?)id, parameters);
@@ -155,13 +155,13 @@ internal class FluxRestModelContext<TModel, TKey> : FluxRestModelContext<TModel>
         string idEndpoint;
 
         bool handleParameters = false;
-        if (ModelOptions.GetIdEndpointAction is not null)
+        if (SetOptions.GetIdEndpointAction is not null)
         {
-            idEndpoint = ModelOptions.GetIdEndpointAction(id, parameters);
+            idEndpoint = SetOptions.GetIdEndpointAction(id, parameters);
         }
         else
         {
-            idEndpoint = ModelOptions.Endpoint is not null ? Path.Combine(ModelOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
+            idEndpoint = SetOptions.Endpoint is not null ? Path.Combine(SetOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
             handleParameters = true;
         }
         var parse = GetFullPath(idEndpoint, handleParameters, parameters);

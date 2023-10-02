@@ -2,6 +2,6 @@
 
 public interface IFluxServiceContext
 {
-    public IFluxModelContext<TModel, TKey> Model<TModel, TKey>() where TModel : class;
-    public IFluxModelContext<TModel> Model<TModel>() where TModel : class;
+    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? name = null) where TModel : class;
+    public IFluxSetContext<TModel> Set<TModel>(string? name = null) where TModel : class;
 }

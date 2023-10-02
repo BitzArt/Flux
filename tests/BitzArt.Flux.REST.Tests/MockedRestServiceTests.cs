@@ -12,22 +12,22 @@ public class MockedRestServiceTests
     [InlineData(10)]
     [InlineData(100)]
     [InlineData(1000)]
-    public async Task GetAllAsync_MockedHttpClient_ReturnsAll(int modelCount)
+    public async Task GetAllAsync_MockedHttpClient_ReturnsAll(int setCount)
     {
         var baseUrl = "https://mocked.service";
 
-        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
         {
             x.When($"{baseUrl.TrimEnd('/')}/model")
             .Respond(HttpStatusCode.OK,
-            JsonContent.Create(TestModel.GetAll(modelCount)));
+            JsonContent.Create(TestModel.GetAll(setCount)));
         });
 
-        var result = await modelContext.GetAllAsync();
+        var result = await setContext.GetAllAsync();
 
         Assert.NotNull(result);
-        if (modelCount > 0) Assert.True(result.Any());
-        Assert.True(result.Count() == modelCount);
+        if (setCount > 0) Assert.True(result.Any());
+        Assert.True(result.Count() == setCount);
     }
 
     [Theory]
@@ -37,25 +37,25 @@ public class MockedRestServiceTests
     [InlineData(1000, 0, 10)]
     [InlineData(10, 5, 10)]
     [InlineData(100, 1, 100)]
-    public async Task GetPageAsync_MockedHttpClient_ReturnsPage(int modelCount, int offset, int limit)
+    public async Task GetPageAsync_MockedHttpClient_ReturnsPage(int setCount, int offset, int limit)
     {
         var baseUrl = "https://mocked.service";
 
-        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
         {
             x.When($"{baseUrl.TrimEnd('/')}/model?offset={offset}&limit={limit}")
             .Respond(HttpStatusCode.OK,
-            JsonContent.Create(TestModel.GetPage(modelCount, offset, limit)));
+            JsonContent.Create(TestModel.GetPage(setCount, offset, limit)));
         });
 
-        var result = await modelContext.GetPageAsync(offset, limit);
+        var result = await setContext.GetPageAsync(offset, limit);
 
         Assert.NotNull(result);
         Assert.NotNull(result.Data);
-        if (offset < modelCount) Assert.True(result.Data.Any());
-        if (offset + limit > modelCount)
+        if (offset < setCount) Assert.True(result.Data.Any());
+        if (offset + limit > setCount)
         {
-            var shouldCount = modelCount - offset;
+            var shouldCount = setCount - offset;
             Assert.Equal(shouldCount, result.Data.Count());
         }
     }
@@ -74,7 +74,7 @@ public class MockedRestServiceTests
         var modelCount = 10;
         var id = 1;
 
-        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
         {
             x.When($"{baseUrl.TrimEnd('/')}/model/{id}")
             .Respond(HttpStatusCode.OK,
@@ -82,7 +82,7 @@ public class MockedRestServiceTests
                 TestModel.GetAll(modelCount).FirstOrDefault(x => x.Id == id)));
         });
 
-        var result = await modelContext.GetAsync(id);
+        var result = await setContext.GetAsync(id);
 
         Assert.NotNull(result);
         Assert.Equal(id, result.Id);
@@ -101,7 +101,7 @@ public class MockedRestServiceTests
     {
         var modelCount = 1;
 
-        var modelContext = TestModelContext.GetTestModelContext(baseUrl, x =>
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
         {
             x.When($"{baseUrl.TrimEnd('/')}/model/specific")
             .Respond(HttpStatusCode.OK,
@@ -109,10 +109,10 @@ public class MockedRestServiceTests
                 TestModel.GetAll(modelCount).FirstOrDefault(x => x.Id == 1)));
         });
 
-        ((FluxRestModelContext<TestModel>)modelContext)
-            .ModelOptions.GetIdEndpointAction = (key, parameters) => "model/specific";
+        ((FluxRestSetContext<TestModel>)setContext)
+            .SetOptions.GetIdEndpointAction = (key, parameters) => "model/specific";
 
-        var result = await modelContext.GetAsync(1);
+        var result = await setContext.GetAsync(1);
 
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
@@ -130,8 +130,8 @@ public class MockedRestServiceTests
         var defaultName = defaultModel.Name;
         var changedModel = new TestModel() { Id = id, Name = changedName };
 
-        var modelContext = (FluxRestModelContext<TestModel, int>)
-            TestModelContext.GetTestModelContext(baseUrl, x =>
+        var setContext = (FluxRestSetContext<TestModel, int>)
+            TestSetContext.GetTestSetContext(baseUrl, x =>
         {
             x.When($"{baseUrl.TrimEnd('/')}/model/{id}?changeName=False")
             .Respond(HttpStatusCode.OK,
@@ -142,15 +142,15 @@ public class MockedRestServiceTests
             JsonContent.Create(changedModel));
         });
 
-        modelContext.ModelOptions.GetIdEndpointAction = (id, parameters) =>
+        setContext.SetOptions.GetIdEndpointAction = (id, parameters) =>
         {
             return $"model/{id}?changeName={parameters!.First()}";
         };
 
-        var resultWithParameterFalse = await modelContext.GetAsync(id, false);
+        var resultWithParameterFalse = await setContext.GetAsync(id, false);
         Assert.Equal(defaultName, resultWithParameterFalse.Name);
 
-        var resultWithParameterTrue = await modelContext.GetAsync(id, true);
+        var resultWithParameterTrue = await setContext.GetAsync(id, true);
         Assert.Equal(changedName, resultWithParameterTrue.Name);
     }
 
@@ -159,17 +159,17 @@ public class MockedRestServiceTests
     {
         var baseUrl = "https://mocked.service";
 
-        var modelContext = (FluxRestModelContext<TestModel, int>)
-            TestModelContext.GetTestModelContext(baseUrl, x =>
+        var setContext = (FluxRestSetContext<TestModel, int>)
+            TestSetContext.GetTestSetContext(baseUrl, x =>
             {
                 x.When($"{baseUrl.TrimEnd('/')}/test-1?offset=0&limit=10")
                 .Respond(HttpStatusCode.OK,
                 JsonContent.Create(TestModel.GetPage(100, 0, 10)));
             });
 
-        modelContext.ModelOptions.Endpoint = "test-{number}";
+        setContext.SetOptions.Endpoint = "test-{number}";
 
-        var result = await modelContext.GetPageAsync(0, 10, 1);
+        var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
         Assert.True(result.Data!.Count() == 10);
     }
@@ -179,17 +179,17 @@ public class MockedRestServiceTests
     {
         var baseUrl = "https://mocked.service";
 
-        var modelContext = (FluxRestModelContext<TestModel, int>)
-            TestModelContext.GetTestModelContext(baseUrl, x =>
+        var setContext = (FluxRestSetContext<TestModel, int>)
+            TestSetContext.GetTestSetContext(baseUrl, x =>
             {
-                x.When($"{baseUrl.TrimEnd('/')}/1/models?offset=0&limit=10")
+                x.When($"{baseUrl.TrimEnd('/')}/1/test?offset=0&limit=10")
                 .Respond(HttpStatusCode.OK,
                 JsonContent.Create(TestModel.GetPage(100, 0, 10)));
             });
 
-        modelContext.ModelOptions.PageEndpoint = "{parentId}/models";
+        setContext.SetOptions.PageEndpoint = "{parentId}/test";
 
-        var result = await modelContext.GetPageAsync(0, 10, 1);
+        var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
         Assert.True(result.Data!.Count() == 10);
     }

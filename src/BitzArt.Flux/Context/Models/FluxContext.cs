@@ -14,11 +14,11 @@ internal class FluxContext : IFluxContext
     public IFluxServiceContext Service(string serviceName)
         => new FluxServiceContext(_factory.GetServiceProvider(serviceName), _serviceProvider);
 
-    public IFluxModelContext<TModel, TKey> Model<TModel, TKey>(string? serviceName = null)
+    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? service = null, string? set = null)
         where TModel : class
-        => _factory.GetModelContext<TModel, TKey>(_serviceProvider, serviceName);
+        => _factory.GetSetContext<TModel, TKey>(_serviceProvider, service, set);
 
-    public IFluxModelContext<TModel> Model<TModel>(string? serviceName = null)
+    public IFluxSetContext<TModel> Set<TModel>(string? service = null, string? set = null)
         where TModel : class
-        => _factory.GetModelContext<TModel>(_serviceProvider, serviceName);
+        => _factory.GetSetContext<TModel>(_serviceProvider, service, set);
 }

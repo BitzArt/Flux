@@ -16,9 +16,10 @@ internal class FluxFactory : IFluxFactory
         return serviceContext;
     }
 
-    public IFluxModelContext<TModel> GetModelContext<TModel>(
+    public IFluxSetContext<TModel> GetSetContext<TModel>(
         IServiceProvider services,
-        string? serviceName = null)
+        string? serviceName = null,
+        string? setName = null)
         where TModel : class
     {
         IFluxServiceFactory? serviceContext;
@@ -31,18 +32,19 @@ internal class FluxFactory : IFluxFactory
         }
         else
         {
-            var serviceContexts = q.Where(x => x.ContainsSignature<TModel>()).ToList();
+            var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
             if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
             if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 
-        return serviceContext.CreateModelContext<TModel>(services);
+        return serviceContext.CreateSetContext<TModel>(services, setName);
     }
 
-    public IFluxModelContext<TModel, TKey> GetModelContext<TModel, TKey>(
+    public IFluxSetContext<TModel, TKey> GetSetContext<TModel, TKey>(
         IServiceProvider services,
-        string? serviceName = null)
+        string? serviceName = null,
+        string? setName = null)
         where TModel : class
     {
         IFluxServiceFactory? serviceContext;
@@ -55,24 +57,24 @@ internal class FluxFactory : IFluxFactory
         }
         else
         {
-            var serviceContexts = q.Where(x => x.ContainsSignature<TModel>()).ToList();
+            var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
             if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
             if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 
-        return serviceContext.CreateModelContext<TModel, TKey>(services);
+        return serviceContext.CreateSetContext<TModel, TKey>(services, setName);
     }
 }
 
-file class FluxServiceProviderNotFoundException : Exception
+internal class FluxServiceProviderNotFoundException : Exception
 {
     public FluxServiceProviderNotFoundException()
         : base("Requested Flux Service Provider was not found.")
     { }
 }
 
-file class MultipleFluxServiceProviderFoundException : Exception
+internal class MultipleFluxServiceProviderFoundException : Exception
 {
     public MultipleFluxServiceProviderFoundException()
         : base("Multiple matching Flux Service Providers were found.")

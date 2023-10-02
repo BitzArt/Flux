@@ -1,4 +1,4 @@
-# Flux.REST
+﻿# Flux.REST
 
 ## Installation
 
@@ -16,41 +16,53 @@ services.AddFlux(flux =>
 {
     flux.AddService("service1")     // Give your external service a specific name
     .UsingRest("https://test.com")  // External service's base url
-        .AddModel<YourModel>()      // Adds an Model of a specific type
-        .WithEndpoint("model");    // Model endpoint : https://test.com/model
+    .AddSet<YourModel>()            // Adds a Set for a specific model
+        .WithEndpoint("model");     // Set endpoint : https://test.com/model
 });
 ```
 ### Use IFluxContext in your app
 
 1. Resolve `IFluxContext` from your DI container
+
 ```csharp
 serviceProvider.GetRequiredService<IFluxContext>();
 ```
-2. Get your model context
+
+2. Get your set context
+
 ```csharp
-var modelContext = fluxContext.Model<YourModel>()
+// Resolve the Set directly
+var setContext = fluxContext.Set<YourModel>();
+
+// Or specify the external service
+var setContext = fluxContext.Service("service1").Set<YourModel>();
 ```
-3. Use the IModelContext to interact with this model:
+
+> ℹ️
+> Selecting a specific service can be useful in situations where you have multiple external services configured with the same model types.
+
+3. Use the SetContext to interact with this Set:
+
 ```csharp
-var model = await modelContext.GetAsync(1); // Will make an http request to https://test.com/model/1
+var model = await setContext.GetAsync(1); // Will make an http request to https://test.com/model/1
 
-var list = await modelContext.GetAllAsync(); // Will make an http request to https://test.com/model
+var list = await setContext.GetAllAsync(); // Will make an http request to https://test.com/model
 
-var page = await modelContext.GetPageAsync(0, 10); // Will make an http request to https://test.com/model?offset=0&limit=10
+var page = await setContext.GetPageAsync(0, 10); // Will make an http request to https://test.com/model?offset=0&limit=10
 ```
 
 ## Advanced scenarios
 
-### Model endpoint configuration
+### Configuring endpoints
 
 ```csharp
-WithEndpoint("your-model-endpoint") // Sets the model REST endpoint, e.g. https://test.com/your-model-endpoint
+WithEndpoint("your-set-endpoint") // Configures the REST endpoint, e.g. https://test.com/your-set-endpoint
 ```
 ```csharp
-WithIdEndpoint((key) => $"something/{key}") // Sets the model ID endpoint, e.g. https://test.com/something/1
+WithIdEndpoint((key) => $"something/{key}") // Configures the ID endpoint, e.g. https://test.com/something/1
 ```
 ```csharp
-WithPageEndpoint("your-page-endpoint") // Sets the model Page endpoint, e.g. https://test.com/your-page-endpoint
+WithPageEndpoint("your-page-endpoint") // Configures the Page endpoint, e.g. https://test.com/your-page-endpoint
 ```
 
 ### Custom variables
@@ -62,7 +74,7 @@ services.AddFlux(flux =>
 {
     flux.AddService("service1")
     .UsingRest("https://test.com")
-        .AddModel<YourModel>()
+    .AddSet<YourModel>()
         .WithEndpoint("{a}/{b}");
 });
 ```
@@ -72,7 +84,7 @@ Provide variable values when calling an appropriate method:
 ```csharp
 var a = "first";
 var b = "second";
-var model = await modelContext.GetAsync(1, a, b); // Will make an http request to https://test.com/first/second/1
+var result = await setContext.GetAsync(1, a, b); // Will make an http request to https://test.com/first/second/1
 ```
 
 ### Custom Page endpoint with parent id example:
@@ -83,14 +95,14 @@ services.AddFlux(flux =>
 {
     flux.AddService("service1")
     .UsingRest("https://test.com")
-        .AddModel<Book>()
+    .AddSet<Book>()
         .WithPageEndpoint("authors/{authorId}/books");
 });
 ```
 
 Usage:
 ```csharp
-var books = fluxContext.Model<Book>();
+var books = fluxContext.Set<Book>();
 
 var authorId = 15;
 var booksPage = await books.GetPage(0, 10, authorId); // https://test.com/authors/15/books?offset=0&limit=10

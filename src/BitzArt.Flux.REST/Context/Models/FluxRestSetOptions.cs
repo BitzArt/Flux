@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-public class FluxRestModelOptions<TModel>
+public class FluxRestSetOptions<TModel>
     where TModel : class
 {
     public string? Endpoint { get; set; }
@@ -12,13 +12,13 @@ public class FluxRestModelOptions<TModel>
         set => _getIdEndpointAction = value;
     }
 
-    public FluxRestModelOptions()
+    public FluxRestSetOptions()
     {
         GetIdEndpointAction = null;
     }
 }
 
-public class FluxRestModelOptions<TModel, TKey> : FluxRestModelOptions<TModel>
+public class FluxRestSetOptions<TModel, TKey> : FluxRestSetOptions<TModel>
     where TModel : class
 {
     public new Func<TKey?, object[]?, string>? GetIdEndpointAction
@@ -39,7 +39,7 @@ public class FluxRestModelOptions<TModel, TKey> : FluxRestModelOptions<TModel>
         }
     }
 
-    public FluxRestModelOptions()
+    public FluxRestSetOptions()
     {
         GetIdEndpointAction = null;
     }
