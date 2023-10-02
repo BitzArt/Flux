@@ -16,7 +16,7 @@ services.AddFlux(flux =>
 {
     flux.AddService("service1")     // Give your external service a specific name
     .UsingRest("https://test.com")  // External service's base url
-    .AddSet<YourModel>()        // Adds a Set for a specific model
+    .AddSet<YourModel>()            // Adds a Set for a specific model
         .WithEndpoint("model");     // Set endpoint : https://test.com/model
 });
 ```
