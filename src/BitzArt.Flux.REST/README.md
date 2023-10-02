@@ -16,7 +16,7 @@ services.AddFlux(flux =>
 {
     flux.AddService("service1")     // Give your external service a specific name
     .UsingRest("https://test.com")  // External service's base url
-        .AddSet<YourModel>()        // Adds an Set of a specific model
+        .AddSet<YourModel>()        // Adds a Set for a specific model
         .WithEndpoint("model");     // Set endpoint : https://test.com/model
 });
 ```
@@ -34,7 +34,7 @@ serviceProvider.GetRequiredService<IFluxContext>();
 // Resolve the Set directly
 var setContext = fluxContext.Set<YourModel>();
 
-// Or specify an external service
+// Or specify the external service
 var setContext = fluxContext.Service("service1").Set<YourModel>();
 ```
 
@@ -74,7 +74,7 @@ services.AddFlux(flux =>
 {
     flux.AddService("service1")
     .UsingRest("https://test.com")
-        .AddSet<YourModel>()
+    .AddSet<YourModel>()
         .WithEndpoint("{a}/{b}");
 });
 ```
@@ -84,7 +84,7 @@ Provide variable values when calling an appropriate method:
 ```csharp
 var a = "first";
 var b = "second";
-var model = await setContext.GetAsync(1, a, b); // Will make an http request to https://test.com/first/second/1
+var result = await setContext.GetAsync(1, a, b); // Will make an http request to https://test.com/first/second/1
 ```
 
 ### Custom Page endpoint with parent id example:
