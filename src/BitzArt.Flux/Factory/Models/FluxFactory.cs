@@ -16,7 +16,7 @@ internal class FluxFactory : IFluxFactory
         return serviceContext;
     }
 
-    public IFluxModelContext<TModel> GetModelContext<TModel>(
+    public IFluxSetContext<TModel> GetSetContext<TModel>(
         IServiceProvider services,
         string? serviceName = null)
         where TModel : class
@@ -37,10 +37,10 @@ internal class FluxFactory : IFluxFactory
             serviceContext = serviceContexts.First();
         }
 
-        return serviceContext.CreateModelContext<TModel>(services);
+        return serviceContext.CreateSetContext<TModel>(services);
     }
 
-    public IFluxModelContext<TModel, TKey> GetModelContext<TModel, TKey>(
+    public IFluxSetContext<TModel, TKey> GetSetContext<TModel, TKey>(
         IServiceProvider services,
         string? serviceName = null)
         where TModel : class
@@ -61,7 +61,7 @@ internal class FluxFactory : IFluxFactory
             serviceContext = serviceContexts.First();
         }
 
-        return serviceContext.CreateModelContext<TModel, TKey>(services);
+        return serviceContext.CreateSetContext<TModel, TKey>(services);
     }
 }
 

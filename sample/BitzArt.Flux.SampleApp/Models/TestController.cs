@@ -15,7 +15,7 @@ internal class TestController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetBookAsync()
     {
-        var book = await _flux.Model<Book>().GetAsync(1);
+        var book = await _flux.Set<Book>().GetAsync(1);
 
         return Ok(book);
     }

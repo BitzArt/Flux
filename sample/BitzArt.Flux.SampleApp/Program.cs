@@ -15,9 +15,9 @@ internal class Program
         {
             x.AddService("library-api")
             .UsingRest("http://your-backend-url")
-            .AddModel<Author>()
+            .AddSet<Author>()
                 .WithEndpoint("authors")
-            .AddModel<Book>()
+            .AddSet<Book>()
                 .WithEndpoint("books")
                 .WithPageEndpoint("authors/{authorId}/books");
 

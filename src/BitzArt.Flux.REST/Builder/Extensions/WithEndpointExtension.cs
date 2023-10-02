@@ -2,18 +2,18 @@
 
 public static class WithEndpointExtension
 {
-    public static IFluxRestModelBuilder<TModel> WithEndpoint<TModel>(this IFluxRestModelBuilder<TModel> builder, string endpoint)
+    public static IFluxRestSetBuilder<TModel> WithEndpoint<TModel>(this IFluxRestSetBuilder<TModel> builder, string endpoint)
         where TModel : class
     {
-        builder.ModelOptions.Endpoint = endpoint;
+        builder.SetOptions.Endpoint = endpoint;
 
         return builder;
     }
 
-    public static IFluxRestModelBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(this IFluxRestModelBuilder<TModel, TKey> builder, string endpoint)
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string endpoint)
         where TModel : class
     {
-        builder.ModelOptions.Endpoint = endpoint;
+        builder.SetOptions.Endpoint = endpoint;
 
         return builder;
     }
