@@ -4,6 +4,8 @@ Back to [repository](../README.md)
 
 BitzArt.Flux is a nuget package that simplifies interactions with external services.
 
+Welcome to Flux 👋
+
 ## **Benefits**
 
 **1. Easy Setup: Configure Once, Use Anywhere**
