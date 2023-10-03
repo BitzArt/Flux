@@ -2,7 +2,7 @@
 
 👋 Welcome to Flux - a nuget package that simplifies interactions with external services.
 
-## Flux Implementations:
+## Implementations:
 
 Refer to your implementation of choice (yep, there's only one for now):
 
