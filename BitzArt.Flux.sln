@@ -28,7 +28,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{83E6C753-C4C4-4C4E-8627-E9077F557159}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.SampleApp", "sample\BitzArt.Flux.SampleApp\BitzArt.Flux.SampleApp.csproj", "{2D85CE63-7FB6-4D97-81EF-44351A94A883}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.SampleApp", "sample\BitzArt.Flux.SampleApp\BitzArt.Flux.SampleApp.csproj", "{2D85CE63-7FB6-4D97-81EF-44351A94A883}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3B30211C-1646-4F19-9D4D-3C90443C4DD7}"
+	ProjectSection(SolutionItems) = preProject
+		docs\README.md = docs\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rest", "rest", "{8958EC8C-442F-4431-B947-CFCCC420B135}"
+	ProjectSection(SolutionItems) = preProject
+		docs\rest\1.introduction.md = docs\rest\1.introduction.md
+		docs\rest\2.endpoints.md = docs\rest\2.endpoints.md
+		docs\rest\3.variables.md = docs\rest\3.variables.md
+		docs\rest\4.pagination.md = docs\rest\4.pagination.md
+		docs\rest\README.md = docs\rest\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +81,7 @@ Global
 		{6A90BCF4-FB3B-4B4A-A992-3D288972B4AF} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
 		{ABC1CAE6-C4A2-42AB-8F24-9A32299CC512} = {1CF88BCF-544C-463E-A639-594ADE0A9F15}
 		{2D85CE63-7FB6-4D97-81EF-44351A94A883} = {83E6C753-C4C4-4C4E-8627-E9077F557159}
+		{8958EC8C-442F-4431-B947-CFCCC420B135} = {3B30211C-1646-4F19-9D4D-3C90443C4DD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}
