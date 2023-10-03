@@ -1,16 +1,20 @@
-# Flux documentation
+# Flux
 
-**Benefits**
+Back to [repository](../README.md)
+
+BitzArt.Flux is a .NET package that simplifies interactions with external services. It's a practical implementation of the Dependency Inversion principle.
+
+## **Benefits**
 
 **1. Easy Setup: Configure Once, Use Anywhere**
 
-	Start by setting up the configuration. Instead of dealing with the intricacies of each external service, configure everything in one place. Define communication rules, endpoints, and other essentials. This step keeps your domain code clean and free from the complexities of different services and communication methods.
+Start by setting up the configuration. Instead of dealing with the intricacies of each external service, configure everything in one place. Define communication rules, endpoints, and other essentials. This step keeps your domain code clean and free from the complexities of different services and communication methods.
 
 **2. Natural Interaction: Forget Protocols, Focus on Results**
 
-	Once the setup is done, interaction becomes a breeze. With the groundwork laid out, you can focus on getting things done. Fetch data, send updates, or perform other tasks without worrying about HTTP, REST, SOAP, or any other protocol. **Flux** handles the technicalities seamlessly in the background.
+Once the setup is done, interaction becomes a breeze. With the groundwork laid out, you can focus on getting things done. Fetch data, send updates, or perform other tasks without worrying about HTTP, REST, SOAP, or any other protocol. **Flux** handles the technicalities seamlessly in the background.
 
-**Key Features:**
+## **Key Features:**
 
 - **Practical Abstraction:** **Flux** simplifies your workflow by making interactions with external services straightforward. It's not tied to any specific technology – its goal is to make your work easier.
 
