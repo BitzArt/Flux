@@ -1,4 +1,4 @@
-﻿# Flux.REST documentation
+﻿# Flux.REST
 
 Back to [**Flux**](../README.md)
 
