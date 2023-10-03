@@ -1,10 +1,6 @@
 # Flux
 
-Back to [repository](../README.md)
-
-BitzArt.Flux is a nuget package that simplifies interactions with external services.
-
-Welcome to Flux 👋
+👋 Welcome to Flux - a nuget package that simplifies interactions with external services.
 
 ## **Benefits**
 
