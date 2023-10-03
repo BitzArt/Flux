@@ -2,7 +2,7 @@
 
 Back to [repository](../README.md)
 
-BitzArt.Flux is a .NET package that simplifies interactions with external services. It's a practical implementation of the Dependency Inversion principle.
+BitzArt.Flux is a nuget package that simplifies interactions with external services.
 
 ## **Benefits**
 
