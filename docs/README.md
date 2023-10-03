@@ -2,6 +2,12 @@
 
 👋 Welcome to Flux - a nuget package that simplifies interactions with external services.
 
+## Flux Implementations:
+
+Refer to your implementation of choice (yep, there's only one for now):
+
+- [**Flux.REST**](rest/1.introduction.md)
+  
 ## **Benefits**
 
 **1. Easy Setup: Configure Once, Use Anywhere**
@@ -21,9 +27,3 @@ Once the setup is done, interaction becomes a breeze. With the groundwork laid o
 - **Flexible Services:** Your code working with external dependencies follows a unified approach. The package manages the intricacies behind the scenes. Switching from one service to another or adapting to different protocols becomes hassle-free. The configuration takes care of the adaptation, sparing your code from unnecessary complexities.
 
 - **Developer-Focused:** This package is designed to save you time and effort. It's all about enhancing simplicity in your work and making coding a more enjoyable experience.
-
-## Flux Implementations:
-
-Refer to your implementation of choice (yep, there's only one for now):
-
-- [**Flux.REST**](rest/1.introduction.md)
