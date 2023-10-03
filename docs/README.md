@@ -26,8 +26,6 @@ Once the setup is done, interaction becomes a breeze. With the groundwork laid o
 
 ## Flux Implementations:
 
-Refer to your implementation of choice:
+Refer to your implementation of choice (yep, there's only one for now):
 
-(Yep, there's only one for now)
-
-[**Flux.REST**](rest/1.introduction.md)
+- [**Flux.REST**](rest/1.introduction.md)
