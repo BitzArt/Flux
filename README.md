@@ -1,8 +1,8 @@
 ![Tests](https://github.com/BitzArt/OCPI.Net/actions/workflows/Tests.yml/badge.svg)
 
-![Prerelease](https://img.shields.io/badge/prerelease%2C_work_in_progress-ffa624?style=for-the-badge)
-
 ## Overview
+
+![Prerelease](https://img.shields.io/badge/prerelease%2C_work_in_progress-ffa624?style=for-the-badge)
 
 **Flux** is a universal WebAPI Client. It introduces an intuitive way for your software to communicate with external systems, whether they use REST, SOAP, or some other communication standard.
 
