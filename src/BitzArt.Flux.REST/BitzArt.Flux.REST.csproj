@@ -14,13 +14,12 @@
 		<RepositoryUrl>https://github.com/BitzArt/Flux</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/BitzArt/Flux</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>flux-logo-128.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+		<None Include="..\..\assets\flux-logo-128.png" Pack="True" Visible="False" PackagePath="\" />
+		<None Include="README.md" Pack="True" Visible="False" PackagePath="\" />
 	</ItemGroup>
 	
 	<ItemGroup>
