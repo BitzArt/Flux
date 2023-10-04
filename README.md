@@ -1,6 +1,6 @@
 ![Tests](https://github.com/BitzArt/OCPI.Net/actions/workflows/Tests.yml/badge.svg)
 
-⚠️ **PRELEASE, Work In Progress** ⚠️
+![Prerelease](https://img.shields.io/badge/prerelease%2C_work_in_progress-fcc624?style=for-the-badge)
 
 ## Overview
 
@@ -13,7 +13,9 @@ Refer to the [documentation](https://github.com/BitzArt/Flux/blob/main/docs/READ
 
 ## Resources
 
-[![Documentation](https://img.shields.io/badge/flux_documentation-512BD4?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/README.md)
+[![Documentation](https://img.shields.io/badge/documentation%3A_flux-%230072C6?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/README.md)
+
+[![Documentation](https://img.shields.io/badge/documentation%3A_flux.rest-512BD4?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/rest/1.introduction.md)
 
 ## License
 
