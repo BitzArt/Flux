@@ -6,7 +6,11 @@
 
 Flux is an abstraction between your application and external services. It allows you to interact with external services in a simple and consistent way.
 
+## The goal
+
 The goal of Flux is to remove the necessity of worrying about the implementation details of external services and to allow you to focus on your application's logic.
+
+## The Main Principle
 
 The main principle behind the development of Flux is the [**Dependency Inversion Principle**](https://en.wikipedia.org/wiki/Dependency_inversion_principle), which states that your domain logic should not depend on the implementation details of external services, but rather on abstractions.
 
