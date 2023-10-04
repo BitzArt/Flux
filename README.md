@@ -1,6 +1,6 @@
 ![Tests](https://github.com/BitzArt/OCPI.Net/actions/workflows/Tests.yml/badge.svg)
 
-![Prerelease](https://img.shields.io/badge/prerelease%2C_work_in_progress-fcc624?style=for-the-badge)
+![Prerelease](https://img.shields.io/badge/prerelease%2C_work_in_progress-ffa624?style=for-the-badge)
 
 ## Overview
 
