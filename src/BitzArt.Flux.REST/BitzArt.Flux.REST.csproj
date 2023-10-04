@@ -19,7 +19,7 @@
 
 	<ItemGroup>
 		<None Include="..\..\assets\flux-logo-128.png" Pack="True" Visible="False" PackagePath="\" />
-		<None Include="README.md" Pack="True" Visible="False" PackagePath="\" />
+		<None Include="..\..\README.md" Pack="True" Visible="False" PackagePath="\" />
 	</ItemGroup>
 	
 	<ItemGroup>
