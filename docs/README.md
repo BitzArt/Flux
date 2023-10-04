@@ -28,4 +28,4 @@ The main principle behind the development of Flux is the [**Dependency Inversion
 
 Refer to your implementation of choice (there's only one for now):
 
-- [**Flux.REST**](rest/1.introduction.md) - A REST client implementation for Flux
+- [**Flux.REST**](rest/1.introduction.md) - A REST WebAPI client implementation
