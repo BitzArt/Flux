@@ -1,29 +1,27 @@
 # Flux
 
 👋 Welcome to Flux - a nuget package that simplifies interactions with external services.
-
-## Implementations:
-
-Refer to your implementation of choice (yep, there's only one for now):
-
-- [**Flux.REST**](rest/1.introduction.md)
   
-## **Benefits**
+## What is Flux?
 
-**1. Easy Setup: Configure Once, Use Anywhere**
+Flux is an abstraction between your application and external services. It allows you to interact with external services in a simple and consistent way.
 
-Start by setting up the configuration. Instead of dealing with the intricacies of each external service, configure everything in one place. Define communication rules, endpoints, and other essentials. This step keeps your domain code clean and free from the complexities of different services and communication methods.
+The goal of Flux is to remove the necessity of worrying about the implementation details of external services and to allow you to focus on your application's logic.
 
-**2. Natural Interaction: Forget Protocols, Focus on Results**
+The main principle behind the development of Flux is the [**Dependency Inversion Principle**](https://en.wikipedia.org/wiki/Dependency_inversion_principle), which states that your domain logic should not depend on the implementation details of external services, but rather on abstractions.
 
-Once the setup is done, interaction becomes a breeze. With the groundwork laid out, you can focus on getting things done. Fetch data, send updates, or perform other tasks without worrying about HTTP, REST, SOAP, or any other protocol. **Flux** handles the technicalities seamlessly in the background.
+## Flux is designed to be:
 
-## **Key Features:**
+- **Easy to use** - Flux provides a simple and intuitive API for interacting with external services.
 
-- **Practical Abstraction:** **Flux** simplifies your workflow by making interactions with external services straightforward. It's not tied to any specific technology – its goal is to make your work easier.
+- **Configurable** - Flux is highly configurable and can be easily adapted to your needs.
 
-- **Cleaner Code:** Maintain a clean and organized codebase. With the configuration handling the heavy lifting, your interactions remain consistent and easy to manage. This is Dependency Inversion at it's finest.
+- **Extendable** - Flux is built with extensibility in mind. You can easily add your own implementations of Flux's core components.
 
-- **Flexible Services:** Your code working with external dependencies follows a unified approach. The package manages the intricacies behind the scenes. Switching from one service to another or adapting to different protocols becomes hassle-free. The configuration takes care of the adaptation, sparing your code from unnecessary complexities.
+- **Testable** - Flux is built with testability in mind. You can easily mock Flux's components to test your applications.
 
-- **Developer-Focused:** This package is designed to save you time and effort. It's all about enhancing simplicity in your work and making coding a more enjoyable experience.
+## Flux Implementations:
+
+Refer to your implementation of choice (there's only one for now):
+
+- [**Flux.REST**](rest/1.introduction.md) - A REST client implementation for Flux
