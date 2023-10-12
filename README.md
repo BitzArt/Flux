@@ -15,7 +15,7 @@ Refer to the [documentation](https://github.com/BitzArt/Flux/blob/main/docs/01.i
 
 **Documentation**
 
-[![documentation-flux](https://img.shields.io/badge/documentation%3A_flux-%230072C6?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/01.introduction.md) [![documentation-flux-rest](https://img.shields.io/badge/documentation%3A_flux.rest-512BD4?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/rest/1.introduction.md)
+[![documentation-flux](https://img.shields.io/badge/documentation%3A_flux-%230072C6?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/01.introduction.md) [![documentation-flux-rest](https://img.shields.io/badge/documentation%3A_flux.rest-512BD4?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/rest/01.introduction.md)
 
 **Nuget**
 

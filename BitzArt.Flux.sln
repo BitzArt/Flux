@@ -37,10 +37,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3B30211C-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rest", "rest", "{8958EC8C-442F-4431-B947-CFCCC420B135}"
 	ProjectSection(SolutionItems) = preProject
-		docs\rest\1.introduction.md = docs\rest\1.introduction.md
-		docs\rest\2.endpoints.md = docs\rest\2.endpoints.md
-		docs\rest\3.variables.md = docs\rest\3.variables.md
-		docs\rest\4.pagination.md = docs\rest\4.pagination.md
+		docs\rest\01.introduction.md = docs\rest\01.introduction.md
+		docs\rest\02.endpoints.md = docs\rest\02.endpoints.md
+		docs\rest\03.variables.md = docs\rest\03.variables.md
+		docs\rest\04.pagination.md = docs\rest\04.pagination.md
 		docs\rest\README.md = docs\rest\README.md
 	EndProjectSection
 EndProject
