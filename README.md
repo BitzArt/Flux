@@ -9,13 +9,13 @@
 > ℹ️
 > This package has no relation to the [Flux SPA Architecture](https://www.freecodecamp.org/news/an-introduction-to-the-flux-architectural-pattern-674ea74775c9/) proposed by facebook. This is a WebAPI Client, and not a state management library. BitzArt.Flux can successfully work in conjunction with state management libraries inspired by Flux Architecture, such as [Redux](https://redux.js.org/), [Fluxor](https://github.com/mrpmorris/Fluxor), and others.
 
-Refer to the [documentation](https://github.com/BitzArt/Flux/blob/main/docs/01.introduction.md) for more information.
+Refer to the [documentation](https://bitzart.github.io/Flux/01.introduction.html) for more information.
 
 ## Resources
 
 **Documentation**
 
-[![documentation-flux](https://img.shields.io/badge/documentation%3A_flux-%230072C6?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/01.introduction.md) [![documentation-flux-rest](https://img.shields.io/badge/documentation%3A_flux.rest-512BD4?style=for-the-badge)](https://github.com/BitzArt/Flux/blob/main/docs/rest/01.introduction.md)
+[![documentation-flux](https://img.shields.io/badge/documentation%3A_flux-%230072C6?style=for-the-badge)](https://bitzart.github.io/Flux/01.introduction.html) [![documentation-flux-rest](https://img.shields.io/badge/documentation%3A_flux.rest-512BD4?style=for-the-badge)](https://bitzart.github.io/Flux/rest/01.introduction.html)
 
 **Nuget**
 

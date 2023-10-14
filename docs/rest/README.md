@@ -1,6 +1,10 @@
-﻿# Flux.REST
+﻿<span class="breadcrumbs">
+    <a href="../">Flux</a> &gt;
+    <a href="../04.implementations.html">Flux Implementations</a> &gt;
+    <a href="./">Flux.REST</a>
+</span>
 
-Back to [**Flux**](../README.md)
+---
 
 ## Table of Contents
 

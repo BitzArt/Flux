@@ -1,6 +1,8 @@
-# Flux
+<span class="breadcrumbs">
+    <a href="./">Flux</a>
+</span>
 
-Back to [**Code**](../README.md)
+---
 
 ## Table of Contents
 
@@ -20,3 +22,4 @@ Back to [**Code**](../README.md)
     - [Using external services](03.use.md#using-external-services)
     - [Working with multiple Sets of the same type](03.use.md#working-with-multiple-sets-of-the-same-type)
 4. [Flux Implementations](04.implementations.md)
+    - [Flux.REST](rest/01.introduction.md)
