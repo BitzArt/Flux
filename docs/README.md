@@ -1,5 +1,5 @@
 <span class="breadcrumbs">
-    <a href="./">Flux</a> &gt;
+    <a href="./">Flux</a>
 </span>
 
 ---
