@@ -5,6 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>BitzArt.Flux</RootNamespace>
+
+        <PackageId>BitzArt.Flux.Json</PackageId>
+        <Authors>BitzArt</Authors>
+        <Description>Flux - Json data source implementation</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/BitzArt/Flux</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/BitzArt/Flux</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>flux-logo-128.png</PackageIcon>
     </PropertyGroup>
 
     <ItemGroup>

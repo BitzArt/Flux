@@ -9,6 +9,8 @@ public class ServiceRegistrationTests
     public void UsingJson_WithModel_AddsFactoryAndSetContext()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
+        
         const string serviceName = "service1";
 
         services.AddFlux(flux =>
@@ -37,6 +39,8 @@ public class ServiceRegistrationTests
     public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
+        
         const string serviceName = "service1";
 
         services.AddFlux(flux =>
@@ -69,6 +73,7 @@ public class ServiceRegistrationTests
     public void AddFlux2Services_GetServiceContextsFromDiContainer_Returns()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         
         services.AddFlux(flux =>
         {
@@ -93,7 +98,8 @@ public class ServiceRegistrationTests
     public void AddSet_SameModelDifferentNames_Configures()
     {
         var services = new ServiceCollection();
-
+        services.AddLogging();
+        
         services.AddFlux(flux =>
         {
             flux.AddService("service1")
@@ -138,7 +144,8 @@ public class ServiceRegistrationTests
     public void AddSet_SameModelTwiceNoName_Throws()
     {
         var services = new ServiceCollection();
-
+        services.AddLogging();
+        
         services.AddFlux(flux =>
         {
             var builder = flux.AddService("service1").UsingJson("Data")
@@ -155,6 +162,8 @@ public class ServiceRegistrationTests
     public void UsingJson_WithJsonConfiguration_Configures()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
+        
         const string serviceName = "service1";
 
         services.AddFlux(flux =>
