@@ -5,10 +5,5 @@ namespace BitzArt.Flux;
 public class FluxJsonServiceOptions
 {
     public string? BaseUrl { get; set; }
-    public JsonSerializerOptions SerializerOptions { get; set; }
-
-    public FluxJsonServiceOptions()
-    {
-        SerializerOptions = new JsonSerializerOptions();
-    }
+    public JsonSerializerOptions SerializerOptions { get; set; } = new();
 }

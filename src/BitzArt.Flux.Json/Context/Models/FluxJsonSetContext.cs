@@ -20,19 +20,19 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         _setOptions = setOptions;
     }
     
-    public virtual Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
+    public virtual async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items);
+        return await Task.FromResult<IEnumerable<TModel>>(SetOptions.Items);
     }
 
     public virtual async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(SetOptions.Items.ToPage(offset, limit));
     }
 
     public virtual async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
-        throw new NotImplementedException();
+       return await Task.FromResult(SetOptions.Items.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
     }
 
     public virtual async Task<TModel> GetAsync(object? id, params object[]? parameters)
