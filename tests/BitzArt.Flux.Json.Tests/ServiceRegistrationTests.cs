@@ -16,7 +16,7 @@ public class ServiceRegistrationTests
     public void UsingJson_WithModel_AddsFactoryAndSetContext()
     {
         var services = new ServiceCollection();
-        const string serviceName = nameof(UsingJson_WithModel_AddsFactoryAndSetContext);
+        const string serviceName = "service1";
 
         services.AddFlux(flux =>
         {
@@ -50,18 +50,12 @@ public class ServiceRegistrationTests
     public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
     {
         var services = new ServiceCollection();
-        const string serviceName = nameof(AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll);
+        const string serviceName = "service1";
 
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson("Data", json =>
-                {
-                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    json.Converters.Add(new JsonStringEnumConverter());
-                    json.WriteIndented = true;
-                })
+                .UsingJson("Data")
                 .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
         });
 
@@ -92,23 +86,11 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService("service1")
-                .UsingJson("Data", json =>
-                {
-                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    json.Converters.Add(new JsonStringEnumConverter());
-                    json.WriteIndented = true;
-                })
+                .UsingJson("Data")
                 .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
             
             flux.AddService("service2")
-                .UsingJson("Data", json =>
-                {
-                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    json.Converters.Add(new JsonStringEnumConverter());
-                    json.WriteIndented = true;
-                })
+                .UsingJson("Data")
                 .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
         });
 
