@@ -93,7 +93,7 @@ public static class AddSetExtension
 internal class JsonFileReadException : Exception
 {
     public JsonFileReadException(string path, Exception innerException)
-        : base($"Error reading JSON from file {path}, see inner exception for details", innerException)
+        : base($"Error reading JSON from file '{path}'. See inner exception for details", innerException)
     { }
 }
     
