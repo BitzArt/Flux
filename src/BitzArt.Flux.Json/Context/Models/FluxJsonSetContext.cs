@@ -20,24 +20,35 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         _setOptions = setOptions;
     }
     
-    public virtual async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
+    public virtual Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        return await Task.FromResult<IEnumerable<TModel>>(SetOptions.Items);
+        return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items);
     }
 
-    public virtual async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
+    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
     {
-        return await Task.FromResult(SetOptions.Items.ToPage(offset, limit));
+        return Task.FromResult(SetOptions.Items.ToPage(offset, limit));
     }
 
-    public virtual async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
+    public virtual Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
-       return await Task.FromResult(SetOptions.Items.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
+       return Task.FromResult(SetOptions.Items.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
     }
 
-    public virtual async Task<TModel> GetAsync(object? id, params object[]? parameters)
+    public virtual Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
-        throw new NotImplementedException();
+        var existingItem = SetOptions.Items.FirstOrDefault(item =>
+        {
+            if (SetOptions.KeyPropertyExpression is null) throw new Exception();
+            
+            var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
+            return Equals(itemId, id);
+        });
+
+        if (existingItem is null)
+            throw new Exception("Not found");
+        
+        return Task.FromResult(existingItem);
     }
 }
 
@@ -58,8 +69,19 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
     public override Task<TModel> GetAsync(object? id, params object[]? parameters) => GetAsync((TKey?)id, parameters);
 
-    public async Task<TModel> GetAsync(TKey? id, params object[]? parameters)
+    public Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
-        throw new NotImplementedException();
+        var existingItem = SetOptions.Items.FirstOrDefault(item =>
+        {
+            if (SetOptions.KeyPropertyExpression is null) throw new Exception();
+            
+            var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
+            return Equals(itemId, id);
+        });
+
+        if (existingItem is null)
+            throw new Exception("Not found");
+
+        return Task.FromResult(existingItem);
     }
 }
