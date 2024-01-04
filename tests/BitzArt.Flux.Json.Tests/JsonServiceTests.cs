@@ -40,6 +40,6 @@ public class JsonServiceTests
     public async Task GetAsync_NotExistingTestModel_Throws()
     {
         Task Action() => _setContext.GetAsync(100);
-        await Assert.ThrowsAsync<NotFoundException<TestModel>>(Action);
+        await Assert.ThrowsAsync<FluxItemNotFoundException<TestModel>>(Action);
     }
 }

@@ -8,6 +8,8 @@ public static class UsingJsonExtension
     public static IFluxJsonServiceBuilder UsingJson(this IFluxServicePreBuilder prebuilder, string? basePath = null,
         Action<JsonSerializerOptions>? configure = null)
     {
+        prebuilder.Services.AddLogging();
+
         var builder = new FluxJsonServiceBuilder(prebuilder, basePath);
 
         var fluxServiceProvider = builder.ServiceFactory;

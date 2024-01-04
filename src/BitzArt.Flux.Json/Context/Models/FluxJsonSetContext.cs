@@ -48,13 +48,13 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
-            if (SetOptions.KeyPropertyExpression is null) throw new KeyPropertyExpressionRequiredException<TModel>();
+            if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return Equals(itemId, id);
         });
 
-        if (existingItem is null) throw new NotFoundException<TModel>(id);
+        if (existingItem is null) throw new FluxItemNotFoundException<TModel>(id);
         
         return Task.FromResult(existingItem);
     }
@@ -83,27 +83,27 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
-            if (SetOptions.KeyPropertyExpression is null) throw new KeyPropertyExpressionRequiredException<TModel>();
+            if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return Equals(itemId, id);
         });
 
-        if (existingItem is null) throw new NotFoundException<TModel>(id);
+        if (existingItem is null) throw new FluxItemNotFoundException<TModel>(id);
 
         return Task.FromResult(existingItem);
     }
 }
 
-internal class NotFoundException<TModel> : Exception
+internal class FluxItemNotFoundException<TModel> : Exception
 {
-    public NotFoundException(object? id) : base($"{typeof(TModel).Name} with key {id} was not found")
+    public FluxItemNotFoundException(object? id) : base($"{typeof(TModel).Name} with key {id} was not found")
     { }
 }
 
-internal class KeyPropertyExpressionRequiredException<TModel> : Exception
+internal class FluxKeyPropertyExpressionMissingException<TModel> : Exception
 {
-    public KeyPropertyExpressionRequiredException() : base($"Using .WithKey() extension method is required for {typeof(TModel).Name}")
+    public FluxKeyPropertyExpressionMissingException() : base($"KeyPropertyExpression is required for {typeof(TModel).Name}. Consider using .WithKey() when configuring a Set.")
     {
     }
 }

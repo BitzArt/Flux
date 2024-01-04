@@ -9,7 +9,6 @@ public class ServiceRegistrationTests
     public void UsingJson_WithModel_AddsFactoryAndSetContext()
     {
         var services = new ServiceCollection();
-        services.AddLogging();
         
         const string serviceName = "service1";
 
@@ -39,7 +38,6 @@ public class ServiceRegistrationTests
     public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
     {
         var services = new ServiceCollection();
-        services.AddLogging();
         
         const string serviceName = "service1";
 
@@ -73,7 +71,6 @@ public class ServiceRegistrationTests
     public void AddFlux2Services_GetServiceContextsFromDiContainer_Returns()
     {
         var services = new ServiceCollection();
-        services.AddLogging();
         
         services.AddFlux(flux =>
         {
@@ -98,7 +95,6 @@ public class ServiceRegistrationTests
     public void AddSet_SameModelDifferentNames_Configures()
     {
         var services = new ServiceCollection();
-        services.AddLogging();
         
         services.AddFlux(flux =>
         {
@@ -144,7 +140,6 @@ public class ServiceRegistrationTests
     public void AddSet_SameModelTwiceNoName_Throws()
     {
         var services = new ServiceCollection();
-        services.AddLogging();
         
         services.AddFlux(flux =>
         {
@@ -162,7 +157,6 @@ public class ServiceRegistrationTests
     public void UsingJson_WithJsonConfiguration_Configures()
     {
         var services = new ServiceCollection();
-        services.AddLogging();
         
         const string serviceName = "service1";
 
@@ -188,5 +182,50 @@ public class ServiceRegistrationTests
         Assert.Equal(JsonIgnoreCondition.WhenWritingNull, serializerOptions.DefaultIgnoreCondition);
         Assert.True(serializerOptions.WriteIndented);
         Assert.Contains(serializerOptions.Converters, x => x.GetType() == typeof(JsonStringEnumConverter));
+    }
+
+    [Fact]
+    public void AddSet_TwoSetsSameModelDifferentNames_AddsNamed()
+    {
+        var services = new ServiceCollection();
+
+        services.AddFlux(flux =>
+        {
+            flux.AddService("service1")
+            .UsingJson("Data")
+            .AddSet<TestModel>("test-model.set.json", "test-set-1")
+            .AddSet<TestModel>("test-model.set.json", "test-set-2");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+        var flux = serviceProvider.GetRequiredService<IFluxContext>();
+        var service = flux.Service("service1");
+
+        var set1FromService = service.Set<TestModel>("test-set-1");
+        Assert.NotNull(set1FromService);
+
+        var set2FromService = service.Set<TestModel>("test-set-2");
+        Assert.NotNull(set2FromService);
+
+        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        {
+            var setNoNameFromService = service.Set<TestModel>();
+        });
+
+        var set1FromFlux = flux.Set<TestModel>("service1", "test-set-1");
+        Assert.NotNull(set1FromFlux);
+
+        var set2FromFlux = flux.Set<TestModel>("service1", "test-set-2");
+        Assert.NotNull(set2FromFlux);
+
+        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        {
+            var setNoNameFromFlux = flux.Set<TestModel>("service1");
+        });
+
+        Assert.Throws<FluxServiceProviderNotFoundException>(() =>
+        {
+            var setNoNameFromFlux = flux.Set<TestModel>();
+        });
     }
 }

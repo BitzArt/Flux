@@ -65,7 +65,7 @@ public static class AddSetExtension
         }
         catch (Exception ex)
         {
-            throw new JsonFileReadException(path, ex);
+            throw new FluxJsonFileReadException(path, ex);
         }
     }
 
@@ -75,7 +75,7 @@ public static class AddSetExtension
         var items = JsonSerializer.Deserialize<List<TModel>>(jsonString, options);
 
         if (items is null)
-            throw new JsonDeserializationException<List<TModel>>();
+            throw new FluxJsonDeserializationException<List<TModel>>();
 
         return items;
     }
@@ -90,16 +90,16 @@ public static class AddSetExtension
     }
 }
 
-internal class JsonFileReadException : Exception
+internal class FluxJsonFileReadException : Exception
 {
-    public JsonFileReadException(string path, Exception innerException)
+    public FluxJsonFileReadException(string path, Exception innerException)
         : base($"Error reading JSON from file '{path}'. See inner exception for details", innerException)
     { }
 }
     
-internal class JsonDeserializationException<TModel> : Exception
+internal class FluxJsonDeserializationException<TModel> : Exception
 {
-    public JsonDeserializationException()
+    public FluxJsonDeserializationException()
         : base($"Failed to deserialize JSON to {typeof(TModel).Name}")
     { }
 }

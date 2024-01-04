@@ -9,7 +9,6 @@ internal static class TestSetContext
     public static IFluxSetContext<TestModel> GetTestSetContext()
     {
         var services = new ServiceCollection();
-        services.AddLogging();
         
         const string serviceName = "JsonService";
 
