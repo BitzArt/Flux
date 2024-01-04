@@ -35,7 +35,7 @@ public class FluxJsonSetContextTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                .AddSet<TestModel>("./data/test-model.set.json").WithKey(x => x.Id!);
+                .AddSet<TestModel>("./Data/test-model.set.json").WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -57,7 +57,7 @@ public class FluxJsonSetContextTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                .AddSet<TestModel>("data/test-model.set.json").WithKey(x => x.Id!);
+                .AddSet<TestModel>("Data/test-model.set.json").WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -76,7 +76,7 @@ public class FluxJsonSetContextTests
         var services = new ServiceCollection();
 
         var currentDirectory = Directory.GetCurrentDirectory();
-        var dataDirectory = $"{currentDirectory.TrimEnd('\\').TrimEnd('/')}/data";
+        var dataDirectory = $"{currentDirectory.TrimEnd('\\').TrimEnd('/')}/Data";
 
         services.AddFlux(flux =>
         {
