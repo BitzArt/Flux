@@ -106,17 +106,23 @@ internal class FluxJsonServiceFactory : IFluxServiceFactory
     public IFluxSetContext<TModel> CreateSetContext<TModel>(IServiceProvider services, string? name)
         where TModel : class
     {
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("Flux");
+        
         var options = GetOptions<TModel>(name);
 
-        return new FluxJsonSetContext<TModel>(_serviceOptions, options);
+        return new FluxJsonSetContext<TModel>(_serviceOptions, logger, options);
     }
 
     public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name)
         where TModel : class
     {
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("Flux");
+        
         var options = GetOptions<TModel, TKey>(name);
 
-        return new FluxJsonSetContext<TModel, TKey>(_serviceOptions, options);
+        return new FluxJsonSetContext<TModel, TKey>(_serviceOptions, logger, options);
     }
 }
 

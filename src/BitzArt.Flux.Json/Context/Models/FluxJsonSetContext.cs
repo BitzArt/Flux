@@ -1,4 +1,5 @@
 using BitzArt.Pagination;
+using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 
@@ -6,6 +7,7 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
     where TModel : class
 {
     internal readonly FluxJsonServiceOptions ServiceOptions;
+    internal readonly ILogger _logger;
     
     protected FluxJsonSetOptions<TModel> _setOptions;
     internal virtual FluxJsonSetOptions<TModel> SetOptions
@@ -14,14 +16,17 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         set => _setOptions = value;
     }
 
-    public FluxJsonSetContext(FluxJsonServiceOptions serviceOptions, FluxJsonSetOptions<TModel> setOptions)
+    public FluxJsonSetContext(FluxJsonServiceOptions serviceOptions, ILogger logger, FluxJsonSetOptions<TModel> setOptions)
     {
         ServiceOptions = serviceOptions;
+        _logger = logger;
         _setOptions = setOptions;
     }
     
     public virtual Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
+        _logger.LogInformation("GetAll {type}", typeof(TModel).Name);
+
         return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
     }
 
@@ -32,11 +37,15 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
 
     public virtual Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
+        _logger.LogInformation("GetPage {type}", typeof(TModel).Name);
+        
        return Task.FromResult(SetOptions.Items!.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
     }
 
     public virtual Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
+        _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
+        
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
             if (SetOptions.KeyPropertyExpression is null) throw new Exception();
@@ -60,8 +69,8 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
         set => _setOptions = value;
     }
 
-    public FluxJsonSetContext(FluxJsonServiceOptions serviceOptions, FluxJsonSetOptions<TModel, TKey> setOptions)
-        : base(serviceOptions, setOptions)
+    public FluxJsonSetContext(FluxJsonServiceOptions serviceOptions, ILogger logger, FluxJsonSetOptions<TModel, TKey> setOptions)
+        : base(serviceOptions, logger, setOptions)
     {
         SetOptions = setOptions;
     }
@@ -70,6 +79,8 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
+        _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
+
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
             if (SetOptions.KeyPropertyExpression is null) throw new Exception();
