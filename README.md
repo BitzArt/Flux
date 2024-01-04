@@ -1,5 +1,8 @@
 ![Tests](https://github.com/BitzArt/OCPI.Net/actions/workflows/Tests.yml/badge.svg)
 
+[![NuGet version](https://img.shields.io/nuget/v/BitzArt.Flux.svg)](https://www.nuget.org/packages/BitzArt.Flux/)
+[![NuGet downloads](https://img.shields.io/nuget/dt/BitzArt.Flux.svg)](https://www.nuget.org/packages/BitzArt.Flux/)
+
 ## Overview
 
 ![Prerelease](https://img.shields.io/badge/prerelease%2C_work_in_progress-ffa624?style=for-the-badge)
