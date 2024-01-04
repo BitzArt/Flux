@@ -20,9 +20,9 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         _setOptions = setOptions;
     }
     
-    public virtual async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
+    public virtual Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        throw new NotImplementedException();
+        return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items);
     }
 
     public virtual async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
@@ -47,10 +47,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
     internal new FluxJsonSetOptions<TModel, TKey> SetOptions
     {
         get => (FluxJsonSetOptions<TModel, TKey>)_setOptions;
-        set
-        {
-            _setOptions = value;
-        }
+        set => _setOptions = value;
     }
 
     public FluxJsonSetContext(FluxJsonServiceOptions serviceOptions, FluxJsonSetOptions<TModel, TKey> setOptions)

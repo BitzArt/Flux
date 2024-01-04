@@ -16,8 +16,7 @@ public class ServiceRegistrationTests
     public void UsingJson_WithModel_AddsFactoryAndSetContext()
     {
         var services = new ServiceCollection();
-
-        const string serviceName = "SomeExternalService";
+        const string serviceName = nameof(UsingJson_WithModel_AddsFactoryAndSetContext);
 
         services.AddFlux(flux =>
         {
@@ -45,5 +44,79 @@ public class ServiceRegistrationTests
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
         Assert.NotNull(setContext);
+    }
+    
+    [Fact]
+    public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
+    {
+        var services = new ServiceCollection();
+        const string serviceName = nameof(AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll);
+
+        services.AddFlux(flux =>
+        {
+            flux.AddService(serviceName)
+                .UsingJson("Data", json =>
+                {
+                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    json.Converters.Add(new JsonStringEnumConverter());
+                    json.WriteIndented = true;
+                })
+                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+        var fluxContext = serviceProvider.GetRequiredService<IFluxContext>();
+
+        var service = fluxContext.Service(serviceName);
+        Assert.NotNull(service);
+        Assert.True(service is FluxServiceContext);
+
+        var provider = ((FluxServiceContext)service).Provider;
+        Assert.True(provider is FluxJsonServiceFactory);
+
+        var setContextFromService = service.Set<TestModel>();
+        Assert.NotNull(setContextFromService);
+        Assert.True(setContextFromService is FluxJsonSetContext<TestModel>);
+
+        var setContextFromFluxContext = fluxContext.Set<TestModel>();
+        Assert.NotNull(setContextFromFluxContext);
+        Assert.True(setContextFromFluxContext is FluxJsonSetContext<TestModel>);
+    }
+    
+    [Fact]
+    public void AddFlux2Services_GetServiceContextsFromDiContainer_Returns()
+    {
+        var services = new ServiceCollection();
+        
+        services.AddFlux(flux =>
+        {
+            flux.AddService("service1")
+                .UsingJson("Data", json =>
+                {
+                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    json.Converters.Add(new JsonStringEnumConverter());
+                    json.WriteIndented = true;
+                })
+                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
+            
+            flux.AddService("service2")
+                .UsingJson("Data", json =>
+                {
+                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    json.Converters.Add(new JsonStringEnumConverter());
+                    json.WriteIndented = true;
+                })
+                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+        var serviceContexts = serviceProvider.GetRequiredService<IEnumerable<IFluxServiceContext>>().ToList();
+        
+        Assert.NotNull(serviceContexts);
+        Assert.True(serviceContexts.Any());
+        Assert.True(serviceContexts.Count == 2);
     }
 }
