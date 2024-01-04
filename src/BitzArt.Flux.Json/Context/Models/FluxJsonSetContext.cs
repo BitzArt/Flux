@@ -48,7 +48,7 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
-            if (SetOptions.KeyPropertyExpression is null) throw new Exception();
+            if (SetOptions.KeyPropertyExpression is null) throw new KeyPropertyExpressionRequiredException<TModel>();
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return Equals(itemId, id);
@@ -83,7 +83,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
-            if (SetOptions.KeyPropertyExpression is null) throw new Exception();
+            if (SetOptions.KeyPropertyExpression is null) throw new KeyPropertyExpressionRequiredException<TModel>();
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return Equals(itemId, id);
@@ -99,4 +99,11 @@ internal class NotFoundException<TModel> : Exception
 {
     public NotFoundException(object? id) : base($"{typeof(TModel).Name} with key {id} was not found")
     { }
+}
+
+internal class KeyPropertyExpressionRequiredException<TModel> : Exception
+{
+    public KeyPropertyExpressionRequiredException() : base($"Using .WithKey() extension method is required for {typeof(TModel).Name}")
+    {
+    }
 }
