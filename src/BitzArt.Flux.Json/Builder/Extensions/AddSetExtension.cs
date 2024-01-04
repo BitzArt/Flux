@@ -14,7 +14,8 @@ public static class AddSetExtension
         var services = serviceBuilder.Services;
         var serviceFactory = builder.ServiceFactory;
 
-        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(filePath, serviceBuilder.BasePath);
+        var path = GetFilePath(filePath, serviceBuilder.BasePath);
+        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path);
 
         serviceFactory.AddSet<TModel>(builder.SetOptions, name);
 
@@ -36,7 +37,8 @@ public static class AddSetExtension
         var services = serviceBuilder.Services;
         var serviceFactory = serviceBuilder.ServiceFactory;
 
-        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(filePath, serviceBuilder.BasePath);
+        var path = GetFilePath(filePath, serviceBuilder.BasePath);
+        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path);
 
         serviceFactory.AddSet<TModel, TKey>(builder.SetOptions, name);
 
@@ -55,46 +57,49 @@ public static class AddSetExtension
         return builder;
     }
 
-    private static ICollection<TModel> TryGetItemsFromJsonFile<TModel>(string filePath, string? basePath = null)
+    private static ICollection<TModel> TryGetItemsFromJsonFile<TModel>(string path)
     {
         try
         {
-            return GetItemsFromJsonFile<TModel>(filePath, basePath);
+            return GetItemsFromJsonFile<TModel>(path);
         }
         catch (Exception ex)
         {
-            throw new JsonFileReadException(ex);
+            throw new JsonFileReadException(path, ex);
         }
     }
 
-    private static ICollection<TModel> GetItemsFromJsonFile<TModel>(string filePath, string? basePath = null)
+    private static ICollection<TModel> GetItemsFromJsonFile<TModel>(string path)
+    {
+        var jsonString = File.ReadAllText(path);
+        var items = JsonSerializer.Deserialize<List<TModel>>(jsonString);
+
+        if (items is null)
+            throw new JsonDeserializationException<List<TModel>>();
+
+        return items;
+    }
+
+    private static string GetFilePath(string filePath, string? basePath = null)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
 
         if (basePath is not null) filePath = Path.Combine(basePath, filePath);
 
-        var path = Path.Combine(currentDirectory, filePath);
-
-        var jsonString = File.ReadAllText(path);
-        var items = JsonSerializer.Deserialize<List<TModel>>(jsonString);
-
-        if (items is null)
-            throw new JsonDeserializationException<List<TModel>>(path);
-
-        return items;
+        return Path.Combine(currentDirectory, filePath);
     }
+}
+
+internal class JsonFileReadException : Exception
+{
+    public JsonFileReadException(string path, Exception innerException)
+        : base($"Error reading JSON from file {path}, see inner exception for details", innerException)
+    { }
+}
     
-    private class JsonFileReadException : Exception
-    {
-        public JsonFileReadException(Exception innerException)
-            : base("Error reading JSON file, see inner exception for details", innerException)
-        { }
-    }
-    
-    private class JsonDeserializationException<TModel> : Exception
-    {
-        public JsonDeserializationException(string path)
-            : base($"Failed to deserialize JSON from '{path}' to {typeof(TModel).Name}")
-        { }
-    }
+internal class JsonDeserializationException<TModel> : Exception
+{
+    public JsonDeserializationException()
+        : base($"Failed to deserialize JSON to {typeof(TModel).Name}")
+    { }
 }
