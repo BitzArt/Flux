@@ -45,8 +45,7 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
             return Equals(itemId, id);
         });
 
-        if (existingItem is null)
-            throw new Exception("Not found");
+        if (existingItem is null) throw new NotFoundException<TModel>(id);
         
         return Task.FromResult(existingItem);
     }
@@ -79,9 +78,15 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
             return Equals(itemId, id);
         });
 
-        if (existingItem is null)
-            throw new Exception("Not found");
+        if (existingItem is null) throw new NotFoundException<TModel>(id);
 
         return Task.FromResult(existingItem);
+    }
+}
+
+internal class NotFoundException<TModel> : Exception
+{
+    public NotFoundException(object? id) : base($"{typeof(TModel).Name} with key {id} was not found")
+    {
     }
 }

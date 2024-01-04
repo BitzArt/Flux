@@ -13,7 +13,7 @@ file class TestModel
 public class ServiceRegistrationTests
 {
     [Fact]
-    public void UsingJson_WithModel_AddsFactoryAndSetContext()
+    public async Task Get_TestItem_Returns()
     {
         var services = new ServiceCollection();
         const string serviceName = "service1";
@@ -29,6 +29,34 @@ public class ServiceRegistrationTests
                     json.WriteIndented = true;
                 })
                 .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var set = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
+        var item = await set.GetAsync(1);
+
+        Assert.NotNull(item);
+        Assert.Equal(1, item.Id);
+    }
+    
+    [Fact]
+    public void UsingJson_WithModel_AddsFactoryAndSetContext()
+    {
+        var services = new ServiceCollection();
+        const string serviceName = "service1";
+
+        services.AddFlux(flux =>
+        {
+            flux.AddService(serviceName)
+                .UsingJson("Data", json =>
+                {
+                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    json.Converters.Add(new JsonStringEnumConverter());
+                    json.WriteIndented = true;
+                })
+                .AddSet<TestModel>("test-model.set.json").WithKey(x => x.Id);
         });
 
         var serviceProvider = services.BuildServiceProvider();
