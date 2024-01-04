@@ -74,19 +74,16 @@ public static class AddSetExtension
         var jsonString = File.ReadAllText(path);
         var items = JsonSerializer.Deserialize<List<TModel>>(jsonString, options);
 
-        if (items is null)
-            throw new FluxJsonDeserializationException<List<TModel>>();
+        if (items is null) throw new FluxJsonDeserializationException<List<TModel>>();
 
         return items;
     }
 
     private static string GetFilePath(string filePath, string? basePath = null)
     {
-        var currentDirectory = Directory.GetCurrentDirectory();
-
         if (basePath is not null) filePath = Path.Combine(basePath, filePath);
 
-        return Path.Combine(currentDirectory, filePath);
+        return filePath;
     }
 }
 
