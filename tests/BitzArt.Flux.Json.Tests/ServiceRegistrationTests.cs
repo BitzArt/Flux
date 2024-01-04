@@ -29,7 +29,7 @@ public class ServiceRegistrationTests
                     json.Converters.Add(new JsonStringEnumConverter());
                     json.WriteIndented = true;
                 })
-                .AddSet<TestModel, int>("test-model.set.json");
+                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id);
         });
 
         var serviceProvider = services.BuildServiceProvider();
