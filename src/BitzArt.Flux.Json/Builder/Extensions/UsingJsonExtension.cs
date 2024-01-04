@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
 public static class UsingJsonExtension
 {
-    public static IFluxJsonServiceBuilder UsingJson(this IFluxServicePreBuilder prebuilder, string? basePath = null)
+    public static IFluxJsonServiceBuilder UsingJson(this IFluxServicePreBuilder prebuilder, string? basePath = null,
+        Action<JsonSerializerOptions>? configure = null)
     {
         var builder = new FluxJsonServiceBuilder(prebuilder, basePath);
 
@@ -15,7 +17,9 @@ public static class UsingJsonExtension
         {
             return new FluxServiceContext(fluxServiceProvider, x);
         });
-        
+
+        configure?.Invoke(builder.ServiceOptions.SerializerOptions);
+
         return builder;
     }
 }

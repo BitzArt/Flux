@@ -1,9 +1,12 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
 file class TestModel
 {
+    [JsonPropertyName("id")]
     public int Id { get; set; }
 }
 
@@ -19,7 +22,13 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson("Data")
+                .UsingJson("Data", json =>
+                {
+                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    json.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    json.Converters.Add(new JsonStringEnumConverter());
+                    json.WriteIndented = true;
+                })
                 .AddSet<TestModel, int>("test-model.set.json");
         });
 
