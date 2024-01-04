@@ -22,22 +22,22 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
     
     public virtual Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items);
+        return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
     }
 
     public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
     {
-        return Task.FromResult(SetOptions.Items.ToPage(offset, limit));
+        return Task.FromResult(SetOptions.Items!.ToPage(offset, limit));
     }
 
     public virtual Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
-       return Task.FromResult(SetOptions.Items.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
+       return Task.FromResult(SetOptions.Items!.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
     }
 
     public virtual Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
-        var existingItem = SetOptions.Items.FirstOrDefault(item =>
+        var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
             if (SetOptions.KeyPropertyExpression is null) throw new Exception();
             
@@ -71,7 +71,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
-        var existingItem = SetOptions.Items.FirstOrDefault(item =>
+        var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
             if (SetOptions.KeyPropertyExpression is null) throw new Exception();
             

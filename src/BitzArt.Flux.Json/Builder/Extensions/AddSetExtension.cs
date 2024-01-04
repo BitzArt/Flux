@@ -63,7 +63,7 @@ public static class AddSetExtension
         }
         catch (Exception ex)
         {
-            throw new Exception("Error reading JSON file, see inner exception for details", ex);
+            throw new JsonFileReadException(ex);
         }
     }
 
@@ -79,8 +79,24 @@ public static class AddSetExtension
         var items = JsonSerializer.Deserialize<List<TModel>>(jsonString);
 
         if (items is null)
-            throw new Exception($"Failed to deserialize JSON from ${path} to {typeof(List<TModel>)}");
+            throw new JsonDeserializationException<List<TModel>>(path);
 
         return items;
+    }
+    
+    private class JsonFileReadException : Exception
+    {
+        public JsonFileReadException(Exception innerException)
+            : base("Error reading JSON file, see inner exception for details", innerException)
+        {
+        }
+    }
+    
+    private class JsonDeserializationException<TModel> : Exception
+    {
+        public JsonDeserializationException(string path)
+            : base($"Failed to deserialize JSON from '{path}' to {typeof(TModel).Name}")
+        {
+        }
     }
 }
