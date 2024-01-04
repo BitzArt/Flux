@@ -15,7 +15,7 @@ public static class AddSetExtension
         var serviceFactory = builder.ServiceFactory;
 
         var path = GetFilePath(filePath, serviceBuilder.BasePath);
-        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path);
+        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path, serviceBuilder.ServiceOptions.SerializerOptions);
 
         serviceFactory.AddSet<TModel>(builder.SetOptions, name);
 
@@ -38,7 +38,7 @@ public static class AddSetExtension
         var serviceFactory = serviceBuilder.ServiceFactory;
 
         var path = GetFilePath(filePath, serviceBuilder.BasePath);
-        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path);
+        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path, serviceBuilder.ServiceOptions.SerializerOptions);
 
         serviceFactory.AddSet<TModel, TKey>(builder.SetOptions, name);
 
@@ -57,11 +57,11 @@ public static class AddSetExtension
         return builder;
     }
 
-    private static ICollection<TModel> TryGetItemsFromJsonFile<TModel>(string path)
+    private static ICollection<TModel> TryGetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
     {
         try
         {
-            return GetItemsFromJsonFile<TModel>(path);
+            return GetItemsFromJsonFile<TModel>(path, options);
         }
         catch (Exception ex)
         {
@@ -69,10 +69,10 @@ public static class AddSetExtension
         }
     }
 
-    private static ICollection<TModel> GetItemsFromJsonFile<TModel>(string path)
+    private static ICollection<TModel> GetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
     {
         var jsonString = File.ReadAllText(path);
-        var items = JsonSerializer.Deserialize<List<TModel>>(jsonString);
+        var items = JsonSerializer.Deserialize<List<TModel>>(jsonString, options);
 
         if (items is null)
             throw new JsonDeserializationException<List<TModel>>();
