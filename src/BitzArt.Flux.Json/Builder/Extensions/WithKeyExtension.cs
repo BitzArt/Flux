@@ -8,6 +8,7 @@ public static class WithKeyExtension
         where TModel : class
     {
         builder.SetOptions.KeyPropertyExpression = expression;
+        
         return builder;
     }
 
@@ -15,6 +16,7 @@ public static class WithKeyExtension
         where TModel : class
     {
         builder.SetOptions.KeyPropertyExpression = expression;
+        
         return builder;
     }
 }

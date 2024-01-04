@@ -1,6 +1,6 @@
 namespace BitzArt.Flux;
 
-public interface IFluxJsonSetBuilder<TModel> : IFluxModelBuilder
+public interface IFluxJsonSetBuilder<TModel> : IFluxModelBuilder, IFluxJsonServiceBuilder
     where TModel : class
 {
     public FluxJsonSetOptions<TModel> SetOptions { get; }

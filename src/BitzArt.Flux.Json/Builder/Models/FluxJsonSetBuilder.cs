@@ -11,8 +11,8 @@ internal class FluxJsonSetBuilder<TModel> : IFluxJsonSetBuilder<TModel>
     public IFluxServiceFactory ServiceFactory => ServiceBuilder.ServiceFactory;
     public IFluxFactory Factory => ServiceBuilder.Factory;
     public FluxJsonServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
+    public string? BasePath => ServiceBuilder.BasePath;
 
-    
     public FluxJsonSetOptions<TModel> SetOptions { get; set; }
     
     public FluxJsonSetBuilder(IFluxJsonServiceBuilder serviceBuilder)
