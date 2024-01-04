@@ -1,7 +1,4 @@
 using BitzArt.Pagination;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
-using System.Web;
 
 namespace BitzArt.Flux;
 

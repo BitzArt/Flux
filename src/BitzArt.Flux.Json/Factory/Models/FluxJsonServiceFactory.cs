@@ -10,11 +10,13 @@ internal class FluxJsonServiceFactory : IFluxServiceFactory
     private readonly IDictionary<FluxSetSignature, object> _setOptions;
 
     public string ServiceName { get; private set; }
+    public string? BasePath { get; private set; }
 
-    public FluxJsonServiceFactory(FluxJsonServiceOptions options, string serviceName)
+    public FluxJsonServiceFactory(FluxJsonServiceOptions options, string serviceName, string? basePath = null)
     {
         _serviceOptions = options;
         ServiceName = serviceName;
+        BasePath = basePath;
 
         _setOptions = new Dictionary<FluxSetSignature, object>();
     }
@@ -112,9 +114,6 @@ internal class FluxJsonServiceFactory : IFluxServiceFactory
     public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name)
         where TModel : class
     {
-        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger("Flux");
-
         var options = GetOptions<TModel, TKey>(name);
 
         return new FluxJsonSetContext<TModel, TKey>(_serviceOptions, options);

@@ -19,8 +19,8 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson("./models/")
-                .AddSet<TestModel>("test-model.set.json");
+                .UsingJson("Data")
+                .AddSet<TestModel, int>("test-model.set.json");
         });
 
         var serviceProvider = services.BuildServiceProvider();
