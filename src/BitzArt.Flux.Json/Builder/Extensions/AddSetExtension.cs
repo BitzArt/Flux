@@ -88,15 +88,13 @@ public static class AddSetExtension
     {
         public JsonFileReadException(Exception innerException)
             : base("Error reading JSON file, see inner exception for details", innerException)
-        {
-        }
+        { }
     }
     
     private class JsonDeserializationException<TModel> : Exception
     {
         public JsonDeserializationException(string path)
             : base($"Failed to deserialize JSON from '{path}' to {typeof(TModel).Name}")
-        {
-        }
+        { }
     }
 }

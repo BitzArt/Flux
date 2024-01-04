@@ -87,6 +87,5 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 internal class NotFoundException<TModel> : Exception
 {
     public NotFoundException(object? id) : base($"{typeof(TModel).Name} with key {id} was not found")
-    {
-    }
+    { }
 }
