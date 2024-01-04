@@ -173,7 +173,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddSet_SameModelDifferentNames_Configures()
+    public void AddSet_TwoSetsSameModelDifferentNames_Configures()
     {
         var services = new ServiceCollection();
 
