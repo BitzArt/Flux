@@ -23,3 +23,4 @@
     - [Working with multiple Sets of the same type](03.use.md#working-with-multiple-sets-of-the-same-type)
 4. [Flux Implementations](04.implementations.md)
     - [Flux.REST](rest/01.introduction.md)
+    - [Flux.JSON](json/01.introduction.md)
