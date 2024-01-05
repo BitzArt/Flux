@@ -52,10 +52,8 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return Equals(itemId, id);
-        });
+        }) ?? throw new FluxItemNotFoundException<TModel>(id);
 
-        if (existingItem is null) throw new FluxItemNotFoundException<TModel>(id);
-        
         return Task.FromResult(existingItem);
     }
 }
@@ -87,9 +85,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return Equals(itemId, id);
-        });
-
-        if (existingItem is null) throw new FluxItemNotFoundException<TModel>(id);
+        }) ?? throw new FluxItemNotFoundException<TModel>(id);
 
         return Task.FromResult(existingItem);
     }

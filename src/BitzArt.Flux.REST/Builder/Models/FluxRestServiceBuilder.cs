@@ -17,7 +17,7 @@ internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
         ServiceOptions = new(baseUrl);
         HttpClientConfiguration = null;
 
-        if (prebuilder.Name is null) throw new Exception("Missing Name in Flux Service configuration. Consider using .WithName() when configuring external services.");
+        if (prebuilder.Name is null) throw new Exception("Missing Name in Flux Service configuration. Specify service names when configuring external services.");
         ServiceFactory = new FluxRestServiceFactory(ServiceOptions, prebuilder.Name);
     }
 }

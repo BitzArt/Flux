@@ -12,8 +12,11 @@ public class FluxJsonSetContextTests
         services.AddFlux(flux =>
         {
             flux.AddService("service 1")
-                .UsingJson("Data")
-                .AddSet<TestModel>("test-model.set.json").WithKey(x => x.Id!);
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .AddSet<TestModel>()
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -35,7 +38,9 @@ public class FluxJsonSetContextTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                .AddSet<TestModel>("./Data/test-model.set.json").WithKey(x => x.Id!);
+                .AddSet<TestModel>()
+                    .FromJsonFile("./Data/test-model.set.json")
+                    .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -57,7 +62,9 @@ public class FluxJsonSetContextTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                .AddSet<TestModel>("Data/test-model.set.json").WithKey(x => x.Id!);
+                    .AddSet<TestModel>()
+                        .FromJsonFile("Data/test-model.set.json")
+                        .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -81,8 +88,11 @@ public class FluxJsonSetContextTests
         services.AddFlux(flux =>
         {
             flux.AddService("service 1")
-                .UsingJson(dataDirectory)
-                .AddSet<TestModel>("test-model.set.json").WithKey(x => x.Id!);
+                .UsingJson()
+                    .WithBaseFilePath(dataDirectory)
+                    .AddSet<TestModel>()
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
