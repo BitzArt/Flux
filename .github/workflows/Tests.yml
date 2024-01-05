@@ -10,7 +10,7 @@ on:
       - "src/**"
       - "tests/**"
       - "BitzArt.Flux.sln"
-      - ".github/workflows/tests.yml"
+      - ".github/workflows/Tests.yml"
 
 jobs:
   tests:
