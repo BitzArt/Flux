@@ -5,12 +5,11 @@ namespace BitzArt.Flux;
 
 public static class UsingJsonExtension
 {
-    public static IFluxJsonServiceBuilder UsingJson(this IFluxServicePreBuilder prebuilder, string? basePath = null,
-        Action<JsonSerializerOptions>? configure = null)
+    public static IFluxJsonServiceBuilder UsingJson(this IFluxServicePreBuilder prebuilder)
     {
         prebuilder.Services.AddLogging();
 
-        var builder = new FluxJsonServiceBuilder(prebuilder, basePath);
+        var builder = new FluxJsonServiceBuilder(prebuilder);
 
         var fluxServiceProvider = builder.ServiceFactory;
         builder.Factory.ServiceContexts.Add(fluxServiceProvider);
@@ -19,8 +18,6 @@ public static class UsingJsonExtension
         {
             return new FluxServiceContext(fluxServiceProvider, x);
         });
-
-        configure?.Invoke(builder.ServiceOptions.SerializerOptions);
 
         return builder;
     }

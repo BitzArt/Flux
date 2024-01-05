@@ -15,8 +15,11 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson("Data")
-                .AddSet<TestModel>("test-model.set.json").WithKey(x => x.Id!);
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .AddSet<TestModel>()
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -44,8 +47,11 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson("Data")
-                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id!);
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .AddSet<TestModel, int>()
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -75,12 +81,18 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService("service1")
-                .UsingJson("Data")
-                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id!);
-            
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .AddSet<TestModel, int>()
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!);
+
             flux.AddService("service2")
-                .UsingJson("Data")
-                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id!);
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .AddSet<TestModel, int>()
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -99,9 +111,14 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService("service1")
-                .UsingJson("Data")
-                .AddSet<TestModel, int>("test-model.set.json", "test-set-1").WithKey(x => x.Id!)
-                .AddSet<TestModel, int>("test-model.set.json", "test-set-2").WithKey(x => x.Id!);
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .AddSet<TestModel, int>("test-set-1")
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!)
+                    .AddSet<TestModel, int>("test-set-2")
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -143,12 +160,15 @@ public class ServiceRegistrationTests
         
         services.AddFlux(flux =>
         {
-            var builder = flux.AddService("service1").UsingJson("Data")
-                .AddSet<TestModel, int>("test-model.set.json");
+            var builder = flux.AddService("service1")
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .AddSet<TestModel, int>()
+                        .FromJsonFile("test-model.set.json");
 
             Assert.Throws<SetAlreadyRegisteredException>(() =>
             {
-                builder.AddSet<TestModel, int>("test-model.set.json");
+                builder.AddSet<TestModel, int>();
             });
         });
     }
@@ -163,13 +183,17 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson("Data", json =>
-                {
-                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                    json.Converters.Add(new JsonStringEnumConverter());
-                    json.WriteIndented = true;
-                })
-                .AddSet<TestModel, int>("test-model.set.json").WithKey(x => x.Id!.Value);
+                .UsingJson()
+                    .WithBaseFilePath("Data")
+                    .ConfigureJson(json =>
+                    {
+                        json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                        json.Converters.Add(new JsonStringEnumConverter());
+                        json.WriteIndented = true;
+                    })
+                    .AddSet<TestModel, int>()
+                        .FromJsonFile("test-model.set.json")
+                        .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -192,9 +216,12 @@ public class ServiceRegistrationTests
         services.AddFlux(flux =>
         {
             flux.AddService("service1")
-            .UsingJson("Data")
-            .AddSet<TestModel>("test-model.set.json", "test-set-1")
-            .AddSet<TestModel>("test-model.set.json", "test-set-2");
+            .UsingJson()
+                .WithBaseFilePath("Data")
+                .AddSet<TestModel>("test-set-1")
+                    .FromJsonFile("test-model.set.json")
+                .AddSet<TestModel>("test-set-2")
+                    .FromJsonFile("test-model.set.json");
         });
 
         var serviceProvider = services.BuildServiceProvider();
