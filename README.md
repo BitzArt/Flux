@@ -18,11 +18,17 @@ Refer to the [documentation](https://bitzart.github.io/Flux/01.introduction.html
 
 **Documentation**
 
-[![documentation-flux](https://img.shields.io/badge/documentation%3A_flux-%230072C6?style=for-the-badge)](https://bitzart.github.io/Flux/01.introduction.html) [![documentation-flux-rest](https://img.shields.io/badge/documentation%3A_flux.rest-512BD4?style=for-the-badge)](https://bitzart.github.io/Flux/rest/01.introduction.html)
+[![documentation-flux](https://img.shields.io/badge/documentation%3A_flux-%230072C6?style=for-the-badge)](https://bitzart.github.io/Flux/01.introduction.html)
+
+[![documentation-flux-rest](https://img.shields.io/badge/documentation%3A_flux.rest-512BD4?style=for-the-badge)](https://bitzart.github.io/Flux/rest/01.introduction.html)
+[![documentation-flux-json](https://img.shields.io/badge/documentation%3A_flux.json-512BD4?style=for-the-badge)](https://bitzart.github.io/Flux/json/01.introduction.html)
 
 **Nuget**
 
-[![nuget-flux](https://img.shields.io/badge/Nuget%3A_flux-%230072C6?style=for-the-badge)](https://www.nuget.org/packages/BitzArt.Flux) [![nuget-flux-rest](https://img.shields.io/badge/nuget%3A_flux.rest-512BD4?style=for-the-badge)](https://www.nuget.org/packages/BitzArt.Flux.Rest)
+[![nuget-flux](https://img.shields.io/badge/Nuget%3A_flux-%230072C6?style=for-the-badge)](https://www.nuget.org/packages/BitzArt.Flux)
+
+[![nuget-flux-rest](https://img.shields.io/badge/nuget%3A_flux.rest-512BD4?style=for-the-badge)](https://www.nuget.org/packages/BitzArt.Flux.Rest)
+[![nuget-flux-json](https://img.shields.io/badge/nuget%3A_flux.json-512BD4?style=for-the-badge)](https://www.nuget.org/packages/BitzArt.Flux.Json)
 
 ## License
 
