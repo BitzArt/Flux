@@ -7,6 +7,8 @@
 - [Use Flux](03.use.md)
 - [Flux Implementations](04.implementations.md)
 
+---
+
 # Implementations
 
 - [Flux.REST](rest/01.introduction.md)
