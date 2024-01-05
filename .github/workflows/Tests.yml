@@ -6,6 +6,11 @@ on:
       - main
     tags-ignore:
       - '*'
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "BitzArt.Flux.sln"
+      - ".github/workflows/tests.yml"
 
 jobs:
   tests:
