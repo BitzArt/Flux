@@ -2,10 +2,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
-public class FluxJsonSetContextTests
+public class FromJsonFileExtensionTests
 {
     [Fact]
-    public async Task UsingJson_WithBasePath_ReadsJsonData()
+    public async Task FromJsonFile_WithBasePath_ReadsJsonData()
     {
         var services = new ServiceCollection();
 
@@ -30,7 +30,7 @@ public class FluxJsonSetContextTests
     }
 
     [Fact]
-    public async Task UsingJson_BasePathDirectlyInSetStartingWithDot_ReadsJsonData()
+    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithDot_ReadsJsonData()
     {
         var services = new ServiceCollection();
 
@@ -54,7 +54,7 @@ public class FluxJsonSetContextTests
     }
 
     [Fact]
-    public async Task UsingJson_BasePathDirectlyInSetStartingWithNoDot_ReadsJsonData()
+    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithNoDot_ReadsJsonData()
     {
         var services = new ServiceCollection();
 
@@ -78,7 +78,7 @@ public class FluxJsonSetContextTests
     }
 
     [Fact]
-    public async Task UsingJson_BasePathGlobalByGettingCurrentDirectory_ReadsJsonData()
+    public async Task FromJsonFile_BasePathGlobalByGettingCurrentDirectory_ReadsJsonData()
     {
         var services = new ServiceCollection();
 

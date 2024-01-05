@@ -52,17 +52,3 @@ public static class FromJsonFileExtension
         return filePath;
     }
 }
-
-internal class FluxJsonFileReadException : Exception
-{
-    public FluxJsonFileReadException(string path, Exception innerException)
-        : base($"Error reading JSON from file '{path}'. See inner exception for details", innerException)
-    { }
-}
-    
-internal class FluxJsonDeserializationException<TModel> : Exception
-{
-    public FluxJsonDeserializationException()
-        : base($"Failed to deserialize JSON to {typeof(TModel).Name}")
-    { }
-}
