@@ -18,7 +18,9 @@ internal class FluxRestSetBuilder<TModel> : IFluxRestSetBuilder<TModel>
         set => ServiceBuilder.HttpClientConfiguration = value;
     }
 
-    public FluxRestSetOptions<TModel> SetOptions { get; set; }
+    protected FluxRestSetOptions<TModel> _setOptions;
+    
+    public FluxRestSetOptions<TModel> SetOptions { get => _setOptions; set => _setOptions = value; }
 
     public FluxRestSetBuilder(IFluxRestServiceBuilder serviceBuilder)
     {

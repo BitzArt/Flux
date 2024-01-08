@@ -12,8 +12,9 @@ internal class FluxJsonSetBuilder<TModel> : IFluxJsonSetBuilder<TModel>
     public IFluxFactory Factory => ServiceBuilder.Factory;
     public FluxJsonServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
     public string? BaseFilePath => ServiceBuilder.ServiceOptions.BaseFilePath;
-
-    public FluxJsonSetOptions<TModel> SetOptions { get; set; }
+    protected FluxJsonSetOptions<TModel> _setOptions;
+    
+    public FluxJsonSetOptions<TModel> SetOptions { get => _setOptions; set => _setOptions = value; }
     
     public FluxJsonSetBuilder(IFluxJsonServiceBuilder serviceBuilder)
     {
@@ -25,7 +26,11 @@ internal class FluxJsonSetBuilder<TModel> : IFluxJsonSetBuilder<TModel>
 internal class FluxJsonSetBuilder<TModel, TKey> : FluxJsonSetBuilder<TModel>, IFluxJsonSetBuilder<TModel, TKey>
     where TModel : class
 {
-    public new FluxJsonSetOptions<TModel, TKey> SetOptions { get; set; }
+    public new FluxJsonSetOptions<TModel, TKey> SetOptions
+    {
+        get => (FluxJsonSetOptions<TModel, TKey>)_setOptions;
+        set => _setOptions = value;
+    }
 
     public FluxJsonSetBuilder(IFluxJsonServiceBuilder serviceBuilder) : base(serviceBuilder)
     {
