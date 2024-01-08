@@ -1,4 +1,4 @@
-![Tests](https://github.com/BitzArt/OCPI.Net/actions/workflows/Tests.yml/badge.svg)
+![Tests](https://github.com/BitzArt/Flux/actions/workflows/Tests.yml/badge.svg)
 
 [![NuGet version](https://img.shields.io/nuget/v/BitzArt.Flux.svg)](https://www.nuget.org/packages/BitzArt.Flux/)
 [![NuGet downloads](https://img.shields.io/nuget/dt/BitzArt.Flux.svg)](https://www.nuget.org/packages/BitzArt.Flux/)
