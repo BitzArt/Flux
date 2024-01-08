@@ -77,7 +77,7 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
             if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
-            return Equals(itemId, id);
+            return itemId.Equals(id);
         }) ?? throw new FluxItemNotFoundException<TModel>(id);
 
         return Task.FromResult(existingItem);
