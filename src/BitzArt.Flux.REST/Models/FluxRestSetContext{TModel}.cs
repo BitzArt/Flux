@@ -35,14 +35,14 @@ internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
 
     // ============== IEnumerable implementation ==============
 
-    public IEnumerator<TModel> GetEnumerator() => throw new NotImplementedException();
-    IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+    public IEnumerator<TModel> GetEnumerator() => throw new EnumerationNotSupportedException();
+    IEnumerator IEnumerable.GetEnumerator() => throw new EnumerationNotSupportedException();
 
     // ============== IQueryable implementation ==============
 
-    public Type ElementType => throw new NotImplementedException();
-    public Expression Expression => throw new NotImplementedException();
-    public IQueryProvider Provider => throw new NotImplementedException();
+    public Type ElementType => typeof(TModel);
+    public Expression Expression => Expression.Constant(this);
+    public virtual IQueryProvider Provider => new FluxRestQueryProvider<TModel>(this);
 
     // ============== Data methods implementation ==============
 

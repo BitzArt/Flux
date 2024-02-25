@@ -13,7 +13,7 @@ public interface IFluxSetContext<TModel> : IQueryable<TModel>
     public Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters);
     public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters);
     public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters);
-    public Task<TModel> GetAsync(object? id, params object[]? parameters);
+    public Task<TModel> GetAsync(object? id = null, params object[]? parameters);
 }
 
 public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>

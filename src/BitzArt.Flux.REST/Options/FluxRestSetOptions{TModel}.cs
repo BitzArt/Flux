@@ -12,6 +12,8 @@ public class FluxRestSetOptions<TModel>
         set => _getIdEndpointAction = value;
     }
 
+    internal virtual Type? KeyType => null;
+
     public FluxRestSetOptions()
     {
         GetIdEndpointAction = null;
