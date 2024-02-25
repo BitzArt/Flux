@@ -2,18 +2,20 @@
 
 namespace BitzArt.Flux;
 
-internal class FluxRestQueryProvider<TModel, TKey> : FluxRestQueryProvider<TModel>
+internal class FluxRestQueryProvider<TModel, TKey>(
+    FluxRestSetContext<TModel, TKey> setContext
+    ) : FluxRestQueryProvider<TModel>(setContext)
     where TModel : class
 {
-    public FluxRestQueryProvider(FluxRestSetContext<TModel, TKey> setContext) : base(setContext) { }
+    protected override FluxRestHttpRequestBuilder<TModel> CreateRequestBuilder()
+    {
+        return new FluxRestHttpRequestBuilder<TModel, TKey>((SetContext as FluxRestSetContext<TModel, TKey>)!);
+    }
 
     public override IQueryable<TResult> CreateQuery<TResult>(Expression expression)
     {
         if (typeof(TResult) != typeof(TModel))
             throw new NotSupportedException("Result type not supported");
-
-        if (SetContext is not FluxRestSetContext<TModel, TKey> setContextCasted)
-            throw new NotSupportedException("Set context not supported");
 
         return (new FluxRestQueryable<TModel, TKey>(this, expression) as IQueryable<TResult>)!;
     }

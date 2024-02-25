@@ -3,17 +3,11 @@ using System.Linq.Expressions;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestQueryable<TModel> : IFluxQueryable<TModel>
+internal class FluxRestQueryable<TModel>(FluxRestQueryProvider<TModel> provider, Expression expression) : IFluxQueryable<TModel>
     where TModel : class
 {
-    protected readonly Expression _expression;
-    protected readonly FluxRestQueryProvider<TModel> _provider;
-
-    public FluxRestQueryable(FluxRestQueryProvider<TModel> provider, Expression expression)
-    {
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        _expression = expression ?? throw new ArgumentNullException(nameof(expression));
-    }
+    protected readonly Expression _expression = expression ?? throw new ArgumentNullException(nameof(expression));
+    protected readonly FluxRestQueryProvider<TModel> _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
     public Type ElementType => typeof(TModel);
 

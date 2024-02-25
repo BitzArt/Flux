@@ -7,30 +7,20 @@ using System.Web;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
+internal class FluxRestSetContext<TModel>(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel> setOptions) : IFluxSetContext<TModel>
     where TModel : class
 {
     // ================ Flux internal wiring ================
 
-    internal readonly HttpClient HttpClient;
-    internal readonly FluxRestServiceOptions ServiceOptions;
-    internal readonly ILogger _logger;
+    internal readonly HttpClient HttpClient = httpClient;
+    internal readonly FluxRestServiceOptions ServiceOptions = serviceOptions;
+    internal readonly ILogger _logger = logger;
 
-    protected FluxRestSetOptions<TModel> _setOptions;
+    protected FluxRestSetOptions<TModel> _setOptions = setOptions;
     internal virtual FluxRestSetOptions<TModel> SetOptions
     {
         get => _setOptions;
         set => _setOptions = value;
-    }
-
-    // ==================== Constructor ====================
-
-    public FluxRestSetContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel> setOptions)
-    {
-        HttpClient = httpClient;
-        ServiceOptions = serviceOptions;
-        _logger = logger;
-        _setOptions = setOptions;
     }
 
     // ============== IEnumerable implementation ==============
@@ -99,7 +89,7 @@ internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
 
         var query = queryIndex == -1 ?
             HttpUtility.ParseQueryString(string.Empty) :
-            HttpUtility.ParseQueryString(path.Substring(queryIndex));
+            HttpUtility.ParseQueryString(path[queryIndex..]);
 
         query.Add("offset", pageRequest.Offset?.ToString());
         query.Add("limit", pageRequest.Limit?.ToString());

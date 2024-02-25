@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using RichardSzalay.MockHttp;
+using System.Net.Http.Json;
+using System.Net;
 
 namespace BitzArt.Flux;
 
@@ -70,5 +73,23 @@ public class FluxRestQueryableTests
         var set = services.GetRequiredService<IFluxSetContext<TestModel>>();
 
         Assert.ThrowsAsync<NotSupportedException>(() => set.FirstOrDefaultAsync());
+    }
+
+    [Fact]
+    public async Task FirstOrDefaultAsync_OnQuery_CallsEndpointById()
+    {
+        var baseUrl = "https://mocked.service";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/1")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(TestModel.GetAll(10).FirstOrDefault(x => x.Id == 1)));
+        });
+
+        var result = await setContext.Where(x => x.Id == 1).FirstOrDefaultAsync();
+
+        Assert.NotNull(result);
+        Assert.Equal(1, result.Id);
     }
 }
