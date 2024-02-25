@@ -21,6 +21,8 @@ public class FluxRestSetOptions<TModel, TKey> : FluxRestSetOptions<TModel>
         }
     }
 
+    internal override Type? KeyType => typeof(TKey);
+
     public FluxRestSetOptions()
     {
         GetIdEndpointAction = null;

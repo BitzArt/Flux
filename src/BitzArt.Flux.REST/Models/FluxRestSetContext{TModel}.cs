@@ -7,42 +7,32 @@ using System.Web;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
+internal class FluxRestSetContext<TModel>(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel> setOptions) : IFluxSetContext<TModel>
     where TModel : class
 {
     // ================ Flux internal wiring ================
 
-    internal readonly HttpClient HttpClient;
-    internal readonly FluxRestServiceOptions ServiceOptions;
-    internal readonly ILogger _logger;
+    internal readonly HttpClient HttpClient = httpClient;
+    internal readonly FluxRestServiceOptions ServiceOptions = serviceOptions;
+    internal readonly ILogger _logger = logger;
 
-    protected FluxRestSetOptions<TModel> _setOptions;
+    protected FluxRestSetOptions<TModel> _setOptions = setOptions;
     internal virtual FluxRestSetOptions<TModel> SetOptions
     {
         get => _setOptions;
         set => _setOptions = value;
     }
 
-    // ==================== Constructor ====================
-
-    public FluxRestSetContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel> setOptions)
-    {
-        HttpClient = httpClient;
-        ServiceOptions = serviceOptions;
-        _logger = logger;
-        _setOptions = setOptions;
-    }
-
     // ============== IEnumerable implementation ==============
 
-    public IEnumerator<TModel> GetEnumerator() => throw new NotImplementedException();
-    IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+    public IEnumerator<TModel> GetEnumerator() => throw new EnumerationNotSupportedException();
+    IEnumerator IEnumerable.GetEnumerator() => throw new EnumerationNotSupportedException();
 
     // ============== IQueryable implementation ==============
 
-    public Type ElementType => throw new NotImplementedException();
-    public Expression Expression => throw new NotImplementedException();
-    public IQueryProvider Provider => throw new NotImplementedException();
+    public Type ElementType => typeof(TModel);
+    public Expression Expression => Expression.Constant(this);
+    public virtual IQueryProvider Provider => new FluxRestQueryProvider<TModel>(this);
 
     // ============== Data methods implementation ==============
 
@@ -59,13 +49,13 @@ internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
         return new RequestUrlParameterParsingResult(resultPath, string.Empty);
     }
 
-    internal async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message) where TResult : class
+    internal async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message, CancellationToken cancellationToken = default)
     {
         try
         {
-            var response = await HttpClient.SendAsync(message);
+            var response = await HttpClient.SendAsync(message, cancellationToken);
             if (!response.IsSuccessStatusCode) throw new Exception($"External REST Service responded with http status code '{response.StatusCode}'.");
-            var content = await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<TResult>(content, ServiceOptions.SerializerOptions)!;
 
             return result;
@@ -99,7 +89,7 @@ internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
 
         var query = queryIndex == -1 ?
             HttpUtility.ParseQueryString(string.Empty) :
-            HttpUtility.ParseQueryString(path.Substring(queryIndex));
+            HttpUtility.ParseQueryString(path[queryIndex..]);
 
         query.Add("offset", pageRequest.Offset?.ToString());
         query.Add("limit", pageRequest.Limit?.ToString());
@@ -140,5 +130,10 @@ internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
     {
         if (SetOptions.Endpoint is null) return string.Empty;
         return SetOptions.Endpoint;
+    }
+
+    public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
     }
 }

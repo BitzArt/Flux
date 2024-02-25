@@ -11,7 +11,7 @@ internal partial class RequestParameterParsingUtility
         var logBuilder = new StringBuilder();
 
         var matches = ParameterRegex().Matches(path);
-        if (!matches.Any()) return new RequestUrlParameterParsingResult(path, string.Empty);
+        if (matches.Count == 0) return new RequestUrlParameterParsingResult(path, string.Empty);
 
         if (parameters is null) throw new ParametersNotFoundException();
 
@@ -48,9 +48,7 @@ file class ParametersNotFoundException : Exception
     { }
 }
 
-file class ParameterCountDidNotMatchException : Exception
+file class ParameterCountDidNotMatchException(int found, int required)
+    : Exception($"Number of parameters in a request ({found}) did not match number of required parameters ({required}) for this endpoint.")
 {
-    public ParameterCountDidNotMatchException(int found, int required)
-        : base($"Number of parameters in a request ({found}) did not match number of required parameters ({required}) for this endpoint.")
-    { }
 }
