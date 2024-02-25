@@ -7,7 +7,7 @@ namespace BitzArt.Flux;
 /// See <see href="https://bitzart.github.io/Flux/03.use.html">Use Flux</see>
 /// for more information on how to use it.
 /// </summary>
-public interface IFluxSetContext<TModel> : IQueryable<TModel>
+public interface IFluxSetContext<TModel> : IFluxQueryable<TModel>
     where TModel : class
 {
     public Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters);
@@ -16,7 +16,7 @@ public interface IFluxSetContext<TModel> : IQueryable<TModel>
     public Task<TModel> GetAsync(object? id = null, params object[]? parameters);
 }
 
-public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
+public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>, IFluxQueryable<TModel, TKey>
     where TModel : class
 {
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters);

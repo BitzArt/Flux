@@ -59,13 +59,13 @@ internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
         return new RequestUrlParameterParsingResult(resultPath, string.Empty);
     }
 
-    internal async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message) where TResult : class
+    internal async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message, CancellationToken cancellationToken = default)
     {
         try
         {
-            var response = await HttpClient.SendAsync(message);
+            var response = await HttpClient.SendAsync(message, cancellationToken);
             if (!response.IsSuccessStatusCode) throw new Exception($"External REST Service responded with http status code '{response.StatusCode}'.");
-            var content = await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<TResult>(content, ServiceOptions.SerializerOptions)!;
 
             return result;
@@ -140,5 +140,10 @@ internal class FluxRestSetContext<TModel> : IFluxSetContext<TModel>
     {
         if (SetOptions.Endpoint is null) return string.Empty;
         return SetOptions.Endpoint;
+    }
+
+    public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
     }
 }

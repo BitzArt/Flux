@@ -22,20 +22,45 @@ internal class FluxRestQueryProvider<TModel> : IQueryProvider
         if (typeof(TResult) != typeof(TModel))
             throw new NotSupportedException("Result type not supported");
 
-        return (new FluxRestQueryable<TModel>(SetContext) as IQueryable<TResult>)!;
+        return (new FluxRestQueryable<TModel>(this, expression) as IQueryable<TResult>)!;
     }
 
     public object Execute(Expression expression)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     public TResult Execute<TResult>(Expression expression)
     {
-        if (typeof(TResult) != typeof(IEnumerable<TModel>) && typeof(TResult) != typeof(Task<TModel>))
-            throw new NotSupportedException("Result type not supported");
+        throw new NotSupportedException();
+    }
 
-        // You need to interpret the expression and perform the corresponding operation here.
-        throw new NotImplementedException();
+    public async Task<TResult> FirstOrDefaultAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+    {
+        if (expression is null) throw new ArgumentNullException(nameof(expression));
+
+        var request = Translate(expression);
+        return await SetContext.HandleRequestAsync<TResult>(request, cancellationToken);
+    }
+
+    private HttpRequestMessage Translate(Expression expression)
+    {
+        // Check if the expression represents a simple filter
+        if (expression is LambdaExpression lambda && lambda.Body is BinaryExpression binary && lambda.Parameters.Count == 1)
+        {
+            if (binary.NodeType == ExpressionType.Equal && binary.Left is MemberExpression member && binary.Right is ConstantExpression constant)
+            {
+                // Assuming member represents the property to filter on (e.g., x.Id) and constant represents the value to filter for (e.g., 1)
+                var propertyName = member.Member.Name;
+                var propertyValue = constant.Value;
+
+                // Construct the HTTP request to fetch the item with the specified property value
+                var endpoint = $"{SetContext.SetOptions.Endpoint}/{propertyValue}";
+                return new HttpRequestMessage(HttpMethod.Get, endpoint);
+            }
+        }
+
+        // If the expression is not a simple filter, throw an exception or handle it appropriately
+        throw new NotSupportedException("Unsupported LINQ expression");
     }
 }

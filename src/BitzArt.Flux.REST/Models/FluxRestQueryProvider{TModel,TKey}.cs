@@ -15,6 +15,6 @@ internal class FluxRestQueryProvider<TModel, TKey> : FluxRestQueryProvider<TMode
         if (SetContext is not FluxRestSetContext<TModel, TKey> setContextCasted)
             throw new NotSupportedException("Set context not supported");
 
-        return (new FluxRestQueryable<TModel, TKey>(setContextCasted) as IQueryable<TResult>)!;
+        return (new FluxRestQueryable<TModel, TKey>(this, expression) as IQueryable<TResult>)!;
     }
 }

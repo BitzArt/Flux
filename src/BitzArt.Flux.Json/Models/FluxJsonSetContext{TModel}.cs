@@ -82,4 +82,9 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
 
         return Task.FromResult(existingItem);
     }
+
+    public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
 }

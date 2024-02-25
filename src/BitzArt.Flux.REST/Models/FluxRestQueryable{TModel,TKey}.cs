@@ -1,7 +1,12 @@
-﻿namespace BitzArt.Flux;
+﻿using System.Linq.Expressions;
+
+namespace BitzArt.Flux;
 
 internal class FluxRestQueryable<TModel, TKey> : FluxRestQueryable<TModel>
     where TModel : class
 {
-    public FluxRestQueryable(FluxRestSetContext<TModel, TKey> setContext) : base(setContext) { }
+    public FluxRestQueryable(
+        FluxRestQueryProvider<TModel, TKey> provider,
+        Expression expression
+        ) : base(provider, expression) { }
 }
