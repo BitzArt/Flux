@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace BitzArt.Flux;
 
@@ -31,9 +32,44 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
 
     public async Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
-        string idEndpoint;
+        GetIdEndpoint(id, parameters, out string idEndpoint, out bool handleParameters);
+        var parse = GetFullPath(idEndpoint, handleParameters, parameters);
 
-        bool handleParameters = false;
+        _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parse.Result, parse.Log);
+
+        var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
+        var result = await HandleRequestAsync<TModel>(message);
+
+        return result;
+    }
+
+    public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters) 
+        => UpdateAsync<TResponse>((TKey?)id, model, partial, parameters);
+
+    public async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+    {
+        GetIdEndpoint(id, parameters, out string idEndpoint, out bool handleParameters);
+        var parse = GetFullPath(idEndpoint, handleParameters, parameters);
+
+        _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id!.ToString(), parse.Result);
+
+        var method = partial ? HttpMethod.Patch : HttpMethod.Put;
+        var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
+
+        var message = new HttpRequestMessage(method, parse.Result)
+        {
+            Content = new StringContent(jsonString)
+        };
+
+        var result = await HandleRequestAsync<TResponse>(message);
+
+        return result;
+    }
+
+    protected void GetIdEndpoint(TKey? id, object[]? parameters, out string idEndpoint, out bool handleParameters)
+    {
+        handleParameters = false;
+
         if (SetOptions.GetIdEndpointAction is not null)
         {
             idEndpoint = SetOptions.GetIdEndpointAction(id, parameters);
@@ -43,13 +79,5 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
             idEndpoint = SetOptions.Endpoint is not null ? Path.Combine(SetOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
             handleParameters = true;
         }
-        var parse = GetFullPath(idEndpoint, handleParameters, parameters);
-
-        _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parse.Result, parse.Log);
-
-        var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
-        var result = await HandleRequestAsync<TModel>(message);
-
-        return result;
     }
 }

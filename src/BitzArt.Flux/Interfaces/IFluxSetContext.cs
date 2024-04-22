@@ -14,10 +14,17 @@ public interface IFluxSetContext<TModel> : IFluxQueryable<TModel>
     public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters);
     public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters);
     public Task<TModel> GetAsync(object? id = null, params object[]? parameters);
+
+    public Task<TModel> AddAsync(TModel model, params object[]? parameters);
+    public Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters);
+
+    public Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters);
+    public Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters);
 }
 
 public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>, IFluxQueryable<TModel, TKey>
     where TModel : class
 {
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters);
+    public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters);
 }

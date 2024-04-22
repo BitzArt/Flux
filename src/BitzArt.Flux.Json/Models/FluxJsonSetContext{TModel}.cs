@@ -83,6 +83,22 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         return Task.FromResult(existingItem);
     }
 
+    public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters)
+        => AddAsync<TModel>(model, parameters);
+
+    public virtual Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
+    {
+        throw new NotSupportedException();
+    }
+
+    public virtual Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(id, model, partial, parameters);
+
+    public virtual Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();

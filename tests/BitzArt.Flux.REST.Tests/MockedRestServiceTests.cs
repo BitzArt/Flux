@@ -193,4 +193,48 @@ public class MockedRestServiceTests
         Assert.NotNull(result);
         Assert.True(result.Data!.Count() == 10);
     }
+
+    [Fact]
+    public async Task AddAsync_MockedHttpClient_ReturnsModel()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "model 1";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model")
+            .Respond(HttpStatusCode.Created,
+            JsonContent.Create(new TestModel { Id = id, Name = name }));
+        });
+
+        var model = new TestModel { Id = id, Name = name };
+        var result = await setContext.AddAsync(model);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task AddAsyncWithResponseType_MockedHttpClient_ReturnsUpdateResponse()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "model 1";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model")
+            .Respond(HttpStatusCode.Created,
+            JsonContent.Create(new TestModelUpdateResponse(id, name)));
+        });
+
+        var model = new TestModel { Id = id, Name = name };
+        var result = await setContext.AddAsync<TestModelUpdateResponse>(model);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
 }

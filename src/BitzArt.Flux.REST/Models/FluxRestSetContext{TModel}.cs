@@ -7,7 +7,12 @@ using System.Web;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestSetContext<TModel>(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel> setOptions) : IFluxSetContext<TModel>
+internal class FluxRestSetContext<TModel>(
+    HttpClient httpClient, 
+    FluxRestServiceOptions serviceOptions, 
+    ILogger logger, 
+    FluxRestSetOptions<TModel> setOptions) 
+    : IFluxSetContext<TModel>
     where TModel : class
 {
     // ================ Flux internal wiring ================
@@ -62,7 +67,7 @@ internal class FluxRestSetContext<TModel>(HttpClient httpClient, FluxRestService
         }
         catch (Exception ex)
         {
-            throw new Exception("An error has occured while processing http request. See inner exception for details.", ex);
+            throw new Exception("An error has occurred while processing http request. See inner exception for details.", ex);
         }
     }
 
@@ -108,15 +113,56 @@ internal class FluxRestSetContext<TModel>(HttpClient httpClient, FluxRestService
 
     public virtual async Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
-        if (SetOptions.GetIdEndpointAction is null) throw new FluxRestKeyNotFoundException<TModel>();
-
-        var idEndpoint = SetOptions.GetIdEndpointAction(id, parameters);
+        var idEndpoint = GetIdEndpoint(id, parameters);
         var parse = GetFullPath(idEndpoint, false);
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id is not null ? id.ToString() : "_", parse.Result, parse.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
         var result = await HandleRequestAsync<TModel>(message);
 
+        return result;
+    }
+
+    public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters)
+        => AddAsync<TModel>(model, parameters);
+
+    public virtual async Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
+    {
+        var path = GetEndpoint();
+        var parse = GetFullPath(path, false);
+        _logger.LogInformation("Add {type}: {route}", typeof(TModel).Name, path);
+
+        var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
+        var message = new HttpRequestMessage(HttpMethod.Post, parse.Result)
+        {
+            Content = new StringContent(jsonString)
+        };
+
+        var result = await HandleRequestAsync<TResponse>(message);
+
+        return result;
+    }
+
+    public virtual Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(id, model, partial, parameters);
+
+    public virtual async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
+    {
+        var idEndpoint = GetIdEndpoint(id, parameters);
+        var parse = GetFullPath(idEndpoint, false);
+
+        _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", parse.Result);
+
+        var method = partial ? HttpMethod.Patch : HttpMethod.Put;
+        var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
+
+        var message = new HttpRequestMessage(method, parse.Result)
+        {
+            Content = new StringContent(jsonString)
+        };
+
+        var result = await HandleRequestAsync<TResponse>(message);
+        
         return result;
     }
 
@@ -130,6 +176,13 @@ internal class FluxRestSetContext<TModel>(HttpClient httpClient, FluxRestService
     {
         if (SetOptions.Endpoint is null) return string.Empty;
         return SetOptions.Endpoint;
+    }
+
+    protected string GetIdEndpoint(object? id, params object[]? parameters)
+    {
+        if (SetOptions.GetIdEndpointAction is null) throw new FluxRestKeyNotFoundException<TModel>();
+
+        return SetOptions.GetIdEndpointAction(id, parameters);
     }
 
     public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
