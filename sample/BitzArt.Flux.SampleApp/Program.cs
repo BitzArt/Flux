@@ -1,13 +1,12 @@
 ﻿using BitzArt.Flux.SampleApp.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
 namespace BitzArt.Flux.SampleApp;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static void Main()
     {
         var services = new ServiceCollection();
 
@@ -23,8 +22,10 @@ internal class Program
                 .WithEndpoint("books")
                 .WithPageEndpoint("authors/{authorId}/books")
 
-            .ConfigureHttpClient(client =>
+            .ConfigureHttpClient((serviceProvider, client) =>
             {
+                // You can get options/services from the service provider here
+                // And then configure the HttpClient instance.
                 client.DefaultRequestHeaders.Add("X-Api-Key", "MyApiKey");
             })
             .ConfigureJson(json =>
