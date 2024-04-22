@@ -123,8 +123,8 @@ internal class FluxRestSetContext<TModel>(
         return result;
     }
 
-    public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters)
-        => AddAsync<TModel>(model, parameters);
+    public virtual async Task<TModel> AddAsync(TModel model, params object[]? parameters)
+        => await AddAsync<TModel>(model, parameters);
 
     public virtual async Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
     {
@@ -143,8 +143,8 @@ internal class FluxRestSetContext<TModel>(
         return result;
     }
 
-    public virtual Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TModel>(id, model, partial, parameters);
+    public virtual async Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TModel>(id, model, partial, parameters);
 
     public virtual async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {

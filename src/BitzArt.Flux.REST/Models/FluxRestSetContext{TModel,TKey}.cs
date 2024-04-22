@@ -43,6 +43,12 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
         return result;
     }
 
+    public override Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync((TKey?)id, model, partial, parameters);
+
+    public async Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TModel>(id, model, partial, parameters);
+
     public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters) 
         => UpdateAsync<TResponse>((TKey?)id, model, partial, parameters);
 
