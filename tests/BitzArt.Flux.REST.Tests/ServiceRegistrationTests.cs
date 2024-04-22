@@ -62,8 +62,9 @@ public class ServiceRegistrationTests
         Assert.NotNull(setContext);
 
         var setContextCasted = (FluxRestSetContext<TestModel, int>)setContext;
+        var httpClient = setContextCasted.HttpClient;
 
-        Assert.Contains(setContextCasted.HttpClient.DefaultRequestHeaders,
+        Assert.Contains(httpClient.DefaultRequestHeaders,
             x => x.Key == testHeader.Key && x.Value.Single() == testHeader.Value);
     }
 
