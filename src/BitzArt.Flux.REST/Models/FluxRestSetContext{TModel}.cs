@@ -146,6 +146,12 @@ internal class FluxRestSetContext<TModel>(
     public virtual async Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
         => await UpdateAsync<TModel>(id, model, partial, parameters);
 
+    public virtual async Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TModel>(null, model, partial, parameters);
+
+    public virtual async Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TResponse>(null, model, partial, parameters);
+
     public virtual async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {
         var idEndpoint = GetIdEndpoint(id, parameters);

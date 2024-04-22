@@ -94,6 +94,12 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
     public virtual Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
         => UpdateAsync<TModel>(id, model, partial, parameters);
 
+    public virtual Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(null, model, partial, parameters);
+
+    public virtual Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TResponse>(null, model, partial, parameters);
+
     public virtual Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {
         throw new NotImplementedException();

@@ -18,9 +18,10 @@ public interface IFluxSetContext<TModel> : IFluxQueryable<TModel>
     public Task<TModel> AddAsync(TModel model, params object[]? parameters);
     public Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters);
 
-    //public Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters);
-    public Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters);
-    //public Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters);
+    public Task<TModel> UpdateAsync(object id, TModel model, bool partial = false, params object[]? parameters);
+    public Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters);
+
+    public Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters);
     public Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters);
 }
 
