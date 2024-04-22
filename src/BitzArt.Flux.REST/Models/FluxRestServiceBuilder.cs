@@ -8,7 +8,7 @@ internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
     public IFluxServiceFactory ServiceFactory { get; set; }
     public IFluxFactory Factory { get; init; }
     public FluxRestServiceOptions ServiceOptions { get; init; }
-    public Action<HttpClient>? HttpClientConfiguration { get; set; }
+    public Action<IServiceProvider, HttpClient>? HttpClientConfiguration { get; set; }
 
     public FluxRestServiceBuilder(IFluxServicePreBuilder prebuilder, string? baseUrl)
     {
@@ -17,7 +17,7 @@ internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
         ServiceOptions = new(baseUrl);
         HttpClientConfiguration = null;
 
-        if (prebuilder.Name is null) throw new Exception("Missing Name in Flux Service configuration. Specify service names when configuring external services.");
+        if (prebuilder.Name is null) throw new Exception("Missing Name in Flux Service configuration. Please specify your external services' names when configuring Flux.");
         ServiceFactory = new FluxRestServiceFactory(ServiceOptions, prebuilder.Name);
     }
 }

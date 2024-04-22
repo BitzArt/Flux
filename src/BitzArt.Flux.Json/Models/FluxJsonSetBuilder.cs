@@ -12,7 +12,7 @@ internal class FluxJsonSetBuilder<TModel> : IFluxJsonSetBuilder<TModel>
     public IFluxFactory Factory => ServiceBuilder.Factory;
     public FluxJsonServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
     public string? BaseFilePath => ServiceBuilder.ServiceOptions.BaseFilePath;
-    protected FluxJsonSetOptions<TModel> _setOptions;
+    protected FluxJsonSetOptions<TModel> _setOptions = null!;
     
     public FluxJsonSetOptions<TModel> SetOptions { get => _setOptions; set => _setOptions = value; }
     

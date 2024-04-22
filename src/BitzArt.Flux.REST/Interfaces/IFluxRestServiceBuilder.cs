@@ -3,5 +3,5 @@
 public interface IFluxRestServiceBuilder : IFluxServiceBuilder
 {
     public FluxRestServiceOptions ServiceOptions { get; }
-    internal Action<HttpClient>? HttpClientConfiguration { get; set; }
+    internal Action<IServiceProvider, HttpClient>? HttpClientConfiguration { get; set; }
 }

@@ -12,13 +12,13 @@ internal class FluxRestSetBuilder<TModel> : IFluxRestSetBuilder<TModel>
     public IFluxFactory Factory => ServiceBuilder.Factory;
     public FluxRestServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
 
-    public Action<HttpClient>? HttpClientConfiguration
+    public Action<IServiceProvider, HttpClient>? HttpClientConfiguration
     {
         get => ServiceBuilder.HttpClientConfiguration;
         set => ServiceBuilder.HttpClientConfiguration = value;
     }
 
-    protected FluxRestSetOptions<TModel> _setOptions;
+    protected FluxRestSetOptions<TModel> _setOptions = null!;
     
     public FluxRestSetOptions<TModel> SetOptions { get => _setOptions; set => _setOptions = value; }
 
