@@ -73,12 +73,11 @@ internal class FluxRestSetContext<TModel>(
 
     public virtual async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        var path = SetOptions.Endpoint is not null ? SetOptions.Endpoint : string.Empty;
-        var parse = GetFullPath(path, true, parameters);
+        var path = GetEndpointFullPath(parameters);
 
-        _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
+        _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, path.Result, path.Log);
 
-        var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
+        var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
         var result = await HandleRequestAsync<IEnumerable<TModel>>(message);
 
         return result;
@@ -175,16 +174,22 @@ internal class FluxRestSetContext<TModel>(
         return GetEndpoint();
     }
 
+    protected virtual RequestUrlParameterParsingResult GetEndpointFullPath(params object[]? parameters)
+    {
+        var endpoint = GetEndpoint();
+        return GetFullPath(endpoint, true);
+    }
+
     protected string GetEndpoint()
     {
         if (SetOptions.Endpoint is null) return string.Empty;
         return SetOptions.Endpoint;
     }
 
-    protected virtual RequestUrlParameterParsingResult GetEndpointFullPath(params object[]? parameters)
+    protected virtual RequestUrlParameterParsingResult GetIdEndpointFullPath(object? id, params object[]? parameters)
     {
-        var endpoint = GetEndpoint();
-        return GetFullPath(endpoint, false);
+        var idEndpoint = GetIdEndpoint(id, parameters);
+        return GetFullPath(idEndpoint, true);
     }
 
     protected string GetIdEndpoint(object? id, params object[]? parameters)
@@ -192,12 +197,6 @@ internal class FluxRestSetContext<TModel>(
         if (SetOptions.GetIdEndpointAction is null) throw new FluxRestKeyNotFoundException<TModel>();
 
         return SetOptions.GetIdEndpointAction(id, parameters);
-    }
-
-    protected virtual RequestUrlParameterParsingResult GetIdEndpointFullPath(object? id, params object[]? parameters)
-    {
-        var idEndpoint = GetIdEndpoint(id, parameters);
-        return GetFullPath(idEndpoint, false);
     }
 
     public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
