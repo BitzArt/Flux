@@ -73,12 +73,11 @@ internal class FluxRestSetContext<TModel>(
 
     public virtual async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        var path = SetOptions.Endpoint is not null ? SetOptions.Endpoint : string.Empty;
-        var parse = GetFullPath(path, true, parameters);
+        var path = GetEndpointFullPath(parameters);
 
-        _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
+        _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, path.Result, path.Log);
 
-        var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
+        var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
         var result = await HandleRequestAsync<IEnumerable<TModel>>(message);
 
         return result;
@@ -113,11 +112,10 @@ internal class FluxRestSetContext<TModel>(
 
     public virtual async Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
-        var idEndpoint = GetIdEndpoint(id, parameters);
-        var parse = GetFullPath(idEndpoint, false);
-        _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id is not null ? id.ToString() : "_", parse.Result, parse.Log);
+        var path = GetIdEndpointFullPath(id, parameters);
+        _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result, path.Log);
 
-        var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
+        var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
         var result = await HandleRequestAsync<TModel>(message);
 
         return result;
@@ -128,9 +126,8 @@ internal class FluxRestSetContext<TModel>(
 
     public virtual async Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
     {
-        var path = GetEndpoint();
-        var parse = GetFullPath(path, false);
-        _logger.LogInformation("Add {type}: {route}", typeof(TModel).Name, path);
+        var parse = GetEndpointFullPath(parameters);
+        _logger.LogInformation("Add {type}: {route}", typeof(TModel).Name, parse.Result);
 
         var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
         var message = new HttpRequestMessage(HttpMethod.Post, parse.Result)
@@ -154,15 +151,14 @@ internal class FluxRestSetContext<TModel>(
 
     public virtual async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {
-        var idEndpoint = GetIdEndpoint(id, parameters);
-        var parse = GetFullPath(idEndpoint, false);
+        var path = GetIdEndpointFullPath(id, parameters);
 
-        _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", parse.Result);
+        _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result);
 
         var method = partial ? HttpMethod.Patch : HttpMethod.Put;
         var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
 
-        var message = new HttpRequestMessage(method, parse.Result)
+        var message = new HttpRequestMessage(method, path.Result)
         {
             Content = new StringContent(jsonString)
         };
@@ -178,10 +174,22 @@ internal class FluxRestSetContext<TModel>(
         return GetEndpoint();
     }
 
+    protected virtual RequestUrlParameterParsingResult GetEndpointFullPath(params object[]? parameters)
+    {
+        var endpoint = GetEndpoint();
+        return GetFullPath(endpoint, true);
+    }
+
     protected string GetEndpoint()
     {
         if (SetOptions.Endpoint is null) return string.Empty;
         return SetOptions.Endpoint;
+    }
+
+    protected virtual RequestUrlParameterParsingResult GetIdEndpointFullPath(object? id, params object[]? parameters)
+    {
+        var idEndpoint = GetIdEndpoint(id, parameters);
+        return GetFullPath(idEndpoint, true);
     }
 
     protected string GetIdEndpoint(object? id, params object[]? parameters)
