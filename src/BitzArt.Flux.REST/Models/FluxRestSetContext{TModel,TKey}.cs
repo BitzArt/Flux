@@ -16,7 +16,11 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
 
     // ==================== Constructor ====================
 
-    public FluxRestSetContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel, TKey> setOptions)
+    public FluxRestSetContext(
+        HttpClient httpClient,
+        FluxRestServiceOptions serviceOptions,
+        ILogger logger,
+        FluxRestSetOptions<TModel, TKey> setOptions)
         : base(httpClient, serviceOptions, logger, setOptions)
     {
         SetOptions = setOptions;
