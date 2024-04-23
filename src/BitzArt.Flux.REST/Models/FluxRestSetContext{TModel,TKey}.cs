@@ -15,7 +15,11 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
 
     // ==================== Constructor ====================
 
-    public FluxRestSetContext(HttpClient httpClient, FluxRestServiceOptions serviceOptions, ILogger logger, FluxRestSetOptions<TModel, TKey> setOptions)
+    public FluxRestSetContext(
+        HttpClient httpClient,
+        FluxRestServiceOptions serviceOptions,
+        ILogger logger,
+        FluxRestSetOptions<TModel, TKey> setOptions)
         : base(httpClient, serviceOptions, logger, setOptions)
     {
         SetOptions = setOptions;
@@ -31,19 +35,7 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
 
     public async Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
-        string idEndpoint;
-
-        bool handleParameters = false;
-        if (SetOptions.GetIdEndpointAction is not null)
-        {
-            idEndpoint = SetOptions.GetIdEndpointAction(id, parameters);
-        }
-        else
-        {
-            idEndpoint = SetOptions.Endpoint is not null ? Path.Combine(SetOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
-            handleParameters = true;
-        }
-        var parse = GetFullPath(idEndpoint, handleParameters, parameters);
+        var parse = GetIdEndpointFullPath(id, parameters);
 
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parse.Result, parse.Log);
 
@@ -51,5 +43,33 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
         var result = await HandleRequestAsync<TModel>(message);
 
         return result;
+    }
+
+    public async Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TModel>(id, model, partial, parameters);
+
+    public async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => await base.UpdateAsync<TResponse>(id, model, partial, parameters);
+
+    protected override RequestUrlParameterParsingResult GetIdEndpointFullPath(object? id, params object[]? parameters)
+    {
+        if (SetOptions.GetIdEndpointAction is not null)
+        {
+            if (id is null)
+            {
+                var action = SetOptions.BaseGetIdEndpointAction!;
+                return GetFullPath(action(id, parameters), false, parameters);
+            }
+
+            if (id is not TKey idCasted) throw new ArgumentException($"Id must be of type {typeof(TKey).Name}");
+
+            var idEndpoint = SetOptions.GetIdEndpointAction(idCasted, parameters);
+            return GetFullPath(idEndpoint, false, parameters);
+        }
+        else
+        {
+            var idEndpoint = SetOptions.Endpoint is not null ? Path.Combine(SetOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
+            return GetFullPath(idEndpoint, true, parameters);
+        }
     }
 }

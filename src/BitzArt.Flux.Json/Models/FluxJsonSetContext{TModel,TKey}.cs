@@ -39,4 +39,10 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
         return Task.FromResult(existingItem);
     }
+
+    public Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(id, model, partial, parameters);
+
+    public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => base.UpdateAsync<TResponse>(id, model, partial, parameters);
 }
