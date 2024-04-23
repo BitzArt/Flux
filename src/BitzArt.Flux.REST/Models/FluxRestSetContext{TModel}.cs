@@ -150,7 +150,6 @@ internal class FluxRestSetContext<TModel>(
     public override async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {
         var path = GetIdEndpointFullPath(id, parameters);
-
         _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result);
 
         var method = partial ? HttpMethod.Patch : HttpMethod.Put;
