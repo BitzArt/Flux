@@ -18,11 +18,11 @@ public abstract class FluxSetContext<TModel> : IFluxSetContext<TModel>
     public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters) => throw new NotImplementedException();
     public virtual Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters) => throw new NotImplementedException();
 
-    public virtual Task<TModel> UpdateAsync(object id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
+    public virtual Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
     public virtual Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
 
-    public virtual Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
     public virtual Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
+    public virtual Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
 
     // ============== IEnumerable implementation ==============
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace BitzArt.Flux;
 
@@ -46,24 +45,24 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
         return result;
     }
 
-    public override Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TModel>((TKey?)id, model, partial, parameters);
-
     public async Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters)
         => await UpdateAsync<TModel>(id, model, partial, parameters);
-
-    public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters) 
-        => UpdateAsync<TResponse>((TKey?)id, model, partial, parameters);
 
     public async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
         => await base.UpdateAsync<TResponse>(id, model, partial, parameters);
 
     protected override RequestUrlParameterParsingResult GetIdEndpointFullPath(object? id, params object[]? parameters)
     {
-        if (id is not TKey idCasted) throw new ArgumentException($"Id must be of type {typeof(TKey).Name}");
-
         if (SetOptions.GetIdEndpointAction is not null)
         {
+            if (id is null)
+            {
+                var action = SetOptions.BaseGetIdEndpointAction!;
+                return GetFullPath(action(id, parameters), false, parameters);
+            }
+
+            if (id is not TKey idCasted) throw new ArgumentException($"Id must be of type {typeof(TKey).Name}");
+
             var idEndpoint = SetOptions.GetIdEndpointAction(idCasted, parameters);
             return GetFullPath(idEndpoint, false, parameters);
         }

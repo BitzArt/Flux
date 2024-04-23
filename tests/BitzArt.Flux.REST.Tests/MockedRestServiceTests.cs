@@ -199,7 +199,7 @@ public class MockedRestServiceTests
     {
         var baseUrl = "https://mocked.service";
         var id = 1;
-        var name = "model 1";
+        var name = "model";
 
         var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
         {
@@ -217,11 +217,11 @@ public class MockedRestServiceTests
     }
 
     [Fact]
-    public async Task AddAsyncWithResponseType_MockedHttpClient_ReturnsUpdateResponse()
+    public async Task AddAsync_WithResponseType_ReturnsUpdateResponse()
     {
         var baseUrl = "https://mocked.service";
         var id = 1;
-        var name = "model 1";
+        var name = "model";
 
         var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
         {
@@ -232,6 +232,198 @@ public class MockedRestServiceTests
 
         var model = new TestModel { Id = id, Name = name };
         var result = await setContext.AddAsync<TestModelUpdateResponse>(model);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_MockedHttpClient_ReturnsModel()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModel { Id = id, Name = name }));
+        });
+
+        var model = new TestModel { Id = id, Name = name };
+        var result = await setContext.UpdateAsync(id, model);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WithResponseType_ReturnsUpdateResponse()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModelUpdateResponse { Id = id, Name = name }));
+        });
+
+        var model = new TestModel { Id = id, Name = name };
+        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(id, model);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_Partial_ReturnsModel()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model 1";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModel { Id = id, Name = name }));
+        });
+
+        var model = new TestModel { Id = id, Name = name };
+        var result = await setContext.UpdateAsync(id, model, partial: true);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsyncWithResponseType_Partial_ReturnsUpdateResponse()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model 1";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModelUpdateResponse { Id = id, Name = name }));
+        });
+
+        var model = new TestModel { Id = id, Name = "model" };
+        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(id, model, partial: true);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_IdAsParameter_ReturnsModel()
+    {
+        var baseUrl = "https://mocked.service";
+        var modelId = 1;
+        var name = "updated model";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model?id={modelId}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModel { Id = modelId, Name = name }));
+        });
+
+        ((FluxRestSetContext<TestModel>)setContext)
+            .SetOptions.GetIdEndpointAction = (_, parameters) => $"model?id={parameters!.First()}";
+
+        var model = new TestModel { Id = modelId, Name = name };
+        
+        var result = await setContext.UpdateAsync(model, partial: false, modelId);
+
+        Assert.NotNull(result);
+        Assert.Equal(modelId, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_CustomIdEndpointLogic_ReturnsModel()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/specific/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModel { Id = id, Name = name }));
+        });
+
+        ((FluxRestSetContext<TestModel>)setContext)
+            .SetOptions.GetIdEndpointAction = (key, _) => $"model/specific/{key}";
+
+        var model = new TestModel { Id = id, Name = name };
+
+        var result = await setContext.UpdateAsync(id, model);
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsyncWithResponseType_IdAsParameter_ReturnsUpdateResponse()
+    {
+        var baseUrl = "https://mocked.service";
+        var modelId = 1;
+        var name = "updated model";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model?id={modelId}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModelUpdateResponse { Id = modelId, Name = name }));
+        });
+
+        ((FluxRestSetContext<TestModel>)setContext)
+            .SetOptions.GetIdEndpointAction = (_, parameters) => $"model?id={parameters!.First()}";
+
+        var model = new TestModel { Id = modelId, Name = name };
+
+        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(model, partial: false, modelId);
+
+        Assert.NotNull(result);
+        Assert.Equal(modelId, result.Id);
+        Assert.Equal(name, result.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsyncWithResponseType_CustomIdEndpointLogic_ReturnsUpdateResponse()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model";
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/specific/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModelUpdateResponse { Id = id, Name = name }));
+        });
+
+        ((FluxRestSetContext<TestModel>)setContext)
+            .SetOptions.GetIdEndpointAction = (key, _) => $"model/specific/{key}";
+
+        var model = new TestModel { Id = id, Name = name };
+        
+        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(id, model);
 
         Assert.NotNull(result);
         Assert.Equal(id, result.Id);
