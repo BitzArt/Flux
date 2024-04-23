@@ -1,6 +1,5 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
-using System.Collections;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Web;
@@ -12,7 +11,7 @@ internal class FluxRestSetContext<TModel>(
     FluxRestServiceOptions serviceOptions, 
     ILogger logger, 
     FluxRestSetOptions<TModel> setOptions) 
-    : IFluxSetContext<TModel>
+    : FluxSetContext<TModel>
     where TModel : class
 {
     // ================ Flux internal wiring ================
@@ -30,14 +29,13 @@ internal class FluxRestSetContext<TModel>(
 
     // ============== IEnumerable implementation ==============
 
-    public IEnumerator<TModel> GetEnumerator() => throw new EnumerationNotSupportedException();
-    IEnumerator IEnumerable.GetEnumerator() => throw new EnumerationNotSupportedException();
+    public override IEnumerator<TModel> GetEnumerator() => throw new EnumerationNotSupportedException();
 
     // ============== IQueryable implementation ==============
 
-    public Type ElementType => typeof(TModel);
-    public Expression Expression => Expression.Constant(this);
-    public virtual IQueryProvider Provider => new FluxRestQueryProvider<TModel>(this);
+    public override Type ElementType => typeof(TModel);
+    public override Expression Expression => Expression.Constant(this);
+    public override IQueryProvider Provider => new FluxRestQueryProvider<TModel>(this);
 
     // ============== Data methods implementation ==============
 
@@ -71,7 +69,7 @@ internal class FluxRestSetContext<TModel>(
         }
     }
 
-    public virtual async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
+    public override async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
         var path = GetEndpointFullPath(parameters);
 
@@ -83,9 +81,9 @@ internal class FluxRestSetContext<TModel>(
         return result;
     }
 
-    public virtual async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters) => await GetPageAsync(new PageRequest(offset, limit), parameters);
+    public override async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters) => await GetPageAsync(new PageRequest(offset, limit), parameters);
 
-    public virtual async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
+    public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
         var path = GetPageEndpoint();
 
@@ -110,7 +108,7 @@ internal class FluxRestSetContext<TModel>(
         return result;
     }
 
-    public virtual async Task<TModel> GetAsync(object? id, params object[]? parameters)
+    public override async Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
         var path = GetIdEndpointFullPath(id, parameters);
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result, path.Log);
@@ -121,10 +119,10 @@ internal class FluxRestSetContext<TModel>(
         return result;
     }
 
-    public virtual async Task<TModel> AddAsync(TModel model, params object[]? parameters)
+    public override async Task<TModel> AddAsync(TModel model, params object[]? parameters)
         => await AddAsync<TModel>(model, parameters);
 
-    public virtual async Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
+    public override async Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
     {
         var parse = GetEndpointFullPath(parameters);
         _logger.LogInformation("Add {type}: {route}", typeof(TModel).Name, parse.Result);
@@ -140,16 +138,16 @@ internal class FluxRestSetContext<TModel>(
         return result;
     }
 
-    public virtual async Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
+    public override async Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
         => await UpdateAsync<TModel>(id, model, partial, parameters);
 
-    public virtual async Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
+    public override async Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
         => await UpdateAsync<TModel>(null, model, partial, parameters);
 
-    public virtual async Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
+    public override async Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
         => await UpdateAsync<TResponse>(null, model, partial, parameters);
 
-    public virtual async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
+    public override async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {
         var path = GetIdEndpointFullPath(id, parameters);
 
@@ -166,6 +164,11 @@ internal class FluxRestSetContext<TModel>(
         var result = await HandleRequestAsync<TResponse>(message);
         
         return result;
+    }
+
+    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
     }
 
     protected string GetPageEndpoint()
@@ -197,10 +200,5 @@ internal class FluxRestSetContext<TModel>(
         if (SetOptions.GetIdEndpointAction is null) throw new FluxRestKeyNotFoundException<TModel>();
 
         return SetOptions.GetIdEndpointAction(id, parameters);
-    }
-
-    public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotSupportedException();
     }
 }

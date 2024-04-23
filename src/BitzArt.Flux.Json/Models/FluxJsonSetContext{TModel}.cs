@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace BitzArt.Flux;
 
-internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
+internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
     where TModel : class
 {
     // ================ Flux internal wiring ================
@@ -22,7 +22,10 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
 
     // ==================== Constructor ====================
 
-    public FluxJsonSetContext(FluxJsonServiceOptions serviceOptions, ILogger logger, FluxJsonSetOptions<TModel> setOptions)
+    public FluxJsonSetContext(
+        FluxJsonServiceOptions serviceOptions,
+        ILogger logger,
+        FluxJsonSetOptions<TModel> setOptions)
     {
         ServiceOptions = serviceOptions;
         _logger = logger;
@@ -36,39 +39,38 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
 
     // ============== IEnumerable implementation ==============
 
-    public IEnumerator<TModel> GetEnumerator() => Items.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public override IEnumerator<TModel> GetEnumerator() => Items.GetEnumerator();
 
     // ============== IQueryable implementation ==============
 
-    public Type ElementType => typeof(TModel);
+    public override Type ElementType => typeof(TModel);
 
-    public Expression Expression => Query.Expression;
+    public override Expression Expression => Query.Expression;
 
-    public IQueryProvider Provider => Query.Provider;
+    public override IQueryProvider Provider => Query.Provider;
 
     // ============== Data methods implementation ==============
 
-    public virtual Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
+    public override Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
         _logger.LogInformation("GetAll {type}", typeof(TModel).Name);
 
         return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
     }
 
-    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
+    public override Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
     {
         return Task.FromResult(SetOptions.Items!.ToPage(offset, limit));
     }
 
-    public virtual Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
+    public override Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
         _logger.LogInformation("GetPage {type}", typeof(TModel).Name);
         
        return Task.FromResult(SetOptions.Items!.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
     }
 
-    public virtual Task<TModel> GetAsync(object? id, params object[]? parameters)
+    public override Task<TModel> GetAsync(object? id, params object[]? parameters)
     {
         _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
         
@@ -83,29 +85,29 @@ internal class FluxJsonSetContext<TModel> : IFluxSetContext<TModel>
         return Task.FromResult(existingItem);
     }
 
-    public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters)
+    public override Task<TModel> AddAsync(TModel model, params object[]? parameters)
         => AddAsync<TModel>(model, parameters);
 
-    public virtual Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
+    public override Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
     {
         throw new NotSupportedException();
     }
 
-    public virtual Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
+    public override Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
         => UpdateAsync<TModel>(id, model, partial, parameters);
 
-    public virtual Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
+    public override Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
         => UpdateAsync<TModel>(null, model, partial, parameters);
 
-    public virtual Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
+    public override Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
         => UpdateAsync<TResponse>(null, model, partial, parameters);
 
-    public virtual Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
+    public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {
         throw new NotImplementedException();
     }
 
-    public Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
     {
         throw new NotSupportedException();
     }
