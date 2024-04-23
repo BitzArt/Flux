@@ -32,8 +32,7 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
 
     public async Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
-        GetIdEndpoint(id, parameters, out string idEndpoint, out bool handleParameters);
-        var parse = GetFullPath(idEndpoint, handleParameters, parameters);
+        var parse = GetIdEndpointFullPath(id, parameters);
 
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parse.Result, parse.Log);
 
