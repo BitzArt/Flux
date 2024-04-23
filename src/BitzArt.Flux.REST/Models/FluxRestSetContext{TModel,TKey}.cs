@@ -53,37 +53,21 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
         => UpdateAsync<TResponse>((TKey?)id, model, partial, parameters);
 
     public async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => await base.UpdateAsync<TResponse>(id, model, partial, parameters);
+
+    protected override RequestUrlParameterParsingResult GetIdEndpointFullPath(object? id, params object[]? parameters)
     {
-        GetIdEndpoint(id, parameters, out string idEndpoint, out bool handleParameters);
-        var parse = GetFullPath(idEndpoint, handleParameters, parameters);
-
-        _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id!.ToString(), parse.Result);
-
-        var method = partial ? HttpMethod.Patch : HttpMethod.Put;
-        var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
-
-        var message = new HttpRequestMessage(method, parse.Result)
-        {
-            Content = new StringContent(jsonString)
-        };
-
-        var result = await HandleRequestAsync<TResponse>(message);
-
-        return result;
-    }
-
-    protected void GetIdEndpoint(TKey? id, object[]? parameters, out string idEndpoint, out bool handleParameters)
-    {
-        handleParameters = false;
+        if (id is not TKey idCasted) throw new ArgumentException($"Id must be of type {typeof(TKey).Name}");
 
         if (SetOptions.GetIdEndpointAction is not null)
         {
-            idEndpoint = SetOptions.GetIdEndpointAction(id, parameters);
+            var idEndpoint = SetOptions.GetIdEndpointAction(idCasted, parameters);
+            return GetFullPath(idEndpoint, false, parameters);
         }
         else
         {
-            idEndpoint = SetOptions.Endpoint is not null ? Path.Combine(SetOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
-            handleParameters = true;
+            var idEndpoint = SetOptions.Endpoint is not null ? Path.Combine(SetOptions.Endpoint, id!.ToString()!) : id!.ToString()!;
+            return GetFullPath(idEndpoint, true, parameters);
         }
     }
 }
