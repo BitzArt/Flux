@@ -15,10 +15,15 @@ public static class UsingRestExtension
         // If configuration action is null, do nothing
         builder.HttpClientConfiguration ??= (_, _) => { };
 
-        builder.Services.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
+        var httpClientBuilder = builder.Services.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
         {
             builder.HttpClientConfiguration(serviceProvider, httpClient);
         });
+
+        if (builder.ConfigureHandler is not null)
+        {
+            httpClientBuilder.AddHttpMessageHandler(builder.ConfigureHandler);
+        }
 
         builder.Services.AddScoped<IFluxServiceContext>(x =>
         {

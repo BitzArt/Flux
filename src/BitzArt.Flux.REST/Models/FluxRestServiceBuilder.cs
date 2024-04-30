@@ -9,6 +9,7 @@ internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
     public IFluxFactory Factory { get; init; }
     public FluxRestServiceOptions ServiceOptions { get; init; }
     public Action<IServiceProvider, HttpClient>? HttpClientConfiguration { get; set; }
+    public Func<IServiceProvider, DelegatingHandler>? ConfigureHandler { get; set; }
 
     public FluxRestServiceBuilder(IFluxServicePreBuilder prebuilder, string? baseUrl)
     {
