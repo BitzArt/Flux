@@ -2,8 +2,8 @@
 
 internal record RequestUrlParameterParsingResult
 {
-    public required string Result { get; set; }
-    public required string Log { get; set; }
+    public string Result { get; set; }
+    public string Log { get; set; }
 
     public RequestUrlParameterParsingResult(string result, string log)
     {
