@@ -18,12 +18,6 @@ internal class FluxRestSetBuilder<TModel> : IFluxRestSetBuilder<TModel>
         set => ServiceBuilder.HttpClientConfiguration = value;
     }
 
-    public Func<IServiceProvider, DelegatingHandler>? ConfigureHandler
-    {
-        get => ServiceBuilder.ConfigureHandler;
-        set => ServiceBuilder.ConfigureHandler = value;
-    }
-
     protected FluxRestSetOptions<TModel> _setOptions = null!;
     
     public FluxRestSetOptions<TModel> SetOptions { get => _setOptions; set => _setOptions = value; }

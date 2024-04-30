@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
 
 namespace BitzArt.Flux;
 
@@ -20,10 +19,29 @@ public static class UsingRestExtension
             builder.HttpClientConfiguration(serviceProvider, httpClient);
         });
 
-        if (builder.ConfigureHandler is not null)
+        builder.Services.AddScoped<IFluxServiceContext>(x =>
         {
-            httpClientBuilder.AddHttpMessageHandler(builder.ConfigureHandler);
-        }
+            return new FluxServiceContext(fluxServiceProvider, x);
+        });
+
+        return builder;
+    }
+
+    public static IFluxRestServiceBuilder UsingRest<THandler>(this IFluxServicePreBuilder prebuilder, string? baseUrl = null)
+        where THandler : DelegatingHandler
+    {
+        var builder = new FluxRestServiceBuilder(prebuilder, baseUrl);
+
+        var fluxServiceProvider = builder.ServiceFactory;
+        builder.Factory.ServiceContexts.Add(fluxServiceProvider);
+
+        // If configuration action is null, do nothing
+        builder.HttpClientConfiguration ??= (_, _) => { };
+
+        builder.Services.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
+        {
+            builder.HttpClientConfiguration(serviceProvider, httpClient);
+        }).AddHttpMessageHandler<THandler>();
 
         builder.Services.AddScoped<IFluxServiceContext>(x =>
         {
