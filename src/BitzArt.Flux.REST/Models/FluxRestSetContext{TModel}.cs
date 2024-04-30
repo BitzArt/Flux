@@ -86,6 +86,8 @@ internal class FluxRestSetContext<TModel>(
     public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
         var path = GetPageEndpoint();
+        var parse = GetFullPath(path, true, parameters);
+        path = parse.Result;
 
         var queryIndex = path.IndexOf('?');
 
@@ -99,7 +101,8 @@ internal class FluxRestSetContext<TModel>(
         if (queryIndex != -1) path = path[..queryIndex];
         path = path + "?" + query.ToString();
 
-        var parse = GetFullPath(path, true, parameters);
+        parse.Result = path;
+        
         _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
