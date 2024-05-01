@@ -30,6 +30,30 @@ public class MockedRestServiceTests
         Assert.True(result.Count() == setCount);
     }
 
+    [Fact]
+    public async Task GetAllAsync_WithQuery_ReturnsAll()
+    {
+        var baseUrl = "https://mocked.service";
+        var query = "?sort=id";
+        var setCount = 10;
+
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model{query}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(TestModel.GetAll(setCount)));
+        });
+
+        ((FluxRestSetContext<TestModel>)setContext)
+          .SetOptions.Endpoint = "model{query}";
+
+        var result = await setContext.GetAllAsync(query);
+
+        Assert.NotNull(result);
+        if (setCount > 0) Assert.True(result.Any());
+        Assert.True(result.Count() == setCount);
+    }
+
     [Theory]
     [InlineData(0, 0, 0)]
     [InlineData(0, 0, 10)]
