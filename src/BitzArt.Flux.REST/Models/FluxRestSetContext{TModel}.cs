@@ -182,7 +182,7 @@ internal class FluxRestSetContext<TModel>(
     protected virtual RequestUrlParameterParsingResult GetEndpointFullPath(params object[]? parameters)
     {
         var endpoint = GetEndpoint();
-        return GetFullPath(endpoint, true);
+        return GetFullPath(endpoint, true, parameters);
     }
 
     protected string GetEndpoint()
