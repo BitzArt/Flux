@@ -1,6 +1,7 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
+using System.Text;
 using System.Text.Json;
 using System.Web;
 
@@ -133,7 +134,7 @@ internal class FluxRestSetContext<TModel>(
         var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
         var message = new HttpRequestMessage(HttpMethod.Post, parse.Result)
         {
-            Content = new StringContent(jsonString)
+            Content = new StringContent(jsonString, Encoding.UTF8, "application/json")
         };
 
         var result = await HandleRequestAsync<TResponse>(message);
@@ -160,7 +161,7 @@ internal class FluxRestSetContext<TModel>(
 
         var message = new HttpRequestMessage(method, path.Result)
         {
-            Content = new StringContent(jsonString)
+            Content = new StringContent(jsonString, Encoding.UTF8, "application/json")
         };
 
         var result = await HandleRequestAsync<TResponse>(message);
