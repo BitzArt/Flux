@@ -2,12 +2,12 @@
 
 public static class AddFluxExtension
 {
-    public static IServiceCollection AddFlux(this IServiceCollection services)
+    public static IServiceCollection AddFlux(this IServiceCollection services, string baseUrl)
     {
         services.AddFlux(flux =>
         {
             flux.AddService("backend")
-                .UsingRest()
+                .UsingRest(baseUrl)
 
                 .AddSet<Author>()
                 .WithEndpoint("authors")

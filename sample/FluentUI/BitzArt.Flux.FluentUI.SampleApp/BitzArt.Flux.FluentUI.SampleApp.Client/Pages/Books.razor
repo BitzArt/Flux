@@ -1,0 +1,41 @@
+﻿@page "/books"
+
+@inherits PageBase<BooksPageViewModel>
+
+<PageTitle>Books</PageTitle>
+
+<h1>Books</h1>
+
+<FluentDataGrid
+    ItemsProvider="ViewModel.BooksProvider.GetItems"
+    GridTemplateColumns="1fr 1fr 1fr"
+    Pagination="@ViewModel.PaginationState"
+    TGridItem="Book">
+        <PropertyColumn 
+            Title="ID" 
+            Property="@(x => x!.Id)"
+            Sortable="true"
+            IsDefaultSortColumn="true"
+            Align="Align.Start" />
+        
+        <PropertyColumn 
+            Title="Title" 
+            Property="@(x => x!.Title)"
+            Sortable="true"
+            Align="Align.Start" />
+        
+        <PropertyColumn 
+            Title="Author ID" 
+            Property="@(x => x!.AuthorId)"
+            Sortable="true"
+            Align="Align.Start" />
+</FluentDataGrid>
+
+<FluentPaginator State="@ViewModel.PaginationState">
+    <SummaryTemplate>
+        There are total <strong>@(ViewModel.PaginationState.TotalItemCount ?? 0)</strong> items
+    </SummaryTemplate>
+    <PaginationTextTemplate>
+        This is page <strong>@(ViewModel.PaginationState.CurrentPageIndex + 1)</strong> out of a total of <strong>@(ViewModel.PaginationState.LastPageIndex + 1)</strong> pages
+    </PaginationTextTemplate>
+</FluentPaginator>
