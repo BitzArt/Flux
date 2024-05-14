@@ -70,21 +70,22 @@ internal class FluxRestSetContext<TModel>(
         }
     }
 
-    public override async Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
+    public override async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken, params object[]? parameters)
     {
         var path = GetEndpointFullPath(parameters);
 
         _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, path.Result, path.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
-        var result = await HandleRequestAsync<IEnumerable<TModel>>(message);
+        var result = await HandleRequestAsync<IEnumerable<TModel>>(message, cancellationToken);
 
         return result;
     }
 
-    public override async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters) => await GetPageAsync(new PageRequest(offset, limit), parameters);
+    public override async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, CancellationToken cancellationToken, params object[]? parameters) 
+        => await GetPageAsync(new PageRequest(offset, limit), cancellationToken, parameters);
 
-    public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
+    public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken, params object[]? parameters)
     {
         var path = GetPageEndpoint();
         var parse = GetFullPath(path, true, parameters);
@@ -97,7 +98,9 @@ internal class FluxRestSetContext<TModel>(
             HttpUtility.ParseQueryString(path[queryIndex..]);
 
         query.Add("offset", pageRequest.Offset?.ToString());
-        query.Add("limit", pageRequest.Limit?.ToString());
+        
+        if (pageRequest.Limit.HasValue)
+            query.Add("limit", pageRequest.Limit.Value.ToString());
 
         if (queryIndex != -1) path = path[..queryIndex];
         path = path + "?" + query.ToString();
@@ -107,26 +110,26 @@ internal class FluxRestSetContext<TModel>(
         _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
-        var result = await HandleRequestAsync<PageResult<TModel>>(message);
+        var result = await HandleRequestAsync<PageResult<TModel>>(message, cancellationToken);
 
         return result;
     }
 
-    public override async Task<TModel> GetAsync(object? id, params object[]? parameters)
+    public override async Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters)
     {
         var path = GetIdEndpointFullPath(id, parameters);
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result, path.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
-        var result = await HandleRequestAsync<TModel>(message);
+        var result = await HandleRequestAsync<TModel>(message, cancellationToken);
 
         return result;
     }
 
-    public override async Task<TModel> AddAsync(TModel model, params object[]? parameters)
-        => await AddAsync<TModel>(model, parameters);
+    public override async Task<TModel> AddAsync(TModel model, CancellationToken cancellationToken, params object[]? parameters)
+        => await AddAsync<TModel>(model, cancellationToken, parameters);
 
-    public override async Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
+    public override async Task<TResponse> AddAsync<TResponse>(TModel model, CancellationToken cancellationToken, params object[]? parameters)
     {
         var parse = GetEndpointFullPath(parameters);
         _logger.LogInformation("Add {type}: {route}", typeof(TModel).Name, parse.Result);
@@ -137,21 +140,21 @@ internal class FluxRestSetContext<TModel>(
             Content = new StringContent(jsonString, Encoding.UTF8, "application/json")
         };
 
-        var result = await HandleRequestAsync<TResponse>(message);
+        var result = await HandleRequestAsync<TResponse>(message, cancellationToken);
 
         return result;
     }
 
-    public override async Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
-        => await UpdateAsync<TModel>(id, model, partial, parameters);
+    public override async Task<TModel> UpdateAsync(object? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TModel>(id, model, cancellationToken, partial, parameters);
 
-    public override async Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
-        => await UpdateAsync<TModel>(null, model, partial, parameters);
+    public override async Task<TModel> UpdateAsync(TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TModel>(null, model, cancellationToken, partial, parameters);
 
-    public override async Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
-        => await UpdateAsync<TResponse>(null, model, partial, parameters);
+    public override async Task<TResponse> UpdateAsync<TResponse>(TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TResponse>(null, model, cancellationToken, partial, parameters);
 
-    public override async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
+    public override async Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
     {
         var path = GetIdEndpointFullPath(id, parameters);
         _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result);
@@ -164,12 +167,12 @@ internal class FluxRestSetContext<TModel>(
             Content = new StringContent(jsonString, Encoding.UTF8, "application/json")
         };
 
-        var result = await HandleRequestAsync<TResponse>(message);
+        var result = await HandleRequestAsync<TResponse>(message, cancellationToken);
         
         return result;
     }
 
-    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken)
     {
         throw new NotSupportedException();
     }

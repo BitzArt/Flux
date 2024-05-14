@@ -31,25 +31,37 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
 
     // ============== Data methods implementation ==============
 
-    public override Task<TModel> GetAsync(object? id, params object[]? parameters) => GetAsync((TKey?)id, parameters);
+    public override Task<TModel> GetAsync(object? id = null, params object[]? parameters)
+        => GetAsync(cancellationToken: default,(TKey?)id, parameters);
 
-    public async Task<TModel> GetAsync(TKey? id, params object[]? parameters)
+    public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters) 
+        => GetAsync((TKey?)id, cancellationToken, parameters);
+
+    public Task<TModel> GetAsync(TKey? id, params object[]? parameters)
+        => GetAsync(id, default, parameters);
+
+    public async Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken, params object[]? parameters)
     {
         var parse = GetIdEndpointFullPath(id, parameters);
 
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parse.Result, parse.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
-        var result = await HandleRequestAsync<TModel>(message);
+        var result = await HandleRequestAsync<TModel>(message, cancellationToken);
 
         return result;
     }
+    public Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(id, model, default, partial, parameters);
 
-    public async Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters)
-        => await UpdateAsync<TModel>(id, model, partial, parameters);
+    public async Task<TModel> UpdateAsync(TKey? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => await UpdateAsync<TModel>(id, model, cancellationToken, partial, parameters);
 
-    public async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
-        => await base.UpdateAsync<TResponse>(id, model, partial, parameters);
+    public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TResponse>(id, model, default, partial, parameters);
+
+    public async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => await base.UpdateAsync<TResponse>(id, model, cancellationToken, partial, parameters);
 
     protected override RequestUrlParameterParsingResult GetIdEndpointFullPath(object? id, params object[]? parameters)
     {

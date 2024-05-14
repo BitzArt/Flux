@@ -51,26 +51,26 @@ internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
 
     // ============== Data methods implementation ==============
 
-    public override Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
+    public override Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken, params object[]? parameters)
     {
         _logger.LogInformation("GetAll {type}", typeof(TModel).Name);
 
         return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
     }
 
-    public override Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
+    public override Task<PageResult<TModel>> GetPageAsync(int offset, int limit, CancellationToken cancellationToken, params object[]? parameters)
     {
         return Task.FromResult(SetOptions.Items!.ToPage(offset, limit));
     }
 
-    public override Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
+    public override Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken, params object[]? parameters)
     {
         _logger.LogInformation("GetPage {type}", typeof(TModel).Name);
         
        return Task.FromResult(SetOptions.Items!.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
     }
 
-    public override Task<TModel> GetAsync(object? id, params object[]? parameters)
+    public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters)
     {
         _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
         
@@ -85,29 +85,29 @@ internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
         return Task.FromResult(existingItem);
     }
 
-    public override Task<TModel> AddAsync(TModel model, params object[]? parameters)
-        => AddAsync<TModel>(model, parameters);
+    public override Task<TModel> AddAsync(TModel model, CancellationToken cancellationToken, params object[]? parameters)
+        => AddAsync<TModel>(model, cancellationToken, parameters);
 
-    public override Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
+    public override Task<TResponse> AddAsync<TResponse>(TModel model, CancellationToken cancellationToken, params object[]? parameters)
     {
         throw new NotSupportedException();
     }
 
-    public override Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TModel>(id, model, partial, parameters);
+    public override Task<TModel> UpdateAsync(object? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(id, model, cancellationToken, partial, parameters);
 
-    public override Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TModel>(null, model, partial, parameters);
+    public override Task<TModel> UpdateAsync(TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(null, model, cancellationToken, partial, parameters);
 
-    public override Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TResponse>(null, model, partial, parameters);
+    public override Task<TResponse> UpdateAsync<TResponse>(TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TResponse>(null, model, cancellationToken, partial, parameters);
 
-    public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
+    public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
     {
         throw new NotImplementedException();
     }
 
-    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken)
     {
         throw new NotSupportedException();
     }

@@ -23,9 +23,13 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
     // ============== Methods implementation ==============
 
-    public override Task<TModel> GetAsync(object? id, params object[]? parameters) => GetAsync((TKey?)id, parameters);
+    public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters) 
+        => GetAsync((TKey?)id, cancellationToken, parameters);
 
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters)
+        => GetAsync(id, default, parameters);
+
+    public Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken, params object[]? parameters)
     {
         _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
 
@@ -41,8 +45,14 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
     }
 
     public Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TModel>(id, model, partial, parameters);
+        => UpdateAsync<TModel>(id, model, default, partial, parameters);
+
+    public Task<TModel> UpdateAsync(TKey? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => UpdateAsync<TModel>(id, model, cancellationToken, partial, parameters);
 
     public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
-        => base.UpdateAsync<TResponse>(id, model, partial, parameters);
+        => UpdateAsync<TResponse>(id, model, default, partial, parameters);
+
+    public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, CancellationToken cancellationToken, bool partial = false, params object[]? parameters)
+        => base.UpdateAsync<TResponse>(id, model, cancellationToken, partial, parameters);
 }
