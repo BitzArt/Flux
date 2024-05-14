@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BitzArt.Flux.FluentUI.SampleApp.Client\BitzArt.Flux.FluentUI.SampleApp.Client.csproj" />
+    <PackageReference Include="BitzArt.LinqExtensions" Version="1.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.3" />
   </ItemGroup>
   <ItemGroup>

@@ -1,33 +1,44 @@
-using BitzArt.Flux.FluentUI.SampleApp.Client.Pages;
 using BitzArt.Flux.FluentUI.SampleApp.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace BitzArt.Flux.FluentUI.SampleApp;
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
-builder.Services.AddFluentUIComponents();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+internal class Program
 {
-    app.UseWebAssemblyDebugging();
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add services to the container.
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents()
+            .AddInteractiveWebAssemblyComponents();
+        builder.Services.AddFluentUIComponents();
+
+        builder.Services.AddFlux();
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseWebAssemblyDebugging();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error", createScopeForErrors: true);
+        }
+
+        app.UseStaticFiles();
+        app.UseAntiforgery();
+
+        app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode()
+            .AddInteractiveWebAssemblyRenderMode()
+            .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
+
+        app.MapWebApiEndpoints();
+
+        app.Run();
+    }
 }
-else
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-}
-
-app.UseStaticFiles();
-app.UseAntiforgery();
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(BitzArt.Flux.FluentUI.SampleApp.Client._Imports).Assembly);
-
-app.Run();

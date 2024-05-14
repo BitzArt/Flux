@@ -9,9 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BitzArt.Blazor.MVVM" Version="0.2.2-Prerelease" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
 	<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
 	<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\BitzArt.Flux.REST\BitzArt.Flux.REST.csproj" />
+    <ProjectReference Include="..\..\..\..\src\FluentUI\BitzArt.Flux.FluentUI.AspNetCore\BitzArt.Flux.FluentUI.AspNetCore.csproj" />
   </ItemGroup>
 
 </Project>
