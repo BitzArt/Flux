@@ -30,9 +30,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{83E6C7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.SampleApp", "sample\BitzArt.Flux.SampleApp\BitzArt.Flux.SampleApp.csproj", "{2D85CE63-7FB6-4D97-81EF-44351A94A883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.Json", "src\BitzArt.Flux.Json\BitzArt.Flux.Json.csproj", "{72FE978D-615D-49AF-B69A-4D676EA7254F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.Json", "src\BitzArt.Flux.Json\BitzArt.Flux.Json.csproj", "{72FE978D-615D-49AF-B69A-4D676EA7254F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.Json.Tests", "tests\BitzArt.Flux.Json.Tests\BitzArt.Flux.Json.Tests.csproj", "{2ED3365D-9DC2-4177-866F-46D1A15CBF61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.Json.Tests", "tests\BitzArt.Flux.Json.Tests\BitzArt.Flux.Json.Tests.csproj", "{2ED3365D-9DC2-4177-866F-46D1A15CBF61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FluentUI", "FluentUI", "{015BD5C6-D496-481B-B5EF-6FEA43C44F96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.FluentUI.AspNetCore", "src\FluentUI\BitzArt.Flux.FluentUI.AspNetCore\BitzArt.Flux.FluentUI.AspNetCore.csproj", "{685CE60B-8373-4649-9F2C-241800EB972B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FluentUI", "FluentUI", "{DB8F3316-7E2C-4A8B-BD26-B0198F312A70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.FluentUI.SampleApp", "sample\FluentUI\BitzArt.Flux.FluentUI.SampleApp\BitzArt.Flux.FluentUI.SampleApp\BitzArt.Flux.FluentUI.SampleApp.csproj", "{D1A724F1-E370-43C4-B948-FF19B0AC8EE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.FluentUI.SampleApp.Client", "sample\FluentUI\BitzArt.Flux.FluentUI.SampleApp\BitzArt.Flux.FluentUI.SampleApp.Client\BitzArt.Flux.FluentUI.SampleApp.Client.csproj", "{7CFDAACA-83DE-4E6E-A1ED-5F559767E964}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +78,18 @@ Global
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{685CE60B-8373-4649-9F2C-241800EB972B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{685CE60B-8373-4649-9F2C-241800EB972B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{685CE60B-8373-4649-9F2C-241800EB972B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{685CE60B-8373-4649-9F2C-241800EB972B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1A724F1-E370-43C4-B948-FF19B0AC8EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A724F1-E370-43C4-B948-FF19B0AC8EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A724F1-E370-43C4-B948-FF19B0AC8EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A724F1-E370-43C4-B948-FF19B0AC8EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CFDAACA-83DE-4E6E-A1ED-5F559767E964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CFDAACA-83DE-4E6E-A1ED-5F559767E964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CFDAACA-83DE-4E6E-A1ED-5F559767E964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CFDAACA-83DE-4E6E-A1ED-5F559767E964}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +103,11 @@ Global
 		{2D85CE63-7FB6-4D97-81EF-44351A94A883} = {83E6C753-C4C4-4C4E-8627-E9077F557159}
 		{72FE978D-615D-49AF-B69A-4D676EA7254F} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
+		{015BD5C6-D496-481B-B5EF-6FEA43C44F96} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
+		{685CE60B-8373-4649-9F2C-241800EB972B} = {015BD5C6-D496-481B-B5EF-6FEA43C44F96}
+		{DB8F3316-7E2C-4A8B-BD26-B0198F312A70} = {83E6C753-C4C4-4C4E-8627-E9077F557159}
+		{D1A724F1-E370-43C4-B948-FF19B0AC8EE2} = {DB8F3316-7E2C-4A8B-BD26-B0198F312A70}
+		{7CFDAACA-83DE-4E6E-A1ED-5F559767E964} = {DB8F3316-7E2C-4A8B-BD26-B0198F312A70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}
