@@ -1,5 +1,6 @@
 using BitzArt.Blazor.MVVM;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace BitzArt.Flux.FluentUI.SampleApp.Client;
 
@@ -13,6 +14,8 @@ internal class Program
         builder.Services.AddFlux(baseAddress);
         builder.Services.AddBlazorViewModels();
         builder.Services.AddRenderingEnvironment();
+
+        builder.Services.AddFluentUIComponents();
 
         await builder.Build().RunAsync();
     }

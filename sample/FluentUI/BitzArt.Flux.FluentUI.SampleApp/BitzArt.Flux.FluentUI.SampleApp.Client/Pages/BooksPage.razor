@@ -1,10 +1,22 @@
 ﻿@page "/books"
-
 @inherits PageBase<BooksPageViewModel>
-
+@rendermode InteractiveWebAssembly
 <PageTitle>Books</PageTitle>
 
 <h1>Books</h1>
+
+<FluentTextField
+    Label="Author ID"
+    Placeholder="Author ID"
+    @bind-Value="@ViewModel.AuthorId"
+    Immediate="true"
+    />
+
+<FluentTextField
+    Label="Some random text"
+    Placeholder="Just some random text"
+    @bind-Value="ViewModel.RandomText"
+    Immediate="true" />
 
 <FluentDataGrid
     ItemsProvider="ViewModel.BooksProvider.GetItems"
@@ -39,3 +51,5 @@
         This is page <strong>@(ViewModel.PaginationState.CurrentPageIndex + 1)</strong> out of a total of <strong>@(ViewModel.PaginationState.LastPageIndex + 1)</strong> pages
     </PaginationTextTemplate>
 </FluentPaginator>
+
+<ComponentStateContainer ViewModel="ViewModel" />

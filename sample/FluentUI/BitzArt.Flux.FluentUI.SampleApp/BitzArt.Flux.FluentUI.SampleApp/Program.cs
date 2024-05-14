@@ -16,10 +16,11 @@ internal class Program
             .AddInteractiveWebAssemblyComponents();
         builder.Services.AddFluentUIComponents();
 
-        builder.Services.AddFlux("http://localhost:8080");
-
+        builder.Services.AddFlux("http://localhost:8080/api");
         builder.Services.AddBlazorViewModels();
         builder.Services.AddRenderingEnvironment();
+
+        builder.Services.AddFluentUIComponents();
 
         var app = builder.Build();
 
