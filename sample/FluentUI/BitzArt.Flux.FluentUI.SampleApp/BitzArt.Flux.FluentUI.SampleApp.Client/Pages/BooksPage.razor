@@ -20,27 +20,40 @@
 
 <FluentDataGrid
     ItemsProvider="ViewModel.BooksProvider.GetItems"
-    GridTemplateColumns="1fr 1fr 1fr"
+    GridTemplateColumns="1fr 1fr 1fr 1fr 1fr"
     Pagination="@ViewModel.PaginationState"
     TGridItem="Book">
         <PropertyColumn 
             Title="ID" 
-            Property="@(x => x!.Id)"
+            Property="@(x => x.Id)"
             Sortable="true"
             IsDefaultSortColumn="true"
             Align="Align.Start" />
         
         <PropertyColumn 
             Title="Title" 
-            Property="@(x => x!.Title)"
+            Property="@(x => x.Title)"
             Sortable="true"
             Align="Align.Start" />
         
         <PropertyColumn 
             Title="Author ID" 
-            Property="@(x => x!.AuthorId)"
+            Property="@(x => x.AuthorId)"
             Sortable="true"
             Align="Align.Start" />
+
+        <PropertyColumn
+            Title="Rating"
+            Property="@(x => x.Rating!.Rating)"
+            Sortable="true"
+            Align="Align.Start" />
+
+        <PropertyColumn
+            Title="Rating Count"
+            Property="@(x => x.Rating!.RatingCount)"
+            Sortable="true"
+            Align="Align.Start" />
+
 </FluentDataGrid>
 
 <FluentPaginator State="@ViewModel.PaginationState">

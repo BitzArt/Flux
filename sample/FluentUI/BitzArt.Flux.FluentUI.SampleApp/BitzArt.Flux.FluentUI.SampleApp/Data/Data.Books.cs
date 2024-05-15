@@ -1,0 +1,80 @@
+﻿namespace BitzArt.Flux.FluentUI.SampleApp;
+
+public static partial class Data
+{
+    internal static readonly IEnumerable<Book> Books =
+    [
+        Book.New(11, "The Divine Comedy", 1),
+        Book.New(12, "Inferno", 1),
+        Book.New(13, "Purgatorio", 1),
+        Book.New(14, "Paradiso", 1),
+        Book.New(15, "Vita Nuova", 1),
+        Book.New(16, "De vulgari eloquentia", 1),
+        Book.New(17, "Convivio", 1),
+        Book.New(18, "Monarchia", 1),
+        Book.New(19, "Epistle to Cangrande", 1),
+
+        Book.New(21, "The Iliad", 2),
+        Book.New(22, "The Odyssey", 2),
+        Book.New(23, "The Homeric Hymns", 2),
+        Book.New(24, "The Epic Cycle", 2),
+        Book.New(25, "The Theban Cycle", 2),
+        Book.New(26, "The Cypria", 2),
+        Book.New(27, "The Little Iliad", 2),
+        Book.New(28, "The Sack of Troy", 2),
+        Book.New(29, "The Returns", 2),
+
+        Book.New(31, "War and Peace", 3),
+        Book.New(32, "Anna Karenina", 3),
+        Book.New(33, "The Death of Ivan Ilyich", 3),
+        Book.New(34, "Resurrection", 3),
+        Book.New(35, "The Kreutzer Sonata", 3),
+        Book.New(36, "The Cossacks", 3),
+        Book.New(37, "Childhood", 3),
+        Book.New(38, "Boyhood", 3),
+        Book.New(39, "Youth", 3),
+
+        Book.New(41, "Hamlet", 4),
+        Book.New(42, "Macbeth", 4),
+        Book.New(43, "Romeo and Juliet", 4),
+        Book.New(44, "Othello", 4),
+        Book.New(45, "King Lear", 4),
+        Book.New(46, "A Midsummer Night's Dream", 4),
+        Book.New(47, "Julius Caesar", 4),
+        Book.New(48, "The Tempest", 4),
+        Book.New(49, "Twelfth Night", 4),
+
+        Book.New(51, "Crime and Punishment", 5),
+        Book.New(52, "The Brothers Karamazov", 5),
+        Book.New(53, "The Idiot" , 5),
+        Book.New(54, "Demons", 5),
+        Book.New(55, "The Gambler", 5),
+        Book.New(56, "The Adolescent", 5),
+        Book.New(57, "The Double", 5),
+        Book.New(58, "The Village of Stepanchikovo", 5),
+        Book.New(59, "The Insulted and Injured", 5),
+
+        Book.New(61, "The Master and Margarita", 6),
+        Book.New(62, "The White Guard", 6),
+        Book.New(63, "Heart of a Dog", 6),
+        Book.New(64, "The Fatal Eggs", 6),
+        Book.New(65, "The Life of Monsieur de Molière", 6),
+        Book.New(66, "Black Snow", 6),
+        Book.New(67, "Theatrical Novel", 6),
+
+        Book.New(71, "The Picture of Dorian Gray", 7),
+        Book.New(72, "The Importance of Being Earnest", 7),
+        Book.New(73, "Lady Windermere's Fan", 7),
+        Book.New(74, "An Ideal Husband", 7),
+
+        Book.New(81, "The Great Gatsby", 8),
+        Book.New(82, "Tender Is the Night", 8),
+        Book.New(83, "The Beautiful and Damned", 8),
+        Book.New(84, "This Side of Paradise", 8),
+        Book.New(85, "The Last Tycoon", 8),
+        Book.New(86, "The Curious Case of Benjamin Button", 8),
+        Book.New(87, "The Diamond as Big as the Ritz", 8),
+        Book.New(88, "The Pat Hobby Stories", 8),
+        Book.New(89, "Babylon Revisited", 8),
+    ];
+}

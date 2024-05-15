@@ -24,6 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BitzArt.LinqExtensions" Version="1.5.2" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.7.2" />
 	</ItemGroup>
 
