@@ -8,14 +8,14 @@
 <FluentTextField
     Label="Author ID"
     Placeholder="Author ID"
-    @bind-Value="@ViewModel.AuthorId"
+    ValueChanged="ViewModel.AuthorIdChanged"
     Immediate="true"
     />
 
 <FluentTextField
     Label="Some random text"
     Placeholder="Just some random text"
-    @bind-Value="ViewModel.RandomText"
+    @bind-Value="ViewModel.State.RandomText"
     Immediate="true" />
 
 <FluentDataGrid
