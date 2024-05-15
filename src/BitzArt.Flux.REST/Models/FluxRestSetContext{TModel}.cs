@@ -8,10 +8,10 @@ using System.Web;
 namespace BitzArt.Flux;
 
 internal class FluxRestSetContext<TModel>(
-    HttpClient httpClient, 
-    FluxRestServiceOptions serviceOptions, 
-    ILogger logger, 
-    FluxRestSetOptions<TModel> setOptions) 
+    HttpClient httpClient,
+    FluxRestServiceOptions serviceOptions,
+    ILogger logger,
+    FluxRestSetOptions<TModel> setOptions)
     : FluxSetContext<TModel>
     where TModel : class
 {
@@ -82,7 +82,7 @@ internal class FluxRestSetContext<TModel>(
         return result;
     }
 
-    public override async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, CancellationToken cancellationToken, params object[]? parameters) 
+    public override async Task<PageResult<TModel>> GetPageAsync(int offset, int limit, CancellationToken cancellationToken, params object[]? parameters)
         => await GetPageAsync(new PageRequest(offset, limit), cancellationToken, parameters);
 
     public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken, params object[]? parameters)
@@ -98,7 +98,7 @@ internal class FluxRestSetContext<TModel>(
             HttpUtility.ParseQueryString(path[queryIndex..]);
 
         query.Add("offset", pageRequest.Offset?.ToString());
-        
+
         if (pageRequest.Limit.HasValue)
             query.Add("limit", pageRequest.Limit.Value.ToString());
 
@@ -106,7 +106,7 @@ internal class FluxRestSetContext<TModel>(
         path = path + "?" + query.ToString();
 
         parse.Result = path;
-        
+
         _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
@@ -168,7 +168,7 @@ internal class FluxRestSetContext<TModel>(
         };
 
         var result = await HandleRequestAsync<TResponse>(message, cancellationToken);
-        
+
         return result;
     }
 

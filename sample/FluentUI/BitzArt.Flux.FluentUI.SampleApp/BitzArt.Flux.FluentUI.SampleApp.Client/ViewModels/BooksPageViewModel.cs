@@ -5,7 +5,6 @@ namespace BitzArt.Flux.FluentUI.SampleApp;
 
 public class BooksPageViewModel : ViewModel<BooksPageState>
 {
-    private readonly RenderingEnvironment _renderingEnvironment;
     public BooksProvider BooksProvider;
     public PaginationState PaginationState;
 
@@ -15,17 +14,16 @@ public class BooksPageViewModel : ViewModel<BooksPageState>
         await PaginationState.SetCurrentPageIndexAsync(0);
     }
 
-    public BooksPageViewModel(IFluxSetContext<Book> booksSet, RenderingEnvironment renderingEnvironment)
+    public BooksPageViewModel(IFluxSetContext<Book> booksSet)
     {
         PaginationState = new() { ItemsPerPage = 5 };
         BooksProvider = new(this, booksSet, PaginationState);
-        _renderingEnvironment = renderingEnvironment;
 
         // Whenever another request is made, save it to ViewModel's state
         BooksProvider.OnAfterRequest += (request) =>
         {
             State.LastRequest = request;
-            StateHasChanged(); // Update ComponentStateContainer
+            StateHasChanged(); // Notify ComponentStateContainer
         };
     }
 

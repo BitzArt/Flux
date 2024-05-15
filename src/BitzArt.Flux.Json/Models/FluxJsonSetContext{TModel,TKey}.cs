@@ -23,7 +23,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
 
     // ============== Methods implementation ==============
 
-    public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters) 
+    public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters)
         => GetAsync((TKey?)id, cancellationToken, parameters);
 
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters)
@@ -36,7 +36,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxJsonSetContext<TModel>, IF
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
             if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
-            
+
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return itemId is not null && itemId.Equals(id);
         }) ?? throw new FluxItemNotFoundException<TModel>(id);

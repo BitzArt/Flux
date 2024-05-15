@@ -19,7 +19,7 @@ internal class FluxRestSetBuilder<TModel> : IFluxRestSetBuilder<TModel>
     }
 
     protected FluxRestSetOptions<TModel> _setOptions = null!;
-    
+
     public FluxRestSetOptions<TModel> SetOptions { get => _setOptions; set => _setOptions = value; }
 
     public FluxRestSetBuilder(IFluxRestServiceBuilder serviceBuilder)

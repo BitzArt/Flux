@@ -18,7 +18,7 @@ public class FluxPageRequestInfo : FluxRequestInfo
         PageRequest = pageRequest;
         Sorting = sorting;
     }
-    
+
     public FluxPageRequestInfo(PageRequest pageRequest, FluxSortingInfo sorting, IEnumerable<string> parameters) : base(parameters)
     {
         PageRequest = pageRequest;

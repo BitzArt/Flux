@@ -21,7 +21,7 @@ public static class MapWebApiEndpointsExtension
             var result = Data.Books.AsQueryable()
                 .Apply(authorId, sort, desc)
                 .ToPage(offset, limit);
-            
+
             return Results.Ok(result);
         });
 

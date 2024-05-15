@@ -17,6 +17,6 @@ public interface IFluxContext
     /// See <see href="https://bitzart.github.io/Flux/03.use.html">Use Flux</see> for more information.
     /// </summary>
     public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? service = null, string? set = null) where TModel : class;
-    
+
     public IFluxSetContext<TModel> Set<TModel>(string? service = null, string? set = null) where TModel : class;
 }

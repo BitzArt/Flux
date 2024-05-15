@@ -12,7 +12,7 @@ public class FluxJsonSetOptions<TModel, TKey> : FluxJsonSetOptions<TModel>
             if (_keyPropertyExpression is null) return null;
 
             Expression<Func<TModel, TKey>> result;
-            
+
             if (typeof(TKey).IsValueType)
                 result = Expression.Lambda<Func<TModel, TKey>>(Expression.Convert(_keyPropertyExpression.Body, typeof(TKey)), _keyPropertyExpression.Parameters);
             else
@@ -25,7 +25,7 @@ public class FluxJsonSetOptions<TModel, TKey> : FluxJsonSetOptions<TModel>
             if (value is null) return;
 
             Expression<Func<TModel, object>> result;
-            
+
             if (typeof(TKey).IsValueType)
                 result = Expression.Lambda<Func<TModel, object>>(Expression.Convert(value.Body, typeof(object)), value.Parameters);
             else

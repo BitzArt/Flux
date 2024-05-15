@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RichardSzalay.MockHttp;
-using System.Net.Http.Json;
 using System.Net;
+using System.Net.Http.Json;
 
 namespace BitzArt.Flux;
 

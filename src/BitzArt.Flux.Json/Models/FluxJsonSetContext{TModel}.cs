@@ -1,6 +1,5 @@
 using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
-using System.Collections;
 using System.Linq.Expressions;
 
 namespace BitzArt.Flux;
@@ -12,7 +11,7 @@ internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
 
     internal readonly FluxJsonServiceOptions ServiceOptions;
     internal readonly ILogger _logger;
-    
+
     protected FluxJsonSetOptions<TModel> _setOptions;
     internal virtual FluxJsonSetOptions<TModel> SetOptions
     {
@@ -66,18 +65,18 @@ internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
     public override Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken, params object[]? parameters)
     {
         _logger.LogInformation("GetPage {type}", typeof(TModel).Name);
-        
-       return Task.FromResult(SetOptions.Items!.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
+
+        return Task.FromResult(SetOptions.Items!.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
     }
 
     public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters)
     {
         _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
-        
+
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
             if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
-            
+
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
             return itemId.Equals(id);
         }) ?? throw new FluxItemNotFoundException<TModel>(id);

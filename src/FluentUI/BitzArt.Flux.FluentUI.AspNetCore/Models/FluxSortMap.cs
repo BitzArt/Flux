@@ -28,5 +28,5 @@ public class FluxSortMap<TModel>
         return memberExpression.Member;
     }
 
-    
+
 }

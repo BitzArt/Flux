@@ -42,7 +42,7 @@ internal class TestController : ControllerBase
     public async Task<IActionResult> UpdateBookAsync([FromRoute] int id, Book book)
     {
         var result = await _flux.Set<Book>().UpdateAsync(id, book);
-        
+
         return Ok(result);
     }
 
@@ -50,7 +50,7 @@ internal class TestController : ControllerBase
     public async Task<IActionResult> PatchBookAsync([FromRoute] int id, Book book)
     {
         var result = await _flux.Set<Book>().UpdateAsync(id, book, partial: true);
-        
+
         return Ok(result);
     }
 }

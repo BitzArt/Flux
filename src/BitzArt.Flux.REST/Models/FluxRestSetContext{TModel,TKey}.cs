@@ -32,9 +32,9 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
     // ============== Data methods implementation ==============
 
     public override Task<TModel> GetAsync(object? id = null, params object[]? parameters)
-        => GetAsync(cancellationToken: default,(TKey?)id, parameters);
+        => GetAsync(cancellationToken: default, (TKey?)id, parameters);
 
-    public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters) 
+    public override Task<TModel> GetAsync(CancellationToken cancellationToken, object? id = null, params object[]? parameters)
         => GetAsync((TKey?)id, cancellationToken, parameters);
 
     public Task<TModel> GetAsync(TKey? id, params object[]? parameters)

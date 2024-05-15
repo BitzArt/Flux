@@ -1,6 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
@@ -9,7 +8,7 @@ internal static class TestSetContext
     public static IFluxSetContext<TestModel> GetTestSetContext()
     {
         var services = new ServiceCollection();
-        
+
         const string serviceName = "JsonService";
 
         services.AddFlux(flux =>
