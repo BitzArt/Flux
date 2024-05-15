@@ -10,6 +10,10 @@ public class FluxItemsProvider<TModel>(IFluxSetContext<TModel> fluxSet)
 
     private async ValueTask<GridItemsProviderResult<TModel>> GetItemsAsync(GridItemsProviderRequest<TModel> request)
     {
+        // var cachedResult = GetCachedResult(request);
+        // if (cachedResult is not null)
+        //     return GridItemsProviderResult.From(items: cachedResult.Data!.ToList(), totalItemCount: cachedResult.Total);
+
         var pageRequest = new PageRequest(request.StartIndex, request.Count);
 
         pageRequest = ConfigurePageRequest(pageRequest);

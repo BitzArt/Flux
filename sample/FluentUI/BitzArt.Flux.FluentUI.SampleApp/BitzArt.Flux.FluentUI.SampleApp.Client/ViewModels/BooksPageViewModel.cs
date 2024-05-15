@@ -1,5 +1,6 @@
 ﻿using BitzArt.Blazor.MVVM;
 using Microsoft.FluentUI.AspNetCore.Components;
+using System.Linq.Expressions;
 
 namespace BitzArt.Flux.FluentUI.SampleApp;
 
@@ -24,6 +25,8 @@ public class BooksProvider(
 {
     protected override object[] ConfigureParameters(GridItemsProviderRequest<Book> request)
     {
+        var sortingExpression = request.GetSortingColumnPropertyExpression();
+
         var authorId = viewModel.AuthorId;
         var query = string.IsNullOrWhiteSpace(authorId) ? string.Empty : $"?authorId={authorId}";
         return [query];
