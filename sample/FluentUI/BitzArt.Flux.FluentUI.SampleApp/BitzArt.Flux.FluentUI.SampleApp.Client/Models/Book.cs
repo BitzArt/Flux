@@ -33,7 +33,7 @@ public class Book
 
     private static readonly Random _random = new(42069);
 
-    private static double GetRandomRating() => _random.NextDouble() * 5;
+    private static double GetRandomRating() => _random.NextDouble() * 4 + 1;
 
     private static int GetRandomRatingCount() => _random.Next(1, 1000);
 

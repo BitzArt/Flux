@@ -11,7 +11,7 @@ public class FluxSortingInfo
     /// The field to order by.
     /// </summary>
     [JsonPropertyName("orderBy")]
-    public string? OrderBy { get; set; } = null;
+    public object? OrderBy { get; set; } = null;
 
     /// <summary>
     /// The order direction.
@@ -29,7 +29,7 @@ public class FluxSortingInfo
     /// </summary>
     /// <param name="orderBy"></param>
     /// <param name="direction"></param>
-    public FluxSortingInfo(string? orderBy, OrderDirection? direction)
+    public FluxSortingInfo(object? orderBy, OrderDirection? direction)
     {
         OrderBy = orderBy;
         Direction = direction;

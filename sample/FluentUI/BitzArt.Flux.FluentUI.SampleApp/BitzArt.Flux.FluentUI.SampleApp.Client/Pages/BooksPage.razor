@@ -5,53 +5,64 @@
 
 <h1>Books</h1>
 
-<FluentTextField
-    Label="Author ID"
-    Placeholder="Author ID"
-    ValueChanged="ViewModel.AuthorIdChanged"
-    Immediate="true"
-    />
-
-<FluentTextField
-    Label="Some random text"
-    Placeholder="Just some random text"
-    @bind-Value="ViewModel.State.RandomText"
-    Immediate="true" />
+<FluentSelect
+    TOption="Author"
+    Label="Author"
+    Items="ViewModel.State.Authors"
+    OptionText="@(author => author.Name)"
+    SelectedOptionChanged="ViewModel.OnAuthorSelectedAsync"
+    Multiple="false">
+    </FluentSelect>
 
 <FluentDataGrid
     ItemsProvider="ViewModel.BooksProvider.GetItems"
     GridTemplateColumns="1fr 1fr 1fr 1fr 1fr"
     Pagination="@ViewModel.BooksProvider.PaginationState"
     TGridItem="Book">
-        <PropertyColumn 
-            Title="ID" 
+
+        <SortMapPropertyColumn
+            Title="ID"
             Property="@(x => x.Id)"
+            SortValue=@("Id")
             Sortable="true"
             IsDefaultSortColumn="true"
             Align="Align.Start" />
         
-        <PropertyColumn 
-            Title="Title" 
+        <SortMapPropertyColumn 
+            Title="Title"
+            SortValue=@("Title")
             Property="@(x => x.Title)"
             Sortable="true"
             Align="Align.Start" />
-        
-        <PropertyColumn 
-            Title="Author ID" 
-            Property="@(x => x.AuthorId)"
-            Sortable="true"
-            Align="Align.Start" />
 
-        <PropertyColumn
+        <SortMapTemplateColumn
             Title="Rating"
-            Property="@(x => x.Rating!.Rating)"
+            SortValue=@("Rating")
             Sortable="true"
-            Align="Align.Start" />
+            Align="Align.Start" >
+            <div id=@($"grid-book-{context.Id}")>
+                @for (int i = 0; i < context.GetStarCount(); i++)
+                {
+                    <FluentEmoji
+                        Value="@(new Emojis.TravelPlaces.Flat.Default.Star())" />
+                }
+            </div>
+            <FluentTooltip Anchor=@($"grid-book-{context.Id}")>
+                <div>
+                    Rating: @context.Rating!.Rating!.Value.ToString("F2")
+                </div>
+                <div>
+                    Rating count: @context.Rating!.RatingCount
+                </div>
+            </FluentTooltip>
+            
+        </SortMapTemplateColumn>
 
-        <PropertyColumn
-            Title="Rating Count"
-            Property="@(x => x.Rating!.RatingCount)"
-            Sortable="true"
+        <SortMapPropertyColumn
+            Title="Author"
+            SortValue=@("AuthorId")
+            Property="@(x => ViewModel.State.Authors.First(a => a.Id == x.AuthorId).Name)"
+            Sortable="ViewModel.State.SelectedAuthorId is null"
             Align="Align.Start" />
 
 </FluentDataGrid>
@@ -66,3 +77,4 @@
 </FluentPaginator>
 
 <ComponentStateContainer ViewModel="ViewModel" />
+<FluentTooltipProvider />

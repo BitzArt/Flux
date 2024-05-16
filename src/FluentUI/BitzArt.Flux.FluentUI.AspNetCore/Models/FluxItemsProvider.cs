@@ -34,11 +34,6 @@ public class FluxItemsProvider<TModel> : IFluxItemsProvider<TModel>
     /// <inheritdoc />
     public GridItemsProvider<TModel> GetItems => new(GetItemsAsync);
 
-    /// <summary>
-    /// The sort map for the provider.
-    /// </summary>
-    protected FluxSortMap<TModel> SortMap { get; }
-
     private FluxPageRequestRecord<TModel>? _lastRequest = null;
 
     /// <inheritdoc />
@@ -56,7 +51,6 @@ public class FluxItemsProvider<TModel> : IFluxItemsProvider<TModel>
     public FluxItemsProvider(IFluxContext flux)
     {
         _flux = flux;
-        SortMap = new();
         PaginationState = new PaginationState() { ItemsPerPage = DefaultPageSize };
     }
 
@@ -84,7 +78,10 @@ public class FluxItemsProvider<TModel> : IFluxItemsProvider<TModel>
             && (!_lastRequest.IsExhausted.HasValue || _lastRequest.IsExhausted.Value == false))
         {
             _lastRequest.IsExhausted = true;
-            await PaginationState.SetCurrentPageIndexAsync(0);
+            _ = ResetPaginationAsync();
+
+            Console.WriteLine("Restoring from last result, marking last result as exhausted.");
+
             return GridItemsProviderResult.From(
                 items: _lastRequest.Result!.Data!.ToList(),
                 totalItemCount: _lastRequest.Result.Total!.Value);
@@ -94,14 +91,26 @@ public class FluxItemsProvider<TModel> : IFluxItemsProvider<TModel>
 
         var currentRequest = new FluxPageRequestRecord<TModel>(new(pageRequest, sort, parameters));
         if (_lastRequest is not null
+            && (!_lastRequest.IsExhausted.HasValue || _lastRequest.IsExhausted.Value == false)
             && _lastRequest.Request.Compare(currentRequest.Request) == true
             && _lastRequest.Result is not null)
+        {
+            Console.WriteLine("Result was restored from last request.");
             return FinalizeResult(currentRequest, _lastRequest.Result!);
+        }
+
+        if (request.CancellationToken.IsCancellationRequested)
+        {
+            Console.WriteLine("Request was cancelled");
+            return GridItemsProviderResult.From(Enumerable.Empty<TModel>().ToList(), 0);
+        }
 
         var page = await _fluxSet!.GetPageAsync(
             pageRequest,
             //request.CancellationToken,
             parameters: parameters);
+
+        Console.WriteLine("Request was made.");
 
         return FinalizeResult(currentRequest, page);
     }
@@ -122,6 +131,7 @@ public class FluxItemsProvider<TModel> : IFluxItemsProvider<TModel>
         request.Result = page;
         _lastRequest = request;
         OnAfterRequest?.Invoke(request);
+
         return ConfigureResult(page);
     }
 
@@ -145,25 +155,37 @@ public class FluxItemsProvider<TModel> : IFluxItemsProvider<TModel>
     /// </summary>
     protected FluxSortingInfo GetSorting(GridItemsProviderRequest<TModel> request)
     {
-        var expression = GetSortingExpression(request);
-        if (expression is null) return new FluxSortingInfo();
+        var sortValue = GetSortingValue(request);
+        if (sortValue is null) return new FluxSortingInfo();
 
-        var sortValue = SortMap.GetSortValue(expression);
         var direction = request.SortByAscending ? OrderDirection.Ascending : OrderDirection.Descending;
 
         return new FluxSortingInfo(sortValue, direction);
     }
 
-    private static LambdaExpression? GetSortingExpression(GridItemsProviderRequest<TModel> request)
+    private static object? GetSortingValue(GridItemsProviderRequest<TModel> request)
     {
         var sortingColumn = request.SortByColumn;
         if (sortingColumn is null) return null;
 
         var type = sortingColumn.GetType();
-        var fieldInfo = type.GetProperty("Property", BindingFlags.Public | BindingFlags.Instance)!;
-        var sorting = fieldInfo.GetValue(sortingColumn) as LambdaExpression;
 
-        return sorting;
+        // If column inherits from SortMapPropertyColumn, return it's SortValue.
+        if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISortMapColumn<>)))
+        {
+            var sortValuePropertyInfo = type.GetProperty("SortValue", BindingFlags.Public | BindingFlags.Instance)!;
+            return sortValuePropertyInfo.GetValue(sortingColumn);
+        }
+
+        // Otherwise, return the Property expression.
+        var fieldInfo = type.GetProperty("Property", BindingFlags.Public | BindingFlags.Instance)!;
+        return fieldInfo.GetValue(sortingColumn) as LambdaExpression;
+    }
+
+    /// <inheritdoc />
+    public async Task ResetPaginationAsync()
+    {
+        await SetPageAsync(1);
     }
 
     /// <inheritdoc />

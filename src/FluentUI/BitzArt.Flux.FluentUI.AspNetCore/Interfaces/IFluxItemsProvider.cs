@@ -26,6 +26,11 @@ public interface IFluxItemsProvider
     public int PageSize { get; }
 
     /// <summary>
+    /// Resets the current page to 1.
+    /// </summary>
+    public Task ResetPaginationAsync();
+
+    /// <summary>
     /// Sets the current page.
     /// </summary>
     /// <param name="pageNumber"></param>

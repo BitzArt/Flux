@@ -1,6 +1,7 @@
 using BitzArt.Blazor.MVVM;
 using BitzArt.Flux.FluentUI.SampleApp.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Microsoft.FluentUI.AspNetCore.Components.Components.Tooltip;
 
 namespace BitzArt.Flux.FluentUI.SampleApp;
 
@@ -15,6 +16,8 @@ internal class Program
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();
         builder.Services.AddFluentUIComponents();
+
+        builder.Services.AddScoped<ITooltipService, TooltipService>();
 
         builder.Services.AddFlux("http://localhost:8080/api");
         builder.Services.AddBlazorViewModels();
