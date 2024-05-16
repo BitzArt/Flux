@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>BitzArt.Flux</RootNamespace>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <PackageId>BitzArt.Flux.Json</PackageId>
         <Authors>BitzArt</Authors>

@@ -5,29 +5,76 @@ using System.Reflection;
 
 namespace BitzArt.Flux;
 
-public class FluxItemsProvider<TModel>
+/// <summary>
+/// Provides items for a grid using Flux.
+/// </summary>
+/// <typeparam name="TModel"></typeparam>
+/// <inheritdoc/>
+public class FluxItemsProvider<TModel> : IFluxItemsProvider<TModel>
     where TModel : class
 {
-    private readonly IFluxSetContext<TModel> _fluxSet;
-    protected readonly PaginationState PaginationState;
+    private readonly IFluxContext _flux;
+    private IFluxSetContext<TModel>? _fluxSet;
 
+    /// <inheritdoc />
+    public readonly PaginationState PaginationState;
+
+    /// <inheritdoc />
+    public int CurrentPage => PaginationState.CurrentPageIndex + 1;
+
+    /// <inheritdoc />
+    public int TotalItems => PaginationState.TotalItemCount ?? 0;
+
+    /// <inheritdoc />
+    public int TotalPages => PaginationState.LastPageIndex.HasValue ? PaginationState.LastPageIndex!.Value + 1 : 0;
+
+    /// <inheritdoc />
+    public int PageSize => PaginationState.ItemsPerPage;
+
+    /// <inheritdoc />
     public GridItemsProvider<TModel> GetItems => new(GetItemsAsync);
+
+    /// <summary>
+    /// The sort map for the provider.
+    /// </summary>
     protected FluxSortMap<TModel> SortMap { get; }
 
     private FluxPageRequestRecord<TModel>? _lastRequest = null;
 
-    public delegate void OnAfterRequestHandler(FluxPageRequestRecord<TModel> request);
-    public event OnAfterRequestHandler? OnAfterRequest;
+    /// <inheritdoc />
+    public event IFluxItemsProvider<TModel>.OnAfterRequestHandler? OnAfterRequest;
 
-    public FluxItemsProvider(IFluxSetContext<TModel> fluxSet, PaginationState paginationState)
+    /// <summary>
+    /// Override this to configure the default page size.
+    /// </summary>
+    protected virtual int DefaultPageSize => 10;
+
+    /// <summary>
+    /// Creates a new instance of <see cref="FluxItemsProvider{TModel}"/>.
+    /// </summary>
+    /// <param name="flux"></param>
+    public FluxItemsProvider(IFluxContext flux)
     {
+        _flux = flux;
         SortMap = new();
-        _fluxSet = fluxSet;
-        PaginationState = paginationState;
+        PaginationState = new PaginationState() { ItemsPerPage = DefaultPageSize };
+    }
+
+    private void EnsureSet()
+    {
+        _fluxSet ??= _flux.Set<TModel>();
+    }
+
+    /// <inheritdoc />
+    public void ConfigureSet(IFluxSetContext<TModel> set)
+    {
+        _fluxSet = set;
     }
 
     private async ValueTask<GridItemsProviderResult<TModel>> GetItemsAsync(GridItemsProviderRequest<TModel> request)
     {
+        EnsureSet();
+
         var pageRequest = new PageRequest(request.StartIndex, request.Count);
 
         pageRequest = await ConfigurePageRequestAsync(pageRequest);
@@ -59,8 +106,14 @@ public class FluxItemsProvider<TModel>
         return FinalizeResult(currentRequest, page);
     }
 
+    /// <summary>
+    /// Override this to configure the page request.
+    /// </summary>
     protected virtual Task<PageRequest> ConfigurePageRequestAsync(PageRequest pageRequest) => Task.FromResult(pageRequest);
 
+    /// <summary>
+    /// Override this to configure the parameters for the request.
+    /// </summary>
     protected virtual Task<object[]> ConfigureParametersAsync(FluxSortingInfo sort, GridItemsProviderRequest<TModel> request)
         => Task.FromResult(Array.Empty<object>());
 
@@ -72,17 +125,24 @@ public class FluxItemsProvider<TModel>
         return ConfigureResult(page);
     }
 
+    /// <inheritdoc />
     public void RestoreLastRequest(FluxPageRequestRecord<TModel>? request)
     {
         if (request is null) return;
         _lastRequest = request;
     }
 
+    /// <summary>
+    /// Override this to configure the result.
+    /// </summary>
     protected virtual GridItemsProviderResult<TModel> ConfigureResult(PageResult<TModel> page)
     {
         return GridItemsProviderResult.From(items: page.Data!.ToList(), totalItemCount: page.Total!.Value);
     }
 
+    /// <summary>
+    /// Builds the <see cref="FluxSortingInfo"/> from a request.
+    /// </summary>
     protected FluxSortingInfo GetSorting(GridItemsProviderRequest<TModel> request)
     {
         var expression = GetSortingExpression(request);
@@ -94,7 +154,7 @@ public class FluxItemsProvider<TModel>
         return new FluxSortingInfo(sortValue, direction);
     }
 
-    private LambdaExpression? GetSortingExpression(GridItemsProviderRequest<TModel> request)
+    private static LambdaExpression? GetSortingExpression(GridItemsProviderRequest<TModel> request)
     {
         var sortingColumn = request.SortByColumn;
         if (sortingColumn is null) return null;
@@ -106,6 +166,10 @@ public class FluxItemsProvider<TModel>
         return sorting;
     }
 
-    protected ICollection<KeyValuePair<string, string>> NewQuery() => [];
-
+    /// <inheritdoc />
+    public async Task SetPageAsync(int pageNumber)
+    {
+        if (pageNumber < 1) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than 0.");
+        await PaginationState.SetCurrentPageIndexAsync(pageNumber - 1);
+    }
 }

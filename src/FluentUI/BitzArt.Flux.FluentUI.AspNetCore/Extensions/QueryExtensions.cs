@@ -2,11 +2,26 @@
 
 namespace BitzArt.Flux;
 
-public static class QueryExtensions
+/// <summary>
+/// Extensions for working with query strings.
+/// </summary>
+public static class QueryString
 {
+    /// <summary>
+    /// Creates a new query string.
+    /// </summary>
+    /// <returns></returns>
+    public static ICollection<KeyValuePair<string, string>> New() => [];
+
+    /// <summary>
+    /// Adds a key-value pair to the query.
+    /// </summary>
     public static void Add(this ICollection<KeyValuePair<string, string>> query, string key, string value)
         => query.Add(new(key, value));
 
+    /// <summary>
+    /// Builds the query string.
+    /// </summary>
     public static string ToQueryString(this ICollection<KeyValuePair<string, string>> query)
     {
         if (query is null || query.Count == 0) return string.Empty;

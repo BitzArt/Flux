@@ -13,6 +13,7 @@ internal class Program
 
         builder.Services.AddFlux(baseAddress);
         builder.Services.AddBlazorViewModels();
+        builder.Services.AddItemsProviders();
         builder.Services.AddRenderingEnvironment();
 
         builder.Services.AddFluentUIComponents();

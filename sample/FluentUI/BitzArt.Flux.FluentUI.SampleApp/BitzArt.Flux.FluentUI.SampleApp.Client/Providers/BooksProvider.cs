@@ -5,15 +5,12 @@ namespace BitzArt.Flux.FluentUI.SampleApp;
 public class BooksProvider
     : FluxItemsProvider<Book>
 {
-    private readonly BooksPageViewModel _viewModel;
+    protected override int DefaultPageSize => 5;
 
-    public BooksProvider(
-        BooksPageViewModel viewModel,
-        IFluxSetContext<Book> booksSet,
-        PaginationState paginationState) : base(booksSet, paginationState)
+    public string? AuthorId { get; set; }
+
+    public BooksProvider(IFluxContext flux) : base(flux)
     {
-        _viewModel = viewModel;
-
         SortMap.Add(x => x.Id, "id");
         SortMap.Add(x => x.Title, "title");
         SortMap.Add(x => x.AuthorId, "authorId");
@@ -23,10 +20,10 @@ public class BooksProvider
 
     protected override Task<object[]> ConfigureParametersAsync(FluxSortingInfo sort, GridItemsProviderRequest<Book> request)
     {
-        var query = NewQuery();
+        var query = QueryString.New();
 
-        if (!string.IsNullOrWhiteSpace(_viewModel.State.AuthorId))
-            query.Add("authorId", _viewModel.State.AuthorId!);
+        if (!string.IsNullOrWhiteSpace(AuthorId))
+            query.Add("authorId", AuthorId!);
         if (!string.IsNullOrWhiteSpace(sort.OrderBy))
             query.Add("sort", sort.OrderBy);
         if (sort.Direction.HasValue && sort.Direction.Value == OrderDirection.Descending)

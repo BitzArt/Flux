@@ -21,7 +21,7 @@
 <FluentDataGrid
     ItemsProvider="ViewModel.BooksProvider.GetItems"
     GridTemplateColumns="1fr 1fr 1fr 1fr 1fr"
-    Pagination="@ViewModel.PaginationState"
+    Pagination="@ViewModel.BooksProvider.PaginationState"
     TGridItem="Book">
         <PropertyColumn 
             Title="ID" 
@@ -56,12 +56,12 @@
 
 </FluentDataGrid>
 
-<FluentPaginator State="@ViewModel.PaginationState">
+<FluentPaginator State="@ViewModel.BooksProvider.PaginationState">
     <SummaryTemplate>
-        There are total <strong>@(ViewModel.PaginationState.TotalItemCount ?? 0)</strong> items
+        Total items: <strong>@(Provider.TotalItems)</strong>
     </SummaryTemplate>
     <PaginationTextTemplate>
-        This is page <strong>@(ViewModel.PaginationState.CurrentPageIndex + 1)</strong> out of a total of <strong>@(ViewModel.PaginationState.LastPageIndex + 1)</strong> pages
+        Page <strong>@(Provider.CurrentPage)</strong> of <strong>@(Provider.TotalPages)</strong>
     </PaginationTextTemplate>
 </FluentPaginator>
 

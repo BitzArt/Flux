@@ -1,23 +1,21 @@
 ﻿using BitzArt.Blazor.MVVM;
-using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace BitzArt.Flux.FluentUI.SampleApp;
 
 public class BooksPageViewModel : ViewModel<BooksPageState>
 {
     public BooksProvider BooksProvider;
-    public PaginationState PaginationState;
 
     public async Task AuthorIdChanged(string? authorId)
     {
         State.AuthorId = authorId;
-        await PaginationState.SetCurrentPageIndexAsync(0);
+        BooksProvider.AuthorId = authorId;
+        await BooksProvider.SetPageAsync(1);
     }
 
-    public BooksPageViewModel(IFluxSetContext<Book> booksSet)
+    public BooksPageViewModel(BooksProvider booksProvider)
     {
-        PaginationState = new() { ItemsPerPage = 5 };
-        BooksProvider = new(this, booksSet, PaginationState);
+        BooksProvider = booksProvider;
 
         // Whenever another request is made, save it to ViewModel's state
         BooksProvider.OnAfterRequest += (request) =>
@@ -33,6 +31,7 @@ public class BooksPageViewModel : ViewModel<BooksPageState>
 
         // Whenever state is restored, supply the last request to the provider
         BooksProvider.RestoreLastRequest(State.LastRequest);
+        BooksProvider.AuthorId = State.AuthorId;
     }
 }
 

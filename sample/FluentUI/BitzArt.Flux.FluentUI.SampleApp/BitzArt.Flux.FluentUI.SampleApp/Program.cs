@@ -18,6 +18,7 @@ internal class Program
 
         builder.Services.AddFlux("http://localhost:8080/api");
         builder.Services.AddBlazorViewModels();
+        builder.Services.AddItemsProviders();
         builder.Services.AddRenderingEnvironment();
 
         builder.Services.AddFluentUIComponents();
