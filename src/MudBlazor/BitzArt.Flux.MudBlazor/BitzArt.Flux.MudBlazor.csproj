@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageId>BitzArt.Flux</PackageId>
+		<Authors>BitzArt</Authors>
+		<Description>A universal WebApi client</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/BitzArt/Flux</RepositoryUrl>
+		<PackageProjectUrl>https://bitzart.github.io/Flux</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIconUrl></PackageIconUrl>
+		<PackageIcon>flux-logo-128.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\assets\flux-logo-128.png" Pack="True" Visible="False" PackagePath="\" />
+		<None Include="..\..\..\README.md" Pack="True" Visible="False" PackagePath="\" />
+	</ItemGroup>
+
+</Project>

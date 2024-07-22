@@ -30,9 +30,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{83E6C7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.SampleApp", "sample\BitzArt.Flux.SampleApp\BitzArt.Flux.SampleApp.csproj", "{2D85CE63-7FB6-4D97-81EF-44351A94A883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.Json", "src\BitzArt.Flux.Json\BitzArt.Flux.Json.csproj", "{72FE978D-615D-49AF-B69A-4D676EA7254F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.Json", "src\BitzArt.Flux.Json\BitzArt.Flux.Json.csproj", "{72FE978D-615D-49AF-B69A-4D676EA7254F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.Json.Tests", "tests\BitzArt.Flux.Json.Tests\BitzArt.Flux.Json.Tests.csproj", "{2ED3365D-9DC2-4177-866F-46D1A15CBF61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.Json.Tests", "tests\BitzArt.Flux.Json.Tests\BitzArt.Flux.Json.Tests.csproj", "{2ED3365D-9DC2-4177-866F-46D1A15CBF61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MudBlazor", "MudBlazor", "{FB04F142-5BDC-4B3A-9EFF-AFE14F9A7014}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.MudBlazor", "src\MudBlazor\BitzArt.Flux.MudBlazor\BitzArt.Flux.MudBlazor.csproj", "{AB6F442A-B032-41A0-955D-467F66CECD53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +72,10 @@ Global
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB6F442A-B032-41A0-955D-467F66CECD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB6F442A-B032-41A0-955D-467F66CECD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB6F442A-B032-41A0-955D-467F66CECD53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB6F442A-B032-41A0-955D-467F66CECD53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +89,8 @@ Global
 		{2D85CE63-7FB6-4D97-81EF-44351A94A883} = {83E6C753-C4C4-4C4E-8627-E9077F557159}
 		{72FE978D-615D-49AF-B69A-4D676EA7254F} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
 		{2ED3365D-9DC2-4177-866F-46D1A15CBF61} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
+		{FB04F142-5BDC-4B3A-9EFF-AFE14F9A7014} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
+		{AB6F442A-B032-41A0-955D-467F66CECD53} = {FB04F142-5BDC-4B3A-9EFF-AFE14F9A7014}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}

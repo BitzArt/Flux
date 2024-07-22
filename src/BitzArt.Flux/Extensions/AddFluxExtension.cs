@@ -29,7 +29,7 @@ public static class AddFluxExtension
 
     private class FluxAlreadyRegisteredException : Exception
     {
-        private const string Msg = "Flux is already registered in this IServiceCollection";
+        private const string Msg = "Flux is already registered in this service collection";
         public FluxAlreadyRegisteredException() : base(Msg) { }
     }
 }
