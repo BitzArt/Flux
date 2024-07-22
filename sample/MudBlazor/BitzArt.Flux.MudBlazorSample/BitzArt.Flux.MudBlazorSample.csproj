@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>BitzArt.Flux.MudBlazorSample</RootNamespace>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\BitzArt.Flux.MudBlazorSample.Client\BitzArt.Flux.MudBlazorSample.Client.csproj" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*" />
+	</ItemGroup>
+
+</Project>

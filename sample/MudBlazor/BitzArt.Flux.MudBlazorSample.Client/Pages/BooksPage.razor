@@ -1,0 +1,79 @@
+﻿@page "/books"
+
+@if (_initialized)
+{
+    <MudSelect
+        T="Author"
+        Label="Author"
+        FullWidth="true"
+        AnchorOrigin="Origin.BottomCenter"
+        ValueChanged="OnAuthorSelectedAsync">
+
+        <MudSelectItem Value="(Author)null!">Select Author</MudSelectItem>
+        @foreach (var author in _authors)
+        {
+            <MudSelectItem Value="@author">@author.Name</MudSelectItem>
+        }
+
+    </MudSelect>
+
+    <MudBlazor.MudTable
+        @ref="_table"
+        T="Book"
+        ServerData="LoadBooksAsync"
+        Style="width:contain"
+    >
+        <ToolBarContent>
+            <MudTextField
+                T="string"
+                DebounceInterval="300"
+                OnDebounceIntervalElapsed="OnSearchAsync"
+                Placeholder="Search"
+                Adornment="Adornment.Start"
+                AdornmentIcon="@Icons.Material.Filled.Search"
+                IconSize="Size.Medium"
+                Class="mt-0">
+            </MudTextField>
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel T="Book" SortLabel="id">
+                    ID
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="Book" SortLabel="author">
+                    Author
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="Book" SortLabel="title">
+                    Title
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="Book" SortLabel="publish">
+                    Publish Year
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">
+                @context.Id
+                </MudTd>
+            <MudTd DataLabel="Author">
+                @_authors.FirstOrDefault(x => x.Id == context.AuthorId)?.Name
+            </MudTd>
+            <MudTd DataLabel="Title">
+                @context.Title
+            </MudTd>
+            <MudTd DataLabel="Publish Year">
+                @context.PublishYearDisplay
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 5 }" HideRowsPerPage="true" />
+        </PagerContent>
+    </MudBlazor.MudTable>
+}
