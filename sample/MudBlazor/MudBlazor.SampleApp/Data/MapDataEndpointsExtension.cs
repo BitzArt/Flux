@@ -1,7 +1,7 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BitzArt.Flux.MudBlazorSample;
+namespace MudBlazor.SampleApp;
 
 internal static class MapDataEndpointsExtension
 {

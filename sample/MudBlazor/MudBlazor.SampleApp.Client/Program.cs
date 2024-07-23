@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 
-namespace BitzArt.Flux.MudBlazorSample.Client;
+namespace MudBlazor.SampleApp.Client;
 
 internal class Program
 {

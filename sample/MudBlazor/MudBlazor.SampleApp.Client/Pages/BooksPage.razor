@@ -18,9 +18,9 @@
     </MudSelect>
 
     <MudBlazor.MudTable
-        @ref="_table"
+        @ref="BooksDataProvider.Table"
         T="Book"
-        ServerData="LoadBooksAsync"
+        ServerData="BooksDataProvider.Data"
         Style="width:contain"
     >
         <ToolBarContent>

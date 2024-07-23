@@ -1,7 +1,7 @@
-using BitzArt.Flux.MudBlazorSample.Components;
+using MudBlazor.SampleApp.Components;
 using MudBlazor.Services;
 
-namespace BitzArt.Flux.MudBlazorSample
+namespace MudBlazor.SampleApp
 {
     public class Program
     {

@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux.MudBlazorSample;
+﻿namespace MudBlazor.SampleApp;
 
 internal static class WebApiData
 {

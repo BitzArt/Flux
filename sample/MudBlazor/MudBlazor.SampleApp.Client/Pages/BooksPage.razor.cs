@@ -1,27 +1,27 @@
-﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
+﻿using BitzArt.Flux;
+using BitzArt.Flux.MudBlazor;
+using Microsoft.AspNetCore.Components;
 using System.Web;
 
-namespace BitzArt.Flux.MudBlazorSample.Client.Pages;
+namespace MudBlazor.SampleApp.Client.Pages;
 
 public partial class BooksPage : ComponentBase
 {
-    private MudTable<Book> _table = null!;
-
     private IEnumerable<Author> _authors = null!;
     private Author? _selectedAuthor;
 
     private string? _search;
 
     [Inject] private IFluxSetContext<Author> Authors { get; set; } = null!;
-    [Inject] private IFluxSetContext<Book> BooksSet { get; set; } = null!;
 
-    private const int _pageSize = 10;
+    [Inject] private IFluxSetDataProvider<Book> BooksDataProvider { get; set; } = null!;
 
     private bool _initialized = false;
 
     protected override async Task OnInitializedAsync()
     {
+        BooksDataProvider.GetParameters = GetBooksParameters;
+
         await base.OnInitializedAsync();
         _authors = await Authors.GetAllAsync();
         _initialized = true;
@@ -29,7 +29,7 @@ public partial class BooksPage : ComponentBase
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task<TableData<Book>> LoadBooksAsync(TableState state, CancellationToken token)
+    private object[] GetBooksParameters(TableState state)
     {
         var query = HttpUtility.ParseQueryString(string.Empty);
 
@@ -40,32 +40,18 @@ public partial class BooksPage : ComponentBase
 
         var queryString = query.Count > 0 ? $"?{query}" : string.Empty;
 
-        var page = await BooksSet.GetPageAsync(state.Page * state.PageSize, state.PageSize, queryString);
-
-        return new TableData<Book>
-        {
-            Items = page.Data,
-            TotalItems = page.Total!.Value
-        };
+        return [queryString];
     }
 
     private async Task OnAuthorSelectedAsync(Author author)
     {
         _selectedAuthor = author;
-        if (_table is not null)
-        {
-            _table!.CurrentPage = 0;
-            await _table!.ReloadServerData();
-        }
+        await BooksDataProvider.ResetAndReloadAsync();
     }
 
     private async Task OnSearchAsync(string value)
     {
         _search = value;
-        if (_table is not null)
-        {
-            _table!.CurrentPage = 0;
-            await _table!.ReloadServerData();
-        }
+        await BooksDataProvider.ResetAndReloadAsync();
     }
 }

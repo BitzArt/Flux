@@ -4,12 +4,12 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<RootNamespace>BitzArt.Flux.MudBlazorSample</RootNamespace>
+		<RootNamespace>MudBlazor.SampleApp</RootNamespace>
 	</PropertyGroup>
 
 
 	<ItemGroup>
-		<ProjectReference Include="..\BitzArt.Flux.MudBlazorSample.Client\BitzArt.Flux.MudBlazorSample.Client.csproj" />
+		<ProjectReference Include="..\MudBlazor.SampleApp.Client\MudBlazor.SampleApp.Client.csproj" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*" />
 	</ItemGroup>
 

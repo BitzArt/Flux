@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using BitzArt.Flux;
+using BitzArt.Flux.MudBlazor;
 
-namespace BitzArt.Flux.MudBlazorSample;
+namespace MudBlazor.SampleApp;
 
 public static class AddFluxExtension
 {
@@ -16,5 +18,7 @@ public static class AddFluxExtension
                 .WithEndpoint("books")
                 .WithPageEndpoint("books{query}");
         });
+
+        services.AddFluxSetDataProvider<Book>();
     }
 }

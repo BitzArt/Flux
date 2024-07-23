@@ -40,11 +40,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.MudBlazor", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MudBlazor", "MudBlazor", "{0BA6ECD8-3FF5-4E88-8C65-F169F184FE33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.MudBlazorSample.Shared", "sample\MudBlazor\BitzArt.Flux.MudBlazorSample.Shared\BitzArt.Flux.MudBlazorSample.Shared.csproj", "{F2A4D102-0354-4D03-8D59-8953C8A6056A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.SampleApp.Shared", "sample\MudBlazor\MudBlazor.SampleApp.Shared\MudBlazor.SampleApp.Shared.csproj", "{F2A4D102-0354-4D03-8D59-8953C8A6056A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.MudBlazorSample", "sample\MudBlazor\BitzArt.Flux.MudBlazorSample\BitzArt.Flux.MudBlazorSample.csproj", "{EFCA3026-BF48-46F3-BAF4-9B6A5DC39A0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.SampleApp", "sample\MudBlazor\MudBlazor.SampleApp\MudBlazor.SampleApp.csproj", "{EFCA3026-BF48-46F3-BAF4-9B6A5DC39A0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.MudBlazorSample.Client", "sample\MudBlazor\BitzArt.Flux.MudBlazorSample.Client\BitzArt.Flux.MudBlazorSample.Client.csproj", "{1D0CBDFE-7989-40B5-AFED-92D1BA64C36B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.SampleApp.Client", "sample\MudBlazor\MudBlazor.SampleApp.Client\MudBlazor.SampleApp.Client.csproj", "{1D0CBDFE-7989-40B5-AFED-92D1BA64C36B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

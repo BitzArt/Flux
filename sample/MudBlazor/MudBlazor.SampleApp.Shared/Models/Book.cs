@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BitzArt.Flux.MudBlazorSample;
+namespace MudBlazor.SampleApp;
 
 public class Book
 {
