@@ -4,6 +4,8 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		
 		<PackageId>BitzArt.Flux.MudBlazor</PackageId>
 		<Authors>BitzArt</Authors>
 		<Description>A universal WebApi client</Description>

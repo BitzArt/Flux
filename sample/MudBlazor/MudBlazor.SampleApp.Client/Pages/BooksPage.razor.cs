@@ -13,7 +13,6 @@ public partial class BooksPage : ComponentBase
     private string? _search;
 
     [Inject] private IFluxSetContext<Author> Authors { get; set; } = null!;
-
     [Inject] private IFluxSetDataProvider<Book> BooksDataProvider { get; set; } = null!;
 
     private bool _initialized = false;
