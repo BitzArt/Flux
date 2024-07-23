@@ -116,6 +116,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         // dynamic reset based on parameters
         if (ShouldResetDynamicOnParameters(newParameters)) return true;
 
+        // reset is not requested
         return false;
     }
 
@@ -144,52 +145,70 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     private static bool HasOrderChanged(TableState lastState, TableState newState)
     {
+        // sort label (column) has changed
         if (lastState.SortLabel != newState.SortLabel) return true;
+
+        // no change detected
         return false;
     }
 
     private static bool HasOrderDirectionChanged(TableState lastState, TableState newState)
     {
+        // sort direction has changed
         if (lastState.SortDirection != newState.SortDirection) return true;
+
+        // no change detected
         return false;
     }
 
     private bool CompareWithLastRequest(TableState newState, object[] newParameters)
     {
+        // no last query, no comparison
         if (LastQuery is null) return false;
 
+        // state has changed
         var pageStateHasChanged = ComparePageStates(LastQuery!.TableState, newState) == false;
         if (pageStateHasChanged) return false;
 
+        // parameters have changed
         var parametersHaveChanged = CompareParameters(LastQuery!.Parameters, newParameters) == false;
         if (parametersHaveChanged) return false;
 
+        // no change detected
         return true;
     }
 
     private static bool ComparePageStates(TableState lastState, TableState newState)
     {
+        // page index has changed
         if (lastState.Page != newState.Page) return false;
 
+        // page size has changed
         if (lastState.PageSize != newState.PageSize) return false;
 
+        // no change detected
         return true;
     }
 
     private static bool CompareParameters(object[]? lastParameters, object[] newParameters)
     {
+        // no last parameters, no comparison
         if (lastParameters is null) return false;
 
+        // different number of parameters
         if (lastParameters.Length != newParameters.Length) return false;
 
+        // compare each parameter
         for (var i = 0; i < lastParameters.Length; i++)
         {
             if (!lastParameters[i].Equals(newParameters[i])) return false;
         }
 
+        // no change detected
         return true;
     }
 
+    // TODO: Extract as extension method ?
     private static TableData<TModel> BuildTableData(PageResult<TModel> page, FluxSetDataPageQuery<TModel> currentQuery)
     {
         var result = new TableData<TModel>()
