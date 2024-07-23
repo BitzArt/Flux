@@ -15,6 +15,8 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public FluxSetDataPageQuery<TModel>? LastQuery { get; private set; }
 
+    private bool _resetting = false;
+
     private bool _resetPageOnce = false;
     private bool ResetPageOnce
     {
@@ -41,7 +43,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         ResetPage();
 
         if (Table is null) throw new InvalidOperationException(
-            "Table component must be forwarded to flux data provider for it to be able to trigger a reload.");
+            "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
         
         await Table!.ReloadServerData();
     }
@@ -59,11 +61,13 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
     [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken)
     {
-        var parameters = GetParameters?.Invoke(state) ?? [];
+        var parameters = GetParameters is not null ? GetParameters(state) : [];
 
         var lastParameters = LastQuery?.Parameters;
         
-        if (ResetPageOnce
+        if (!_resetting
+            &&
+            (ResetPageOnce
             ||
             (ShouldResetPage is not null
             && ShouldResetPage.Invoke() == true)
@@ -78,16 +82,19 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
             ||
             (lastParameters is not null
             && ShouldResetPageOnParameters is not null
-            && ShouldResetPageOnParameters!.Invoke(lastParameters, parameters) == true))
+            && ShouldResetPageOnParameters!.Invoke(lastParameters, parameters) == true)))
         {
             if (Table is null) throw new InvalidOperationException(
-                "Table component must be forwarded to flux data provider for it to be able to reset current page.");
+                "Table component must be forwarded to the flux data provider for it to be able to reset current page.");
 
             Table.CurrentPage = 0;
+            _resetting = true;
             await Table.ReloadServerData();
 
             return LastQuery!.Result;
         }
+
+        if (_resetting == true) _resetting = false;
 
         if (CompareWithLastRequest(state, parameters)) return LastQuery!.Result;
 

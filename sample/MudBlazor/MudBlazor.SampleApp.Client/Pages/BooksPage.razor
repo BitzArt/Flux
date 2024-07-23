@@ -7,7 +7,8 @@
         Label="Author"
         FullWidth="true"
         AnchorOrigin="Origin.BottomCenter"
-        ValueChanged="OnAuthorSelectedAsync">
+        ValueChanged="OnAuthorSelectedAsync"
+        Class="mb-4">
 
         <MudSelectItem Value="(Author)null!">Select Author</MudSelectItem>
         @foreach (var author in _authors)
@@ -21,7 +22,6 @@
         @ref="BooksDataProvider.Table"
         T="Book"
         ServerData="BooksDataProvider.Data"
-        Style="width:contain"
     >
         <ToolBarContent>
             <MudTextField
