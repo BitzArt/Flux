@@ -4,6 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BitzArt.Flux.MudBlazor;
 
+// TODO: ? Extract reset logic ?
+// TODO: ? Extract page state comparison logic ?
+// TODO: Cleanup and refactor
+
 internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
     where TModel : class
 {
@@ -63,26 +67,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
     {
         var parameters = GetParameters is not null ? GetParameters(state) : [];
 
-        var lastParameters = LastQuery?.Parameters;
-        
-        if (!_resetting
-            &&
-            (ResetPageOnce
-            ||
-            (ShouldResetPage is not null
-            && ShouldResetPage.Invoke() == true)
-            ||
-            (ShouldResetPageOnOrderDirectionChanged
-            && LastQuery is not null
-            && HasOrderDirectionChanged(LastQuery.TableState, state))
-            ||
-            (ShouldResetPageOnOrderChanged
-            && LastQuery is not null
-            && HasOrderChanged(LastQuery.TableState, state))
-            ||
-            (lastParameters is not null
-            && ShouldResetPageOnParameters is not null
-            && ShouldResetPageOnParameters!.Invoke(lastParameters, parameters) == true)))
+        if (ShouldReset(state, parameters))
         {
             if (Table is null) throw new InvalidOperationException(
                 "Table component must be forwarded to the flux data provider for it to be able to reset current page.");
@@ -110,6 +95,52 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
         return result;
     }
+
+    private bool ShouldReset(TableState state, object[] newParameters)
+    {
+        // already resetting, do not loop infinitely
+        if (_resetting) return false;
+
+        // manual page reset requested
+        if (ResetPageOnce) return true;
+
+        // reset on order change
+        if (ShouldResetOrderChanged(state)) return true;
+
+        // reset on order direction change
+        if (ShouldResetOrderDirectionChanged(state)) return true;
+
+        // dynamic reset
+        if (ShouldResetDynamic()) return true;
+
+        // dynamic reset based on parameters
+        if (ShouldResetDynamicOnParameters(newParameters)) return true;
+
+        return false;
+    }
+
+    private bool ShouldResetOrderChanged(TableState newState) =>
+        ShouldResetPageOnOrderChanged
+        && LastQuery is not null
+        && HasOrderChanged(LastQuery!.TableState, newState);
+
+    private bool ShouldResetOrderDirectionChanged(TableState newState) =>
+        ShouldResetPageOnOrderDirectionChanged
+        && LastQuery is not null
+        && HasOrderDirectionChanged(LastQuery.TableState, newState);
+
+    private bool ShouldResetDynamic() =>
+        ShouldResetPage is not null && ShouldResetPage.Invoke() == true;
+
+    private bool ShouldResetDynamicOnParameters(object[] newParameters)
+    {
+        var lastParameters = LastQuery?.Parameters;
+
+        return lastParameters is not null
+            && ShouldResetPageOnParameters is not null
+            && ShouldResetPageOnParameters!.Invoke(lastParameters, newParameters) == true;
+    }
+
 
     private static bool HasOrderChanged(TableState lastState, TableState newState)
     {
