@@ -1,0 +1,9 @@
+﻿.books-page ::deep .mud-table .mud-table-toolbar {
+    height: inherit !important;
+    padding-inline-start: 1rem !important;
+    padding-inline-end: 1rem !important;
+}
+
+.books-page ::deep .mud-table .mud-table-smalldevices-sortselect {
+    padding-top: 1rem !important;
+}

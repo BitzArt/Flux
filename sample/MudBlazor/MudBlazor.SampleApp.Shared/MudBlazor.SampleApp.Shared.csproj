@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>MudBlazor.SampleApp</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="BitzArt.Pagination" Version="1.14.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\src\BitzArt.Flux.REST\BitzArt.Flux.REST.csproj" />
+	  <ProjectReference Include="..\..\..\src\MudBlazor\BitzArt.Flux.MudBlazor\BitzArt.Flux.MudBlazor.csproj" />
+	</ItemGroup>
+
+</Project>
