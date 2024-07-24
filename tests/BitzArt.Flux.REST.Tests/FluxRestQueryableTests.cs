@@ -44,7 +44,7 @@ public class FluxRestQueryableTests
     }
 
     [Fact]
-    public void FirstOrDefaultAsync_OnRestSetWithNoTKeyWithNoExpression_ThrowsNotSupported()
+    public async Task FirstOrDefaultAsync_OnRestSetWithNoTKeyWithNoExpression_ThrowsNotSupported()
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddFlux(x =>
@@ -56,11 +56,11 @@ public class FluxRestQueryableTests
         var services = serviceCollection.BuildServiceProvider();
         var set = services.GetRequiredService<IFluxSetContext<TestModel>>();
 
-        Assert.ThrowsAsync<NotSupportedException>(() => set.FirstOrDefaultAsync());
+        await Assert.ThrowsAsync<NotSupportedException>(() => set.FirstOrDefaultAsync());
     }
 
     [Fact]
-    public void FirstOrDefaultAsync_OnRestSetWithTKeyWithNoExpression_ThrowsNotSupported()
+    public async Task FirstOrDefaultAsync_OnRestSetWithTKeyWithNoExpression_ThrowsNotSupported()
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddFlux(x =>
@@ -72,7 +72,7 @@ public class FluxRestQueryableTests
         var services = serviceCollection.BuildServiceProvider();
         var set = services.GetRequiredService<IFluxSetContext<TestModel>>();
 
-        Assert.ThrowsAsync<NotSupportedException>(() => set.FirstOrDefaultAsync());
+        await Assert.ThrowsAsync<NotSupportedException>(() => set.FirstOrDefaultAsync());
     }
 
     [Fact]
