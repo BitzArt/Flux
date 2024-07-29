@@ -58,15 +58,19 @@ internal class FluxRestSetContext<TModel>(
         try
         {
             var response = await HttpClient.SendAsync(message, cancellationToken);
-            if (!response.IsSuccessStatusCode) throw new Exception($"External REST Service responded with http status code '{response.StatusCode}'.");
+            if (!response.IsSuccessStatusCode) throw new FluxRestNonSuccessStatusCodeException(response);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<TResult>(content, ServiceOptions.SerializerOptions)!;
 
             return result;
         }
+        catch (FluxRestException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
-            throw new Exception("An error has occurred while processing http request. See inner exception for details.", ex);
+            throw new FluxRestException("An error has occurred while processing http request. See inner exception for details.", ex);
         }
     }
 
