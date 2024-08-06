@@ -32,4 +32,10 @@
 	  <ProjectReference Include="..\..\BitzArt.Flux\BitzArt.Flux.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>BitzArt.Flux.MudBlazor.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
 </Project>

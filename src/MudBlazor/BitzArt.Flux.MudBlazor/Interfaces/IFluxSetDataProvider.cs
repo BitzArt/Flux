@@ -25,6 +25,11 @@ public interface IFluxSetDataProvider<TModel>
     public Func<TableState, object[]>? GetParameters { get; set; }
 
     /// <summary>
+    /// Event triggered when a request was completed and results are available.
+    /// </summary>
+    public event OnResultHandler<TModel>? OnResult;
+
+    /// <summary>
     /// Resets current page to 0 on next request.
     /// </summary>
     public void ResetPage();
