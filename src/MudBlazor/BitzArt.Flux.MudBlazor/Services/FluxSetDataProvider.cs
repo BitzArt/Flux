@@ -3,6 +3,7 @@ using MudBlazor;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
+using static MudBlazor.Colors;
 
 namespace BitzArt.Flux.MudBlazor;
 
@@ -21,22 +22,12 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public event OnResultHandler<TModel>? OnResult;
 
-    private FluxSetDataPageQuery<TModel>? _lastQuery = null;
-    public FluxSetDataPageQuery<TModel>? LastQuery
-    {
-        get => _lastQuery;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            _lastQuery = value;
-            OnResult?.Invoke(value);
-        }
-    }
+    public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
     public void RestoreLastQuery(object query)
     {
         if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
-        _lastQuery = lastQuery;
+        LastQuery = lastQuery;
     }
 
     private bool _resetting = false;
@@ -112,6 +103,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         var result = BuildTableData(page, currentQuery);
 
         LastQuery = currentQuery;
+        OnResult?.Invoke(new(this, LastQuery));
 
         return result;
     }
@@ -246,5 +238,27 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 /// <summary>
 /// Handler for an event triggered when a request was completed and results are available.
 /// </summary>
-public delegate void OnResultHandler<TModel>(FluxSetDataPageQuery<TModel> query)
+public delegate void OnResultHandler<TModel>(OnResultEventArgs<TModel> args)
     where TModel : class;
+
+/// <summary>
+/// Event arguments for an event triggered when a request was completed and results are available.
+/// </summary>
+/// <typeparam name="TModel"></typeparam>
+/// <remarks>
+/// Initializes a new instance of the <see cref="OnResultEventArgs{TModel}"/> class.
+/// </remarks>
+/// <param name="query"></param>
+public class OnResultEventArgs<TModel>(object sender, FluxSetDataPageQuery<TModel> query) : EventArgs
+    where TModel : class
+{
+    /// <summary>
+    /// Object that triggered the event.
+    /// </summary>
+    public object Sender { get; } = sender;
+
+    /// <summary>
+    /// Query that triggered the event.
+    /// </summary>
+    public FluxSetDataPageQuery<TModel> Query { get; } = query;
+}

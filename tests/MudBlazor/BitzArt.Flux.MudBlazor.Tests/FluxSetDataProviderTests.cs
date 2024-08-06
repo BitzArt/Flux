@@ -35,10 +35,10 @@ public class FluxSetDataProviderTests
         var triggered = false;
         FluxSetDataPageQuery<TestModel>? query = null;
 
-        dataProvider.OnResult += q =>
+        dataProvider.OnResult += args =>
         {
             triggered = true;
-            query = q;
+            query = args.Query;
         };
 
         // Act
@@ -110,10 +110,10 @@ public class FluxSetDataProviderTests
     private class TestModel
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public required int Id { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
     }
 
     private const int TestModelCount = 3;
