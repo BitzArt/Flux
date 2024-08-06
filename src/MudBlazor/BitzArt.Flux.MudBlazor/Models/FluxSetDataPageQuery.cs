@@ -2,12 +2,24 @@
 
 namespace BitzArt.Flux.MudBlazor;
 
-internal record FluxSetDataPageQuery<TModel>
+/// <summary>
+/// Represents a page query for a data set.
+/// </summary>
+public record FluxSetDataPageQuery<TModel>
     where TModel : class
 {
+    /// <summary>
+    /// Table state at the time of request.
+    /// </summary>
     public TableState TableState { get; set; } = null!;
 
+    /// <summary>
+    /// Parameters for the request.
+    /// </summary>
     public object[]? Parameters { get; set; } = null!;
 
+    /// <summary>
+    /// Result of the request.
+    /// </summary>
     public TableData<TModel> Result { get; set; } = null!;
 }
