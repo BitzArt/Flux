@@ -39,6 +39,12 @@ public interface IFluxSetDataProvider<TModel>
     /// </summary>
     /// <returns></returns>
     public Task ResetAndReloadAsync();
+    
+    /// <summary>
+    /// Restores last query.
+    /// </summary>
+    /// <param name="query"></param>
+    public void RestoreLastQuery(object query);
 
     /// <summary>
     /// Dynamically determine whether to reset page when processing a request or not.
