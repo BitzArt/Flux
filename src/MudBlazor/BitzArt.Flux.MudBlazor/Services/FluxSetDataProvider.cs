@@ -22,11 +22,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
-    public bool IsLoading
-    {
-        get;
-        private set;
-    }
+    public bool IsLoading { get; private set; }
 
     private List<Task> CurrentOperations { get; } = [];
 
@@ -42,7 +38,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
                 _resetPageOnce = false;
                 return true;
             }
-            
+
             return false;
         }
         set => _resetPageOnce = value;
@@ -77,7 +73,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
-        
+
         await Table!.ReloadServerData();
     }
 
@@ -96,7 +92,6 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         var task = GetDataInternalAsync(state, cancellationToken);
         CurrentOperations.Add(task);
         IsLoading = true;
-        Table?.Context.TableStateHasChanged?.Invoke();
 
         try
         {
