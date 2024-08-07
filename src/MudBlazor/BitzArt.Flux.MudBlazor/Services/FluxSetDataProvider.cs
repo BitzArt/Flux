@@ -1,9 +1,6 @@
 ﻿using BitzArt.Pagination;
 using MudBlazor;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Reflection;
-using static MudBlazor.Colors;
 
 namespace BitzArt.Flux.MudBlazor;
 
@@ -23,6 +20,10 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
     public event OnResultHandler<TModel>? OnResult;
 
     public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
+
+    public bool IsLoading { get; private set; }
+
+    private List<Task> CurrentOperations { get; } = [];
 
     private bool _resetting = false;
 
@@ -85,8 +86,25 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public MudTable<TModel>? Table { get; set; }
 
-    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken)
+    {
+        var task = GetDataInternalAsync(state, cancellationToken);
+        CurrentOperations.Add(task);
+        IsLoading = true;
+
+        try
+        {
+            return await task;
+        }
+        finally
+        {
+            CurrentOperations.Remove(task);
+            if (CurrentOperations.Count == 0) IsLoading = false;
+        }
+    }
+
+    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
+    private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
     {
         var parameters = GetParameters is not null ? GetParameters(state) : [];
 
