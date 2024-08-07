@@ -47,6 +47,11 @@ public interface IFluxSetDataProvider<TModel>
     public void RestoreLastQuery(object query);
 
     /// <summary>
+    /// Resets table sorting to it's default state.
+    /// </summary>
+    public void ResetSort();
+
+    /// <summary>
     /// Dynamically determine whether to reset page when processing a request or not.
     /// </summary>
     public Func<bool>? ShouldResetPage { get; set; }

@@ -51,6 +51,7 @@ public partial class BooksPage : ComponentBase
     private async Task OnSearchAsync(string value)
     {
         _search = value;
+        BooksDataProvider.ResetSort();
         await BooksDataProvider.ResetAndReloadAsync();
     }
 }

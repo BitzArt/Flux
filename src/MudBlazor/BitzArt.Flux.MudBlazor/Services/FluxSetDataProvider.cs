@@ -24,12 +24,6 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
-    public void RestoreLastQuery(object query)
-    {
-        if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
-        LastQuery = lastQuery;
-    }
-
     private bool _resetting = false;
 
     private bool _resetPageOnce = false;
@@ -46,6 +40,24 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
             return false;
         }
         set => _resetPageOnce = value;
+    }
+
+    public void RestoreLastQuery(object query)
+    {
+        if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
+        LastQuery = lastQuery;
+    }
+
+    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
+    public void ResetSort()
+    {
+        if (Table is null) throw new InvalidOperationException(
+            "Table component must be forwarded to the flux data provider for it to be able to reset sorting.");
+
+        foreach (var sortLabel in Table.Context.SortLabels)
+        {
+            sortLabel.SortDirection = SortDirection.None;
+        }
     }
 
     public void ResetPage()
