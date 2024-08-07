@@ -39,12 +39,17 @@ public interface IFluxSetDataProvider<TModel>
     /// </summary>
     /// <returns></returns>
     public Task ResetAndReloadAsync();
-    
+
     /// <summary>
     /// Restores last query.
     /// </summary>
     /// <param name="query"></param>
     public void RestoreLastQuery(object query);
+
+    /// <summary>
+    /// Resets table sorting to it's default state.
+    /// </summary>
+    public void ResetSort();
 
     /// <summary>
     /// Dynamically determine whether to reset page when processing a request or not.
@@ -65,4 +70,9 @@ public interface IFluxSetDataProvider<TModel>
     /// Dynamically determine whether to reset page when processing a request based on last and new parameters or not.
     /// </summary>
     public Func<object[], object[], bool>? ShouldResetPageOnParameters { get; set; }
+
+    /// <summary>
+    /// Identifies if the data provider is currently working on loading data.
+    /// </summary>
+    public bool IsLoading { get; }
 }

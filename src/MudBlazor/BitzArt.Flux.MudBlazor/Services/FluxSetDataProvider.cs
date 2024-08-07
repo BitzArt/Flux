@@ -1,15 +1,13 @@
 ﻿using BitzArt.Pagination;
 using MudBlazor;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Reflection;
-using static MudBlazor.Colors;
 
 namespace BitzArt.Flux.MudBlazor;
 
 // TODO: ? Extract reset logic ?
 // TODO: ? Extract page state comparison logic ?
 // TODO: Cleanup and refactor
+// TODO: Forward CancellationToken
 
 internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
     where TModel : class
@@ -24,11 +22,9 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
-    public void RestoreLastQuery(object query)
-    {
-        if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
-        LastQuery = lastQuery;
-    }
+    public bool IsLoading { get; private set; }
+
+    private List<Task> CurrentOperations { get; } = [];
 
     private bool _resetting = false;
 
@@ -42,10 +38,28 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
                 _resetPageOnce = false;
                 return true;
             }
-            
+
             return false;
         }
         set => _resetPageOnce = value;
+    }
+
+    public void RestoreLastQuery(object query)
+    {
+        if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
+        LastQuery = lastQuery;
+    }
+
+    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
+    public void ResetSort()
+    {
+        if (Table is null) throw new InvalidOperationException(
+            "Table component must be forwarded to the flux data provider for it to be able to reset sorting.");
+
+        foreach (var sortLabel in Table.Context.SortLabels)
+        {
+            sortLabel.SortDirection = SortDirection.None;
+        }
     }
 
     public void ResetPage()
@@ -59,7 +73,7 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
-        
+
         await Table!.ReloadServerData();
     }
 
@@ -73,8 +87,27 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public MudTable<TModel>? Table { get; set; }
 
-    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken)
+    {
+        var task = GetDataInternalAsync(state, cancellationToken);
+        CurrentOperations.Add(task);
+        IsLoading = true;
+
+        try
+        {
+            var result = await task;
+            cancellationToken.ThrowIfCancellationRequested();
+            return result;
+        }
+        finally
+        {
+            CurrentOperations.Remove(task);
+            if (CurrentOperations.Count == 0) IsLoading = false;
+        }
+    }
+
+    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
+    private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
     {
         var parameters = GetParameters is not null ? GetParameters(state) : [];
 
