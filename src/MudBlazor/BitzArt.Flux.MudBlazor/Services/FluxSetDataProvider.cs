@@ -7,6 +7,7 @@ namespace BitzArt.Flux.MudBlazor;
 // TODO: ? Extract reset logic ?
 // TODO: ? Extract page state comparison logic ?
 // TODO: Cleanup and refactor
+// TODO: Forward CancellationToken
 
 internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
     where TModel : class
@@ -21,7 +22,11 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
-    public bool IsLoading { get; private set; }
+    public bool IsLoading
+    {
+        get;
+        private set;
+    }
 
     private List<Task> CurrentOperations { get; } = [];
 
@@ -91,10 +96,13 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         var task = GetDataInternalAsync(state, cancellationToken);
         CurrentOperations.Add(task);
         IsLoading = true;
+        Table?.Context.TableStateHasChanged?.Invoke();
 
         try
         {
-            return await task;
+            var result = await task;
+            cancellationToken.ThrowIfCancellationRequested();
+            return result;
         }
         finally
         {
