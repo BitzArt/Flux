@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace BitzArt.Flux.MudBlazor;
 
@@ -14,6 +15,9 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     where TModel : class
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger("Flux.MudBlazor");
+
+    private static readonly FieldInfo _tableCurrentPageField = typeof(MudTableBase)
+        .GetField("_currentPage", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
     public IFluxSetContext<TModel> SetContext { get; internal set; } = null!;
 
@@ -58,6 +62,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
         if (Table.Context.CurrentSortLabel is not null)
             await Table.Context.SetSortFunc(Table.Context.CurrentSortLabel);
+
+        await Table.ReloadServerData();
     }
 
     public async Task ResetPageAndReloadAsync()
@@ -113,7 +119,10 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             if (Table is null) throw new InvalidOperationException(
                 "Table component must be forwarded to the flux data provider for it to be able to reset current page.");
 
-            Table.CurrentPage = 0;
+            // Not using public CurrentPage property due to
+            // the side effect of it triggering a table reload.
+            _tableCurrentPageField.SetValue(Table, 0);
+
             _resetting = true;
             _logger.LogDebug("Resetting page for {Model} data provider.", typeof(TModel).Name);
             await Table.ReloadServerData();

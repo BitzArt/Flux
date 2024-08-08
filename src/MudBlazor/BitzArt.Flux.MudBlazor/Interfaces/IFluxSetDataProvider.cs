@@ -36,16 +36,17 @@ public interface IFluxSetDataProvider<TModel>
     public void RestoreLastQuery(object query);
 
     /// <summary>
-    /// Resets table sorting to it's default state, resets current page to 0, and reloads the data.
+    /// Resets table sorting to none, resets current page to 0, and then reloads the data.
+    /// </summary>
     public Task ResetAndReloadAsync();
 
     /// <summary>
-    /// Resets table sorting to it's default state and reloads the data.
+    /// Resets table sorting to none and then reloads the data.
     /// </summary>
     public Task ResetSortAndReloadAsync();
 
     /// <summary>
-    /// Resets current page to 0 and reloads the data.
+    /// Resets current page to 0 and then reloads the data.
     /// </summary>
     /// <returns></returns>
     public Task ResetPageAndReloadAsync();
