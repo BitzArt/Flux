@@ -1,6 +1,8 @@
 ﻿using BitzArt.Pagination;
+using Microsoft.Extensions.Logging;
 using MudBlazor;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace BitzArt.Flux.MudBlazor;
 
@@ -9,9 +11,14 @@ namespace BitzArt.Flux.MudBlazor;
 // TODO: Cleanup and refactor
 // TODO: Forward CancellationToken
 
-internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
+internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFluxSetDataProvider<TModel>
     where TModel : class
 {
+    private readonly ILogger _logger = loggerFactory.CreateLogger("Flux.MudBlazor");
+
+    private static readonly FieldInfo _tableCurrentPageField = typeof(MudTableBase)
+        .GetField("_currentPage", BindingFlags.NonPublic | BindingFlags.Instance)!;
+
     public IFluxSetContext<TModel> SetContext { get; internal set; } = null!;
 
     public Func<TableState, CancellationToken, Task<TableData<TModel>>> Data => GetDataAsync;
@@ -24,25 +31,11 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public bool IsLoading { get; private set; }
 
-    private List<Task> CurrentOperations { get; } = [];
+    private int _currentOperationCount = 0;
 
     private bool _resetting = false;
 
     private bool _resetPageOnce = false;
-    private bool ResetPageOnce
-    {
-        get
-        {
-            if (_resetPageOnce == true)
-            {
-                _resetPageOnce = false;
-                return true;
-            }
-
-            return false;
-        }
-        set => _resetPageOnce = value;
-    }
 
     public void RestoreLastQuery(object query)
     {
@@ -50,8 +43,14 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         LastQuery = lastQuery;
     }
 
+    public async Task ResetAndReloadAsync()
+    {
+        ResetPage();
+        await ResetSortAndReloadAsync();
+    }
+
     [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
-    public void ResetSort()
+    public async Task ResetSortAndReloadAsync()
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to reset sorting.");
@@ -60,14 +59,14 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         {
             sortLabel.SortDirection = SortDirection.None;
         }
+
+        if (Table.Context.CurrentSortLabel is not null)
+            await Table.Context.SetSortFunc(Table.Context.CurrentSortLabel);
+
+        await Table.ReloadServerData();
     }
 
-    public void ResetPage()
-    {
-        ResetPageOnce = true;
-    }
-
-    public async Task ResetAndReloadAsync()
+    public async Task ResetPageAndReloadAsync()
     {
         ResetPage();
 
@@ -75,6 +74,11 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
             "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
 
         await Table!.ReloadServerData();
+    }
+
+    public void ResetPage()
+    {
+        _resetPageOnce = true;
     }
 
     public Func<bool>? ShouldResetPage { get; set; }
@@ -89,20 +93,19 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
 
     public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken)
     {
-        var task = GetDataInternalAsync(state, cancellationToken);
-        CurrentOperations.Add(task);
+        _currentOperationCount++;
         IsLoading = true;
 
         try
         {
-            var result = await task;
+            var result = await GetDataInternalAsync(state, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             return result;
         }
         finally
         {
-            CurrentOperations.Remove(task);
-            if (CurrentOperations.Count == 0) IsLoading = false;
+            _currentOperationCount--;
+            if (_currentOperationCount == 0) IsLoading = false;
         }
     }
 
@@ -116,14 +119,22 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
             if (Table is null) throw new InvalidOperationException(
                 "Table component must be forwarded to the flux data provider for it to be able to reset current page.");
 
-            Table.CurrentPage = 0;
+            // Not using public CurrentPage property due to
+            // the side effect of it triggering a table reload.
+            _tableCurrentPageField.SetValue(Table, 0);
+
             _resetting = true;
+            _logger.LogDebug("Resetting page for {Model} data provider.", typeof(TModel).Name);
             await Table.ReloadServerData();
 
             return LastQuery!.Result;
         }
 
-        if (_resetting == true) _resetting = false;
+        if (_resetting == true)
+        {
+            _resetting = false;
+            _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
+        }
 
         if (CompareWithLastRequest(state, parameters)) return LastQuery!.Result;
 
@@ -147,7 +158,11 @@ internal class FluxSetDataProvider<TModel> : IFluxSetDataProvider<TModel>
         if (_resetting) return false;
 
         // manual page reset requested
-        if (ResetPageOnce) return true;
+        if (_resetPageOnce)
+        {
+            _resetPageOnce = false;
+            return true;
+        }
 
         // reset on order change
         if (ShouldResetOrderChanged(state)) return true;
