@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MudBlazor;
 using System.Text.Json.Serialization;
 
@@ -63,7 +64,9 @@ public class FluxSetDataProviderTests
     [Fact]
     public async Task RestoreLastQuery_WithQuery_ShouldRestore()
     {
-        var dataProvider = new FluxSetDataProvider<TestModel>();
+        var loggerFactory = new LoggerFactory();
+
+        var dataProvider = new FluxSetDataProvider<TestModel>(loggerFactory);
         var tableState = new TableState()
         {
             Page = 0,
