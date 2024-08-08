@@ -33,7 +33,8 @@ public partial class BooksPage : ComponentBase
         var query = HttpUtility.ParseQueryString(string.Empty);
 
         if (_selectedAuthor is not null) query["authorId"] = _selectedAuthor.Id.ToString();
-        if (!string.IsNullOrWhiteSpace(state.SortLabel)) query["order"] = state.SortLabel;
+        if (!string.IsNullOrWhiteSpace(state.SortLabel) && state.SortDirection != SortDirection.None) 
+            query["order"] = state.SortLabel;
         if (state.SortDirection == SortDirection.Descending) query["desc"] = "true";
         if (!string.IsNullOrWhiteSpace(_search)) query["search"] = _search;
 
@@ -51,7 +52,6 @@ public partial class BooksPage : ComponentBase
     private async Task OnSearchAsync(string value)
     {
         _search = value;
-        BooksDataProvider.ResetSort();
-        await BooksDataProvider.ResetAndReloadAsync();
+        await BooksDataProvider.ResetPageAndReloadAsync();
     }
 }

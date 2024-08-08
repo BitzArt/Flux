@@ -30,26 +30,30 @@ public interface IFluxSetDataProvider<TModel>
     public event OnResultHandler<TModel>? OnResult;
 
     /// <summary>
-    /// Resets current page to 0 on next request.
-    /// </summary>
-    public void ResetPage();
-
-    /// <summary>
-    /// Resets current page to 0 and reloads the data.
-    /// </summary>
-    /// <returns></returns>
-    public Task ResetAndReloadAsync();
-
-    /// <summary>
     /// Restores last query.
     /// </summary>
     /// <param name="query"></param>
     public void RestoreLastQuery(object query);
 
     /// <summary>
-    /// Resets table sorting to it's default state.
+    /// Resets table sorting to it's default state, resets current page to 0, and reloads the data.
+    public Task ResetAndReloadAsync();
+
+    /// <summary>
+    /// Resets table sorting to it's default state and reloads the data.
     /// </summary>
-    public void ResetSort();
+    public Task ResetSortAndReloadAsync();
+
+    /// <summary>
+    /// Resets current page to 0 and reloads the data.
+    /// </summary>
+    /// <returns></returns>
+    public Task ResetPageAndReloadAsync();
+
+    /// <summary>
+    /// Resets current page to 0 on next request.
+    /// </summary>
+    public void ResetPage();
 
     /// <summary>
     /// Dynamically determine whether to reset page when processing a request or not.
