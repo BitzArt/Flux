@@ -135,22 +135,30 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     private async Task AddOperationAsync()
     {
         _currentOperationCount++;
-        IsLoading = true;
 
-        if (OnLoadingStateChanged is not null)
+        var loadingStateChanged = UpdateLoading(true);
+        if (loadingStateChanged && OnLoadingStateChanged is not null)
             await OnLoadingStateChanged.Invoke(new(this));
     }
 
     private async Task RemoveOperationAsync()
     {
         _currentOperationCount--;
-        if (_currentOperationCount == 0) IsLoading = false;
+        if (_currentOperationCount > 0) return;
 
-        if (OnLoadingStateChanged is not null)
+        var loadingStateChanged = UpdateLoading(false);
+        if (loadingStateChanged && OnLoadingStateChanged is not null)
             await OnLoadingStateChanged.Invoke(new(this));
     }
 
-    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
+    private bool UpdateLoading(bool newValue)
+    {
+        if (IsLoading == newValue) return false;
+
+        IsLoading = newValue;
+        return true;
+    }
+
     private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
     {
         var parameters = GetParameters is not null ? GetParameters(state) : [];
