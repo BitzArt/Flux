@@ -28,6 +28,7 @@ public interface IFluxSetDataProvider<TModel>
     /// Event triggered when a request was completed and results are available.
     /// </summary>
     public event OnResultHandler<TModel>? OnResult;
+    event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
 
     /// <summary>
     /// Restores last query.

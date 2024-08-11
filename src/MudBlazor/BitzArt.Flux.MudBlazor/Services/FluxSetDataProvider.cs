@@ -31,6 +31,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public bool IsLoading { get; private set; }
 
+    public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
+
     private int _currentOperationCount = 0;
 
     private int _cancelledOperationCount = 0;
@@ -118,7 +120,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default)
     {
-        AddOperation();
+        await AddOperationAsync();
 
         try
         {
@@ -128,29 +130,36 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
         catch (PageResetException)
         {
-            RemoveOperation(cancelled: true);
+            await RemoveOperationAsync(cancelled: true);
             return await GetDataInternalAsync(state, cancellationToken);
         }
         finally
         {
-            if (!FinalizeCancelled()) RemoveOperation();
+            if (!FinalizeCancelled()) await RemoveOperationAsync();
         }
     }
 
-    private void AddOperation()
+    private async Task AddOperationAsync()
     {
         _currentOperationCount++;
         IsLoading = true;
+
+        if (OnLoadingStateChanged is not null)
+            await OnLoadingStateChanged.Invoke(new(this));
     }
 
-    private void RemoveOperation(bool cancelled = false)
+    private async Task RemoveOperationAsync(bool cancelled = false)
     {
         _currentOperationCount--;
         if (_currentOperationCount == 0) IsLoading = false;
 
         if (cancelled) _cancelledOperationCount++;
+
+        if (OnLoadingStateChanged is not null)
+            await OnLoadingStateChanged.Invoke(new(this));
     }
 
+    // Returns true if operation was cancelled, false otherwise
     private bool FinalizeCancelled()
     {
         if (_cancelledOperationCount > 0)
@@ -335,32 +344,4 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
         return result;
     }
-}
-
-/// <summary>
-/// Handler for an event triggered when a request was completed and results are available.
-/// </summary>
-public delegate void OnResultHandler<TModel>(OnResultEventArgs<TModel> args)
-    where TModel : class;
-
-/// <summary>
-/// Event arguments for an event triggered when a request was completed and results are available.
-/// </summary>
-/// <typeparam name="TModel"></typeparam>
-/// <remarks>
-/// Initializes a new instance of the <see cref="OnResultEventArgs{TModel}"/> class.
-/// </remarks>
-/// <param name="query"></param>
-public class OnResultEventArgs<TModel>(object sender, FluxSetDataPageQuery<TModel> query) : EventArgs
-    where TModel : class
-{
-    /// <summary>
-    /// Object that triggered the event.
-    /// </summary>
-    public object Sender { get; } = sender;
-
-    /// <summary>
-    /// Query that triggered the event.
-    /// </summary>
-    public FluxSetDataPageQuery<TModel> Query { get; } = query;
 }
