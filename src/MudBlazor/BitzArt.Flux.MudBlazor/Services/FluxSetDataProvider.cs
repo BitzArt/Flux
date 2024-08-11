@@ -35,8 +35,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private int _currentOperationCount = 0;
 
-    private int _cancelledOperationCount = 0;
-
     private bool _resetting = false;
 
     private bool _resetPageOnce = false;
@@ -128,14 +126,9 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             cancellationToken.ThrowIfCancellationRequested();
             return result;
         }
-        catch (PageResetException)
-        {
-            await RemoveOperationAsync(cancelled: true);
-            return await GetDataInternalAsync(state, cancellationToken);
-        }
         finally
         {
-            if (!FinalizeCancelled()) await RemoveOperationAsync();
+            await RemoveOperationAsync();
         }
     }
 
@@ -148,30 +141,14 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             await OnLoadingStateChanged.Invoke(new(this));
     }
 
-    private async Task RemoveOperationAsync(bool cancelled = false)
+    private async Task RemoveOperationAsync()
     {
         _currentOperationCount--;
         if (_currentOperationCount == 0) IsLoading = false;
 
-        if (cancelled) _cancelledOperationCount++;
-
         if (OnLoadingStateChanged is not null)
             await OnLoadingStateChanged.Invoke(new(this));
     }
-
-    // Returns true if operation was cancelled, false otherwise
-    private bool FinalizeCancelled()
-    {
-        if (_cancelledOperationCount > 0)
-        {
-            _cancelledOperationCount--;
-            return true;
-        }
-
-        return false;
-    }
-
-    private class PageResetException() : Exception("Page was reset") { }
 
     [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
@@ -190,7 +167,9 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _resetting = true;
             _logger.LogDebug("Resetting page for {Model} data provider.", typeof(TModel).Name);
 
-            throw new PageResetException();
+            await Table.ReloadServerData();
+
+            throw new OperationCanceledException("Page reset");
         }
 
         if (_resetting == true)
