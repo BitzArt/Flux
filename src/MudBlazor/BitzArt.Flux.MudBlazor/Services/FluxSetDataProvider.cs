@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MudBlazor;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace BitzArt.Flux.MudBlazor;
 
@@ -40,6 +41,22 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     public int DefaultPageSize { get; set; } = 10;
 
     public TableState DefaultTableState => new() { Page = 0, PageSize = DefaultPageSize };
+
+    public TableState TableState
+    {
+        get
+        {
+            if (Table is not null) return new TableState
+            {
+                Page = Table.CurrentPage,
+                PageSize = Table.RowsPerPage,
+                SortDirection = Table.Context.SortDirection,
+                SortLabel = Table.Context.CurrentSortLabel?.SortLabel
+            };
+
+            return DefaultTableState;
+        }
+    }
 
     public void RestoreLastQuery(object query)
     {
@@ -96,7 +113,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     public MudTable<TModel>? Table { get; set; }
 
     public async Task<TableData<TModel>> GetDataAsync(CancellationToken cancellationToken = default)
-        => await GetDataAsync(DefaultTableState, cancellationToken);
+        => await GetDataAsync(TableState, cancellationToken);
 
     public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default)
     {
