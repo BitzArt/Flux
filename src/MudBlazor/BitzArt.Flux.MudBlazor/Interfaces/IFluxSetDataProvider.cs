@@ -80,4 +80,24 @@ public interface IFluxSetDataProvider<TModel>
     /// Identifies if the data provider is currently working on loading data.
     /// </summary>
     public bool IsLoading { get; }
+
+    /// <summary>
+    /// The default page size to use when the table is first loaded.
+    /// </summary>
+    public int DefaultPageSize { get; set; }
+
+    /// <summary>
+    /// The default table state to use when the table is first loaded.
+    /// </summary>
+    public TableState DefaultTableState { get; }
+
+    /// <summary>
+    /// Gets data from the server for a default TableState.
+    /// </summary>
+    public Task<TableData<TModel>> GetDataAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets data from the server.
+    /// </summary>
+    public Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default);
 }

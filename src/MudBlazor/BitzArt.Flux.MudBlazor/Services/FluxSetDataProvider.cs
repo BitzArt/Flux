@@ -37,6 +37,10 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private bool _resetPageOnce = false;
 
+    public int DefaultPageSize { get; set; } = 10;
+
+    public TableState DefaultTableState => new() { Page = 0, PageSize = DefaultPageSize };
+
     public void RestoreLastQuery(object query)
     {
         if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
@@ -91,7 +95,10 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public MudTable<TModel>? Table { get; set; }
 
-    public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken)
+    public async Task<TableData<TModel>> GetDataAsync(CancellationToken cancellationToken = default)
+        => await GetDataAsync(DefaultTableState, cancellationToken);
+
+    public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default)
     {
         _currentOperationCount++;
         IsLoading = true;
