@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using MudBlazor;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace BitzArt.Flux.MudBlazor;
 
@@ -33,6 +32,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     public bool IsLoading { get; private set; }
 
     private int _currentOperationCount = 0;
+
+    private int _cancelledOperationCount = 0;
 
     private bool _resetting = false;
 
@@ -117,8 +118,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default)
     {
-        _currentOperationCount++;
-        IsLoading = true;
+        AddOperation();
 
         try
         {
@@ -126,12 +126,43 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             cancellationToken.ThrowIfCancellationRequested();
             return result;
         }
+        catch (PageResetException)
+        {
+            RemoveOperation(cancelled: true);
+            return await GetDataInternalAsync(state, cancellationToken);
+        }
         finally
         {
-            _currentOperationCount--;
-            if (_currentOperationCount == 0) IsLoading = false;
+            if (!FinalizeCancelled()) RemoveOperation();
         }
     }
+
+    private void AddOperation()
+    {
+        _currentOperationCount++;
+        IsLoading = true;
+    }
+
+    private void RemoveOperation(bool cancelled = false)
+    {
+        _currentOperationCount--;
+        if (_currentOperationCount == 0) IsLoading = false;
+
+        if (cancelled) _cancelledOperationCount++;
+    }
+
+    private bool FinalizeCancelled()
+    {
+        if (_cancelledOperationCount > 0)
+        {
+            _cancelledOperationCount--;
+            return true;
+        }
+
+        return false;
+    }
+
+    private class PageResetException() : Exception("Page was reset") { }
 
     [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
@@ -149,9 +180,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
             _resetting = true;
             _logger.LogDebug("Resetting page for {Model} data provider.", typeof(TModel).Name);
-            await Table.ReloadServerData();
 
-            return LastQuery!.Result;
+            throw new PageResetException();
         }
 
         if (_resetting == true)
