@@ -2,8 +2,17 @@
 
 namespace BitzArt.Flux;
 
+/// <summary>
+/// Extension methods for configuring a REST Flux service.
+/// </summary>
 public static class UsingRestExtension
 {
+    /// <summary>
+    /// Implements a REST Flux service.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="IFluxRestServiceBuilder"/> for further configuration.
+    /// </returns>
     public static IFluxRestServiceBuilder UsingRest(this IFluxServicePreBuilder prebuilder, string? baseUrl = null)
     {
         var builder = new FluxRestServiceBuilder(prebuilder, baseUrl);
@@ -27,6 +36,7 @@ public static class UsingRestExtension
         return builder;
     }
 
+    /// <inheritdoc cref="UsingRest(IFluxServicePreBuilder,string)"/>
     public static IFluxRestServiceBuilder UsingRest<THandler>(this IFluxServicePreBuilder prebuilder, string? baseUrl = null)
         where THandler : DelegatingHandler
     {

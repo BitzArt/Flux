@@ -37,6 +37,7 @@ jobs:
         run: |
           dotnet nuget push BitzArt.Flux.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
           dotnet nuget push BitzArt.Flux.REST.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
+          dotnet nuget push BitzArt.Flux.REST.Context.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
           dotnet nuget push BitzArt.Flux.Json.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
           dotnet nuget push BitzArt.Flux.MudBlazor.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
 

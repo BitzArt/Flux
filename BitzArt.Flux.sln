@@ -60,6 +60,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Json", "Json", "{F8192256-A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.REST.Context", "src\REST\BitzArt.Flux.REST.Context\BitzArt.Flux.REST.Context.csproj", "{CBB67562-DEED-4E07-814A-EF6FCB3D5533}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sln", "sln", "{9483F0E9-5474-43BF-ABBA-26E43431CF7C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

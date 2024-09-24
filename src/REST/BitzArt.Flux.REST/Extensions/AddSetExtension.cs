@@ -2,8 +2,14 @@
 
 namespace BitzArt.Flux;
 
+/// <summary>
+/// Extension methods for adding REST sets to <see cref="IFluxRestServiceBuilder"/>
+/// </summary>
 public static class AddSetExtension
 {
+    /// <summary>
+    /// Adds a REST set to the <see cref="IFluxRestServiceBuilder"/>
+    /// </summary>
     public static IFluxRestSetBuilder<TModel> AddSet<TModel>(this IFluxRestServiceBuilder serviceBuilder, string? endpoint = null, string? name = null)
         where TModel : class
     {
@@ -25,6 +31,7 @@ public static class AddSetExtension
         return builder;
     }
 
+    /// <inheritdoc cref="AddSet{TModel}(IFluxRestServiceBuilder, string?, string?)"/>
     public static IFluxRestSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxRestServiceBuilder serviceBuilder, string? endpoint = null, string? name = null)
         where TModel : class
     {

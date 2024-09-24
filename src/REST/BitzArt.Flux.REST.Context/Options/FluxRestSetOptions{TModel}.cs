@@ -1,12 +1,20 @@
 ﻿namespace BitzArt.Flux;
 
-public class FluxRestSetOptions<TModel>
+internal class FluxRestSetOptions<TModel>
     where TModel : class
 {
     public string? Endpoint { get; set; }
     public string? PageEndpoint { get; set; }
-    protected Func<object?, object[]?, string>? _getIdEndpointAction;
-    public Func<object?, object[]?, string>? GetIdEndpointAction
+
+    private Func<object?, object[]?, string>? _getIdEndpointAction;
+
+    protected internal Func<object?, object[]?, string>? GetIdEndpointAction
+    {
+        get => GetIdEndpointActionInternal;
+        set => GetIdEndpointActionInternal = value;
+    }
+
+    protected internal virtual Func<object?, object[]?, string>? GetIdEndpointActionInternal
     {
         get => _getIdEndpointAction;
         set => _getIdEndpointAction = value;
