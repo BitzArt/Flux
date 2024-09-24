@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace BitzArt.Flux;
 
-public class FluxJsonSetOptions<TModel>
+internal class FluxJsonSetOptions<TModel>
     where TModel : class
 {
     public ICollection<TModel>? Items { get; set; }

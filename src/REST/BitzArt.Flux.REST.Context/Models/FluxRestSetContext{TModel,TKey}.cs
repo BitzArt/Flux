@@ -25,10 +25,6 @@ internal class FluxRestSetContext<TModel, TKey> : FluxRestSetContext<TModel>, IF
         SetOptions = setOptions;
     }
 
-    // ============== IQueryable implementation ==============
-
-    public override IQueryProvider Provider => new FluxRestQueryProvider<TModel, TKey>(this);
-
     // ============== Data methods implementation ==============
 
     public override Task<TModel> GetAsync(object? id, params object[]? parameters) => GetAsync((TKey?)id, parameters);

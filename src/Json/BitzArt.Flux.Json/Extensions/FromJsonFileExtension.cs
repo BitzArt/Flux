@@ -4,6 +4,19 @@ namespace BitzArt.Flux;
 
 public static class FromJsonFileExtension
 {
+    /// <summary>
+    /// Configures the set to use a provided JSON dataset from the specified file.
+    /// </summary>
+    /// <typeparam name="TModel">
+    /// The model type of the set.
+    /// </typeparam>
+    /// <param name="builder"></param>
+    /// <param name="filePath">
+    /// The path to the JSON file containing the dataset.
+    /// </param>
+    /// <returns>
+    /// The <see cref="IFluxJsonSetBuilder{TModel}"/> for further set configuration.
+    /// </returns>
     public static IFluxJsonSetBuilder<TModel> FromJsonFile<TModel>(this IFluxJsonSetBuilder<TModel> builder,
         string filePath)
         where TModel : class
@@ -14,6 +27,22 @@ public static class FromJsonFileExtension
         return builder;
     }
 
+    /// <summary>
+    /// Configures the set to use a provided JSON dataset from the specified file.
+    /// </summary>
+    /// <typeparam name="TModel">
+    /// The model type of the set.
+    /// </typeparam>
+    /// <typeparam name="TKey">
+    /// The key type of the set.
+    /// </typeparam>
+    /// <param name="builder"></param>
+    /// <param name="filePath">
+    /// The path to the JSON file containing the dataset.
+    /// </param>
+    /// <returns>
+    /// The <see cref="IFluxJsonSetBuilder{TModel,TKey}"/> for further set configuration.
+    /// </returns>
     public static IFluxJsonSetBuilder<TModel, TKey> FromJsonFile<TModel, TKey>(this IFluxJsonSetBuilder<TModel, TKey> builder,
         string filePath)
         where TModel : class
@@ -24,7 +53,7 @@ public static class FromJsonFileExtension
         return builder;
     }
 
-    private static ICollection<TModel> TryGetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
+    private static List<TModel> TryGetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
     {
         try
         {
@@ -36,7 +65,7 @@ public static class FromJsonFileExtension
         }
     }
 
-    private static ICollection<TModel> GetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
+    private static List<TModel> GetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
     {
         var jsonString = File.ReadAllText(path);
         var items = JsonSerializer.Deserialize<List<TModel>>(jsonString, options)

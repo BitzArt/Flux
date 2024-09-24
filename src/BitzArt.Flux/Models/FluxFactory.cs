@@ -6,7 +6,7 @@ internal class FluxFactory : IFluxFactory
 
     public FluxFactory()
     {
-        ServiceContexts = new HashSet<IFluxServiceFactory>();
+        ServiceContexts = [];
     }
 
     public IFluxServiceFactory GetServiceProvider(string name)

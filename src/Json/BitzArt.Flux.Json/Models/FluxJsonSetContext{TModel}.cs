@@ -32,23 +32,6 @@ internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
         _setOptions = setOptions;
     }
 
-    // ================ Linking parsed data ================
-
-    public ICollection<TModel> Items => SetOptions.Items ?? throw new FluxJsonMissingDataException();
-    private IQueryable<TModel> Query => Items.AsQueryable();
-
-    // ============== IEnumerable implementation ==============
-
-    public override IEnumerator<TModel> GetEnumerator() => Items.GetEnumerator();
-
-    // ============== IQueryable implementation ==============
-
-    public override Type ElementType => typeof(TModel);
-
-    public override Expression Expression => Query.Expression;
-
-    public override IQueryProvider Provider => Query.Provider;
-
     // ============== Data methods implementation ==============
 
     public override Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
@@ -105,10 +88,5 @@ internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
     public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
     {
         throw new NotImplementedException();
-    }
-
-    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotSupportedException();
     }
 }

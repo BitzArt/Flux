@@ -28,16 +28,6 @@ internal class FluxRestSetContext<TModel>(
         set => _setOptions = value;
     }
 
-    // ============== IEnumerable implementation ==============
-
-    public override IEnumerator<TModel> GetEnumerator() => throw new EnumerationNotSupportedException();
-
-    // ============== IQueryable implementation ==============
-
-    public override Type ElementType => typeof(TModel);
-    public override Expression Expression => Expression.Constant(this);
-    public override IQueryProvider Provider => new FluxRestQueryProvider<TModel>(this);
-
     // ============== Data methods implementation ==============
 
     internal RequestUrlParameterParsingResult GetFullPath(string path, bool handleParameters, object[]? parameters = null)
@@ -171,11 +161,6 @@ internal class FluxRestSetContext<TModel>(
         var result = await HandleRequestAsync<TResponse>(message);
         
         return result;
-    }
-
-    public override Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotSupportedException();
     }
 
     protected string GetPageEndpoint()

@@ -23,19 +23,6 @@ public abstract class FluxSetContext<TModel> : IFluxSetContext<TModel>
 
     public virtual Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
     public virtual Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
-
-    // ============== IEnumerable implementation ==============
-
-    public virtual IEnumerator<TModel> GetEnumerator() => throw new NotImplementedException();
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    // ============== IQueryable implementation ==============
-
-    public virtual Type ElementType => throw new NotImplementedException();
-    public virtual Expression Expression => throw new NotImplementedException();
-    public virtual IQueryProvider Provider => throw new NotImplementedException();
-
-    public virtual Task<TModel> FirstOrDefaultAsync(CancellationToken cancellationToken = default) => throw new NotImplementedException();
 }
 
 public abstract class FluxSetContext<TModel, TKey> : FluxSetContext<TModel>, IFluxSetContext<TModel, TKey>

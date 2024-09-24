@@ -2,7 +2,7 @@
 
 namespace BitzArt.Flux;
 
-public class FluxJsonSetOptions<TModel, TKey> : FluxJsonSetOptions<TModel>
+internal class FluxJsonSetOptions<TModel, TKey> : FluxJsonSetOptions<TModel>
     where TModel : class
 {
     public new Expression<Func<TModel, TKey>>? KeyPropertyExpression
