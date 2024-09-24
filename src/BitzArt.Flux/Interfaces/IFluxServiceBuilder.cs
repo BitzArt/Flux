@@ -8,7 +8,7 @@ namespace BitzArt.Flux;
 /// </summary>
 public interface IFluxServiceBuilder
 {
-    internal IServiceCollection Services { get; }
-    internal IFluxServiceFactory ServiceFactory { get; }
-    internal IFluxFactory Factory { get; }
+    public IServiceCollection Services { get; }
+    public IFluxServiceFactory ServiceFactory { get; }
+    public IFluxFactory Factory { get; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-internal class FluxServiceContext : IFluxServiceContext
+public class FluxServiceContext : IFluxServiceContext
 {
     internal readonly IFluxServiceFactory Provider;
     private readonly IServiceProvider _serviceProvider;
