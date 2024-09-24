@@ -19,12 +19,12 @@
     </PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\..\assets\flux-logo-128.png" Pack="True" Visible="False" PackagePath="\" />
-		<None Include="..\..\README.md" Pack="True" Visible="False" PackagePath="\" />
+		<None Include="..\..\..\assets\flux-logo-128.png" Pack="True" Visible="False" PackagePath="\" />
+		<None Include="..\..\..\README.md" Pack="True" Visible="False" PackagePath="\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BitzArt.Flux\BitzArt.Flux.csproj" />
+		<ProjectReference Include="..\..\BitzArt.Flux\BitzArt.Flux.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

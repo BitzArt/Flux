@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\BitzArt.Flux.Json\BitzArt.Flux.Json.csproj" />
+    <ProjectReference Include="..\..\..\src\Json\BitzArt.Flux.Json\BitzArt.Flux.Json.csproj" />
     <ProjectReference Include="..\..\..\src\MudBlazor\BitzArt.Flux.MudBlazor\BitzArt.Flux.MudBlazor.csproj" />
   </ItemGroup>
 
