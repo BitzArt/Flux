@@ -48,12 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.SampleApp.Client"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MudBlazor", "MudBlazor", "{72487062-A47A-4F97-9B39-2538728AF8AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitzArt.Flux.MudBlazor.Tests", "tests\MudBlazor\BitzArt.Flux.MudBlazor.Tests\BitzArt.Flux.MudBlazor.Tests.csproj", "{A5D68DE8-E003-4341-AD62-35B82E0B2A9A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sln", "sln", "{457FD8C7-8DAC-42AF-B3BA-C08E999C8503}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.MudBlazor.Tests", "tests\MudBlazor\BitzArt.Flux.MudBlazor.Tests\BitzArt.Flux.MudBlazor.Tests.csproj", "{A5D68DE8-E003-4341-AD62-35B82E0B2A9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
