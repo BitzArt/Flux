@@ -12,7 +12,7 @@ public class JsonServiceTests
         Assert.NotNull(result);
         Assert.True(result.Any());
     }
-    
+
     [Theory]
     [InlineData(0, 10)]
     [InlineData(0, 5)]
@@ -26,7 +26,7 @@ public class JsonServiceTests
         Assert.True(result.Data.Any());
         Assert.Equal(limit, result.Data.Count());
     }
-    
+
     [Fact]
     public async Task GetAsync_TestModel_ReturnsModel()
     {
@@ -35,7 +35,7 @@ public class JsonServiceTests
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
     }
-    
+
     [Fact]
     public async Task GetAsync_NotExistingTestModel_Throws()
     {

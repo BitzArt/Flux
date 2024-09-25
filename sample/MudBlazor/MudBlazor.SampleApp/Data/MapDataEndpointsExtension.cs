@@ -1,5 +1,4 @@
-﻿using BitzArt.Pagination;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace MudBlazor.SampleApp;
 

@@ -1,5 +1,5 @@
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
 
 namespace BitzArt.Flux;
 
@@ -9,7 +9,7 @@ public class ServiceRegistrationTests
     public void UsingJson_WithModel_AddsFactoryAndSetContext()
     {
         var services = new ServiceCollection();
-        
+
         const string serviceName = "service1";
 
         services.AddFlux(flux =>
@@ -36,12 +36,12 @@ public class ServiceRegistrationTests
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
         Assert.NotNull(setContext);
     }
-    
+
     [Fact]
     public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
     {
         var services = new ServiceCollection();
-        
+
         const string serviceName = "service1";
 
         services.AddFlux(flux =>
@@ -72,12 +72,12 @@ public class ServiceRegistrationTests
         Assert.NotNull(setContextFromFluxContext);
         Assert.True(setContextFromFluxContext is FluxJsonSetContext<TestModel, object>);
     }
-    
+
     [Fact]
     public void AddFlux2Services_GetServiceContextsFromDiContainer_Returns()
     {
         var services = new ServiceCollection();
-        
+
         services.AddFlux(flux =>
         {
             flux.AddService("service1")
@@ -97,17 +97,17 @@ public class ServiceRegistrationTests
 
         var serviceProvider = services.BuildServiceProvider();
         var serviceContexts = serviceProvider.GetRequiredService<IEnumerable<IFluxServiceContext>>().ToList();
-        
+
         Assert.NotNull(serviceContexts);
         Assert.NotEmpty(serviceContexts);
         Assert.Equal(2, serviceContexts.Count);
     }
-    
+
     [Fact]
     public void AddSet_SameModelDifferentNames_Configures()
     {
         var services = new ServiceCollection();
-        
+
         services.AddFlux(flux =>
         {
             flux.AddService("service1")
@@ -152,12 +152,12 @@ public class ServiceRegistrationTests
             _ = flux.Set<TestModel>();
         });
     }
-    
+
     [Fact]
     public void AddSet_SameModelTwiceNoName_Throws()
     {
         var services = new ServiceCollection();
-        
+
         services.AddFlux(flux =>
         {
             var builder = flux.AddService("service1")
@@ -172,12 +172,12 @@ public class ServiceRegistrationTests
             });
         });
     }
-    
+
     [Fact]
     public void UsingJson_WithJsonConfiguration_Configures()
     {
         var services = new ServiceCollection();
-        
+
         const string serviceName = "service1";
 
         services.AddFlux(flux =>
@@ -201,7 +201,7 @@ public class ServiceRegistrationTests
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
         var setContextCasted = (FluxJsonSetContext<TestModel, int>)setContext;
         var serializerOptions = setContextCasted.ServiceOptions.SerializerOptions;
-        
+
         Assert.NotNull(serializerOptions);
         Assert.Equal(JsonIgnoreCondition.WhenWritingNull, serializerOptions.DefaultIgnoreCondition);
         Assert.True(serializerOptions.WriteIndented);

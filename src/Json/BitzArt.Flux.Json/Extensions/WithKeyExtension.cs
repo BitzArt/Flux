@@ -28,7 +28,7 @@ public static class WithKeyExtension
     {
         var options = (FluxJsonSetOptions<TModel, TKey>)builder.SetOptions;
         options.KeyPropertyExpression = expression;
-        
+
         return builder;
     }
 }

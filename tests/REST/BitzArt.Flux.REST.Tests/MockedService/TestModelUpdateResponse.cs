@@ -22,7 +22,7 @@ internal class TestModelUpdateResponse
         Name = name;
     }
 
-    public TestModelUpdateResponse() 
+    public TestModelUpdateResponse()
     {
         UpdatedAt = DateTimeOffset.UtcNow;
         CreatedAt = DateTimeOffset.UtcNow;

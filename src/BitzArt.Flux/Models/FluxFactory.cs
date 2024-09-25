@@ -12,7 +12,7 @@ internal class FluxFactory : IFluxFactory
     public IFluxServiceFactory GetServiceProvider(string name)
     {
         var serviceContext = ServiceContexts.AsQueryable().FirstOrDefault(x => x.ServiceName == name);
-        
+
         return serviceContext is null
             ? throw new FluxServiceProviderNotFoundException()
             : serviceContext;

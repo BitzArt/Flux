@@ -60,7 +60,7 @@ public interface IFluxSetContext<TModel>
     /// Updates an object in the set and returns a specific response type.
     /// </summary>
     public Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters);
-    
+
     /// <inheritdoc/>
     public Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters);
 }

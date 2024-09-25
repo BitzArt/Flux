@@ -7,7 +7,7 @@
 public class FluxRestKeyNotFoundException<TModel> : Exception
 {
     private static readonly string Msg = $"Unable to find TKey for type '{typeof(TModel).Name}'. Consider specifying a key when registering the set.";
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="FluxRestKeyNotFoundException{TModel}"/> class.
     /// </summary>

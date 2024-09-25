@@ -369,7 +369,7 @@ public class MockedRestServiceTests
             .SetOptions.IdEndpointOptions.GetPathFunc = (_, parameters) => $"model?id={parameters!.First()}";
 
         var model = new TestModel { Id = modelId, Name = name };
-        
+
         var result = await setContext.UpdateAsync(model, partial: false, modelId);
 
         Assert.NotNull(result);
@@ -447,7 +447,7 @@ public class MockedRestServiceTests
             .SetOptions.IdEndpointOptions.GetPathFunc = (key, _) => $"model/specific/{key}";
 
         var model = new TestModel { Id = id, Name = name };
-        
+
         var result = await setContext.UpdateAsync<TestModelUpdateResponse>(id, model);
 
         Assert.NotNull(result);

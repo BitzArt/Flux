@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using BitzArt.Flux;
+﻿using BitzArt.Flux;
 using BitzArt.Flux.MudBlazor;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MudBlazor.SampleApp;
 
