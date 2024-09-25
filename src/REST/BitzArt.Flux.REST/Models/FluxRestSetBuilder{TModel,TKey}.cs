@@ -13,11 +13,11 @@ internal class FluxRestSetBuilder<TModel>(
 
 internal class FluxRestSetBuilder<TModel, TKey>(
     IFluxRestServiceBuilder serviceBuilder
-    ) : IFluxRestSetBuilder<TModel>, IFluxRestSetBuilder<TModel, TKey>
+    ) : IFluxRestSetBuilder<TModel, TKey>
     where TModel : class
 {
     public FluxRestSetOptions<TModel, TKey> SetOptions { get; set; } = new();
-    IFluxRestSetOptions<TModel> IFluxRestSetBuilder<TModel>.SetOptions => SetOptions;
+    IFluxRestSetOptions<TModel> IFluxRestSetBuilder<TModel, TKey>.SetOptions => SetOptions;
 
     public IFluxRestServiceBuilder ServiceBuilder { get; init; } = serviceBuilder;
 

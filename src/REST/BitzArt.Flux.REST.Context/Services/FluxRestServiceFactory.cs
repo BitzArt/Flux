@@ -4,21 +4,14 @@ using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestServiceFactory : IFluxServiceFactory
+internal class FluxRestServiceFactory(FluxRestServiceOptions options, string serviceName)
+    : IFluxServiceFactory
 {
-    private readonly FluxRestServiceOptions _serviceOptions;
+    private readonly FluxRestServiceOptions _serviceOptions = options;
 
-    private readonly IDictionary<FluxSetSignature, object> _setOptions;
+    private readonly Dictionary<FluxSetSignature, object> _setOptions = [];
 
-    public string ServiceName { get; private set; }
-
-    public FluxRestServiceFactory(FluxRestServiceOptions options, string serviceName)
-    {
-        _serviceOptions = options;
-        ServiceName = serviceName;
-
-        _setOptions = new Dictionary<FluxSetSignature, object>();
-    }
+    public string ServiceName { get; private set; } = serviceName;
 
     public void AddSet<TModel>(object options, string? name)
         where TModel : class
@@ -66,10 +59,9 @@ internal class FluxRestServiceFactory : IFluxServiceFactory
         // and don't add the current one,
         // making it impossible to access this model's Sets
         // without explicitly specifying the Set's name.
-        if (_setOptions.ContainsKey(signature)) _setOptions.Remove(signature);
 
         // If such unnamed signature is not already present, add the current one.
-        else _setOptions.Add(signature, options);
+        if (!_setOptions.Remove(signature)) _setOptions.Add(signature, options);
     }
 
     private IFluxRestSetOptions<TModel> GetOptions<TModel>(string? name = null)

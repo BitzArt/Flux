@@ -11,8 +11,8 @@ namespace BitzArt.Flux;
 /// <typeparam name="TKey">
 /// The key type of the set.
 /// </typeparam>
-public interface IFluxRestSetEndpointBuilder<TModel, TKey> : IFluxRestSetBuilder<TModel, TKey>
+public interface IFluxRestSetIdEndpointBuilder<TModel, TKey> : IFluxRestSetBuilder<TModel, TKey>
     where TModel : class
 {
-    internal FluxRestSetEndpointOptions<TModel, TKey> EndpointOptions { get; }
+    internal FluxRestSetIdEndpointOptions<TModel, TKey> EndpointOptions { get; }
 }

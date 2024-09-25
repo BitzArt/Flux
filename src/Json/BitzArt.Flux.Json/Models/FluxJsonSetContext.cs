@@ -3,26 +3,18 @@ using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 
-internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey>
+internal class FluxJsonSetContext<TModel, TKey>(
+    FluxJsonServiceOptions serviceOptions,
+    ILogger logger,
+    IFluxJsonSetOptions<TModel> setOptions
+    ) : FluxSetContext<TModel, TKey>
     where TModel : class
 {
     // ================ Flux internal wiring ================
-    internal readonly FluxJsonServiceOptions ServiceOptions;
-    internal readonly ILogger _logger;
+    internal readonly FluxJsonServiceOptions ServiceOptions = serviceOptions;
+    internal readonly ILogger _logger = logger;
 
-    internal IFluxJsonSetOptions<TModel> SetOptions { get; set; }
-
-    // ==================== Constructor ====================
-
-    public FluxJsonSetContext(
-        FluxJsonServiceOptions serviceOptions,
-        ILogger logger,
-        IFluxJsonSetOptions<TModel> setOptions)
-    {
-        ServiceOptions = serviceOptions;
-        _logger = logger;
-        SetOptions = setOptions;
-    }
+    internal IFluxJsonSetOptions<TModel> SetOptions { get; set; } = setOptions;
 
     // ============== Methods implementation ==============
 

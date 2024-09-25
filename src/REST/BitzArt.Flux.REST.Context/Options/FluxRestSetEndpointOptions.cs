@@ -5,4 +5,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey> : IFluxRestSetEndpointOp
 {
     /// <inheritdoc/>
     public string? Path { get; set; }
+
+    /// <inheritdoc/>
+    public HttpMethod? Method { get; set; }
 }

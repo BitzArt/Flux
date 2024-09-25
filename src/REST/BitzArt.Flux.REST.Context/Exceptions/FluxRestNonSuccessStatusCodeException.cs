@@ -5,7 +5,12 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Exception thrown when a non-success status code is returned by the REST service.
 /// </summary>
-public class FluxRestNonSuccessStatusCodeException : FluxRestRequestHandlingException
+/// <remarks>
+/// Initializes a new instance of the <see cref="FluxRestNonSuccessStatusCodeException"/> class.
+/// </remarks>
+/// <param name="message"></param>
+public class FluxRestNonSuccessStatusCodeException(string message)
+    : FluxRestRequestHandlingException(message)
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FluxRestNonSuccessStatusCodeException"/> class.
@@ -20,11 +25,4 @@ public class FluxRestNonSuccessStatusCodeException : FluxRestRequestHandlingExce
     /// <param name="statusCode"></param>
     public FluxRestNonSuccessStatusCodeException(HttpStatusCode statusCode)
         : this($"External REST Service responded with http status code '{statusCode}'.") { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FluxRestNonSuccessStatusCodeException"/> class.
-    /// </summary>
-    /// <param name="message"></param>
-    public FluxRestNonSuccessStatusCodeException(string message)
-        : base(message) { }
 }

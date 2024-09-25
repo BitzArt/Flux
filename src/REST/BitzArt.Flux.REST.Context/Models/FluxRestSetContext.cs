@@ -167,7 +167,7 @@ internal class FluxRestSetContext<TModel, TKey>(
         var localPath = path.TrimStart('/');
         var resultPath = $"{baseUrl}/{localPath}";
 
-        if (handleParameters) return RequestParameterParsingUtility.ParseRequestUrl(_logger, resultPath, parameters);
+        if (handleParameters) return RequestParameterParsingUtility.ParseRequestUrl(resultPath, parameters);
 
         return new RequestUrlParameterParsingResult(resultPath, string.Empty);
     }
@@ -176,13 +176,6 @@ internal class FluxRestSetContext<TModel, TKey>(
     {
         if (SetOptions.PageEndpointOptions.Path is not null) return SetOptions.PageEndpointOptions.Path;
         return GetEndpoint();
-    }
-
-    private string GetIdEndpoint(object? id, params object[]? parameters)
-    {
-        if (SetOptions.IdEndpointOptions.GetPathFunc is null) throw new FluxRestKeyNotFoundException<TModel>();
-
-        return SetOptions.IdEndpointOptions.GetPathFunc(id, parameters);
     }
 
     private async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message, CancellationToken cancellationToken = default)

@@ -12,8 +12,10 @@ internal class FluxFactory : IFluxFactory
     public IFluxServiceFactory GetServiceProvider(string name)
     {
         var serviceContext = ServiceContexts.AsQueryable().FirstOrDefault(x => x.ServiceName == name);
-        if (serviceContext is null) throw new FluxServiceProviderNotFoundException();
-        return serviceContext;
+        
+        return serviceContext is null
+            ? throw new FluxServiceProviderNotFoundException()
+            : serviceContext;
     }
 
     public IFluxSetContext<TModel> GetSetContext<TModel>(
@@ -33,7 +35,7 @@ internal class FluxFactory : IFluxFactory
         else
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
-            if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
+            if (serviceContexts.Count == 0) throw new FluxServiceProviderNotFoundException();
             if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
@@ -58,7 +60,7 @@ internal class FluxFactory : IFluxFactory
         else
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
-            if (!serviceContexts.Any()) throw new FluxServiceProviderNotFoundException();
+            if (serviceContexts.Count == 0) throw new FluxServiceProviderNotFoundException();
             if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }

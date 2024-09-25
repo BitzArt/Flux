@@ -196,7 +196,7 @@ public class MockedRestServiceTests
 
         var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
-        Assert.True(result.Data!.Count() == 10);
+        Assert.Equal(10, result.Data!.Count());
     }
 
     [Fact]
@@ -216,7 +216,7 @@ public class MockedRestServiceTests
 
         var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
-        Assert.True(result.Data!.Count() == 10);
+        Assert.Equal(10, result.Data!.Count());
     }
 
     [Fact]

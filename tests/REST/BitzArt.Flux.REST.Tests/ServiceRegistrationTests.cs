@@ -31,7 +31,7 @@ public class ServiceRegistrationTests
         Assert.NotNull(factory);
         Assert.True(factory.ServiceContexts.Count > 0);
 
-        Assert.True(factory.ServiceContexts.Count == 1);
+        Assert.Single(factory.ServiceContexts);
         var provider = factory.ServiceContexts.Single();
 
         Assert.Equal(serviceName, provider.ServiceName);
@@ -171,7 +171,7 @@ public class ServiceRegistrationTests
         var serviceContexts = serviceProvider.GetRequiredService<IEnumerable<IFluxServiceContext>>();
         Assert.NotNull(serviceContexts);
         Assert.True(serviceContexts.Any());
-        Assert.True(serviceContexts.Count() == 2);
+        Assert.Equal(2, serviceContexts.Count());
     }
 
     [Fact]

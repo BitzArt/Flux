@@ -1,28 +1,12 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.REST;
+
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Extension methods for configuring the page endpoint of a set.
 /// </summary>
 public static class WithPageEndpointExtension
 {
-    /// <summary>
-    /// Configures the page endpoint for the <see cref="IFluxRestSetBuilder{TModel}"/><br/>
-    /// The page endpoint is an endpoint used when fetching a page of entities.
-    /// </summary>
-    /// <typeparam name="TModel">
-    /// The model type of the set.
-    /// </typeparam>
-    /// <returns>
-    /// The <see cref="IFluxRestSetBuilder{TModel}"/> with the page endpoint configured
-    /// </returns>
-    public static IFluxRestSetBuilder<TModel> WithPageEndpoint<TModel>(this IFluxRestSetBuilder<TModel> builder, string endpoint)
-        where TModel : class
-    {
-        builder.SetOptions.PageEndpointOptions.Path = endpoint;
-
-        return builder;
-    }
-
     /// <summary>
     /// Configures the page endpoint for the <see cref="IFluxRestSetBuilder{TModel,TKey}"/>
     /// </summary>
@@ -33,13 +17,13 @@ public static class WithPageEndpointExtension
     /// The key type of the set.
     /// </typeparam>
     /// <returns>
-    /// The <see cref="IFluxRestSetBuilder{TModel,TKey}"/> with the page endpoint configured
+    /// The <see cref="IFluxRestSetEndpointBuilder{TModel,TKey}"/> with the page endpoint configured
     /// </returns>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string endpoint)
+    public static IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string endpoint)
         where TModel : class
     {
         builder.SetOptions.PageEndpointOptions.Path = endpoint;
 
-        return builder;
+        return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.PageEndpointOptions);
     }
 }

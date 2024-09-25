@@ -19,11 +19,8 @@ public static class AddFluxSetDataProviderExtension
         Func<IServiceProvider, IFluxSetContext<TModel>>? setContextImplementationFactory = null)
         where TModel : class
     {
-        if (setContextImplementationFactory is null)
-        {
-            setContextImplementationFactory = (serviceProvider)
-                => serviceProvider.GetRequiredService<IFluxSetContext<TModel>>();
-        }
+        setContextImplementationFactory ??= (serviceProvider)
+            => serviceProvider.GetRequiredService<IFluxSetContext<TModel>>();
 
         services.AddScoped<FluxSetDataProvider<TModel>>();
 

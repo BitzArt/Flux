@@ -7,31 +7,14 @@ namespace BitzArt.Flux;
 /// </summary>
 public static class AddSetExtension
 {
+    /// <inheritdoc cref="AddSet{TModel,TKey}(IFluxRestServiceBuilder,string,string)"/>/>
+    public static IFluxRestSetBuilder<TModel, object> AddSet<TModel>(this IFluxRestServiceBuilder serviceBuilder, string? endpoint = null, string? name = null)
+        where TModel : class
+        => AddSet<TModel, object>(serviceBuilder, endpoint, name);
+
     /// <summary>
     /// Adds a REST set to the <see cref="IFluxRestServiceBuilder"/>
     /// </summary>
-    public static IFluxRestSetBuilder<TModel> AddSet<TModel>(this IFluxRestServiceBuilder serviceBuilder, string? endpoint = null, string? name = null)
-        where TModel : class
-    {
-        var builder = new FluxRestSetBuilder<TModel>(serviceBuilder);
-
-        var services = serviceBuilder.Services;
-        var serviceFactory = builder.ServiceFactory;
-
-        serviceFactory.AddSet<TModel>(builder.SetOptions, name);
-
-        services.AddScoped(x =>
-        {
-            var factory = x.GetRequiredService<IFluxFactory>();
-            return factory.GetSetContext<TModel>(x, serviceFactory.ServiceName);
-        });
-
-        if (endpoint is not null) return builder.WithEndpoint(endpoint);
-
-        return builder;
-    }
-
-    /// <inheritdoc cref="AddSet{TModel}(IFluxRestServiceBuilder, string?, string?)"/>
     public static IFluxRestSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxRestServiceBuilder serviceBuilder, string? endpoint = null, string? name = null)
         where TModel : class
     {

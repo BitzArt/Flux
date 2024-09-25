@@ -2,10 +2,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
-internal class FluxJsonSetBuilder<TModel, TKey> : IFluxJsonSetBuilder<TModel, TKey>
+internal class FluxJsonSetBuilder<TModel, TKey>(IFluxJsonServiceBuilder serviceBuilder
+    ) : IFluxJsonSetBuilder<TModel, TKey>
     where TModel : class
 {
-    public IFluxJsonServiceBuilder ServiceBuilder { get; init; }
+    public IFluxJsonServiceBuilder ServiceBuilder { get; init; } = serviceBuilder;
 
     public IServiceCollection Services => ServiceBuilder.Services;
     public IFluxServiceFactory ServiceFactory => ServiceBuilder.ServiceFactory;
@@ -13,13 +14,7 @@ internal class FluxJsonSetBuilder<TModel, TKey> : IFluxJsonSetBuilder<TModel, TK
     public FluxJsonServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
     public string? BaseFilePath => ServiceBuilder.ServiceOptions.BaseFilePath;
 
-    public FluxJsonSetOptions<TModel, TKey> SetOptions { get; set; }
+    public FluxJsonSetOptions<TModel, TKey> SetOptions { get; set; } = new FluxJsonSetOptions<TModel, TKey>();
 
     IFluxJsonSetOptions<TModel> IFluxJsonSetBuilder<TModel, TKey>.SetOptions => SetOptions;
-
-    public FluxJsonSetBuilder(IFluxJsonServiceBuilder serviceBuilder)
-    {
-        ServiceBuilder = serviceBuilder;
-        SetOptions = new FluxJsonSetOptions<TModel, TKey>();
-    }
 }

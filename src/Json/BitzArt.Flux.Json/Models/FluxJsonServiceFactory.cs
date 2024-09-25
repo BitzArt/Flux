@@ -3,23 +3,18 @@ using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 
-internal class FluxJsonServiceFactory : IFluxServiceFactory
+internal class FluxJsonServiceFactory(
+    FluxJsonServiceOptions options,
+    string serviceName,
+    string? basePath = null
+    ) : IFluxServiceFactory
 {
-    private readonly FluxJsonServiceOptions _serviceOptions;
+    private readonly FluxJsonServiceOptions _serviceOptions = options;
 
-    private readonly IDictionary<FluxSetSignature, object> _setOptions;
+    private readonly Dictionary<FluxSetSignature, object> _setOptions = [];
 
-    public string ServiceName { get; private set; }
-    public string? BasePath { get; private set; }
-
-    public FluxJsonServiceFactory(FluxJsonServiceOptions options, string serviceName, string? basePath = null)
-    {
-        _serviceOptions = options;
-        ServiceName = serviceName;
-        BasePath = basePath;
-
-        _setOptions = new Dictionary<FluxSetSignature, object>();
-    }
+    public string ServiceName { get; private set; } = serviceName;
+    public string? BasePath { get; private set; } = basePath;
 
     public void AddSet<TModel>(object options, string? name)
         where TModel : class
@@ -67,10 +62,10 @@ internal class FluxJsonServiceFactory : IFluxServiceFactory
         // and don't add the current one,
         // making it impossible to access this model's Sets
         // without explicitly specifying the Set's name.
-        if (_setOptions.ContainsKey(signature)) _setOptions.Remove(signature);
 
         // If such unnamed signature is not already present, add the current one.
-        else _setOptions.Add(signature, options);
+
+        if (!_setOptions.Remove(signature)) _setOptions.Add(signature, options);
     }
 
     private IFluxJsonSetOptions<TModel> GetOptions<TModel>(string? name = null)
