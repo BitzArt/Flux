@@ -1,35 +1,80 @@
 ﻿using BitzArt.Pagination;
-using System.Collections;
-using System.Linq.Expressions;
 
 namespace BitzArt.Flux;
 
 /// <summary>
 /// Flux Set Context base class.
 /// </summary>
-public abstract class FluxSetContext<TModel> : IFluxSetContext<TModel>
+public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKey>
     where TModel : class
 {
-    public virtual Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters) => throw new NotImplementedException();
-    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters) => throw new NotImplementedException();
-    public virtual Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters) => throw new NotImplementedException();
-    public virtual Task<TModel> GetAsync(object? id = null, params object[]? parameters) => throw new NotImplementedException();
+    // ============== GET ALL ==============
 
-    public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters) => throw new NotImplementedException();
-    public virtual Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters) => throw new NotImplementedException();
+    /// <inheritdoc/>
+    public abstract Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters);
 
-    public virtual Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
-    public virtual Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
+    // ============== GET (Single) ==============
 
-    public virtual Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
-    public virtual Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
-}
+    /// <inheritdoc/>
+    public Task<TModel> GetAsync(object? id = null, params object[]? parameters)
+    {
+        if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type");
+        return GetAsync(idTyped, parameters);
+    }
 
-public abstract class FluxSetContext<TModel, TKey> : FluxSetContext<TModel>, IFluxSetContext<TModel, TKey>
-    where TModel : class
-{
-    public virtual Task<TModel> GetAsync(TKey? id, params object[]? parameters) => throw new NotImplementedException();
+    /// <inheritdoc/>
+    public abstract Task<TModel> GetAsync(TKey? id, params object[]? parameters);
 
-    public virtual Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
-    public virtual Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters) => throw new NotImplementedException();
+    // ============== GET PAGE ==============
+
+    /// <inheritdoc/>
+    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
+        => GetPageAsync(new PageRequest(offset, limit), parameters);
+
+    /// <inheritdoc/>
+    public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters);
+
+    // ============== ADD ==============
+
+    /// <inheritdoc/>
+    public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters)
+        => AddAsync<TModel>(model, parameters);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters);
+
+    // ============== UPDATE ==============
+
+    /// <inheritdoc/>
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(object? id, TModel model, bool partial, params object[]? parameters)
+    {
+        if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type");
+        return UpdateAsync<TModel>(idTyped, model, partial, parameters);
+    }
+
+    /// <inheritdoc/>
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(TModel model, bool partial, params object[]? parameters)
+        => UpdateAsync<TModel>(model, partial, parameters);
+
+    /// <inheritdoc/>
+    Task<TResponse> IFluxSetContext<TModel>.UpdateAsync<TResponse>(object? id, TModel model, bool partial, params object[]? parameters)
+        => UpdateAsync<TResponse>(Cast<TKey>(id), model, partial, parameters);
+
+    /// <inheritdoc/>
+    Task<TModel> IFluxSetContext<TModel, TKey>.UpdateAsync(TKey? id, TModel model, bool partial, params object[]? parameters)
+        => UpdateAsync<TModel>(id, model, partial, parameters);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters);
+
+    private static TResult Cast<TResult>(object? value)
+    {
+        if (value is not TResult result)
+            throw new InvalidOperationException($"Invalid key type. Expected {typeof(TResult).Name} but got {value?.GetType().Name ?? "null"}");
+
+        return result;
+    }
 }

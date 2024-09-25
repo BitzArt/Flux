@@ -1,16 +1,34 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.REST;
+using Microsoft.Extensions.DependencyInjection;
 
-internal class FluxRestSetBuilder<TModel, TKey> : FluxRestSetBuilder<TModel>, IFluxRestSetBuilder<TModel, TKey>
+namespace BitzArt.Flux;
+
+internal class FluxRestSetBuilder<TModel>(
+    IFluxRestServiceBuilder serviceBuilder
+    ) : FluxRestSetBuilder<TModel, object>(serviceBuilder)
     where TModel : class
 {
-    public new FluxRestSetOptions<TModel, TKey> SetOptions
-    {
-        get => (FluxRestSetOptions<TModel, TKey>)_setOptions;
-        set => _setOptions = value;
-    }
 
-    public FluxRestSetBuilder(IFluxRestServiceBuilder serviceBuilder) : base(serviceBuilder)
+}
+
+internal class FluxRestSetBuilder<TModel, TKey>(
+    IFluxRestServiceBuilder serviceBuilder
+    ) : IFluxRestSetBuilder<TModel>, IFluxRestSetBuilder<TModel, TKey>
+    where TModel : class
+{
+    public FluxRestSetOptions<TModel, TKey> SetOptions { get; set; } = new();
+    IFluxRestSetOptions<TModel> IFluxRestSetBuilder<TModel>.SetOptions => SetOptions;
+
+    public IFluxRestServiceBuilder ServiceBuilder { get; init; } = serviceBuilder;
+
+    public IServiceCollection Services => ServiceBuilder.Services;
+    public IFluxServiceFactory ServiceFactory => ServiceBuilder.ServiceFactory;
+    public IFluxFactory Factory => ServiceBuilder.Factory;
+    public FluxRestServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
+
+    public Action<IServiceProvider, HttpClient>? HttpClientConfiguration
     {
-        SetOptions = new();
+        get => ServiceBuilder.HttpClientConfiguration;
+        set => ServiceBuilder.HttpClientConfiguration = value;
     }
 }

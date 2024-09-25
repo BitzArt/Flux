@@ -7,38 +7,11 @@ namespace BitzArt.Flux;
 /// </summary>
 public static class AddSetExtension
 {
-    /// <summary>
-    /// Adds a set to the <see cref="IFluxJsonServiceBuilder"/>.
-    /// </summary>
-    /// <typeparam name="TModel">
-    /// The model type of the set.
-    /// </typeparam>
-    /// <param name="serviceBuilder"></param>
-    /// <param name="name">
-    /// The optional name of the set.
-    /// </param>
-    /// <returns>
-    /// The <see cref="IFluxJsonSetBuilder{TModel}"/> for further set configuration.
-    /// </returns>
-    public static IFluxJsonSetBuilder<TModel> AddSet<TModel>(this IFluxJsonServiceBuilder serviceBuilder,
+    /// <inheritdoc cref="AddSet{TModel,TKey}(IFluxJsonServiceBuilder,string)"/>/>
+    public static IFluxJsonSetBuilder<TModel, object> AddSet<TModel>(this IFluxJsonServiceBuilder serviceBuilder,
         string? name = null)
         where TModel : class
-    {
-        var builder = new FluxJsonSetBuilder<TModel>(serviceBuilder);
-
-        var services = serviceBuilder.Services;
-        var serviceFactory = builder.ServiceFactory;
-
-        serviceFactory.AddSet<TModel>(builder.SetOptions, name);
-
-        services.AddScoped(x =>
-        {
-            var factory = x.GetRequiredService<IFluxFactory>();
-            return factory.GetSetContext<TModel>(x, serviceFactory.ServiceName);
-        });
-
-        return builder;
-    }
+        => AddSet<TModel, object>(serviceBuilder, name);
 
     /// <summary>
     /// Adds a set to the <see cref="IFluxJsonServiceBuilder"/>.

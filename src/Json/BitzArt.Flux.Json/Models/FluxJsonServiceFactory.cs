@@ -24,7 +24,7 @@ internal class FluxJsonServiceFactory : IFluxServiceFactory
     public void AddSet<TModel>(object options, string? name)
         where TModel : class
     {
-        if (options is not FluxJsonSetOptions<TModel> optionsCasted) throw new Exception("Wrong options type");
+        if (options is not IFluxJsonSetOptions<TModel> optionsCasted) throw new Exception("Wrong options type");
 
         var signature = new FluxSetSignature(typeof(TModel), Name: name);
 
@@ -73,13 +73,13 @@ internal class FluxJsonServiceFactory : IFluxServiceFactory
         else _setOptions.Add(signature, options);
     }
 
-    private FluxJsonSetOptions<TModel> GetOptions<TModel>(string? name = null)
+    private IFluxJsonSetOptions<TModel> GetOptions<TModel>(string? name = null)
         where TModel : class
     {
         var signature = new FluxSetSignature(typeof(TModel), Name: name);
         var found = _setOptions.TryGetValue(signature, out var options);
         if (!found) throw new SetConfigurationNotFoundException();
-        return (FluxJsonSetOptions<TModel>)options!;
+        return (IFluxJsonSetOptions<TModel>)options!;
     }
 
     private FluxJsonSetOptions<TModel, TKey> GetOptions<TModel, TKey>(string? name = null)
@@ -111,7 +111,7 @@ internal class FluxJsonServiceFactory : IFluxServiceFactory
         
         var options = GetOptions<TModel>(name);
 
-        return new FluxJsonSetContext<TModel>(_serviceOptions, logger, options);
+        return new FluxJsonSetContext<TModel, object>(_serviceOptions, logger, options);
     }
 
     public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name)

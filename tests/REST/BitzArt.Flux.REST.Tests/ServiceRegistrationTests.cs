@@ -1,3 +1,4 @@
+using BitzArt.Flux.REST;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
@@ -143,11 +144,11 @@ public class ServiceRegistrationTests
 
         var setContextFromService = service.Set<TestModel>();
         Assert.NotNull(setContextFromService);
-        Assert.True(setContextFromService is FluxRestSetContext<TestModel>);
+        Assert.True(setContextFromService is FluxRestSetContext<TestModel, object>);
 
         var setContextFromFluxContext = fluxContext.Set<TestModel>();
         Assert.NotNull(setContextFromFluxContext);
-        Assert.True(setContextFromFluxContext is FluxRestSetContext<TestModel>);
+        Assert.True(setContextFromFluxContext is FluxRestSetContext<TestModel, object>);
     }
 
     [Fact]

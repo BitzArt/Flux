@@ -1,4 +1,6 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.REST;
+
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Flux REST service builder.

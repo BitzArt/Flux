@@ -25,7 +25,7 @@ internal static class TestSetContext
                     })
                     .AddSet<TestModel, int>()
                         .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                        .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();

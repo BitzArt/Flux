@@ -51,7 +51,7 @@ public class ServiceRegistrationTests
                     .WithBaseFilePath("Data")
                     .AddSet<TestModel, int>()
                         .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                        .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -66,11 +66,11 @@ public class ServiceRegistrationTests
 
         var setContextFromService = service.Set<TestModel>();
         Assert.NotNull(setContextFromService);
-        Assert.True(setContextFromService is FluxJsonSetContext<TestModel>);
+        Assert.True(setContextFromService is FluxJsonSetContext<TestModel, object>);
 
         var setContextFromFluxContext = fluxContext.Set<TestModel>();
         Assert.NotNull(setContextFromFluxContext);
-        Assert.True(setContextFromFluxContext is FluxJsonSetContext<TestModel>);
+        Assert.True(setContextFromFluxContext is FluxJsonSetContext<TestModel, object>);
     }
     
     [Fact]
@@ -85,14 +85,14 @@ public class ServiceRegistrationTests
                     .WithBaseFilePath("Data")
                     .AddSet<TestModel, int>()
                         .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                        .WithKey(x => x.Id!.Value);
 
             flux.AddService("service2")
                 .UsingJson()
                     .WithBaseFilePath("Data")
                     .AddSet<TestModel, int>()
                         .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                        .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -115,10 +115,10 @@ public class ServiceRegistrationTests
                     .WithBaseFilePath("Data")
                     .AddSet<TestModel, int>("test-set-1")
                         .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!)
+                        .WithKey(x => x.Id!.Value)
                     .AddSet<TestModel, int>("test-set-2")
                         .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                        .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();

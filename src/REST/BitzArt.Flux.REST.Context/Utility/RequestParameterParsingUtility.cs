@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using BitzArt.Flux.REST;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.RegularExpressions;
 

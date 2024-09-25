@@ -1,3 +1,4 @@
+using BitzArt.Flux.REST;
 using RichardSzalay.MockHttp;
 using System.Net;
 using System.Net.Http.Json;
@@ -44,8 +45,8 @@ public class MockedRestServiceTests
             JsonContent.Create(TestModel.GetAll(setCount)));
         });
 
-        ((FluxRestSetContext<TestModel>)setContext)
-          .SetOptions.Endpoint = "model{query}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+          .SetOptions.EndpointOptions.Path = "model{query}";
 
         var result = await setContext.GetAllAsync(query);
 
@@ -133,8 +134,8 @@ public class MockedRestServiceTests
                 TestModel.GetAll(modelCount).FirstOrDefault(x => x.Id == 1)));
         });
 
-        ((FluxRestSetContext<TestModel>)setContext)
-            .SetOptions.GetIdEndpointAction = (key, parameters) => "model/specific";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => "model/specific";
 
         var result = await setContext.GetAsync(1);
 
@@ -166,7 +167,7 @@ public class MockedRestServiceTests
             JsonContent.Create(changedModel));
         });
 
-        setContext.SetOptions.GetIdEndpointAction = (id, parameters) =>
+        setContext.SetOptions.IdEndpointOptions.GetPathFunc = (id, parameters) =>
         {
             return $"model/{id}?changeName={parameters!.First()}";
         };
@@ -191,7 +192,7 @@ public class MockedRestServiceTests
                 JsonContent.Create(TestModel.GetPage(100, 0, 10)));
             });
 
-        setContext.SetOptions.Endpoint = "test-{number}";
+        setContext.SetOptions.EndpointOptions.Path = "test-{number}";
 
         var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
@@ -211,7 +212,7 @@ public class MockedRestServiceTests
                 JsonContent.Create(TestModel.GetPage(100, 0, 10)));
             });
 
-        setContext.SetOptions.PageEndpoint = "{parentId}/test";
+        setContext.SetOptions.PageEndpointOptions.Path = "{parentId}/test";
 
         var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
@@ -364,8 +365,8 @@ public class MockedRestServiceTests
             JsonContent.Create(new TestModel { Id = modelId, Name = name }));
         });
 
-        ((FluxRestSetContext<TestModel>)setContext)
-            .SetOptions.GetIdEndpointAction = (_, parameters) => $"model?id={parameters!.First()}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (_, parameters) => $"model?id={parameters!.First()}";
 
         var model = new TestModel { Id = modelId, Name = name };
         
@@ -390,8 +391,8 @@ public class MockedRestServiceTests
             JsonContent.Create(new TestModel { Id = id, Name = name }));
         });
 
-        ((FluxRestSetContext<TestModel>)setContext)
-            .SetOptions.GetIdEndpointAction = (key, _) => $"model/specific/{key}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (key, _) => $"model/specific/{key}";
 
         var model = new TestModel { Id = id, Name = name };
 
@@ -416,8 +417,8 @@ public class MockedRestServiceTests
             JsonContent.Create(new TestModelUpdateResponse { Id = modelId, Name = name }));
         });
 
-        ((FluxRestSetContext<TestModel>)setContext)
-            .SetOptions.GetIdEndpointAction = (_, parameters) => $"model?id={parameters!.First()}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (_, parameters) => $"model?id={parameters!.First()}";
 
         var model = new TestModel { Id = modelId, Name = name };
 
@@ -442,8 +443,8 @@ public class MockedRestServiceTests
             JsonContent.Create(new TestModelUpdateResponse { Id = id, Name = name }));
         });
 
-        ((FluxRestSetContext<TestModel>)setContext)
-            .SetOptions.GetIdEndpointAction = (key, _) => $"model/specific/{key}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (key, _) => $"model/specific/{key}";
 
         var model = new TestModel { Id = id, Name = name };
         

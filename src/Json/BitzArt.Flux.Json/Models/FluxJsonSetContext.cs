@@ -1,38 +1,30 @@
 using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
-using System.Collections;
-using System.Linq.Expressions;
 
 namespace BitzArt.Flux;
 
-internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
+internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey>
     where TModel : class
 {
     // ================ Flux internal wiring ================
-
     internal readonly FluxJsonServiceOptions ServiceOptions;
     internal readonly ILogger _logger;
-    
-    protected FluxJsonSetOptions<TModel> _setOptions;
-    internal virtual FluxJsonSetOptions<TModel> SetOptions
-    {
-        get => _setOptions;
-        set => _setOptions = value;
-    }
+
+    internal IFluxJsonSetOptions<TModel> SetOptions { get; set; }
 
     // ==================== Constructor ====================
 
     public FluxJsonSetContext(
         FluxJsonServiceOptions serviceOptions,
         ILogger logger,
-        FluxJsonSetOptions<TModel> setOptions)
+        IFluxJsonSetOptions<TModel> setOptions)
     {
         ServiceOptions = serviceOptions;
         _logger = logger;
-        _setOptions = setOptions;
+        SetOptions = setOptions;
     }
 
-    // ============== Data methods implementation ==============
+    // ============== Methods implementation ==============
 
     public override Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
@@ -41,51 +33,39 @@ internal class FluxJsonSetContext<TModel> : FluxSetContext<TModel>
         return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
     }
 
-    public override Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
-    {
-        return Task.FromResult(SetOptions.Items!.ToPage(offset, limit));
-    }
-
     public override Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
         _logger.LogInformation("GetPage {type}", typeof(TModel).Name);
-        
-       return Task.FromResult(SetOptions.Items!.ToPage(pageRequest.Offset!.Value, pageRequest.Limit!.Value));
+
+        return Task.FromResult(SetOptions.Items!.ToPage(pageRequest));
     }
 
-    public override Task<TModel> GetAsync(object? id, params object[]? parameters)
+    public override Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
         _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
-        
+
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {
             if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
             
             var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
-            return itemId.Equals(id);
+            return itemId is not null && itemId.Equals(id);
         }) ?? throw new FluxItemNotFoundException<TModel>(id);
 
         return Task.FromResult(existingItem);
     }
-
-    public override Task<TModel> AddAsync(TModel model, params object[]? parameters)
-        => AddAsync<TModel>(model, parameters);
 
     public override Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
     {
         throw new NotSupportedException();
     }
 
-    public override Task<TModel> UpdateAsync(object? id, TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TModel>(id, model, partial, parameters);
-
-    public override Task<TModel> UpdateAsync(TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TModel>(null, model, partial, parameters);
-
     public override Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters)
-        => UpdateAsync<TResponse>(null, model, partial, parameters);
+    {
+        throw new NotImplementedException();
+    }
 
-    public override Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, params object[]? parameters)
+    public override Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
     {
         throw new NotImplementedException();
     }

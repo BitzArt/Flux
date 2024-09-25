@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<RootNamespace>BitzArt.Flux</RootNamespace>
+		<RootNamespace>BitzArt.Flux.REST</RootNamespace>
 
 		<PackageId>BitzArt.Flux.Rest.Context</PackageId>
 		<Authors>BitzArt</Authors>

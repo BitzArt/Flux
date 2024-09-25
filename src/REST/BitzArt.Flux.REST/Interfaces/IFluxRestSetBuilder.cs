@@ -1,4 +1,6 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.REST;
+
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Flux REST set builder.
@@ -9,7 +11,7 @@
 public interface IFluxRestSetBuilder<TModel> : IFluxRestServiceBuilder
     where TModel : class
 {
-    internal FluxRestSetOptions<TModel> SetOptions { get; }
+    internal IFluxRestSetOptions<TModel> SetOptions { get; }
 }
 
 /// <inheritdoc cref="IFluxRestSetBuilder{TModel}"/>"

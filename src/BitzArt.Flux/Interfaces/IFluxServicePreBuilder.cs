@@ -10,7 +10,18 @@ namespace BitzArt.Flux;
 /// </summary>
 public interface IFluxServicePreBuilder
 {
+    /// <summary>
+    /// Service name.
+    /// </summary>
     public string? Name { get; set; }
+
+    /// <summary>
+    /// The service collection where Flux Services are registered.
+    /// </summary>
     public IServiceCollection Services { get; }
+
+    /// <summary>
+    /// Flux Factory instance.
+    /// </summary>
     public IFluxFactory Factory { get; }
 }

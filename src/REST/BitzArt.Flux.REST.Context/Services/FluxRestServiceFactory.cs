@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BitzArt.Flux.REST;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
@@ -22,7 +23,7 @@ internal class FluxRestServiceFactory : IFluxServiceFactory
     public void AddSet<TModel>(object options, string? name)
         where TModel : class
     {
-        if (options is not FluxRestSetOptions<TModel> optionsCasted) throw new Exception("Wrong options type");
+        if (options is not IFluxRestSetOptions<TModel> optionsCasted) throw new Exception("Wrong options type");
 
         var signature = new FluxSetSignature(typeof(TModel), Name: name);
 
@@ -71,13 +72,13 @@ internal class FluxRestServiceFactory : IFluxServiceFactory
         else _setOptions.Add(signature, options);
     }
 
-    private FluxRestSetOptions<TModel> GetOptions<TModel>(string? name = null)
+    private IFluxRestSetOptions<TModel> GetOptions<TModel>(string? name = null)
         where TModel : class
     {
         var signature = new FluxSetSignature(typeof(TModel), Name: name);
         var found = _setOptions.TryGetValue(signature, out var options);
         if (!found) throw new SetConfigurationNotFoundException();
-        return (FluxRestSetOptions<TModel>)options!;
+        return (IFluxRestSetOptions<TModel>)options!;
     }
 
     private FluxRestSetOptions<TModel, TKey> GetOptions<TModel, TKey>(string? name = null)
@@ -111,7 +112,7 @@ internal class FluxRestServiceFactory : IFluxServiceFactory
 
         var options = GetOptions<TModel>(name);
 
-        return new FluxRestSetContext<TModel>(httpClient, _serviceOptions, logger, options);
+        return new FluxRestSetContext<TModel, object>(httpClient, _serviceOptions, logger, options);
     }
 
     public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name)

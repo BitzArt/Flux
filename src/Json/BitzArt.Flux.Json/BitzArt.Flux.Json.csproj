@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <RootNamespace>BitzArt.Flux</RootNamespace>
+        <RootNamespace>BitzArt.Flux.Json</RootNamespace>
 
         <PackageId>BitzArt.Flux.Json</PackageId>
         <Authors>BitzArt</Authors>
@@ -24,10 +24,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\BitzArt.Flux\BitzArt.Flux.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 	</ItemGroup>
 
@@ -36,5 +32,9 @@
             <_Parameter1>BitzArt.Flux.Json.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\BitzArt.Flux\BitzArt.Flux.csproj" />
+	</ItemGroup>
     
 </Project>

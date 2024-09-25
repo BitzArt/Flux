@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BitzArt.Flux.REST;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
