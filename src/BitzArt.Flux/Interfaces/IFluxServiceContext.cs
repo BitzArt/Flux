@@ -6,6 +6,11 @@
 /// </summary>
 public interface IFluxServiceContext
 {
+    /// <summary>
+    /// Resolves a context for a specific preconfigured Flux Set.
+    /// </summary>
     public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? name = null) where TModel : class;
+
+    /// <inheritdoc cref="Set{TModel, TKey}(string?)"/>
     public IFluxSetContext<TModel> Set<TModel>(string? name = null) where TModel : class;
 }

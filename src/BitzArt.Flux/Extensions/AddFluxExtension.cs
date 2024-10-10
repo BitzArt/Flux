@@ -8,6 +8,15 @@ namespace BitzArt.Flux;
 /// </summary>
 public static class AddFluxExtension
 {
+    /// <summary>
+    /// Adds Flux to the IServiceCollection.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configure">
+    /// A delegate to configure the <see cref="IFluxBuilder"/>.
+    /// </param>
+    /// <returns></returns>
+    /// <exception cref="FluxAlreadyRegisteredException"></exception>
     public static IServiceCollection AddFlux(this IServiceCollection services, Action<IFluxBuilder> configure)
     {
         var alreadyRegistered = services

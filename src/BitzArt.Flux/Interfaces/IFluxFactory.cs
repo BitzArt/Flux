@@ -5,13 +5,25 @@
 /// </summary>
 public interface IFluxFactory
 {
-    internal ICollection<IFluxServiceFactory> ServiceContexts { get; }
+    /// <summary>
+    /// Registered service contexts.
+    /// </summary>
+    public ICollection<IFluxServiceFactory> ServiceContexts { get; }
 
-    internal IFluxServiceFactory GetServiceProvider(string name);
+    /// <summary>
+    /// Returns a service provider for a specific service name.
+    /// </summary>
+    public IFluxServiceFactory GetServiceProvider(string name);
 
-    internal IFluxSetContext<TModel> GetSetContext<TModel>(IServiceProvider services, string? serviceName = null, string? setName = null)
+    /// <summary>
+    /// Resolves a context for a specific Flux Service.
+    /// </summary>
+    public IFluxSetContext<TModel> GetSetContext<TModel>(IServiceProvider services, string? serviceName = null, string? setName = null)
         where TModel : class;
 
-    internal IFluxSetContext<TModel, TKey> GetSetContext<TModel, TKey>(IServiceProvider services, string? serviceName = null, string? setName = null)
+    /// <summary>
+    /// Resolves a context for a specific Flux Service.
+    /// </summary>
+    public IFluxSetContext<TModel, TKey> GetSetContext<TModel, TKey>(IServiceProvider services, string? serviceName = null, string? setName = null)
         where TModel : class;
 }

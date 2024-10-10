@@ -28,6 +28,8 @@ public interface IFluxSetDataProvider<TModel>
     /// Event triggered when a request was completed and results are available.
     /// </summary>
     public event OnResultHandler<TModel>? OnResult;
+
+    /// <inheritdoc cref="OnLoadingStateChanged{TModel}"/>
     event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
 
     /// <summary>

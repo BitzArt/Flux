@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BitzArt.Flux.REST\BitzArt.Flux.REST.csproj" />
+    <ProjectReference Include="..\..\src\REST\BitzArt.Flux.REST\BitzArt.Flux.REST.csproj" />
   </ItemGroup>
 
 </Project>

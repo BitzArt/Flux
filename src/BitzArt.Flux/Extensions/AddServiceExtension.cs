@@ -1,5 +1,8 @@
 ﻿namespace BitzArt.Flux;
 
+/// <summary>
+/// Extension methods for adding a Service to the IFluxBuilder.
+/// </summary>
 public static class AddServiceExtension
 {
     /// <summary>
