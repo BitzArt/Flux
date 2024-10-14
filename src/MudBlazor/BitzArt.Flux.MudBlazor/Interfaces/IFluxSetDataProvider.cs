@@ -41,18 +41,18 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Resets table sorting to none, resets current page to 0, and then reloads the data.
     /// </summary>
-    public Task ResetAndReloadAsync();
+    public Task ResetAndReloadAsync(bool throwOnCancel = false);
 
     /// <summary>
     /// Resets table sorting to none and then reloads the data.
     /// </summary>
-    public Task ResetSortAndReloadAsync();
+    public Task ResetSortAndReloadAsync(bool throwOnCancel = false);
 
     /// <summary>
     /// Resets current page to 0 and then reloads the data.
     /// </summary>
     /// <returns></returns>
-    public Task ResetPageAndReloadAsync();
+    public Task ResetPageAndReloadAsync(bool throwOnCancel = false);
 
     /// <summary>
     /// Resets current page to 0 on next request.
