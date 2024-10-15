@@ -20,21 +20,21 @@ internal class FluxJsonSetContext<TModel, TKey>(
 
     public override Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters)
     {
-        _logger.LogInformation("GetAll {type}", typeof(TModel).Name);
+        _logger.LogDebug("GetAll {type}", typeof(TModel).Name);
 
         return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
     }
 
     public override Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters)
     {
-        _logger.LogInformation("GetPage {type}", typeof(TModel).Name);
+        _logger.LogDebug("GetPage {type}", typeof(TModel).Name);
 
         return Task.FromResult(SetOptions.Items!.ToPage(pageRequest));
     }
 
     public override Task<TModel> GetAsync(TKey? id, params object[]? parameters)
     {
-        _logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
+        _logger.LogDebug("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
 
         var existingItem = SetOptions.Items!.FirstOrDefault(item =>
         {

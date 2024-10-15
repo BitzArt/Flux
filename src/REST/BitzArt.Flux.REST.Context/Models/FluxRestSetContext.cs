@@ -30,7 +30,7 @@ internal class FluxRestSetContext<TModel, TKey>(
     {
         var path = GetEndpointFullPath(parameters);
 
-        _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, path.Result, path.Log);
+        _logger.LogDebug("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, path.Result, path.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
         var result = await HandleRequestAsync<IEnumerable<TModel>>(message);
@@ -44,7 +44,7 @@ internal class FluxRestSetContext<TModel, TKey>(
     {
         var parse = GetIdEndpointFullPath(id, parameters);
 
-        _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parse.Result, parse.Log);
+        _logger.LogDebug("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parse.Result, parse.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
         var result = await HandleRequestAsync<TModel>(message);
@@ -74,7 +74,7 @@ internal class FluxRestSetContext<TModel, TKey>(
 
         parse.Result = path;
 
-        _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
+        _logger.LogDebug("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parse.Result, parse.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parse.Result);
         var result = await HandleRequestAsync<PageResult<TModel>>(message);
@@ -87,7 +87,7 @@ internal class FluxRestSetContext<TModel, TKey>(
     public override async Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters)
     {
         var parse = GetEndpointFullPath(parameters);
-        _logger.LogInformation("Add {type}: {route}", typeof(TModel).Name, parse.Result);
+        _logger.LogDebug("Add {type}: {route}", typeof(TModel).Name, parse.Result);
 
         var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
         var message = new HttpRequestMessage(HttpMethod.Post, parse.Result)
@@ -108,7 +108,7 @@ internal class FluxRestSetContext<TModel, TKey>(
     public override async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters)
     {
         var path = GetIdEndpointFullPath(id, parameters);
-        _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result);
+        _logger.LogDebug("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", path.Result);
 
         var method = partial ? HttpMethod.Patch : HttpMethod.Put;
         var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
