@@ -1,4 +1,6 @@
-﻿using MudBlazor;
+﻿using BitzArt.Json;
+using MudBlazor;
+using System.Text.Json.Serialization;
 
 namespace BitzArt.Flux.MudBlazor;
 
@@ -16,6 +18,7 @@ public record FluxSetDataPageQuery<TModel>
     /// <summary>
     /// Parameters for the request.
     /// </summary>
+    [JsonConverter(typeof(ItemConverter<TypedObjectJsonConverter<object>>))]
     public object[]? Parameters { get; set; } = null!;
 
     /// <summary>
