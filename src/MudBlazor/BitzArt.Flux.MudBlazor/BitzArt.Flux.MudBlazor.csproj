@@ -24,6 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="BitzArt.Json.TypedObjects" Version="0.0.1-Prerelease" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
 	  <PackageReference Include="MudBlazor" Version="7.4.0" />
 	</ItemGroup>
