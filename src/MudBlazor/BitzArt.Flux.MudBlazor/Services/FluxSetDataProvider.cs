@@ -83,35 +83,23 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
 
         if (Table.Context.CurrentSortLabel is not null)
-            await Table.Context.SetSortFunc(Table.Context.CurrentSortLabel);
+            await Table.Context.SetSortFunc(Table.Context.CurrentSortLabel).IgnoreCancellation();
 
-        await ReloadServerDataAsync(throwOnCancel);
+        await ReloadTableAsync(throwOnCancel);
     }
 
     public async Task ResetPageAndReloadAsync(bool throwOnCancel = false)
     {
         ResetPage();
-        await ReloadServerDataAsync(throwOnCancel);
+        await ReloadTableAsync(throwOnCancel);
     }
 
-    private async Task ReloadServerDataAsync(bool throwOnCancel)
+    private async Task ReloadTableAsync(bool throwOnCancel)
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
 
-        Task? reloadTask = null;
-
-        try
-        {
-            reloadTask = Table!.ReloadServerData();
-            await reloadTask;
-        }
-        catch
-        {
-            if (reloadTask!.IsCanceled && !throwOnCancel) return;
-
-            throw;
-        }
+        await Table!.ReloadServerData().IgnoreCancellation(!throwOnCancel);
     }
 
     public void ResetPage()
