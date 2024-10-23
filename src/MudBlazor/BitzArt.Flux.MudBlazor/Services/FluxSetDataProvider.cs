@@ -65,14 +65,14 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         LastQuery = lastQuery;
     }
 
-    public async Task ResetAndReloadAsync(bool throwOnCancel = false)
+    public async Task ResetAndReloadAsync(bool ignoreCancellation = true)
     {
         ResetPage();
-        await ResetSortAndReloadAsync(throwOnCancel);
+        await ResetSortAndReloadAsync(ignoreCancellation);
     }
 
     [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
-    public async Task ResetSortAndReloadAsync(bool throwOnCancel = false)
+    public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true)
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to reset sorting.");
@@ -83,35 +83,23 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
 
         if (Table.Context.CurrentSortLabel is not null)
-            await Table.Context.SetSortFunc(Table.Context.CurrentSortLabel);
+            await Table.Context.SetSortFunc(Table.Context.CurrentSortLabel).IgnoreCancellation();
 
-        await ReloadServerDataAsync(throwOnCancel);
+        await ReloadTableAsync(ignoreCancellation);
     }
 
-    public async Task ResetPageAndReloadAsync(bool throwOnCancel = false)
+    public async Task ResetPageAndReloadAsync(bool ignoreCancellation = true)
     {
         ResetPage();
-        await ReloadServerDataAsync(throwOnCancel);
+        await ReloadTableAsync(ignoreCancellation);
     }
 
-    private async Task ReloadServerDataAsync(bool throwOnCancel)
+    private async Task ReloadTableAsync(bool ignoreCancellation)
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
 
-        Task? reloadTask = null;
-
-        try
-        {
-            reloadTask = Table!.ReloadServerData();
-            await reloadTask;
-        }
-        catch
-        {
-            if (reloadTask!.IsCanceled && !throwOnCancel) return;
-
-            throw;
-        }
+        await Table!.ReloadServerData().IgnoreCancellation(ignoreCancellation);
     }
 
     public void ResetPage()
