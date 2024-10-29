@@ -11,11 +11,11 @@
         >
             <ToolBarContent>
                 <MudGrid Spacing="4" Class="pt-2">
-                    <MudItem xs="12" sm="12" md="6" Class="align-content-center">
+                    <MudItem xs="12" sm="12" md="3" Class="align-content-center">
                         <MudText Typo="Typo.h4">Books</MudText>
                     </MudItem>
 
-                    <MudItem xs="12" sm="6" md="3" Class="align-content-center">
+                    <MudItem xs="12" sm="4" md="3" Class="align-content-center">
                         <MudSelect 
                             T="Author"
                             Placeholder="Author"
@@ -34,18 +34,35 @@
                         </MudSelect>
                     </MudItem>
 
-                    <MudItem xs="12" sm="6" md="3" Class="align-content-center">
+                    <MudItem xs="12" sm="4" md="3" Class="align-content-center">
                         <MudTextField
                             T="string"
                             DebounceInterval="300"
                             OnDebounceIntervalElapsed="OnSearchAsync"
                             Placeholder="Search"
-                                      Variant="Variant.Outlined"
+                            Variant="Variant.Outlined"
                             Margin="Margin.Dense"
                             Adornment="Adornment.Start"
                             AdornmentIcon="@Icons.Material.Filled.Search"
                             IconSize="Size.Medium">
                         </MudTextField>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="4" md="3" Class="align-content-center">
+                        <MudTableSortSelector 
+                            T="Book"
+                            Variant="Variant.Outlined"
+                            Margin="Margin.Dense">
+
+                                @foreach (var label in BooksDataProvider.Table!.Context.SortLabels)
+                                {
+                                    <MudTableSortItem T="Book" Value="@label" />
+                                }
+
+                            <MudTableSortLabel T="Book" SortLabel="id">
+                                Cheapest
+                            </MudTableSortLabel>
+                        </MudTableSortSelector>
                     </MudItem>
                 </MudGrid>
             </ToolBarContent>

@@ -83,9 +83,13 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
 
         if (Table.Context.CurrentSortLabel is not null)
+        {
             await Table.Context.SetSortFunc(Table.Context.CurrentSortLabel).IgnoreCancellation();
-
-        await ReloadTableAsync(ignoreCancellation);
+        }
+        else
+        {
+            await ReloadTableAsync(ignoreCancellation);
+        }
     }
 
     public async Task ResetPageAndReloadAsync(bool ignoreCancellation = true)

@@ -1,0 +1,28 @@
+﻿@namespace MudBlazor
+@typeparam T
+
+<div class="d-flex align-center">
+    <MudSelect 
+        T="MudTableSortLabel<T>"
+        Placeholder="Sort By"
+        Variant="Variant"
+        Margin="Margin"
+        Clearable="true"
+        FullWidth="true"
+        @bind-Value="CurrentSortLabel">
+            @ChildContent
+    </MudSelect>
+
+    <MudIconButton 
+        Icon="@_currentSortIcon" />
+</div>
+
+@* <MudSelect 
+        T="SortDirection?"
+        Value="_currentSortDirection"
+        ValueChanged="ChangeSortDirtectionAsync"
+        Placeholder="Sorting Direction"
+        Clearable="true">
+        <MudSelectItem T="SortDirection?" Value="SortDirection.Ascending">Ascending</MudSelectItem>
+        <MudSelectItem T="SortDirection?" Value="SortDirection.Descending">Descending</MudSelectItem>
+    </MudSelect> *@
