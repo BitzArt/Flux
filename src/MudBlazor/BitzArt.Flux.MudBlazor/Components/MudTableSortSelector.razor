@@ -1,28 +1,11 @@
 ﻿@namespace MudBlazor
 @typeparam T
 
-<div class="d-flex align-center">
+<CascadingValue TValue="MudTableSortSelector<T>" Value="this" IsFixed="true">
     <MudSelect 
-        T="MudTableSortLabel<T>"
-        Placeholder="Sort By"
-        Variant="Variant"
-        Margin="Margin"
-        Clearable="true"
-        FullWidth="true"
-        @bind-Value="CurrentSortLabel">
+        T="MudTableSortSelectorItem<T>"
+        @bind-Value="SelectedItem"
+        @ref="_select">
             @ChildContent
     </MudSelect>
-
-    <MudIconButton 
-        Icon="@_currentSortIcon" />
-</div>
-
-@* <MudSelect 
-        T="SortDirection?"
-        Value="_currentSortDirection"
-        ValueChanged="ChangeSortDirtectionAsync"
-        Placeholder="Sorting Direction"
-        Clearable="true">
-        <MudSelectItem T="SortDirection?" Value="SortDirection.Ascending">Ascending</MudSelectItem>
-        <MudSelectItem T="SortDirection?" Value="SortDirection.Descending">Descending</MudSelectItem>
-    </MudSelect> *@
+</CascadingValue>
