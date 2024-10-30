@@ -1,0 +1,3 @@
+﻿.mud-table-sort-selector ::deep .invert {
+    transform: scaleY(-1) !important;
+}

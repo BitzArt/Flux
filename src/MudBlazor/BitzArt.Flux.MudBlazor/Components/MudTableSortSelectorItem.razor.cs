@@ -2,6 +2,10 @@
 
 namespace MudBlazor;
 
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public partial class MudTableSortSelectorItem<T>
 {
     /// <summary>
@@ -26,37 +30,40 @@ public partial class MudTableSortSelectorItem<T>
     /// 
     /// </summary>
     [CascadingParameter]
-    private MudTableSortSelector<T>? ParentSelector { get; set; } = null!;
+    private MudTableSortSelector<T>? ParentSelector { get; set; }
+
+    internal MudTableSortSelectorItemValue<T> Value = null!;
 
     /// <summary>
     /// 
     /// </summary>
     protected override void OnInitialized()
     {
-        ParentSelector?.AddItem(this);
+        if (ParentSelector is null)
+            throw new InvalidOperationException($"{nameof(MudTableSortSelectorItem<T>)} requires a parent {nameof(MudTableSortSelector<T>)} component.");
+        
+        Value = new(GetSortLabel(), SortDirection, ParentSelector!);
+
+        ParentSelector!.AddItem(this);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public MudTableSortLabel<T> GetSortLabel()
+    private MudTableSortLabel<T> GetSortLabel()
+    {
+        if (ParentSelector!.Table is null) return CreateNewSortLabel();
+
+        var sortLabel = ParentSelector!.Table.Context.SortLabels.FirstOrDefault(x => x.SortLabel == SortLabel);
+
+        if (sortLabel is null) return CreateNewSortLabel();
+
+        return sortLabel;
+    }
+
+    private MudTableSortLabel<T> CreateNewSortLabel()
     {
         return new MudTableSortLabel<T>
         {
             SortLabel = SortLabel,
-            SortDirection = GetSortDirection()
+            SortDirection = SortDirection.HasValue ? SortDirection.Value : MudBlazor.SortDirection.None
         };
-    }
-
-    private SortDirection GetSortDirection()
-    {
-        if (SortDirection.HasValue)
-            return SortDirection.Value;
-
-        if (ParentSelector is not null && ParentSelector.SortDirection.HasValue)
-            return ParentSelector.SortDirection.Value;
-
-        return MudBlazor.SortDirection.None;
     }
 }

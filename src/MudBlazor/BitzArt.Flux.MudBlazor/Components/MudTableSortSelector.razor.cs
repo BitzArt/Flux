@@ -1,16 +1,32 @@
 ﻿using Microsoft.AspNetCore.Components;
+using static MudBlazor.Colors;
 
 namespace MudBlazor;
 
 public partial class MudTableSortSelector<T>
 {
-    private ICollection<MudTableSortSelectorItem<T>> _items = [];
-
     [Parameter, EditorRequired]
     public required RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public EventCallback<MudTableSortSelectorItem<T>> ValueChanged { get; set; }
+    public bool HideSortButton { get; set; } = false;
+
+    private bool _isQuiescent = false;
+    private RenderFragment _childContent => _isQuiescent ? _quiescentChildContent : ChildContent;
+
+    private RenderFragment _quiescentChildContent => builder =>
+    {
+        var counter = 0;
+        for (var i = 0; i < _items.Count; i++)
+        {
+            var item = _items.ElementAt(i);
+
+            builder.OpenComponent<MudSelectItem<MudTableSortSelectorItemValue<T>>>(counter++);
+            builder.AddAttribute(counter++, "Value", item.Value);
+            builder.AddAttribute(counter++, "ChildContent", item.ChildContent);
+            builder.CloseComponent();
+        }
+    };
 
     [Parameter]
     public EventCallback<MudTableSortLabel<T>> SortChanged { get; set; }
@@ -18,46 +34,101 @@ public partial class MudTableSortSelector<T>
     [Parameter]
     public MudTable<T>? Table { get; set; }
 
-    private MudSelect<MudTableSortSelectorItem<T>> _select;
+    private MudSelect<MudTableSortSelectorItemValue<T>> _select;
 
     public SortDirection? SortDirection { get; set; }
 
-    public MudTableSortSelectorItem<T>? SelectedItem 
-    { 
-        get => _selectedItem; 
+    internal MudTableSortSelectorItemValue<T>? Value
+    {
+        get => _value;
         set
         {
-            _selectedItem = value;
+            _value = value;
             _ = OnValueChangedAsync(value);
         }
     }
 
-    private MudTableSortSelectorItem<T>? _selectedItem;
+    private MudTableSortSelectorItemValue<T>? _value;
+
+    private ICollection<MudTableSortSelectorItem<T>> _items { get; set; } = [];
+
+    private bool _rememberSortDirection;
+
+    protected override void OnInitialized()
+    {
+        if (!HideSortButton)
+        {
+            SortDirection = MudBlazor.SortDirection.Ascending;
+            _rememberSortDirection = true;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        _isQuiescent = true;
+        _select.ChildContent = _quiescentChildContent;
+        StateHasChanged();
+    }
 
     public void AddItem(MudTableSortSelectorItem<T> item)
     {
         _items.Add(item);
     }
 
-    private async Task OnValueChangedAsync(MudTableSortSelectorItem<T>? item)
+    private async Task OnValueChangedAsync(MudTableSortSelectorItemValue<T>? value)
     {
-        //_selectedItem = item;
+        var sortLabel = GetSortLabel(value);
+        await OnValueChangedAsync(sortLabel);
+    }
 
-        if (item is null)
-            return;
-
-        if (item.SortDirection.HasValue)
-            SortDirection = item.SortDirection;
-
-        if (ValueChanged.HasDelegate)
-            await ValueChanged.InvokeAsync(item);
-
-        var sortLabel = item.GetSortLabel();
-
+    private async Task OnValueChangedAsync(MudTableSortLabel<T> sortLabel)
+    {
         if (SortChanged.HasDelegate)
             await SortChanged.InvokeAsync(sortLabel);
 
         if (Table is not null)
             await Table.Context.SetSortFunc(sortLabel);
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private MudTableSortLabel<T> GetSortLabel(MudTableSortSelectorItemValue<T>? value)
+    {
+        //_selectedItem = item;
+
+        if (value is null)
+        {
+            return new MudTableSortLabel<T>
+            {
+                SortLabel = null,
+                SortDirection = SortDirection!.Value
+            };
+        }
+
+        if (value.SortDirection.HasValue && _rememberSortDirection)
+            SortDirection = value.SortDirection;
+
+        return value.GetSortLabel();
+    }
+
+    private async Task ToggleSortDirectionAsync()
+    {
+        SortDirection = SortDirection!.Value.Inverse();
+
+        await OnValueChangedAsync(Value);
+    }
+}
+
+
+public static class SortDirectionExtensions
+{
+    public static SortDirection Inverse(this SortDirection direction)
+    {
+        return direction switch
+        {
+            SortDirection.Ascending => SortDirection.Descending,
+            SortDirection.Descending => SortDirection.Ascending,
+            _ => throw new InvalidOperationException($"Sort direction '{direction}' can not be inverted.")
+        };
     }
 }

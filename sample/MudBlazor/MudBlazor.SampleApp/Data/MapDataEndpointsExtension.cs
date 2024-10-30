@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BitzArt;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MudBlazor.SampleApp;
 
@@ -33,29 +34,34 @@ internal static class MapDataEndpointsExtension
 
             if (authorId.HasValue) q = q.Where(x => x.AuthorId == authorId);
             if (!string.IsNullOrWhiteSpace(search)) q = q.Where(x => x.Title!.Contains(search, StringComparison.OrdinalIgnoreCase));
-            if (!string.IsNullOrWhiteSpace(order))
-            {
-                if (order.Equals("id", StringComparison.CurrentCultureIgnoreCase)) q = !desc
-                    ? q.OrderBy(x => x.Id)
-                    : q.OrderByDescending(x => x.Id);
 
-                if (order.Equals("author", StringComparison.CurrentCultureIgnoreCase)) q = !desc
-                    ? q.OrderBy(x => x.AuthorId)
-                    : q.OrderByDescending(x => x.AuthorId);
+            var orderDirection = desc ? OrderDirection.Descending : OrderDirection.Ascending;
 
-                if (order.Equals("title", StringComparison.CurrentCultureIgnoreCase)) q = !desc
-                    ? q.OrderBy(x => x.Title)
-                    : q.OrderByDescending(x => x.Title);
-
-                if (order.Equals("publish", StringComparison.CurrentCultureIgnoreCase)) q = !desc
-                    ? q.OrderBy(x => x.PublishYear)
-                    : q.OrderByDescending(x => x.PublishYear);
-            }
+            q = string.IsNullOrWhiteSpace(order) 
+                ? q.OrderBy(x => x.Id, orderDirection)
+                : q.Order(order, orderDirection);
 
             return Results.Ok(q.ToPage(offset, limit));
         });
 
         app.MapGet("/api/books/{bookId:int}", (int bookId)
             => Results.Ok(WebApiData.Books.FirstOrDefault(x => x.Id == bookId)));
+    }
+
+    private static IQueryable<Book> Order(this IQueryable<Book> query, string order, OrderDirection orderDirection)
+    {
+        if (order.Equals("id", StringComparison.CurrentCultureIgnoreCase))
+            return query.OrderBy(x => x.Id, orderDirection);
+
+        if (order.Equals("author", StringComparison.CurrentCultureIgnoreCase))
+            return query.OrderBy(x => x.AuthorId, orderDirection);
+
+        if (order.Equals("title", StringComparison.CurrentCultureIgnoreCase))
+            return query.OrderBy(x => x.Title, orderDirection);
+
+        if (order.Equals("publish", StringComparison.CurrentCultureIgnoreCase))
+            return query.OrderBy(x => x.PublishYear, orderDirection);
+
+        return query.OrderBy(x => x.Id, orderDirection);
     }
 }

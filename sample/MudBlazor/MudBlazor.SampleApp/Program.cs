@@ -11,9 +11,10 @@ namespace MudBlazor.SampleApp
 
             builder.Services.AddMudServices();
             builder.Services.AddRazorComponents()
+                .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
-            builder.Services.AddFlux("http://localhost");
+            builder.Services.AddFlux("http://localhost:5213");
 
             var app = builder.Build();
 
@@ -24,6 +25,7 @@ namespace MudBlazor.SampleApp
 
             app.MapDataEndpoints();
             app.MapRazorComponents<App>()
+                 .AddInteractiveServerRenderMode()
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
 

@@ -1,11 +1,23 @@
 ﻿@namespace MudBlazor
 @typeparam T
 
-<CascadingValue TValue="MudTableSortSelector<T>" Value="this" IsFixed="true">
+<div class="mud-table-sort-selector">
+    <CascadingValue TValue="MudTableSortSelector<T>" Value="this" IsFixed="true">
     <MudSelect 
-        T="MudTableSortSelectorItem<T>"
-        @bind-Value="SelectedItem"
+        T="MudTableSortSelectorItemValue<T>"
+        @bind-Value="Value"
         @ref="_select">
-            @ChildContent
+            @_childContent
     </MudSelect>
+
+    @if (!HideSortButton)
+    {
+        <MudIconButton 
+            Icon="@Icons.Material.Filled.Sort"
+            Variant="Variant.Outlined"
+            Class="@(SortDirection == MudBlazor.SortDirection.Ascending ? "" : "invert")" 
+            OnClick="ToggleSortDirectionAsync">
+        </MudIconButton>
+    }
 </CascadingValue>
+</div>

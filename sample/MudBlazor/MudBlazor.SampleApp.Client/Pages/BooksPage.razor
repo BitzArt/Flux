@@ -1,4 +1,9 @@
 ﻿@page "/books"
+@rendermode InteractiveServer
+
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
 @if (_initialized)
 {
@@ -54,6 +59,7 @@
                             <MudTableSortSelectorItem T="Book" SortLabel="id">ID</MudTableSortSelectorItem>
                             <MudTableSortSelectorItem T="Book" SortLabel="author">Author</MudTableSortSelectorItem>
                             <MudTableSortSelectorItem T="Book" SortLabel="title">Title</MudTableSortSelectorItem>
+                            <MudTableSortSelectorItem T="Book" SortLabel="publish">Publish</MudTableSortSelectorItem>
 
                             <MudTableSortSelectorItem T="Book" SortLabel="publish" SortDirection="SortDirection.Ascending">Oldest</MudTableSortSelectorItem>
                             <MudTableSortSelectorItem T="Book" SortLabel="publish" SortDirection="SortDirection.Descending">Newest</MudTableSortSelectorItem>
