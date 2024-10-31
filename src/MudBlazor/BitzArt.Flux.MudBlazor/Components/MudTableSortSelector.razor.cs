@@ -55,6 +55,13 @@ public partial class MudTableSortSelector<T>
     public Margin Margin { get; set; } = Margin.Normal;
 
     /// <summary>
+    /// Show the clear button in the input. 
+    /// Default is <see langword="true"/>.
+    /// </summary>
+    [Parameter]
+    public bool Clearable { get; set; } = true;
+
+    /// <summary>
     /// The size of the button. 
     /// Default is <see cref="Size.Medium"/>.
     /// </summary>
