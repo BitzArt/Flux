@@ -6,8 +6,8 @@
         <MudSelect 
             T="MudTableSortSelectorItemValue<T>"
             Placeholder="@Placeholder"
-            Variant="SelectVariant"
-            Margin="SelectMargin"
+            Variant="Variant"
+            Margin="Margin"
             Clearable="true"
             FullWidth="true"
             @bind-Value="Value"
@@ -19,7 +19,7 @@
         {
             <MudIconButton 
                 Icon="@Icons.Material.Filled.Sort"
-                Variant="ButtonVariant"
+                Variant="Variant"
                 Size="ButtonSize"
                 Class="ml-2"
                 Style="@(SortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"

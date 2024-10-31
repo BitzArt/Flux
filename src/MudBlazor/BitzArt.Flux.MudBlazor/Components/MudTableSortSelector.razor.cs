@@ -41,25 +41,18 @@ public partial class MudTableSortSelector<T>
     public string Placeholder { get; set; } = "Sort by";
 
     /// <summary>
-    /// The apperiance varation of the input.
+    /// The apperiance varation of the input and button.
     /// Default is <see cref="Variant.Text"/>.
     /// </summary>
     [Parameter]
-    public Variant SelectVariant { get; set; } = Variant.Text;
+    public Variant Variant { get; set; } = Variant.Text;
 
     /// <summary>
     /// The amount of vertical spacing for the input.
     /// Default is <see cref="Margin.Normal"/>.
     /// </summary>
     [Parameter]
-    public Margin SelectMargin { get; set; } = Margin.Normal;
-
-    /// <summary>
-    /// The apperiance varation of the button. 
-    /// Default is <see cref="Variant.Text"/>.
-    /// </summary>
-    [Parameter]
-    public Variant ButtonVariant { get; set; } = Variant.Text;
+    public Margin Margin { get; set; } = Margin.Normal;
 
     /// <summary>
     /// The size of the button. 
