@@ -56,10 +56,15 @@
                     <MudItem xs="12" sm="4" md="3" Class="align-content-center">
                         
                         <MudTableSortSelector 
-                            T="Book" 
+                            T="Book"
                             Table="BooksDataProvider.Table"
-                            Variant="Variant.Outlined"
-                            Margin="Margin.Dense">
+                            Placeholder="Sort by"
+                            Clearable="true"
+                            InputVariant="Variant.Outlined"
+                            InputMargin="Margin.Dense"
+                            ButtonVariant="Variant.Outlined"
+                            ButtonSize="Size.Medium"
+                            ButtonClass="ml-2 sort-direction-button">
                                 <MudTableSortSelectorItem T="Book" SortLabel="id">ID</MudTableSortSelectorItem>
                                 <MudTableSortSelectorItem T="Book" SortLabel="author">Author</MudTableSortSelectorItem>
                                 <MudTableSortSelectorItem T="Book" SortLabel="title">Title</MudTableSortSelectorItem>

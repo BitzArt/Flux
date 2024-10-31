@@ -34,39 +34,52 @@ public partial class MudTableSortSelector<T>
     public MudTable<T>? Table { get; set; }
 
     /// <summary>
-    /// The text displayed in the input if no <see cref="Value"/> is specified. <br/>
-    /// Default is "Sort by".
+    /// The text displayed in the input if no <see cref="Value"/> is specified.
     /// </summary>
     [Parameter]
-    public string Placeholder { get; set; } = "Sort by";
+    public string? Placeholder { get; set; }
 
     /// <summary>
-    /// The apperiance varation of the input and sort direction button.
-    /// Default is <see cref="Variant.Text"/>.
+    /// Show the clear button in the input.
     /// </summary>
     [Parameter]
-    public Variant Variant { get; set; } = Variant.Text;
+    public bool Clearable { get; set; }
+
+    /// <summary>
+    /// The apperiance varation of the input.
+    /// </summary>
+    [Parameter]
+    public Variant InputVariant { get; set; }
 
     /// <summary>
     /// The amount of vertical spacing for the input.
-    /// Default is <see cref="Margin.Normal"/>.
     /// </summary>
     [Parameter]
-    public Margin Margin { get; set; } = Margin.Normal;
+    public Margin InputMargin { get; set; }
 
     /// <summary>
-    /// Show the clear button in the input. 
-    /// Default is <see langword="true"/>.
+    /// CSS classes applied to the input.
     /// </summary>
     [Parameter]
-    public bool Clearable { get; set; } = true;
+    public string? InputClass { get; set; }
+
+    /// <summary>
+    /// The apperiance varation of the sort direction button.
+    /// </summary>
+    [Parameter]
+    public Variant ButtonVariant { get; set; }
 
     /// <summary>
     /// The size of the sort direction button. 
-    /// Default is <see cref="Size.Medium"/>.
     /// </summary>
     [Parameter]
-    public Size ButtonSize { get; set; } = Size.Medium;
+    public Size ButtonSize { get; set; }
+
+    /// <summary>
+    /// CSS classes applied to the sort direction button.
+    /// </summary>
+    [Parameter]
+    public string? ButtonClass { get; set; }
 
     private MudSelect<MudTableSortSelectorItemValue<T>> _select;
 
