@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using static MudBlazor.Colors;
 
 namespace MudBlazor;
 
@@ -33,6 +32,54 @@ public partial class MudTableSortSelector<T>
 
     [Parameter]
     public MudTable<T>? Table { get; set; }
+
+    /// <summary>
+    /// The text displayed in the input if no <see cref="Value"/> is specified.
+    /// </summary>
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    /// <summary>
+    /// Show the clear button in the input.
+    /// </summary>
+    [Parameter]
+    public bool Clearable { get; set; }
+
+    /// <summary>
+    /// The apperiance varation of the input.
+    /// </summary>
+    [Parameter]
+    public Variant InputVariant { get; set; }
+
+    /// <summary>
+    /// The amount of vertical spacing for the input.
+    /// </summary>
+    [Parameter]
+    public Margin InputMargin { get; set; }
+
+    /// <summary>
+    /// CSS classes applied to the input.
+    /// </summary>
+    [Parameter]
+    public string? InputClass { get; set; }
+
+    /// <summary>
+    /// The apperiance varation of the sort direction button.
+    /// </summary>
+    [Parameter]
+    public Variant ButtonVariant { get; set; }
+
+    /// <summary>
+    /// The size of the sort direction button. 
+    /// </summary>
+    [Parameter]
+    public Size ButtonSize { get; set; }
+
+    /// <summary>
+    /// CSS classes applied to the sort direction button.
+    /// </summary>
+    [Parameter]
+    public string? ButtonClass { get; set; }
 
     private MudSelect<MudTableSortSelectorItemValue<T>> _select;
 

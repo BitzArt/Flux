@@ -4,6 +4,14 @@
     padding-inline-end: 1rem !important;
 }
 
+/* Hide defaul table sorting on small devices */
 .books-page ::deep .mud-table .mud-table-smalldevices-sortselect {
-    padding-top: 1rem !important;
+    display: none !important;
+}
+
+/* Apply custom styles to the sort direction button */
+::deep .sort-direction-button {
+    border-color: var(--mud-palette-lines-inputs) !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
 }

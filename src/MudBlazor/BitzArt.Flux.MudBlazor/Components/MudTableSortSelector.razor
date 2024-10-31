@@ -1,23 +1,31 @@
 ﻿@namespace MudBlazor
 @typeparam T
 
-<div class="mud-table-sort-selector">
+<div class="d-flex align-center">
     <CascadingValue TValue="MudTableSortSelector<T>" Value="this" IsFixed="true">
-    <MudSelect 
-        T="MudTableSortSelectorItemValue<T>"
-        @bind-Value="Value"
-        @ref="_select">
-            @_childContent
-    </MudSelect>
+        <MudSelect 
+            T="MudTableSortSelectorItemValue<T>"
+            Placeholder="@Placeholder"
+            Variant="InputVariant"
+            Margin="InputMargin"
+            Clearable="Clearable"
+            FullWidth="true"
+            Class="@InputClass"
+            @bind-Value="Value"
+            @ref="_select">
+                @_childContent
+        </MudSelect>
 
-    @if (!HideSortButton)
-    {
-        <MudIconButton 
-            Icon="@Icons.Material.Filled.Sort"
-            Variant="Variant.Outlined"
-            Class="@(SortDirection == MudBlazor.SortDirection.Ascending ? "" : "invert")" 
-            OnClick="ToggleSortDirectionAsync">
-        </MudIconButton>
-    }
-</CascadingValue>
+        @if (!HideSortButton)
+        {
+            <MudIconButton 
+                Icon="@Icons.Material.Filled.Sort"
+                Variant="ButtonVariant"
+                Size="ButtonSize"
+                Class="@ButtonClass"
+                Style="@(SortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"
+                OnClick="ToggleSortDirectionAsync">
+            </MudIconButton>
+        }
+    </CascadingValue>
 </div>
