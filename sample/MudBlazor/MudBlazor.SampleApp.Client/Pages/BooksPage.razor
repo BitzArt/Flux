@@ -55,14 +55,19 @@
 
                     <MudItem xs="12" sm="4" md="3" Class="align-content-center">
                         
-                        <MudTableSortSelector T="Book" Table="BooksDataProvider.Table">
-                            <MudTableSortSelectorItem T="Book" SortLabel="id">ID</MudTableSortSelectorItem>
-                            <MudTableSortSelectorItem T="Book" SortLabel="author">Author</MudTableSortSelectorItem>
-                            <MudTableSortSelectorItem T="Book" SortLabel="title">Title</MudTableSortSelectorItem>
-                            <MudTableSortSelectorItem T="Book" SortLabel="publish">Publish</MudTableSortSelectorItem>
+                        <MudTableSortSelector 
+                            T="Book" 
+                            Table="BooksDataProvider.Table"
+                            SelectVariant="Variant.Outlined"
+                            SelectMargin="Margin.Dense"
+                            ButtonVariant="Variant.Outlined">
+                                <MudTableSortSelectorItem T="Book" SortLabel="id">ID</MudTableSortSelectorItem>
+                                <MudTableSortSelectorItem T="Book" SortLabel="author">Author</MudTableSortSelectorItem>
+                                <MudTableSortSelectorItem T="Book" SortLabel="title">Title</MudTableSortSelectorItem>
+                                <MudTableSortSelectorItem T="Book" SortLabel="publish">Publish</MudTableSortSelectorItem>
 
-                            <MudTableSortSelectorItem T="Book" SortLabel="publish" SortDirection="SortDirection.Ascending">Oldest</MudTableSortSelectorItem>
-                            <MudTableSortSelectorItem T="Book" SortLabel="publish" SortDirection="SortDirection.Descending">Newest</MudTableSortSelectorItem>
+                                <MudTableSortSelectorItem T="Book" SortLabel="publish" SortDirection="SortDirection.Ascending">Oldest</MudTableSortSelectorItem>
+                                <MudTableSortSelectorItem T="Book" SortLabel="publish" SortDirection="SortDirection.Descending">Newest</MudTableSortSelectorItem>
                         </MudTableSortSelector>
 
                     </MudItem>

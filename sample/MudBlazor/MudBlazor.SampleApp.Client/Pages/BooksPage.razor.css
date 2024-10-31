@@ -4,6 +4,7 @@
     padding-inline-end: 1rem !important;
 }
 
+/* Hide defaul table sorting on small devices */
 .books-page ::deep .mud-table .mud-table-smalldevices-sortselect {
-    padding-top: 1rem !important;
+    display: none !important;
 }
