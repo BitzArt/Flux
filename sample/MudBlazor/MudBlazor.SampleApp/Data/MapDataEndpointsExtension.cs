@@ -6,8 +6,17 @@ internal static class MapDataEndpointsExtension
 {
     public static void MapDataEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/authors", ()
-            => Results.Ok(WebApiData.Authors));
+        app.MapGet("/api/authors", (
+            [FromQuery] int offset = 0,
+            [FromQuery] int limit = 5,
+            [FromQuery] string? search = null) =>
+        {
+            var q = WebApiData.Authors.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search)) q = q.Where(x => x.Name!.Contains(search, StringComparison.OrdinalIgnoreCase));
+
+            return Results.Ok(q.ToPage(offset, limit));
+        });
 
         app.MapGet("/api/authors/{id:int}", (
             [FromRoute] int id)

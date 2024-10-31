@@ -54,4 +54,10 @@ public partial class BooksPage : ComponentBase
         _search = value;
         await BooksDataProvider.ResetPageAndReloadAsync();
     }
+
+    private async Task<object[]> SetParameters(string searchString, CancellationToken cancellationToken)
+    {
+        await Task.Yield();
+        return [$"?search={searchString}"];
+    }
 }
