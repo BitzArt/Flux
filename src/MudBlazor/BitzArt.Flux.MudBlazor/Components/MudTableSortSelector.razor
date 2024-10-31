@@ -2,6 +2,7 @@
 @typeparam T
 
 <div class="d-flex align-center">
+    @{ UpdateValue(); }
     <CascadingValue TValue="MudTableSortSelector<T>" Value="this" IsFixed="true">
         <MudSelect 
             T="MudTableSortSelectorItemValue<T>"

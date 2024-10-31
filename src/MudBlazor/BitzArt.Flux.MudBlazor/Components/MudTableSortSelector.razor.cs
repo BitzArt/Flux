@@ -93,6 +93,7 @@ public partial class MudTableSortSelector<T>
             _value = value;
             _ = OnValueChangedAsync(value);
         }
+
     }
 
     private MudTableSortSelectorItemValue<T>? _value;
@@ -102,6 +103,8 @@ public partial class MudTableSortSelector<T>
     private Dictionary<ValueSignature, MudTableSortSelectorItemValue<T>> _signatureMap { get; set; } = [];
 
     private record ValueSignature(string? SortLabel, SortDirection? SortDirection);
+
+    //private Dictionary<MudTableSortLabel<T>,  MudTableSortSelectorItemValue<T>> _sortLabelMap { get; set; } = [];
 
     private bool _rememberSortDirection;
 
@@ -116,8 +119,11 @@ public partial class MudTableSortSelector<T>
 
     protected override void OnAfterRender(bool firstRender)
     {
+        if (!firstRender) return;
+
         _isQuiescent = true;
         _select.ChildContent = _quiescentChildContent;
+
         StateHasChanged();
     }
 
@@ -126,7 +132,9 @@ public partial class MudTableSortSelector<T>
         _items.Add(item);
 
         var signature = new ValueSignature(item.SortLabel, item.SortDirection);
-        _signatureMap.Add(signature, item.Value);
+        _signatureMap[signature] = item.Value;
+
+        //_sortLabelMap[item.Value.SortLabel] = item.Value;
     }
 
     private async Task OnValueChangedAsync(MudTableSortSelectorItemValue<T>? value)
@@ -186,6 +194,59 @@ public partial class MudTableSortSelector<T>
 
         Value = oppositeValue;
     }
+
+    private ValueSignature? previousValueSignature;
+
+    private void UpdateValue()
+    {
+        if (Table is null) return;
+
+        var currentSortLabel = Table.Context.CurrentSortLabel;
+
+        if (currentSortLabel is null || currentSortLabel.SortDirection == MudBlazor.SortDirection.None)
+        {
+            SortDirection = MudBlazor.SortDirection.Ascending;
+            if (Value is not null) Value = null;
+            return;
+        }
+
+        if (currentSortLabel.SortLabel is null)
+        {
+            SortDirection = currentSortLabel.SortDirection == MudBlazor.SortDirection.Descending
+                ? MudBlazor.SortDirection.Descending
+                : MudBlazor.SortDirection.Ascending;
+
+            if (Value is not null) Value = null;
+            return;
+        }
+
+        if (previousValueSignature is not null
+            && previousValueSignature.SortLabel == currentSortLabel.SortLabel
+            && previousValueSignature.SortDirection == currentSortLabel.SortDirection)
+            return;
+
+        var fullMatchSignature = new ValueSignature(currentSortLabel.SortLabel, currentSortLabel.SortDirection);
+        previousValueSignature = fullMatchSignature;
+        var fullMatchFound = _signatureMap.TryGetValue(fullMatchSignature, out var fullMatchValue);
+
+        if (fullMatchFound)
+        {
+            Value = fullMatchValue;
+            return;
+        }
+
+        var sortLabelMatchSignature = new ValueSignature(currentSortLabel.SortLabel, null);
+        var sortLabelMatchFound = _signatureMap.TryGetValue(sortLabelMatchSignature, out var sortLabelMatchValue);
+
+        if (sortLabelMatchFound)
+        {
+            SortDirection = currentSortLabel.SortDirection;
+            Value = sortLabelMatchValue;
+            return;
+        }
+
+        if (Value is not null) Value = null;
+    }
 }
 
 
@@ -199,5 +260,13 @@ public static class SortDirectionExtensions
             SortDirection.Descending => SortDirection.Ascending,
             _ => throw new InvalidOperationException($"Sort direction '{direction}' can not be inverted.")
         };
+    }
+}
+
+public static class Ext
+{
+    public static bool EqualValues<T>(this MudTableSortLabel<T> oldValue, MudTableSortLabel<T> newValue)
+    {
+        return oldValue.SortLabel == newValue.SortLabel && oldValue.SortDirection == newValue.SortDirection;
     }
 }
