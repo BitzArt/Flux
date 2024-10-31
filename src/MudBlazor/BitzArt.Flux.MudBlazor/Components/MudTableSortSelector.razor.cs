@@ -99,6 +99,10 @@ public partial class MudTableSortSelector<T>
 
     private ICollection<MudTableSortSelectorItem<T>> _items { get; set; } = [];
 
+    private Dictionary<ValueSignature, MudTableSortSelectorItemValue<T>> _signatureMap { get; set; } = [];
+
+    private record ValueSignature(string? SortLabel, SortDirection? SortDirection);
+
     private bool _rememberSortDirection;
 
     protected override void OnInitialized()
@@ -120,6 +124,9 @@ public partial class MudTableSortSelector<T>
     public void AddItem(MudTableSortSelectorItem<T> item)
     {
         _items.Add(item);
+
+        var signature = new ValueSignature(item.SortLabel, item.SortDirection);
+        _signatureMap.Add(signature, item.Value);
     }
 
     private async Task OnValueChangedAsync(MudTableSortSelectorItemValue<T>? value)
@@ -162,7 +169,22 @@ public partial class MudTableSortSelector<T>
     {
         SortDirection = SortDirection!.Value.Inverse();
 
+        TryInvertValue();
+
         await OnValueChangedAsync(Value);
+    }
+
+    private void TryInvertValue()
+    {
+        // If no value is selected, toggling the sort direction should not cause any value to be selected.
+        if (Value is null) return;
+
+        var targetSignature = new ValueSignature(Value.SortLabel.SortLabel, SortDirection);
+        var oppositeFound = _signatureMap.TryGetValue(targetSignature, out var oppositeValue);
+
+        if (!oppositeFound) return;
+
+        Value = oppositeValue;
     }
 }
 
