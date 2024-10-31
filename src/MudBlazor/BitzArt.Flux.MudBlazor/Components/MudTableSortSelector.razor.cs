@@ -41,7 +41,7 @@ public partial class MudTableSortSelector<T>
     public string Placeholder { get; set; } = "Sort by";
 
     /// <summary>
-    /// The apperiance varation of the input and button.
+    /// The apperiance varation of the input and sort direction button.
     /// Default is <see cref="Variant.Text"/>.
     /// </summary>
     [Parameter]
@@ -62,7 +62,7 @@ public partial class MudTableSortSelector<T>
     public bool Clearable { get; set; } = true;
 
     /// <summary>
-    /// The size of the button. 
+    /// The size of the sort direction button. 
     /// Default is <see cref="Size.Medium"/>.
     /// </summary>
     [Parameter]
