@@ -1,0 +1,34 @@
+﻿@namespace MudBlazor
+@typeparam T
+
+<div class="d-flex align-center">
+    @{ UpdateValue(); }
+    <CascadingValue TValue="MudTableSortSelect<T>" Value="this" IsFixed="true">
+        <MudSelect 
+            T="MudTableSortSelectItemValue<T>"
+            Placeholder="@Placeholder"
+            Variant="InputVariant"
+            Margin="InputMargin"
+            Clearable="Clearable"
+            FullWidth="InputFullWidth"
+            Class="@InputClass"
+            AnchorOrigin="AnchorOrigin"
+            TransformOrigin="TransformOrigin"
+            @bind-Value="Value"
+            @ref="_select">
+                @_childContent
+        </MudSelect>
+
+        @if (!HideSortButton)
+        {
+            <MudIconButton 
+                Icon="@Icons.Material.Filled.Sort"
+                Variant="ButtonVariant"
+                Size="ButtonSize"
+                Class="@ButtonClass"
+                Style="@(SortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"
+                OnClick="ToggleSortDirectionAsync">
+            </MudIconButton>
+        }
+    </CascadingValue>
+</div>

@@ -3,92 +3,111 @@
 @if (_initialized)
 {
     <div class="books-page">
-        <MudBlazor.MudTable
+        <MudTable
             @ref="BooksDataProvider.Table"
             T="Book"
             ServerData="BooksDataProvider.Data"
-            Loading="BooksDataProvider.IsLoading"
-        >
-            <ToolBarContent>
-                <MudGrid Spacing="4" Class="pt-2">
-                    <MudItem xs="12" sm="12" md="6" Class="align-content-center">
-                        <MudText Typo="Typo.h4">Books</MudText>
-                    </MudItem>
+            Loading="BooksDataProvider.IsLoading">
+                <ToolBarContent>
+                    <MudGrid Spacing="4" Class="pt-2">
+                        <MudItem xs="12" sm="12" md="3" Class="align-content-center">
+                            <MudText Typo="Typo.h4">Books</MudText>
+                        </MudItem>
 
-                    <MudItem xs="12" sm="6" md="3" Class="align-content-center">
-                        <MudSelect 
-                            T="Author"
-                            Placeholder="Author"
-                            Variant="Variant.Outlined"
-                            Margin="Margin.Dense"
-                            AnchorOrigin="Origin.BottomCenter"
-                            ValueChanged="OnAuthorSelectedAsync"
-                        Class="pt-0">
+                        <MudItem xs="12" sm="4" md="3" Class="align-content-center">
+                            <MudSelect 
+                                T="Author"
+                                Placeholder="Author"
+                                Variant="Variant.Outlined"
+                                Margin="Margin.Dense"
+                                AnchorOrigin="Origin.BottomCenter"
+                                ValueChanged="OnAuthorSelectedAsync"
+                                Class="pt-0">
 
-                            <MudSelectItem Value="(Author)null!">Select Author</MudSelectItem>
-                            @foreach (var author in _authors)
-                            {
-                                <MudSelectItem Value="@author">@author.Name</MudSelectItem>
-                            }
+                                <MudSelectItem Value="(Author)null!">Select Author</MudSelectItem>
+                                    @foreach (var author in _authors)
+                                    {
+                                        <MudSelectItem Value="@author">@author.Name</MudSelectItem>
+                                    }
 
-                        </MudSelect>
-                    </MudItem>
+                            </MudSelect>
+                        </MudItem>
 
-                    <MudItem xs="12" sm="6" md="3" Class="align-content-center">
-                        <MudTextField
-                            T="string"
-                            DebounceInterval="300"
-                            OnDebounceIntervalElapsed="OnSearchAsync"
-                            Placeholder="Search"
-                                      Variant="Variant.Outlined"
-                            Margin="Margin.Dense"
-                            Adornment="Adornment.Start"
-                            AdornmentIcon="@Icons.Material.Filled.Search"
-                            IconSize="Size.Medium">
-                        </MudTextField>
-                    </MudItem>
-                </MudGrid>
-            </ToolBarContent>
+                        <MudItem xs="12" sm="4" md="3" Class="align-content-center">
+                            <MudTextField
+                                T="string"
+                                DebounceInterval="300"
+                                OnDebounceIntervalElapsed="OnSearchAsync"
+                                Placeholder="Search"
+                                Variant="Variant.Outlined"
+                                Margin="Margin.Dense"
+                                Adornment="Adornment.Start"
+                                AdornmentIcon="@Icons.Material.Filled.Search"
+                                IconSize="Size.Medium">
+                            </MudTextField>
+                        </MudItem>
 
-            <HeaderContent>
-                <MudTh>
-                    <MudTableSortLabel T="Book" SortLabel="id">
-                        ID
-                    </MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel T="Book" SortLabel="author">
-                        Author
-                    </MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel T="Book" SortLabel="title">
-                        Title
-                    </MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel T="Book" SortLabel="publish">
-                        Publish Year
-                    </MudTableSortLabel>
-                </MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="ID">
-                    @context.Id
+                        <MudItem xs="12" sm="4" md="3" Class="align-content-center">
+                            <MudTableSortSelect 
+                                T="Book"
+                                Table="BooksDataProvider.Table"
+                                Placeholder="Sort by"
+                                InputVariant="Variant.Outlined"
+                                InputMargin="Margin.Dense"
+                                AnchorOrigin="Origin.BottomCenter"
+                                ButtonVariant="Variant.Outlined"
+                                ButtonClass="ml-2 sort-direction-button">
+                                    <MudTableSortSelectItem T="Book" SortLabel="id">ID</MudTableSortSelectItem>
+                                    <MudTableSortSelectItem T="Book" SortLabel="author">Author</MudTableSortSelectItem>
+                                    <MudTableSortSelectItem T="Book" SortLabel="title">Title</MudTableSortSelectItem>
+                                    <MudTableSortSelectItem T="Book" SortLabel="publish">Publish</MudTableSortSelectItem>
+
+                                    <MudTableSortSelectItem T="Book" SortLabel="publish" SortDirection="SortDirection.Ascending">Oldest</MudTableSortSelectItem>
+                                    <MudTableSortSelectItem T="Book" SortLabel="publish" SortDirection="SortDirection.Descending">Newest</MudTableSortSelectItem>
+                            </MudTableSortSelect>
+                        </MudItem>
+                    </MudGrid>
+                </ToolBarContent>
+
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel T="Book" SortLabel="id">
+                            ID
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel T="Book" SortLabel="author">
+                            Author
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel T="Book" SortLabel="title">
+                            Title
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel T="Book" SortLabel="publish">
+                            Publish Year
+                        </MudTableSortLabel>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="ID">
+                        @context.Id
+                        </MudTd>
+                    <MudTd DataLabel="Author">
+                        @_authors.FirstOrDefault(x => x.Id == context.AuthorId)?.Name
                     </MudTd>
-                <MudTd DataLabel="Author">
-                    @_authors.FirstOrDefault(x => x.Id == context.AuthorId)?.Name
-                </MudTd>
-                <MudTd DataLabel="Title">
-                    @context.Title
-                </MudTd>
-                <MudTd DataLabel="Publish Year">
-                    @context.PublishYearDisplay
-                </MudTd>
-            </RowTemplate>
-            <PagerContent>
-                <MudTablePager PageSizeOptions="new int[] { 5 }" HideRowsPerPage="true" />
-            </PagerContent>
-        </MudBlazor.MudTable>
+                    <MudTd DataLabel="Title">
+                        @context.Title
+                    </MudTd>
+                    <MudTd DataLabel="Publish Year">
+                        @context.PublishYearDisplay
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[] { 5 }" HideRowsPerPage="true" />
+                </PagerContent>
+        </MudTable>
     </div>
 }

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="MudBlazor.SampleApp.Client.bundle.scp.css" />
 
     <link rel="icon" type="image/ico" href="favicon.ico" />
-    <HeadOutlet @rendermode="InteractiveWebAssembly" />
+    <HeadOutlet @rendermode="new InteractiveWebAssemblyRenderMode(prerender: false)" />
 </head>
 
 <body>
