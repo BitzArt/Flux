@@ -6,7 +6,6 @@ namespace MudBlazor;
 
 /// <summary>
 /// An autocomplete component that integrates with a FluxSet context to dynamically load and filter data items based on user input.
-/// WARNING: Accessing or modifying the `SearchFunc` method is restricted and should remain unaltered.
 /// </summary>
 /// <typeparam name="T">The type of the data item.</typeparam>
 public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
@@ -22,6 +21,19 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     /// </summary>
     [Parameter]
     public Func<string, CancellationToken, Task<object[]>>? GetParameters { get; set; }
+
+    /// <inheritdoc cref="MudAutocomplete{T}.SearchFunc"/>
+    public new Func<string, CancellationToken, Task<IEnumerable<T>>> SearchFunc
+    {
+        get
+        {
+            return base.SearchFunc;
+        }
+        set
+        {
+            throw new InvalidOperationException($"{nameof(MudFluxSetAutoComplete<T>)} does not allow configuring SearchFunc. Use {nameof(GetParameters)} instead");
+        }
+    }
 
     [Inject]
     private IServiceProvider ServiceProvider { get; set; }
