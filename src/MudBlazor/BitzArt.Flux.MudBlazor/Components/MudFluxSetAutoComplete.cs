@@ -6,6 +6,7 @@ namespace MudBlazor;
 
 /// <summary>
 /// An autocomplete component that integrates with a FluxSet context to dynamically load and filter data items based on user input.
+/// WARNING: Accessing or modifying the `SearchFunc` method is restricted and should remain unaltered.
 /// </summary>
 /// <typeparam name="T">The type of the data item.</typeparam>
 public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
@@ -40,14 +41,13 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     /// </summary>
     protected override void OnInitialized()
     {
-        if (Context is null)
-            Context = ServiceProvider.GetRequiredService<IFluxSetContext<T>>();
+        Context ??= ServiceProvider.GetRequiredService<IFluxSetContext<T>>();
     }
 
     private async Task<IEnumerable<T>> SearchAsync(string searchText, CancellationToken cancellationToken)
     {
         var parameters = await GetParametersAsync(searchText, cancellationToken);
-        var page = await Context.GetPageAsync(0, 10, parameters);
+        var page = await Context.GetPageAsync(0, MaxItems ?? 10, parameters);
 
         return page.Data!;
     }
