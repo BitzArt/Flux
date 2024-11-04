@@ -14,13 +14,13 @@ public partial class MudTableSortSelectItem<T>
     public required RenderFragment ChildContent { get; set; }
 
     /// <summary>
-    /// The sort label value of this <see cref="MudTableSortSelectItem{T}"/>.
+    /// Sort label of this <see cref="MudTableSortSelectItem{T}"/>.
     /// </summary>
     [Parameter]
     public string? SortLabel { get; set; }
 
     /// <summary>
-    /// The sort direction of this <see cref="MudTableSortSelectItem{T}"/>.
+    /// Sort direction of this <see cref="MudTableSortSelectItem{T}"/>.
     /// </summary>
     [Parameter]
     public SortDirection? SortDirection { get; set; }
