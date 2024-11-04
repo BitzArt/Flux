@@ -44,6 +44,12 @@ public partial class MudTableSortSelect<T>
     public string? InputClass { get; set; }
 
     /// <summary>
+    /// Anchor origin point to determen where the popover will open from.
+    /// </summary>
+    [Parameter]
+    public Origin AnchorOrigin { get; set; }
+
+    /// <summary>
     /// The apperiance varation of the sort direction button.
     /// </summary>
     [Parameter]
