@@ -25,10 +25,10 @@
                                 Class="pt-0">
 
                                 <MudSelectItem Value="(Author)null!">Select Author</MudSelectItem>
-                                @foreach (var author in _authors)
-                                {
-                                    <MudSelectItem Value="@author">@author.Name</MudSelectItem>
-                                }
+                                    @foreach (var author in _authors)
+                                    {
+                                        <MudSelectItem Value="@author">@author.Name</MudSelectItem>
+                                    }
 
                             </MudSelect>
                         </MudItem>
@@ -52,12 +52,10 @@
                                 T="Book"
                                 Table="BooksDataProvider.Table"
                                 Placeholder="Sort by"
-                                Clearable="true"
                                 InputVariant="Variant.Outlined"
                                 InputMargin="Margin.Dense"
                                 AnchorOrigin="Origin.BottomCenter"
                                 ButtonVariant="Variant.Outlined"
-                                ButtonSize="Size.Medium"
                                 ButtonClass="ml-2 sort-direction-button">
                                     <MudTableSortSelectItem T="Book" SortLabel="id">ID</MudTableSortSelectItem>
                                     <MudTableSortSelectItem T="Book" SortLabel="author">Author</MudTableSortSelectItem>

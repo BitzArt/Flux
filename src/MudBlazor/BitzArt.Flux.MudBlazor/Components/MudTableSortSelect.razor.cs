@@ -23,19 +23,25 @@ public partial class MudTableSortSelect<T>
     /// Show the clear button in the input.
     /// </summary>
     [Parameter]
-    public bool Clearable { get; set; }
+    public bool Clearable { get; set; } = true;
 
     /// <summary>
     /// The apperiance varation of the input.
     /// </summary>
     [Parameter]
-    public Variant InputVariant { get; set; }
+    public Variant InputVariant { get; set; } = Variant.Text;
 
     /// <summary>
     /// The amount of vertical spacing for the input.
     /// </summary>
     [Parameter]
-    public Margin InputMargin { get; set; }
+    public Margin InputMargin { get; set; } = Margin.None;
+
+    /// <summary>
+    /// /// Fills the full width of the parent container.
+    /// </summary>
+    [Parameter]
+    public bool InputFullWidth { get; set; } = true;
 
     /// <summary>
     /// CSS classes applied to the input.
@@ -47,19 +53,25 @@ public partial class MudTableSortSelect<T>
     /// Anchor origin point to determen where the popover will open from.
     /// </summary>
     [Parameter]
-    public Origin AnchorOrigin { get; set; }
+    public Origin AnchorOrigin { get; set; } = Origin.TopCenter;
+
+    /// <summary>
+    /// Transform origin point for the popover.
+    /// </summary>
+    [Parameter]
+    public Origin TransformOrigin { get; set; } = Origin.TopCenter;
 
     /// <summary>
     /// The apperiance varation of the sort direction button.
     /// </summary>
     [Parameter]
-    public Variant ButtonVariant { get; set; }
+    public Variant ButtonVariant { get; set; } = Variant.Text;
 
     /// <summary>
     /// The size of the sort direction button. 
     /// </summary>
     [Parameter]
-    public Size ButtonSize { get; set; }
+    public Size ButtonSize { get; set; } = Size.Medium;
 
     /// <summary>
     /// CSS classes applied to the sort direction button.
