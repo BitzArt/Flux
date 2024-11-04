@@ -36,17 +36,15 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     }
 
     [Inject]
-    private IServiceProvider ServiceProvider { get; set; }
+    private IServiceProvider ServiceProvider { get; set; } = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MudFluxSetAutoComplete{T}"/> class and sets up the default search function.
     /// </summary>
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public MudFluxSetAutoComplete()
     {
         base.SearchFunc = SearchAsync;
     }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     /// <summary>
     /// Called when the component is initialized; ensures that the required data context is available, injecting it if necessary.
