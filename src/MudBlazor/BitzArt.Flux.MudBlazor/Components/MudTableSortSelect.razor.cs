@@ -2,34 +2,14 @@
 
 namespace MudBlazor;
 
-public partial class MudTableSortSelector<T>
+/// <summary>
+/// <see cref="MudTable{T}"/> sort selection component.
+/// </summary>
+public partial class MudTableSortSelect<T>
 {
-    [Parameter, EditorRequired]
-    public required RenderFragment ChildContent { get; set; }
-
-    [Parameter]
-    public bool HideSortButton { get; set; } = false;
-
-    private bool _isQuiescent = false;
-    private RenderFragment _childContent => _isQuiescent ? _quiescentChildContent : ChildContent;
-
-    private RenderFragment _quiescentChildContent => builder =>
-    {
-        var counter = 0;
-        for (var i = 0; i < _items.Count; i++)
-        {
-            var item = _items.ElementAt(i);
-
-            builder.OpenComponent<MudSelectItem<MudTableSortSelectorItemValue<T>>>(counter++);
-            builder.AddAttribute(counter++, "Value", item.Value);
-            builder.AddAttribute(counter++, "ChildContent", item.ChildContent);
-            builder.CloseComponent();
-        }
-    };
-
-    [Parameter]
-    public EventCallback<MudTableSortLabel<T>> SortChanged { get; set; }
-
+    /// <summary>
+    /// <see cref="MudTable{T}"/> associated with this <see cref="MudTableSortSelect{T}"/>.
+    /// </summary>
     [Parameter]
     public MudTable<T>? Table { get; set; }
 
@@ -81,11 +61,48 @@ public partial class MudTableSortSelector<T>
     [Parameter]
     public string? ButtonClass { get; set; }
 
-    private MudSelect<MudTableSortSelectorItemValue<T>> _select;
+    /// <summary>
+    /// Hide the sort direction button.
+    /// </summary>
+    [Parameter]
+    public bool HideSortButton { get; set; } = false;
 
+    /// <summary>
+    /// The content to display within this <see cref="MudTableSortSelect{T}"/>.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
+
+    private bool _isQuiescent = false;
+
+    private RenderFragment _childContent => _isQuiescent ? _quiescentChildContent : ChildContent;
+
+    private RenderFragment _quiescentChildContent => builder =>
+    {
+        var counter = 0;
+        for (var i = 0; i < _items.Count; i++)
+        {
+            var item = _items.ElementAt(i);
+
+            builder.OpenComponent<MudSelectItem<MudTableSortSelectItemValue<T>>>(counter++);
+            builder.AddAttribute(counter++, "Value", item.Value);
+            builder.AddAttribute(counter++, "ChildContent", item.ChildContent);
+            builder.CloseComponent();
+        }
+    };
+
+    /// <summary>
+    /// Occurs when sorting is changed.
+    /// </summary>
+    [Parameter]
+    public EventCallback<MudTableSortLabel<T>> SortChanged { get; set; }
+
+    /// <summary>
+    /// Current sort direction of this <see cref="MudTableSortSelect{T}"/>.
+    /// </summary>
     public SortDirection? SortDirection { get; set; }
 
-    internal MudTableSortSelectorItemValue<T>? Value
+    internal MudTableSortSelectItemValue<T>? Value
     {
         get => _value;
         set
@@ -93,21 +110,23 @@ public partial class MudTableSortSelector<T>
             _value = value;
             _ = OnValueChangedAsync(value);
         }
-
     }
 
-    private MudTableSortSelectorItemValue<T>? _value;
+    private MudTableSortSelectItemValue<T>? _value;
 
-    private ICollection<MudTableSortSelectorItem<T>> _items { get; set; } = [];
+    private ICollection<MudTableSortSelectItem<T>> _items { get; set; } = [];
 
-    private Dictionary<ValueSignature, MudTableSortSelectorItemValue<T>> _signatureMap { get; set; } = [];
+    private Dictionary<ValueSignature, MudTableSortSelectItemValue<T>> _signatureMap { get; set; } = [];
 
-    private record ValueSignature(string? SortLabel, SortDirection? SortDirection);
-
-    //private Dictionary<MudTableSortLabel<T>,  MudTableSortSelectorItemValue<T>> _sortLabelMap { get; set; } = [];
+    private ValueSignature? previousValueSignature;
 
     private bool _rememberSortDirection;
 
+    private MudSelect<MudTableSortSelectItemValue<T>> _select = null!;
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     protected override void OnInitialized()
     {
         if (!HideSortButton)
@@ -117,6 +136,9 @@ public partial class MudTableSortSelector<T>
         }
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     protected override void OnAfterRender(bool firstRender)
     {
         if (!firstRender) return;
@@ -127,17 +149,18 @@ public partial class MudTableSortSelector<T>
         StateHasChanged();
     }
 
-    public void AddItem(MudTableSortSelectorItem<T> item)
+    /// <summary>
+    /// Register the <paramref name="item"/> in this <see cref="MudTableSortSelect{T}"/>.
+    /// </summary>
+    internal void AddItem(MudTableSortSelectItem<T> item)
     {
         _items.Add(item);
 
         var signature = new ValueSignature(item.SortLabel, item.SortDirection);
         _signatureMap[signature] = item.Value;
-
-        //_sortLabelMap[item.Value.SortLabel] = item.Value;
     }
 
-    private async Task OnValueChangedAsync(MudTableSortSelectorItemValue<T>? value)
+    private async Task OnValueChangedAsync(MudTableSortSelectItemValue<T>? value)
     {
         var sortLabel = GetSortLabel(value);
         await OnValueChangedAsync(sortLabel);
@@ -154,10 +177,8 @@ public partial class MudTableSortSelector<T>
         await InvokeAsync(StateHasChanged);
     }
 
-    private MudTableSortLabel<T> GetSortLabel(MudTableSortSelectorItemValue<T>? value)
+    private MudTableSortLabel<T> GetSortLabel(MudTableSortSelectItemValue<T>? value)
     {
-        //_selectedItem = item;
-
         if (value is null)
         {
             return new MudTableSortLabel<T>
@@ -175,7 +196,7 @@ public partial class MudTableSortSelector<T>
 
     private async Task ToggleSortDirectionAsync()
     {
-        SortDirection = SortDirection!.Value.Inverse();
+        SortDirection = SortDirection!.Value.Invert();
 
         TryInvertValue();
 
@@ -194,8 +215,6 @@ public partial class MudTableSortSelector<T>
 
         Value = oppositeValue;
     }
-
-    private ValueSignature? previousValueSignature;
 
     private void UpdateValue()
     {
@@ -247,26 +266,6 @@ public partial class MudTableSortSelector<T>
 
         if (Value is not null) Value = null;
     }
-}
 
-
-public static class SortDirectionExtensions
-{
-    public static SortDirection Inverse(this SortDirection direction)
-    {
-        return direction switch
-        {
-            SortDirection.Ascending => SortDirection.Descending,
-            SortDirection.Descending => SortDirection.Ascending,
-            _ => throw new InvalidOperationException($"Sort direction '{direction}' can not be inverted.")
-        };
-    }
-}
-
-public static class Ext
-{
-    public static bool EqualValues<T>(this MudTableSortLabel<T> oldValue, MudTableSortLabel<T> newValue)
-    {
-        return oldValue.SortLabel == newValue.SortLabel && oldValue.SortDirection == newValue.SortDirection;
-    }
+    private record ValueSignature(string? SortLabel, SortDirection? SortDirection);
 }

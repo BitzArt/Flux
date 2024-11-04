@@ -3,9 +3,9 @@
 
 <div class="d-flex align-center">
     @{ UpdateValue(); }
-    <CascadingValue TValue="MudTableSortSelector<T>" Value="this" IsFixed="true">
+    <CascadingValue TValue="MudTableSortSelect<T>" Value="this" IsFixed="true">
         <MudSelect 
-            T="MudTableSortSelectorItemValue<T>"
+            T="MudTableSortSelectItemValue<T>"
             Placeholder="@Placeholder"
             Variant="InputVariant"
             Margin="InputMargin"
