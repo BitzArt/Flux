@@ -10,7 +10,7 @@
 		
 		<PackageId>BitzArt.Flux.MudBlazor</PackageId>
 		<Authors>BitzArt</Authors>
-		<Description>BitzArt.Flux / MudBlazor integration package</Description>
+		<Description>BitzArt.Flux and MudBlazor integration package</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/BitzArt/Flux</RepositoryUrl>

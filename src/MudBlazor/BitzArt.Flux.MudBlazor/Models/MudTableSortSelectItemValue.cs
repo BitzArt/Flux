@@ -1,7 +1,7 @@
 ﻿namespace MudBlazor;
 
 /// <summary>
-/// Represents a type of <see cref="MudTableSortSelectItem{T}.Value"/>.
+/// Represents a type of <see cref="MudTableSortSelectItem{T}"/> value.
 /// </summary>
 internal class MudTableSortSelectItemValue<T>(MudTableSortLabel<T> sortLabel, SortDirection? sortDirection, MudTableSortSelect<T> selector)
 {
