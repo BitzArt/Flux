@@ -1,9 +1,10 @@
 ﻿@namespace MudBlazor
 @typeparam T
 
-<div class="d-flex align-center">
+<div class="d-flex flex-grow-1 align-center">
     @{ UpdateValue(); }
     <CascadingValue TValue="MudTableSortSelect<T>" Value="this" IsFixed="true">
+        <div style="display: none">@ChildContent</div>
         <MudSelect 
             T="MudTableSortSelectItemValue<T>"
             Placeholder="@Placeholder"
@@ -14,9 +15,13 @@
             Class="@InputClass"
             AnchorOrigin="AnchorOrigin"
             TransformOrigin="TransformOrigin"
-            @bind-Value="Value"
+            Value="Value"
+            ValueChanged="OnValueChangedAsync"
             @ref="_select">
-                @_childContent
+                @foreach(var item in _items)
+                {
+                    <MudSelectItem Value="@item.Value">@item.ChildContent</MudSelectItem>
+                }
         </MudSelect>
 
         @if (!HideSortButton)

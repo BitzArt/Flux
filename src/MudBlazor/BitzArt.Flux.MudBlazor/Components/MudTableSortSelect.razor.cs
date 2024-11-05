@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BitzArt;
+using Microsoft.AspNetCore.Components;
 
 namespace MudBlazor;
 
@@ -91,24 +92,6 @@ public partial class MudTableSortSelect<T>
     [Parameter, EditorRequired]
     public required RenderFragment ChildContent { get; set; }
 
-    private bool _isQuiescent = false;
-
-    private RenderFragment _childContent => _isQuiescent ? _quiescentChildContent : ChildContent;
-
-    private RenderFragment _quiescentChildContent => builder =>
-    {
-        var counter = 0;
-        for (var i = 0; i < _items.Count; i++)
-        {
-            var item = _items.ElementAt(i);
-
-            builder.OpenComponent<MudSelectItem<MudTableSortSelectItemValue<T>>>(counter++);
-            builder.AddAttribute(counter++, "Value", item.Value);
-            builder.AddAttribute(counter++, "ChildContent", item.ChildContent);
-            builder.CloseComponent();
-        }
-    };
-
     /// <summary>
     /// Occurs when sorting is changed.
     /// </summary>
@@ -120,23 +103,13 @@ public partial class MudTableSortSelect<T>
     /// </summary>
     public SortDirection? SortDirection { get; set; }
 
-    internal MudTableSortSelectItemValue<T>? Value
-    {
-        get => _value;
-        set
-        {
-            _value = value;
-            _ = OnValueChangedAsync(value);
-        }
-    }
-
-    private MudTableSortSelectItemValue<T>? _value;
+    internal MudTableSortSelectItemValue<T>? Value { get; set; }
 
     private ICollection<MudTableSortSelectItem<T>> _items { get; set; } = [];
 
     private Dictionary<ValueSignature, MudTableSortSelectItemValue<T>> _signatureMap { get; set; } = [];
 
-    private ValueSignature? previousValueSignature;
+    private ValueSignature? _previousValueSignature;
 
     private bool _rememberSortDirection;
 
@@ -155,19 +128,6 @@ public partial class MudTableSortSelect<T>
     }
 
     /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (!firstRender) return;
-
-        _isQuiescent = true;
-        _select.ChildContent = _quiescentChildContent;
-
-        StateHasChanged();
-    }
-
-    /// <summary>
     /// Register the <paramref name="item"/> in this <see cref="MudTableSortSelect{T}"/>.
     /// </summary>
     internal void AddItem(MudTableSortSelectItem<T> item)
@@ -178,8 +138,26 @@ public partial class MudTableSortSelect<T>
         _signatureMap[signature] = item.Value;
     }
 
+    /// <summary>
+    /// Unregister the <paramref name="item"/> from this <see cref="MudTableSortSelect{T}"/>.
+    /// </summary>
+    internal void RemoveItem(MudTableSortSelectItem<T> item)
+    {
+        _items.Remove(item);
+
+        var signature = new ValueSignature(item.SortLabel, item.SortDirection);
+        _signatureMap.Remove(signature);
+
+        if (_previousValueSignature == signature)
+        {
+            _previousValueSignature = null;
+            _ = OnValueChangedAsync(GetSortLabel(null));
+        }
+    }
+
     private async Task OnValueChangedAsync(MudTableSortSelectItemValue<T>? value)
     {
+        Value = value;
         var sortLabel = GetSortLabel(value);
         await OnValueChangedAsync(sortLabel);
     }
@@ -190,7 +168,7 @@ public partial class MudTableSortSelect<T>
             await SortChanged.InvokeAsync(sortLabel);
 
         if (Table is not null)
-            await Table.Context.SetSortFunc(sortLabel);
+            await Table.Context.SetSortFunc(sortLabel).IgnoreCancellation();
 
         await InvokeAsync(StateHasChanged);
     }
@@ -257,13 +235,13 @@ public partial class MudTableSortSelect<T>
             return;
         }
 
-        if (previousValueSignature is not null
-            && previousValueSignature.SortLabel == currentSortLabel.SortLabel
-            && previousValueSignature.SortDirection == currentSortLabel.SortDirection)
+        if (_previousValueSignature is not null
+            && _previousValueSignature.SortLabel == currentSortLabel.SortLabel
+            && _previousValueSignature.SortDirection == currentSortLabel.SortDirection)
             return;
 
         var fullMatchSignature = new ValueSignature(currentSortLabel.SortLabel, currentSortLabel.SortDirection);
-        previousValueSignature = fullMatchSignature;
+        _previousValueSignature = fullMatchSignature;
         var fullMatchFound = _signatureMap.TryGetValue(fullMatchSignature, out var fullMatchValue);
 
         if (fullMatchFound)

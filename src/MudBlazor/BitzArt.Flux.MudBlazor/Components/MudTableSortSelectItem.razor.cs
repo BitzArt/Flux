@@ -5,7 +5,7 @@ namespace MudBlazor;
 /// <summary>
 /// Represents an option component for <see cref="MudTableSortSelect{T}"/>.
 /// </summary>
-public partial class MudTableSortSelectItem<T>
+public partial class MudTableSortSelectItem<T> : IDisposable
 {
     /// <summary>
     /// The content to display within this <see cref="MudTableSortSelectItem{T}"/>.
@@ -63,5 +63,16 @@ public partial class MudTableSortSelectItem<T>
             SortLabel = SortLabel,
             SortDirection = SortDirection ?? MudBlazor.SortDirection.None
         };
+    }
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    public void Dispose()
+    {
+        if (_parentSelector is null)
+            throw new InvalidOperationException($"{nameof(MudTableSortSelectItem<T>)} requires a parent {nameof(MudTableSortSelect<T>)} component.");
+
+        _parentSelector.RemoveItem(this);
     }
 }
