@@ -244,7 +244,7 @@ public partial class MudTableSortSelect<T>
         var sortLabelMatchSignature = new ItemSignature(currentSortLabel.SortLabel, null);
         var sortLabelMatchFound = _itemSignatureMap.TryGetValue(sortLabelMatchSignature, out var sortLabelMatchValue);
 
-        if (sortLabelMatchFound)
+        if (sortLabelMatchFound && sortLabelMatchValue is not null)
         {
             SortDirection = currentSortLabel.SortDirection;
             Value = sortLabelMatchValue;
