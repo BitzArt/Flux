@@ -4,7 +4,7 @@
 <div class="d-flex flex-grow-1 align-center">
     @{ UpdateValue(); }
     <CascadingValue TValue="MudTableSortSelect<T>" Value="this" IsFixed="true">
-        <div style="display: none">@ChildContent</div>
+        @ChildContent
         <MudSelect 
             T="MudTableSortSelectItem<T>"
             Placeholder="@Placeholder"
