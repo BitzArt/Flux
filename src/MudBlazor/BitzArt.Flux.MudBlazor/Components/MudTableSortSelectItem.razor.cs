@@ -69,8 +69,8 @@ public partial class MudTableSortSelectItem<T> : IDisposable
         if (SortDirection.HasValue)
             return SortDirection.Value;
 
-        if (_parentSelector!.CurrentSortDirection.HasValue)
-            return _parentSelector.CurrentSortDirection.Value;
+        if (_parentSelector!.SortDirection.HasValue)
+            return _parentSelector.SortDirection.Value;
 
         return MudBlazor.SortDirection.Ascending;
     }

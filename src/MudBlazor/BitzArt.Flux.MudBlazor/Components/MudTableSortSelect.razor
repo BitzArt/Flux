@@ -18,12 +18,12 @@
             Value="Value"
             ValueChanged="OnValueChangedAsync"
             @ref="_select">
-                @foreach (var element in _signatureMap)
+                @foreach (var record in _itemSignatureMap)
                 {
-                    @if (element.Value is not null)
+                    @if (record.Value is not null)
                     {
-                        <MudSelectItem Value="@element.Value">
-                            @element.Value.ChildContent
+                        <MudSelectItem Value="@record.Value">
+                            @record.Value.ChildContent
                         </MudSelectItem>
                     }
             }
@@ -36,7 +36,7 @@
                 Variant="ButtonVariant"
                 Size="ButtonSize"
                 Class="@ButtonClass"
-                Style="@(CurrentSortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"
+                Style="@(SortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"
                 OnClick="ToggleSortDirectionAsync">
             </MudIconButton>
         }
