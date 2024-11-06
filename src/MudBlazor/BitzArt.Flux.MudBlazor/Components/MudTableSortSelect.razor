@@ -2,9 +2,7 @@
 @typeparam T
 
 <div class="d-flex flex-grow-1 align-center">
-    @{ UpdateValue(); }
     <CascadingValue TValue="MudTableSortSelect<T>" Value="this" IsFixed="true">
-        @ChildContent
         <MudSelect 
             T="MudTableSortSelectItem<T>"
             Placeholder="@Placeholder"
@@ -15,18 +13,10 @@
             Class="@InputClass"
             AnchorOrigin="AnchorOrigin"
             TransformOrigin="TransformOrigin"
-            Value="Value"
-            ValueChanged="OnValueChangedAsync"
+            Value="Item"
+            ValueChanged="OnItemChangedAsync"
             @ref="_select">
-                @foreach (var record in _itemSignatureMap)
-                {
-                    @if (record.Value is not null)
-                    {
-                        <MudSelectItem Value="@record.Value">
-                            @record.Value.ChildContent
-                        </MudSelectItem>
-                    }
-                }
+                @ChildContent
         </MudSelect>
 
         @if (!HideSortButton)

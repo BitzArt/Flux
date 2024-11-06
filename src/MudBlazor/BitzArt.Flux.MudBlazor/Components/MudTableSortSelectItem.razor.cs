@@ -26,60 +26,33 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     public SortDirection? SortDirection { get; set; }
 
     [CascadingParameter]
-    private MudTableSortSelect<T>? _parentSelector { get; set; }
-
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    protected override void OnInitialized()
-    {
-        if (_parentSelector is null)
-            throw new InvalidOperationException($"{nameof(MudTableSortSelectItem<T>)} requires a parent {nameof(MudTableSortSelect<T>)} component.");
-
-        _parentSelector.AddItem(this);
-    }
-
-    /// <summary>
-    /// Returns <see cref="MudTableSortLabel{T}"/> for this <see cref="MudTableSortSelectItem{T}"/>.
-    /// </summary>
-    internal MudTableSortLabel<T> GetSortLabel()
-    {
-        if (_parentSelector!.Table is null)
-            return CreateNewSortLabel();
-
-        var sortLabel = _parentSelector!.Table.Context.SortLabels.FirstOrDefault(x => x.SortLabel == SortLabel);
-        if (sortLabel is null)
-            return CreateNewSortLabel();
-
-        sortLabel.SortDirection = GetSortDirection();
-        return sortLabel;
-    }
-
-    private MudTableSortLabel<T> CreateNewSortLabel()
-    {
-        return new MudTableSortLabel<T>
+    private MudTableSortSelect<T>? ParentSelector 
+    { 
+        get => _parentSelector;
+        set
         {
-            SortLabel = SortLabel,
-            SortDirection = GetSortDirection()
-        };
+            if (value is null) return;
+            if (_parentSelector is not null) return;
+
+            _parentSelector = value;
+
+            if (_parentSelector is null)
+                throw new InvalidOperationException($"{nameof(MudTableSortSelectItem<T>)} requires a parent {nameof(MudTableSortSelect<T>)} component.");
+
+            _parentSelector.AddItem(this);
+        }
     }
 
-    private SortDirection GetSortDirection()
-    {
-        if (SortDirection.HasValue)
-            return SortDirection.Value;
+    private MudTableSortSelect<T>? _parentSelector;
 
-        if (_parentSelector!.SortDirection.HasValue)
-            return _parentSelector.SortDirection.Value;
-
-        return MudBlazor.SortDirection.Ascending;
-    }
+    
 
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
     public void Dispose()
     {
+        if (_parentSelector is null) return;
         _parentSelector!.RemoveItem(this);
     }
 }
