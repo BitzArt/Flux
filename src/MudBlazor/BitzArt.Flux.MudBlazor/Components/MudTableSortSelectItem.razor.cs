@@ -26,7 +26,7 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     public SortDirection? SortDirection { get; set; }
 
     [CascadingParameter]
-    private MudTableSortSelect<T> _parentSelector { get; set; } = null!;
+    private MudTableSortSelect<T>? _parentSelector { get; set; }
 
     /// <summary>
     /// <inheritdoc/>
@@ -40,7 +40,7 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     }
 
     /// <summary>
-    /// TODO
+    /// Returns <see cref="MudTableSortLabel{T}"/> for this <see cref="MudTableSortSelectItem{T}"/>.
     /// </summary>
     internal MudTableSortLabel<T> GetSortLabel()
     {
@@ -69,8 +69,8 @@ public partial class MudTableSortSelectItem<T> : IDisposable
         if (SortDirection.HasValue)
             return SortDirection.Value;
 
-        if (_parentSelector.SelectedSortDirection.HasValue)
-            return _parentSelector.SelectedSortDirection.Value;
+        if (_parentSelector!.CurrentSortDirection.HasValue)
+            return _parentSelector.CurrentSortDirection.Value;
 
         return MudBlazor.SortDirection.Ascending;
     }
@@ -80,9 +80,6 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     /// </summary>
     public void Dispose()
     {
-        if (_parentSelector is null)
-            throw new InvalidOperationException($"{nameof(MudTableSortSelectItem<T>)} requires a parent {nameof(MudTableSortSelect<T>)} component.");
-
-        _parentSelector.RemoveItem(this);
+        _parentSelector!.RemoveItem(this);
     }
 }

@@ -39,12 +39,6 @@ public partial class MudTableSortSelect<T>
     public Margin InputMargin { get; set; } = Margin.None;
 
     /// <summary>
-    /// /// Fills the full width of the parent container.
-    /// </summary>
-    [Parameter]
-    public bool InputFullWidth { get; set; } = true;
-
-    /// <summary>
     /// CSS classes applied to the input.
     /// </summary>
     [Parameter]
@@ -98,18 +92,16 @@ public partial class MudTableSortSelect<T>
     [Parameter]
     public EventCallback<MudTableSortLabel<T>> SortChanged { get; set; }
 
+    internal MudTableSortSelectItem<T>? Value { get; set; }
+
     /// <summary>
     /// Current sort direction of this <see cref="MudTableSortSelect{T}"/>.
     /// </summary>
-    public SortDirection? SelectedSortDirection { get; set; }
-
-    internal MudTableSortSelectItem<T>? Value { get; set; }
+    internal SortDirection? CurrentSortDirection { get; set; }
+    private bool _rememberSortDirection;
 
     private Dictionary<ValueSignature, MudTableSortSelectItem<T>?> _signatureMap { get; set; } = [];
-
     private ValueSignature? _previousValueSignature;
-
-    private bool _rememberSortDirection;
 
     private MudSelect<MudTableSortSelectItem<T>> _select = null!;
 
@@ -120,7 +112,7 @@ public partial class MudTableSortSelect<T>
     {
         if (!HideSortButton)
         {
-            SelectedSortDirection = SortDirection.Ascending;
+            CurrentSortDirection = SortDirection.Ascending;
             _rememberSortDirection = true;
         }
     }
@@ -135,7 +127,7 @@ public partial class MudTableSortSelect<T>
     }
 
     /// <summary>
-    /// Unregister the <paramref name="item"/> from this <see cref="MudTableSortSelect{T}"/>.
+    /// Remove the <paramref name="item"/> from this <see cref="MudTableSortSelect{T}"/>.
     /// </summary>
     internal void RemoveItem(MudTableSortSelectItem<T> item)
     {
@@ -150,6 +142,14 @@ public partial class MudTableSortSelect<T>
             _previousValueSignature = null;
             _ = OnValueChangedAsync(GetSortLabel(null));
         }
+    }
+
+    private async Task ToggleSortDirectionAsync()
+    {
+        CurrentSortDirection = CurrentSortDirection!.Value.Invert();
+        TryInvertValue();
+
+        await OnValueChangedAsync(Value);
     }
 
     private async Task OnValueChangedAsync(MudTableSortSelectItem<T>? value)
@@ -176,23 +176,14 @@ public partial class MudTableSortSelect<T>
             return new MudTableSortLabel<T>
             {
                 SortLabel = null,
-                SortDirection = SelectedSortDirection!.Value
+                SortDirection = CurrentSortDirection!.Value
             };
         }
 
         if (item.SortDirection.HasValue && _rememberSortDirection)
-            SelectedSortDirection = item.SortDirection;
+            CurrentSortDirection = item.SortDirection;
 
         return item.GetSortLabel();
-    }
-
-    private async Task ToggleSortDirectionAsync()
-    {
-        SelectedSortDirection = SelectedSortDirection!.Value.Invert();
-
-        TryInvertValue();
-
-        await OnValueChangedAsync(Value);
     }
 
     private void TryInvertValue()
@@ -200,7 +191,7 @@ public partial class MudTableSortSelect<T>
         // If no value is selected, toggling the sort direction should not cause any value to be selected.
         if (Value is null) return;
 
-        var targetSignature = new ValueSignature(Value.SortLabel, SelectedSortDirection);
+        var targetSignature = new ValueSignature(Value.SortLabel, CurrentSortDirection);
         var oppositeFound = _signatureMap.TryGetValue(targetSignature, out var oppositeValue);
 
         if (!oppositeFound) return;
@@ -216,14 +207,14 @@ public partial class MudTableSortSelect<T>
 
         if (currentSortLabel is null || currentSortLabel.SortDirection == MudBlazor.SortDirection.None)
         {
-            SelectedSortDirection = MudBlazor.SortDirection.Ascending;
+            CurrentSortDirection = MudBlazor.SortDirection.Ascending;
             if (Value is not null) Value = null;
             return;
         }
 
         if (currentSortLabel.SortLabel is null)
         {
-            SelectedSortDirection = currentSortLabel.SortDirection == MudBlazor.SortDirection.Descending
+            CurrentSortDirection = currentSortLabel.SortDirection == MudBlazor.SortDirection.Descending
                 ? SortDirection.Descending
                 : SortDirection.Ascending;
 
@@ -251,7 +242,7 @@ public partial class MudTableSortSelect<T>
 
         if (sortLabelMatchFound)
         {
-            SelectedSortDirection = currentSortLabel.SortDirection;
+            CurrentSortDirection = currentSortLabel.SortDirection;
             Value = sortLabelMatchValue;
             return;
         }
