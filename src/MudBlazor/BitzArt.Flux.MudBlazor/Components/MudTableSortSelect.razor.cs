@@ -137,7 +137,7 @@ public partial class MudTableSortSelect<T>
     {
         var signature = new ItemSignature(item.SortLabel, item.SortDirection);
 
-        var fullMatchFound = _itemSignatureMap.TryGetValue(signature, out var fullMatchValue);
+        var fullMatchFound = _itemSignatureMap.TryGetValue(signature, out var _);
         if (fullMatchFound)
             _itemSignatureMap[signature] = null;
 
@@ -235,7 +235,7 @@ public partial class MudTableSortSelect<T>
         _previousItemSignature = fullMatchSignature;
         var fullMatchFound = _itemSignatureMap.TryGetValue(fullMatchSignature, out var fullMatchValue);
 
-        if (fullMatchFound)
+        if (fullMatchFound && fullMatchValue is not null)
         {
             Value = fullMatchValue;
             return;
