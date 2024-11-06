@@ -3,6 +3,7 @@
 
 <div class="d-flex flex-grow-1 align-center">
     <CascadingValue TValue="MudTableSortSelect<T>" Value="this" IsFixed="true">
+        @{ OnRender(); }
         <MudSelect 
             T="MudTableSortSelectItem<T>"
             Placeholder="@Placeholder"

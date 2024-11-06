@@ -103,6 +103,8 @@ public partial class MudTableSortSelect<T>
     /// </summary>
     public MudTableSortSelectItem<T>? Item { get; private set; }
 
+    public MudTableSortLabel<T>? Value { get; private set; }
+
     /// <summary>
     /// Current sort direction of this <see cref="MudTableSortSelect{T}"/>.
     /// </summary>
@@ -128,14 +130,14 @@ public partial class MudTableSortSelect<T>
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private void OnRender()
     {
         var item = Item;
         UpdateCurrentItem();
 
         if (item != Item)
         {
-            await OnItemChangedAsync(Item);
+            _ = OnItemChangedAsync(Item);
         }
     }
 
@@ -147,6 +149,7 @@ public partial class MudTableSortSelect<T>
         var signature = new ItemSignature(item.SortLabel, item.SortDirection);
         _itemSignatureMap[signature] = item;
         _itemsChanged = true;
+        OnRender();
     }
 
     /// <summary>
@@ -157,6 +160,7 @@ public partial class MudTableSortSelect<T>
         var signature = new ItemSignature(item.SortLabel, item.SortDirection);
         _itemSignatureMap.Remove(signature);
         _itemsChanged = true;
+        OnRender();
     }
 
     private async Task ToggleSortDirectionAsync()
@@ -170,13 +174,30 @@ public partial class MudTableSortSelect<T>
     private async Task OnItemChangedAsync(MudTableSortSelectItem<T>? item)
     {
         Item = item;
+
         await ItemChanged.InvokeAsync(Item);
 
-        var sortLabel = GetSortLabel();
-        await ValueChanged.InvokeAsync(sortLabel);
+        var previousValue = Value;
+
+        Value = GetSortLabel();
+
+        if (previousValue == Value)
+        {
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        await ValueChanged.InvokeAsync(Value);
 
         if (Table is not null)
-            await Table.Context.SetSortFunc(sortLabel).IgnoreCancellation();
+        {
+            if (Table.Context.CurrentSortLabel is null
+                || Table.Context.CurrentSortLabel!.SortLabel != Value.SortLabel
+                || Table.Context.CurrentSortLabel.SortDirection != Value.SortDirection)
+            {
+                await Table.Context.SetSortFunc(Value).IgnoreCancellation();
+            }
+        }
 
         await InvokeAsync(StateHasChanged);
     }
