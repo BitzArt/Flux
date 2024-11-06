@@ -25,13 +25,8 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     [Parameter]
     public SortDirection? SortDirection { get; set; }
 
-    /// <summary>
-    /// The value of this <see cref="MudTableSortSelectItem{T}"/>.
-    /// </summary>
-    internal MudTableSortSelectItemValue<T> Value = null!;
-
     [CascadingParameter]
-    private MudTableSortSelect<T>? _parentSelector { get; set; }
+    private MudTableSortSelect<T> _parentSelector { get; set; } = null!;
 
     /// <summary>
     /// <inheritdoc/>
@@ -40,19 +35,23 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     {
         if (_parentSelector is null)
             throw new InvalidOperationException($"{nameof(MudTableSortSelectItem<T>)} requires a parent {nameof(MudTableSortSelect<T>)} component.");
-        
-        Value = new(GetSortLabel(), SortDirection, _parentSelector!);
 
         _parentSelector.AddItem(this);
     }
 
-    private MudTableSortLabel<T> GetSortLabel()
+    /// <summary>
+    /// TODO
+    /// </summary>
+    internal MudTableSortLabel<T> GetSortLabel()
     {
-        if (_parentSelector!.Table is null) return CreateNewSortLabel();
+        if (_parentSelector!.Table is null)
+            return CreateNewSortLabel();
 
         var sortLabel = _parentSelector!.Table.Context.SortLabels.FirstOrDefault(x => x.SortLabel == SortLabel);
-        if (sortLabel is null) return CreateNewSortLabel();
+        if (sortLabel is null)
+            return CreateNewSortLabel();
 
+        sortLabel.SortDirection = GetSortDirection();
         return sortLabel;
     }
 
@@ -61,8 +60,19 @@ public partial class MudTableSortSelectItem<T> : IDisposable
         return new MudTableSortLabel<T>
         {
             SortLabel = SortLabel,
-            SortDirection = SortDirection ?? MudBlazor.SortDirection.None
+            SortDirection = GetSortDirection()
         };
+    }
+
+    private SortDirection GetSortDirection()
+    {
+        if (SortDirection.HasValue)
+            return SortDirection.Value;
+
+        if (_parentSelector.SelectedSortDirection.HasValue)
+            return _parentSelector.SelectedSortDirection.Value;
+
+        return MudBlazor.SortDirection.Ascending;
     }
 
     /// <summary>

@@ -6,7 +6,7 @@
     <CascadingValue TValue="MudTableSortSelect<T>" Value="this" IsFixed="true">
         <div style="display: none">@ChildContent</div>
         <MudSelect 
-            T="MudTableSortSelectItemValue<T>"
+            T="MudTableSortSelectItem<T>"
             Placeholder="@Placeholder"
             Variant="InputVariant"
             Margin="InputMargin"
@@ -18,10 +18,13 @@
             Value="Value"
             ValueChanged="OnValueChangedAsync"
             @ref="_select">
-                @foreach(var item in _items)
+                @foreach(var element in _signatureMap)
                 {
-                    <MudSelectItem Value="@item.Value">@item.ChildContent</MudSelectItem>
-                }
+                    @if(element.Value is not null)
+                    {
+                        <MudSelectItem Value="@element.Value">@element.Value.ChildContent</MudSelectItem>
+                    }
+            }
         </MudSelect>
 
         @if (!HideSortButton)
@@ -31,7 +34,7 @@
                 Variant="ButtonVariant"
                 Size="ButtonSize"
                 Class="@ButtonClass"
-                Style="@(SortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"
+                Style="@(SelectedSortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"
                 OnClick="ToggleSortDirectionAsync">
             </MudIconButton>
         }

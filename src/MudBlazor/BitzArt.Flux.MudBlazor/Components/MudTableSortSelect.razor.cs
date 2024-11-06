@@ -101,19 +101,17 @@ public partial class MudTableSortSelect<T>
     /// <summary>
     /// Current sort direction of this <see cref="MudTableSortSelect{T}"/>.
     /// </summary>
-    public SortDirection? SortDirection { get; set; }
+    public SortDirection? SelectedSortDirection { get; set; }
 
-    internal MudTableSortSelectItemValue<T>? Value { get; set; }
+    internal MudTableSortSelectItem<T>? Value { get; set; }
 
-    private ICollection<MudTableSortSelectItem<T>> _items { get; set; } = [];
-
-    private Dictionary<ValueSignature, MudTableSortSelectItemValue<T>> _signatureMap { get; set; } = [];
+    private Dictionary<ValueSignature, MudTableSortSelectItem<T>?> _signatureMap { get; set; } = [];
 
     private ValueSignature? _previousValueSignature;
 
     private bool _rememberSortDirection;
 
-    private MudSelect<MudTableSortSelectItemValue<T>> _select = null!;
+    private MudSelect<MudTableSortSelectItem<T>> _select = null!;
 
     /// <summary>
     /// <inheritdoc/>
@@ -122,7 +120,7 @@ public partial class MudTableSortSelect<T>
     {
         if (!HideSortButton)
         {
-            SortDirection = MudBlazor.SortDirection.Ascending;
+            SelectedSortDirection = SortDirection.Ascending;
             _rememberSortDirection = true;
         }
     }
@@ -132,10 +130,8 @@ public partial class MudTableSortSelect<T>
     /// </summary>
     internal void AddItem(MudTableSortSelectItem<T> item)
     {
-        _items.Add(item);
-
         var signature = new ValueSignature(item.SortLabel, item.SortDirection);
-        _signatureMap[signature] = item.Value;
+        _signatureMap[signature] = item;
     }
 
     /// <summary>
@@ -143,10 +139,11 @@ public partial class MudTableSortSelect<T>
     /// </summary>
     internal void RemoveItem(MudTableSortSelectItem<T> item)
     {
-        _items.Remove(item);
-
         var signature = new ValueSignature(item.SortLabel, item.SortDirection);
-        _signatureMap.Remove(signature);
+
+        var fullMatchFound = _signatureMap.TryGetValue(signature, out var fullMatchValue);
+        if (fullMatchFound)
+            _signatureMap[signature] = null;
 
         if (_previousValueSignature == signature)
         {
@@ -155,9 +152,8 @@ public partial class MudTableSortSelect<T>
         }
     }
 
-    private async Task OnValueChangedAsync(MudTableSortSelectItemValue<T>? value)
+    private async Task OnValueChangedAsync(MudTableSortSelectItem<T>? value)
     {
-        Value = value;
         var sortLabel = GetSortLabel(value);
         await OnValueChangedAsync(sortLabel);
     }
@@ -173,26 +169,26 @@ public partial class MudTableSortSelect<T>
         await InvokeAsync(StateHasChanged);
     }
 
-    private MudTableSortLabel<T> GetSortLabel(MudTableSortSelectItemValue<T>? value)
+    private MudTableSortLabel<T> GetSortLabel(MudTableSortSelectItem<T>? item)
     {
-        if (value is null)
+        if (item is null)
         {
             return new MudTableSortLabel<T>
             {
                 SortLabel = null,
-                SortDirection = SortDirection!.Value
+                SortDirection = SelectedSortDirection!.Value
             };
         }
 
-        if (value.SortDirection.HasValue && _rememberSortDirection)
-            SortDirection = value.SortDirection;
+        if (item.SortDirection.HasValue && _rememberSortDirection)
+            SelectedSortDirection = item.SortDirection;
 
-        return value.GetSortLabel();
+        return item.GetSortLabel();
     }
 
     private async Task ToggleSortDirectionAsync()
     {
-        SortDirection = SortDirection!.Value.Invert();
+        SelectedSortDirection = SelectedSortDirection!.Value.Invert();
 
         TryInvertValue();
 
@@ -204,7 +200,7 @@ public partial class MudTableSortSelect<T>
         // If no value is selected, toggling the sort direction should not cause any value to be selected.
         if (Value is null) return;
 
-        var targetSignature = new ValueSignature(Value.SortLabel.SortLabel, SortDirection);
+        var targetSignature = new ValueSignature(Value.SortLabel, SelectedSortDirection);
         var oppositeFound = _signatureMap.TryGetValue(targetSignature, out var oppositeValue);
 
         if (!oppositeFound) return;
@@ -220,16 +216,16 @@ public partial class MudTableSortSelect<T>
 
         if (currentSortLabel is null || currentSortLabel.SortDirection == MudBlazor.SortDirection.None)
         {
-            SortDirection = MudBlazor.SortDirection.Ascending;
+            SelectedSortDirection = MudBlazor.SortDirection.Ascending;
             if (Value is not null) Value = null;
             return;
         }
 
         if (currentSortLabel.SortLabel is null)
         {
-            SortDirection = currentSortLabel.SortDirection == MudBlazor.SortDirection.Descending
-                ? MudBlazor.SortDirection.Descending
-                : MudBlazor.SortDirection.Ascending;
+            SelectedSortDirection = currentSortLabel.SortDirection == MudBlazor.SortDirection.Descending
+                ? SortDirection.Descending
+                : SortDirection.Ascending;
 
             if (Value is not null) Value = null;
             return;
@@ -255,7 +251,7 @@ public partial class MudTableSortSelect<T>
 
         if (sortLabelMatchFound)
         {
-            SortDirection = currentSortLabel.SortDirection;
+            SelectedSortDirection = currentSortLabel.SortDirection;
             Value = sortLabelMatchValue;
             return;
         }
