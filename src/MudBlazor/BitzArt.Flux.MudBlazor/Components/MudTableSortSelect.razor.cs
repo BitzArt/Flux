@@ -132,13 +132,13 @@ public partial class MudTableSortSelect<T>
 
     private void OnRender()
     {
-        var item = Item;
+        var previousSortLabel = Item?.SortLabel;
+        var previousSortDirection = Item?.SortDirection;
+
         UpdateCurrentItem();
 
-        if (item != Item)
-        {
+        if (previousSortLabel != Item?.SortLabel || previousSortDirection != Item?.SortDirection)
             _ = OnItemChangedAsync(Item);
-        }
     }
 
     /// <summary>
@@ -166,22 +166,31 @@ public partial class MudTableSortSelect<T>
     private async Task ToggleSortDirectionAsync()
     {
         SortDirection = SortDirection!.Value.Invert();
-        TryInvertValue();
+        TryInvertItem();
 
         await OnItemChangedAsync(Item);
     }
 
     private async Task OnItemChangedAsync(MudTableSortSelectItem<T>? item)
     {
-        Item = item;
+        if (item is not null)
+        {
+            var signature = new ItemSignature(item?.SortLabel, item?.SortDirection);
+            Item = _itemSignatureMap[signature];
+        }
+        else
+        {
+            Item = null;
+        }
 
         await ItemChanged.InvokeAsync(Item);
 
-        var previousValue = Value;
+        var previousSortLabel = Value?.SortLabel;
+        var previousSortDirection = Value?.SortDirection;
 
         Value = GetSortLabel();
 
-        if (previousValue == Value)
+        if (previousSortLabel == Value.SortLabel && previousSortDirection == Value.SortDirection)
         {
             await InvokeAsync(StateHasChanged);
             return;
@@ -190,22 +199,14 @@ public partial class MudTableSortSelect<T>
         await ValueChanged.InvokeAsync(Value);
 
         if (Table is not null)
-        {
-            if (Table.Context.CurrentSortLabel is null
-                || Table.Context.CurrentSortLabel!.SortLabel != Value.SortLabel
-                || Table.Context.CurrentSortLabel.SortDirection != Value.SortDirection)
-            {
-                await Table.Context.SetSortFunc(Value).IgnoreCancellation();
-            }
-        }
+            await Table.Context.SetSortFunc(Value).IgnoreCancellation();
 
         await InvokeAsync(StateHasChanged);
     }
 
     private MudTableSortLabel<T> GetSortLabel()
     {
-        if (Item is null)
-            return CreateNewSortLabel();
+        if (Item is null) return CreateNewSortLabel();
 
         if (Item.SortDirection.HasValue && _rememberSortDirection)
             SortDirection = Item.SortDirection;
@@ -230,26 +231,26 @@ public partial class MudTableSortSelect<T>
 
     private SortDirection GetSortDirection(MudTableSortLabel<T> sortLabel)
     {
-        if (sortLabel.SortDirection != MudBlazor.SortDirection.None)
-            return sortLabel.SortDirection;
-
         if (SortDirection.HasValue)
             return SortDirection.Value;
+
+        if (sortLabel.SortDirection != MudBlazor.SortDirection.None)
+            return sortLabel.SortDirection;
 
         return MudBlazor.SortDirection.Ascending;
     }
 
-    private void TryInvertValue()
+    private void TryInvertItem()
     {
         // If no value is selected, toggling the sort direction should not cause any value to be selected.
         if (Item is null) return;
 
         var targetSignature = new ItemSignature(Item.SortLabel, SortDirection);
-        var oppositeFound = _itemSignatureMap.TryGetValue(targetSignature, out var oppositeValue);
+        var invrtedFound = _itemSignatureMap.TryGetValue(targetSignature, out var invertedItem);
 
-        if (!oppositeFound) return;
+        if (!invrtedFound) return;
 
-        Item = oppositeValue;
+        Item = invertedItem;
     }
 
     private void UpdateCurrentItem()
@@ -257,7 +258,6 @@ public partial class MudTableSortSelect<T>
         if (Table is null) return;
 
         var currentSortLabel = Table.Context.CurrentSortLabel;
-
         if (currentSortLabel is null || currentSortLabel.SortDirection == MudBlazor.SortDirection.None)
         {
             SortDirection = MudBlazor.SortDirection.Ascending;
