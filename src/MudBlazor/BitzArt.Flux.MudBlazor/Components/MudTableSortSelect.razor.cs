@@ -140,7 +140,7 @@ public partial class MudTableSortSelect<T>
         UpdateCurrentItem();
 
         if (previousSortLabel != Item?.SortLabel || previousSortDirection != Item?.SortDirection)
-            _ = OnItemChangedAsync(Item);
+            _ = OnItemChangedAsync(Item, false);
     }
 
     /// <summary>
@@ -173,7 +173,7 @@ public partial class MudTableSortSelect<T>
         await OnItemChangedAsync(Item);
     }
 
-    private async Task OnItemChangedAsync(MudTableSortSelectItem<T>? item)
+    private async Task OnItemChangedAsync(MudTableSortSelectItem<T>? item, bool manual = true)
     {
         if (item is not null)
         {
@@ -193,15 +193,9 @@ public partial class MudTableSortSelect<T>
 
         Value = GetSortLabel();
 
-        if (previousSortLabel == Value.SortLabel && previousSortDirection == Value.SortDirection)
-        {
-            await InvokeAsync(StateHasChanged);
-            return;
-        }
-
         await ValueChanged.InvokeAsync(Value);
 
-        if (Table is not null)
+        if (Table is not null && manual)
             await Table.Context.SetSortFunc(Value).IgnoreCancellation();
 
         await InvokeAsync(StateHasChanged);

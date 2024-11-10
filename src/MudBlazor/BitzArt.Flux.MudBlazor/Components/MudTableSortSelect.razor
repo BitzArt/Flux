@@ -15,7 +15,7 @@
             AnchorOrigin="AnchorOrigin"
             TransformOrigin="TransformOrigin"
             Value="Item"
-            ValueChanged="OnItemChangedAsync"
+            ValueChanged="value => OnItemChangedAsync(value)"
             @ref="_select">
                 @ChildContent
         </MudSelect>
