@@ -99,10 +99,13 @@ public partial class MudTableSortSelect<T>
     public EventCallback<MudTableSortSelectItem<T>> ItemChanged { get; set; }
 
     /// <summary>
-    /// Current value of this <see cref="MudTableSortSelect{T}"/>.
+    /// Current selected item of this <see cref="MudTableSortSelect{T}"/>.
     /// </summary>
     public MudTableSortSelectItem<T>? Item { get; private set; }
 
+    /// <summary>
+    /// Current sort label of this <see cref="MudTableSortSelect{T}"/>.
+    /// </summary>
     public MudTableSortLabel<T>? Value { get; private set; }
 
     /// <summary>
