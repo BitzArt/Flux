@@ -114,7 +114,6 @@ public partial class MudTableSortSelect<T>
 
     private Dictionary<ItemSignature, MudTableSortSelectItem<T>?> _itemSignatureMap { get; set; } = [];
     private ItemSignature? _previousItemSignature;
-    private bool _itemsChanged = false;
 
     private MudSelect<MudTableSortSelectItem<T>> _select = null!;
 
@@ -148,8 +147,8 @@ public partial class MudTableSortSelect<T>
     {
         var signature = new ItemSignature(item.SortLabel, item.SortDirection);
         _itemSignatureMap[signature] = item;
-        _itemsChanged = true;
-        OnRender();
+
+        StateHasChanged();
     }
 
     /// <summary>
@@ -159,8 +158,8 @@ public partial class MudTableSortSelect<T>
     {
         var signature = new ItemSignature(item.SortLabel, item.SortDirection);
         _itemSignatureMap.Remove(signature);
-        _itemsChanged = true;
-        OnRender();
+
+        StateHasChanged();
     }
 
     private async Task ToggleSortDirectionAsync()
@@ -175,7 +174,8 @@ public partial class MudTableSortSelect<T>
     {
         if (item is not null)
         {
-            var signature = new ItemSignature(item?.SortLabel, item?.SortDirection);
+            // Get the item from the map to ensure the correct reference is used.
+            var signature = new ItemSignature(item.SortLabel, item.SortDirection);
             Item = _itemSignatureMap[signature];
         }
         else
@@ -246,9 +246,9 @@ public partial class MudTableSortSelect<T>
         if (Item is null) return;
 
         var targetSignature = new ItemSignature(Item.SortLabel, SortDirection);
-        var invrtedFound = _itemSignatureMap.TryGetValue(targetSignature, out var invertedItem);
+        var invertedFound = _itemSignatureMap.TryGetValue(targetSignature, out var invertedItem);
 
-        if (!invrtedFound) return;
+        if (!invertedFound) return;
 
         Item = invertedItem;
     }
@@ -257,17 +257,17 @@ public partial class MudTableSortSelect<T>
     {
         if (Table is null) return;
 
-        var currentSortLabel = Table.Context.CurrentSortLabel;
-        if (currentSortLabel is null || currentSortLabel.SortDirection == MudBlazor.SortDirection.None)
+        var tableSortLabel = Table.Context.CurrentSortLabel;
+        if (tableSortLabel is null || tableSortLabel.SortDirection == MudBlazor.SortDirection.None)
         {
             SortDirection = MudBlazor.SortDirection.Ascending;
             if (Item is not null) Item = null;
             return;
         }
 
-        if (currentSortLabel.SortLabel is null)
+        if (tableSortLabel.SortLabel is null)
         {
-            SortDirection = currentSortLabel.SortDirection == MudBlazor.SortDirection.Descending
+            SortDirection = tableSortLabel.SortDirection == MudBlazor.SortDirection.Descending
                 ? MudBlazor.SortDirection.Descending
                 : MudBlazor.SortDirection.Ascending;
 
@@ -275,15 +275,7 @@ public partial class MudTableSortSelect<T>
             return;
         }
 
-        if (_previousItemSignature is not null
-            && _previousItemSignature.SortLabel == currentSortLabel.SortLabel
-            && _previousItemSignature.SortDirection == currentSortLabel.SortDirection)
-        {
-            if (!_itemsChanged) return;
-            _itemsChanged = false;
-        }
-
-        var fullMatchSignature = new ItemSignature(currentSortLabel.SortLabel, currentSortLabel.SortDirection);
+        var fullMatchSignature = new ItemSignature(tableSortLabel.SortLabel, tableSortLabel.SortDirection);
         _previousItemSignature = fullMatchSignature;
         var fullMatchFound = _itemSignatureMap.TryGetValue(fullMatchSignature, out var fullMatchValue);
 
@@ -293,12 +285,12 @@ public partial class MudTableSortSelect<T>
             return;
         }
 
-        var sortLabelMatchSignature = new ItemSignature(currentSortLabel.SortLabel, null);
+        var sortLabelMatchSignature = new ItemSignature(tableSortLabel.SortLabel, null);
         var sortLabelMatchFound = _itemSignatureMap.TryGetValue(sortLabelMatchSignature, out var sortLabelMatchValue);
 
         if (sortLabelMatchFound)
         {
-            SortDirection = currentSortLabel.SortDirection;
+            SortDirection = tableSortLabel.SortDirection;
             Item = sortLabelMatchValue;
             return;
         }
