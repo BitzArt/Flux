@@ -156,11 +156,7 @@ public partial class MudTableSortSelect<T>
     private async Task ToggleSortDirectionAsync()
     {
         SortDirection = SortDirection!.Value.Invert();
-        await TryInvertItemAsync();
-    }
 
-    private async Task TryInvertItemAsync()
-    {
         if (Item is not null)
         {
             var invertedSignature = new ItemSignature(Item.SortLabel, SortDirection);
@@ -207,9 +203,12 @@ public partial class MudTableSortSelect<T>
     private MudTableSortLabel<T> GetSortLabel()
     {
         if (Item is null)
+        {
+            if (!_rememberSortDirection) SortDirection = null;
             return CreateNewSortLabel();
+        }
 
-        if (Item.SortDirection.HasValue && _rememberSortDirection)
+        if (Item.SortDirection.HasValue || !_rememberSortDirection)
             SortDirection = Item.SortDirection;
 
         var sortLabel = Table?.Context.SortLabels.FirstOrDefault(x => x.SortLabel == Item.SortLabel);
@@ -248,10 +247,11 @@ public partial class MudTableSortSelect<T>
         if (previousitem != Item)
             _ = ItemChanged.InvokeAsync(Item);
 
-        var previousValue = Value;
+        var previousSortLabel = Value?.SortLabel;
+        var previousSortDirection = Value?.SortDirection;
         SyncCurrentValue();
 
-        if (previousValue != Value)
+        if (previousSortLabel != Value?.SortLabel && previousSortDirection != Value?.SortDirection)
             _ = ValueChanged.InvokeAsync(Value);
     }
 
@@ -302,9 +302,10 @@ public partial class MudTableSortSelect<T>
             ? Table.Context.CurrentSortLabel
             : Table.Context.SortLabels.FirstOrDefault(x => x.SortLabel == Item.SortLabel);
 
-        SortDirection = Value is null || Value.SortDirection == MudBlazor.SortDirection.None 
-            ? MudBlazor.SortDirection.Ascending
-            : Value.SortDirection;
+        var unsorted = Value is null || Value.SortDirection == MudBlazor.SortDirection.None;
+        SortDirection = unsorted
+            ? _rememberSortDirection ? MudBlazor.SortDirection.Ascending : null
+            : Value!.SortDirection;
     }
 
     private record ItemSignature(string? SortLabel, SortDirection? SortDirection);
