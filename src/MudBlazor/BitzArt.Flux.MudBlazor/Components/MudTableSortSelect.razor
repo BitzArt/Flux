@@ -27,7 +27,7 @@
                 Variant="ButtonVariant"
                 Size="ButtonSize"
                 Class="@ButtonClass"
-                Style="@(SortDirection == MudBlazor.SortDirection.Ascending ? string.Empty : "transform: scaleY(-1);")"
+                Style="@(SortDirection == MudBlazor.SortDirection.Ascending || !SortDirection.HasValue ? string.Empty : "transform: scaleY(-1);")"
                 OnClick="ToggleSortDirectionAsync">
             </MudIconButton>
         }

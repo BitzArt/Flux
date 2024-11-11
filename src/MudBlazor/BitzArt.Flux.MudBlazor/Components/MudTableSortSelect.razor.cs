@@ -302,9 +302,9 @@ public partial class MudTableSortSelect<T>
             ? Table.Context.CurrentSortLabel
             : Table.Context.SortLabels.FirstOrDefault(x => x.SortLabel == Item.SortLabel);
 
-        SortDirection = Value?.SortDirection != MudBlazor.SortDirection.None 
-            ? Value?.SortDirection 
-            : MudBlazor.SortDirection.Ascending;
+        SortDirection = Value is null || Value.SortDirection == MudBlazor.SortDirection.None 
+            ? MudBlazor.SortDirection.Ascending
+            : Value.SortDirection;
     }
 
     private record ItemSignature(string? SortLabel, SortDirection? SortDirection);
