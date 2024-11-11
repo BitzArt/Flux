@@ -1,5 +1,4 @@
-﻿using BitzArt;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace MudBlazor;
 
@@ -132,19 +131,6 @@ public partial class MudTableSortSelect<T>
         }
     }
 
-    private void OnRender()
-    {
-        UpdateCurrentItem();
-
-        Value = Item is null
-            ? Table?.Context.CurrentSortLabel
-            : Table?.Context.SortLabels.FirstOrDefault(x => x.SortLabel == Item.SortLabel);
-
-        SortDirection = Value?.SortDirection == MudBlazor.SortDirection.Descending 
-            ? MudBlazor.SortDirection.Descending 
-            : MudBlazor.SortDirection.Ascending;
-    }
-
     /// <summary>
     /// Add the <paramref name="item"/> in this <see cref="MudTableSortSelect{T}"/>.
     /// </summary>
@@ -175,21 +161,19 @@ public partial class MudTableSortSelect<T>
 
     private async Task TryInvertItemAsync()
     {
-        if (Item is null) return;
-
-        var invertedSignature = new ItemSignature(Item.SortLabel, SortDirection);
-        var invertedFound = _itemSignatureMap.TryGetValue(invertedSignature, out var invertedItem);
-
-        if (invertedFound)
+        if (Item is not null)
         {
-            Item = invertedItem;
-            await ItemChanged.InvokeAsync(Item);
+            var invertedSignature = new ItemSignature(Item.SortLabel, SortDirection);
+            var invertedFound = _itemSignatureMap.TryGetValue(invertedSignature, out var invertedItem);
+
+            if (invertedFound)
+            {
+                Item = invertedItem;
+                await ItemChanged.InvokeAsync(Item);
+            }
         }
 
-        Value = GetSortLabel();
-
-        if (Table is not null)
-            await Table.Context.SetSortFunc(Value!);
+        await UpdateValueAsync();
     }
 
     private async Task OnItemChangedAsync(MudTableSortSelectItem<T>? item)
@@ -207,7 +191,14 @@ public partial class MudTableSortSelect<T>
 
         await ItemChanged.InvokeAsync(Item);
 
+        await UpdateValueAsync();
+    }
+
+    private async Task UpdateValueAsync()
+    {
         Value = GetSortLabel();
+
+        await ValueChanged.InvokeAsync(Value);
 
         if (Table is not null)
             await Table.Context.SetSortFunc(Value!);
@@ -215,14 +206,17 @@ public partial class MudTableSortSelect<T>
 
     private MudTableSortLabel<T> GetSortLabel()
     {
-        if (Item is null) return CreateNewSortLabel();
+        if (Item is null)
+            return CreateNewSortLabel();
+
+        if (Item.SortDirection.HasValue && _rememberSortDirection)
+            SortDirection = Item.SortDirection;
 
         var sortLabel = Table?.Context.SortLabels.FirstOrDefault(x => x.SortLabel == Item.SortLabel);
         if (sortLabel is null)
             return CreateNewSortLabel();
 
         sortLabel.SortDirection = GetSortDirection(sortLabel);
-
         return sortLabel;
     }
 
@@ -246,7 +240,22 @@ public partial class MudTableSortSelect<T>
         return MudBlazor.SortDirection.Ascending;
     }
 
-    private void UpdateCurrentItem()
+    private void OnRender()
+    {
+        var previousitem = Item;
+        SyncCurrentItem();
+
+        if (previousitem != Item)
+            _ = ItemChanged.InvokeAsync(Item);
+
+        var previousValue = Value;
+        SyncCurrentValue();
+
+        if (previousValue != Value)
+            _ = ValueChanged.InvokeAsync(Value);
+    }
+
+    private void SyncCurrentItem()
     {
         if (Table is null) return;
 
@@ -283,6 +292,19 @@ public partial class MudTableSortSelect<T>
         }
 
         if (Item is not null) Item = null;
+    }
+
+    private void SyncCurrentValue()
+    {
+        if (Table is null) return;
+
+        Value = Item is null
+            ? Table.Context.CurrentSortLabel
+            : Table.Context.SortLabels.FirstOrDefault(x => x.SortLabel == Item.SortLabel);
+
+        SortDirection = Value?.SortDirection != MudBlazor.SortDirection.None 
+            ? Value?.SortDirection 
+            : MudBlazor.SortDirection.Ascending;
     }
 
     private record ItemSignature(string? SortLabel, SortDirection? SortDirection);
