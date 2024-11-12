@@ -80,6 +80,19 @@ public partial class MudTableSortSelect<T>
     public string? ButtonClass { get; set; }
 
     /// <summary>
+    /// Icon displayed in the sort direction button. <br/>
+    /// If <see cref="SortIconDesc"/> is not specified, this icon is mirrored vertically when the sort direction is descending.
+    /// </summary>
+    [Parameter]
+    public string SortIcon { get; set; } = Icons.Material.Filled.Sort;
+
+    /// <summary>
+    /// Icon displayed in the sort direction button when the sort direction is descending.
+    /// </summary>
+    [Parameter]
+    public string? SortIconDesc { get; set; }
+
+    /// <summary>
     /// Hide the sort direction button.
     /// </summary>
     [Parameter]
@@ -307,6 +320,27 @@ public partial class MudTableSortSelect<T>
         SortDirection = unsorted
             ? _rememberSortDirection ? MudBlazor.SortDirection.Ascending : null
             : Value!.SortDirection;
+    }
+
+    private string GetSortIcon()
+    {
+        return SortDirection switch
+        {
+            MudBlazor.SortDirection.Ascending => SortIcon,
+            MudBlazor.SortDirection.Descending => SortIconDesc ?? SortIcon,
+            _ => SortIcon
+        };
+    }
+
+    private string GetSortIconClass()
+    {
+        if (SortIconDesc is not null) 
+            return string.Empty;
+
+        if (SortDirection == MudBlazor.SortDirection.Descending)
+            return "transform: scaleY(-1);";
+
+        return string.Empty;
     }
 
     private record ItemSignature(string? SortLabel, SortDirection? SortDirection);

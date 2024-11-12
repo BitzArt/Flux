@@ -23,11 +23,11 @@
         @if (!HideSortButton)
         {
             <MudIconButton 
-                Icon="@Icons.Material.Filled.Sort"
+                Icon="@GetSortIcon()"
                 Variant="ButtonVariant"
                 Size="ButtonSize"
                 Class="@ButtonClass"
-                Style="@(SortDirection == MudBlazor.SortDirection.Descending ? "transform: scaleY(-1);" : string.Empty)"
+                Style="@GetSortIconClass()"
                 OnClick="ToggleSortDirectionAsync">
             </MudIconButton>
         }
