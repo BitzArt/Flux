@@ -83,7 +83,17 @@ public partial class MudTableSortSelect<T>
     /// Hide the sort direction button.
     /// </summary>
     [Parameter]
-    public bool HideSortButton { get; set; } = false;
+    public bool HideSortButton 
+    { 
+        get => _hideSortButton; 
+        set
+        {
+            _hideSortButton = value;
+            _rememberSortDirection = !_hideSortButton;
+        }
+    }
+
+    private bool _hideSortButton = false;
 
     /// <summary>
     /// Occurs when sorting is changed.
@@ -213,7 +223,10 @@ public partial class MudTableSortSelect<T>
 
         var sortLabel = Table?.Context.SortLabels.FirstOrDefault(x => x.SortLabel == Item.SortLabel);
         if (sortLabel is null)
-            return CreateNewSortLabel();
+        {
+            if (!_rememberSortDirection) SortDirection = null;
+            return CreateNewSortLabel(); 
+        }
 
         sortLabel.SortDirection = GetSortDirection(sortLabel);
         return sortLabel;
