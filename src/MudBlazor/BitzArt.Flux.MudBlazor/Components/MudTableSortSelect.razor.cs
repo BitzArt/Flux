@@ -255,10 +255,10 @@ public partial class MudTableSortSelect<T>
 
     private void OnRender()
     {
-        var previousitem = Item;
+        var previousItem = Item;
         SyncCurrentItem();
 
-        if (previousitem != Item)
+        if (previousItem != Item)
             _ = ItemChanged.InvokeAsync(Item);
 
         var previousSortLabel = Value?.SortLabel;
