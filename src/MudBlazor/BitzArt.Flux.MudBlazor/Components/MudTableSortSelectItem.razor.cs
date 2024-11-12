@@ -26,8 +26,8 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     public SortDirection? SortDirection { get; set; }
 
     [CascadingParameter]
-    private MudTableSortSelect<T>? ParentSelector 
-    { 
+    private MudTableSortSelect<T>? ParentSelector
+    {
         get => _parentSelector;
         set
         {
@@ -44,8 +44,6 @@ public partial class MudTableSortSelectItem<T> : IDisposable
     }
 
     private MudTableSortSelect<T>? _parentSelector;
-
-    
 
     /// <summary>
     /// <inheritdoc/>

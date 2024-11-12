@@ -96,9 +96,9 @@ public partial class MudTableSortSelect<T>
     /// Hide the sort direction button.
     /// </summary>
     [Parameter]
-    public bool HideSortButton 
-    { 
-        get => _hideSortButton; 
+    public bool HideSortButton
+    {
+        get => _hideSortButton;
         set
         {
             _hideSortButton = value;
@@ -137,7 +137,7 @@ public partial class MudTableSortSelect<T>
 
     private bool _rememberSortDirection = true;
 
-    private Dictionary<ItemSignature, MudTableSortSelectItem<T>?> _itemSignatureMap { get; set; } = [];
+    private Dictionary<ItemSignature, MudTableSortSelectItem<T>?> _itemSignatureMap = [];
     private ItemSignature? _previousItemSignature;
 
     private MudSelect<MudTableSortSelectItem<T>> _select = null!;
@@ -226,7 +226,7 @@ public partial class MudTableSortSelect<T>
         if (sortLabel is null)
         {
             if (!_rememberSortDirection) SortDirection = null;
-            return CreateNewSortLabel(); 
+            return CreateNewSortLabel();
         }
 
         sortLabel.SortDirection = GetSortDirection(sortLabel);
@@ -334,7 +334,7 @@ public partial class MudTableSortSelect<T>
 
     private string GetSortIconClass()
     {
-        if (SortIconDesc is not null) 
+        if (SortIconDesc is not null)
             return string.Empty;
 
         if (SortDirection == MudBlazor.SortDirection.Descending)
