@@ -122,24 +122,12 @@ public partial class MudTableSortSelect<T>
     /// </summary>
     public SortDirection? SortDirection { get; private set; }
 
-    private bool _rememberSortDirection;
+    private bool _rememberSortDirection = true;
 
     private Dictionary<ItemSignature, MudTableSortSelectItem<T>?> _itemSignatureMap { get; set; } = [];
     private ItemSignature? _previousItemSignature;
 
     private MudSelect<MudTableSortSelectItem<T>> _select = null!;
-
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    protected override void OnInitialized()
-    {
-        if (!HideSortButton)
-        {
-            SortDirection = MudBlazor.SortDirection.Ascending;
-            _rememberSortDirection = true;
-        }
-    }
 
     /// <summary>
     /// Add the <paramref name="item"/> in this <see cref="MudTableSortSelect{T}"/>.
