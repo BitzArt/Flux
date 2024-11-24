@@ -77,4 +77,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
         return result;
     }
+
+    /// <inheritdoc />
+    public IFluxSetContext<TResult> Cast<TResult>() where TResult : class => this.Cast<TModel, TResult>();
 }

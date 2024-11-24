@@ -63,6 +63,16 @@ public interface IFluxSetContext<TModel>
 
     /// <inheritdoc/>
     public Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters);
+
+    // ============== CAST ==============
+
+    /// <summary>
+    /// Casts the context to a different model type.
+    /// </summary>
+    /// <typeparam name="TResult"> The new model type. </typeparam>
+    /// <returns> A new context with the specified model type. </returns>
+    public IFluxSetContext<TResult> Cast<TResult>()
+        where TResult : class;
 }
 
 /// <inheritdoc/>"
