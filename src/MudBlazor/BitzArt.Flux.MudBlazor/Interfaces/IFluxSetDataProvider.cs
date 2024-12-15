@@ -30,7 +30,7 @@ public interface IFluxSetDataProvider<TModel>
     public event OnResultHandler<TModel>? OnResult;
 
     /// <inheritdoc cref="OnLoadingStateChanged{TModel}"/>
-    event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
+    public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
 
     /// <summary>
     /// Restores last query.
@@ -103,4 +103,14 @@ public interface IFluxSetDataProvider<TModel>
     /// Gets data from the server.
     /// </summary>
     public Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default);
+
+    public bool IndexItems { get; set; }
+
+    public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
+
+    public int IndexOf(TModel item);
+
+    public IDictionary<TModel, int>? ItemIndexMap { get; }
+
+    public void RestoreItemIndexMap(IDictionary<TModel, int> map);
 }

@@ -204,6 +204,12 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         var page = await SetContext.GetPageAsync(state.Page * state.PageSize, state.PageSize, parameters: parameters);
         var result = BuildTableData(page, currentQuery);
 
+        if (IndexItems)
+        {
+            UpdateItemIndexMap(result.Items!);
+            OnItemsIndexed?.Invoke(new(this, ItemIndexMap!));
+        }
+
         LastQuery = currentQuery;
         OnResult?.Invoke(new(this, LastQuery));
 
@@ -338,5 +344,75 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         currentQuery.Result = result;
 
         return result;
+    }
+
+    public bool IndexItems { get; set; } = false;
+
+    public IDictionary<TModel, int>? ItemIndexMap { get; private set; }
+
+    public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
+
+    public int IndexOf(TModel item)
+    {
+        if (IndexItems == false)
+            throw new InvalidOperationException();
+
+        if (ItemIndexMap is null)
+            throw new InvalidOperationException();
+
+        try
+        {
+            return ItemIndexMap[item];
+        }
+        catch
+        {
+            return -1;
+        }
+    }
+
+    public void RestoreItemIndexMap(IDictionary<TModel, int> map)
+    {
+        ItemIndexMap = map;
+    }
+
+    private void UpdateItemIndexMap(IEnumerable<TModel> newItems)
+    {
+        var newItemsCount = newItems.Count();
+
+        if (ItemIndexMap is null)
+        {
+            ItemIndexMap = CreateItemIndexMap(newItems, newItemsCount);
+            return;
+        }
+
+        var previousItems = LastQuery?.Result.Items;
+        var previousItemsCount = previousItems is not null ? previousItems.Count() : 0;
+
+        if (newItemsCount > previousItemsCount)
+        {
+            // recreate the item/index map with increased size
+            ItemIndexMap = CreateItemIndexMap(newItems, newItemsCount);
+            return;
+        }
+
+        ItemIndexMap.Clear();
+        PopulateItemIndexMap(ItemIndexMap, newItems);
+    }
+
+    private static Dictionary<TModel, int> CreateItemIndexMap(IEnumerable<TModel> items, int mapSize)
+    {
+        var map = new Dictionary<TModel, int>(mapSize);
+        PopulateItemIndexMap(map, items);
+        return map;
+    }
+
+    private static void PopulateItemIndexMap(IDictionary<TModel, int> map, IEnumerable<TModel> items)
+    {
+        int index = 0;
+        foreach (var item in items)
+        {
+            map.Add(item, index);
+            index++;
+        }
     }
 }
