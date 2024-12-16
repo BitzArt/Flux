@@ -76,12 +76,12 @@ public class MockedRestServiceTests
         var result = await setContext.GetPageAsync(offset, limit);
 
         Assert.NotNull(result);
-        Assert.NotNull(result.Data);
-        if (offset < setCount) Assert.True(result.Data.Any());
+        Assert.NotNull(result.Items);
+        if (offset < setCount) Assert.True(result.Items.Any());
         if (offset + limit > setCount)
         {
             var shouldCount = setCount - offset;
-            Assert.Equal(shouldCount, result.Data.Count());
+            Assert.Equal(shouldCount, result.Items.Count());
         }
     }
 
@@ -196,7 +196,7 @@ public class MockedRestServiceTests
 
         var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
-        Assert.Equal(10, result.Data!.Count());
+        Assert.Equal(10, result.Items!.Count());
     }
 
     [Fact]
@@ -216,7 +216,7 @@ public class MockedRestServiceTests
 
         var result = await setContext.GetPageAsync(0, 10, 1);
         Assert.NotNull(result);
-        Assert.Equal(10, result.Data!.Count());
+        Assert.Equal(10, result.Items!.Count());
     }
 
     [Fact]

@@ -201,8 +201,12 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             TableState = state,
             Parameters = parameters
         };
-        var page = await SetContext.GetPageAsync(state.Page * state.PageSize, state.PageSize, parameters: parameters);
-        var result = BuildTableData(page, currentQuery);
+
+        var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
+        var page = await SetContext.GetPageAsync(pageRequest, parameters: parameters);
+
+        currentQuery.Data = page;
+        var result = currentQuery.GetTableData();
 
         if (IndexItems)
         {
@@ -332,23 +336,9 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return true;
     }
 
-    // TODO: Extract as extension method ?
-    private static TableData<TModel> BuildTableData(PageResult<TModel> page, FluxSetDataPageQuery<TModel> currentQuery)
-    {
-        var result = new TableData<TModel>()
-        {
-            Items = page.Data,
-            TotalItems = page.Total!.Value
-        };
-
-        currentQuery.Result = result;
-
-        return result;
-    }
-
     public bool IndexItems { get; set; } = false;
 
-    public IDictionary<TModel, int>? ItemIndexMap { get; set; }
+    public IDictionary<TModel, int>? Index { get; set; }
 
     public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
@@ -28,11 +28,10 @@
 		<None Include="..\..\..\assets\flux-logo-128.png" Pack="True" Visible="False" PackagePath="\" />
 		<None Include="..\..\..\README.md" Pack="True" Visible="False" PackagePath="\" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
 	  <PackageReference Include="BitzArt.Json.TypedObjects" Version="0.1.0" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-	  <PackageReference Include="MudBlazor" Version="7.4.0" />
+	  <PackageReference Include="MudBlazor" Version="7.15.0" />
 	</ItemGroup>
 
 	<ItemGroup>

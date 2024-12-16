@@ -88,7 +88,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
         var parameters = await GetParametersAsync(searchText, cancellationToken);
         var page = await Context.GetPageAsync(0, MaxItems ?? 10, parameters);
 
-        return page.Data!;
+        return page.Items!;
     }
 
     private async Task<object[]?> GetParametersAsync(string searchText, CancellationToken cancellationToken)

@@ -22,9 +22,9 @@ public class JsonServiceTests
         var result = await _setContext.GetPageAsync(offset, limit);
 
         Assert.NotNull(result);
-        Assert.NotNull(result.Data);
-        Assert.True(result.Data.Any());
-        Assert.Equal(limit, result.Data.Count());
+        Assert.NotNull(result.Items);
+        Assert.True(result.Items.Any());
+        Assert.Equal(limit, result.Items.Count());
     }
 
     [Fact]
