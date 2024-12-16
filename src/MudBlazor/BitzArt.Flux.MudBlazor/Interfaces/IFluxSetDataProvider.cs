@@ -104,13 +104,26 @@ public interface IFluxSetDataProvider<TModel>
     /// </summary>
     public Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Whether to index items.
+    /// </summary>
     public bool IndexItems { get; set; }
 
+    /// <summary>
+    /// Map of item indices.<br/>
+    /// Items are indexed if <see cref="IndexItems"/> is set to <see langword="true"/>.
+    /// </summary>
+    public IDictionary<TModel, int>? ItemIndexMap { get; set; }
+
+    /// <summary>
+    /// Event triggered when a request was completed and resulting items were indexed.<br/>
+    /// The event occurs if <see cref="IndexItems"/> is set to <see langword="true"/>.
+    /// </summary>
     public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
 
+    /// <summary>
+    /// Returns the index of the given <paramref name="item"/>.<br/>
+    /// Items are indexed if <see cref="IndexItems"/> is set to <see langword="true"/>.
+    /// </summary>
     public int IndexOf(TModel item);
-
-    public IDictionary<TModel, int>? ItemIndexMap { get; }
-
-    public void RestoreItemIndexMap(IDictionary<TModel, int> map);
 }

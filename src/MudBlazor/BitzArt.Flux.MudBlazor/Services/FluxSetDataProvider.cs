@@ -71,7 +71,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         await ResetSortAndReloadAsync(ignoreCancellation);
     }
 
-    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true)
     {
         if (Table is null) throw new InvalidOperationException(
@@ -348,17 +347,17 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public bool IndexItems { get; set; } = false;
 
-    public IDictionary<TModel, int>? ItemIndexMap { get; private set; }
+    public IDictionary<TModel, int>? ItemIndexMap { get; set; }
 
     public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
 
     public int IndexOf(TModel item)
     {
         if (IndexItems == false)
-            throw new InvalidOperationException();
+            throw new InvalidOperationException(""); // TODO: Add exception message
 
         if (ItemIndexMap is null)
-            throw new InvalidOperationException();
+            throw new InvalidOperationException(""); // TODO: Add exception message
 
         try
         {
@@ -368,11 +367,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         {
             return -1;
         }
-    }
-
-    public void RestoreItemIndexMap(IDictionary<TModel, int> map)
-    {
-        ItemIndexMap = map;
     }
 
     private void UpdateItemIndexMap(IEnumerable<TModel> newItems)
@@ -385,12 +379,12 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             return;
         }
 
-        var previousItems = LastQuery?.Result.Items;
-        var previousItemsCount = previousItems is not null ? previousItems.Count() : 0;
+        var lastItems = LastQuery?.Result.Items;
+        var lastItemsCount = lastItems is not null ? lastItems.Count() : 0;
 
-        if (newItemsCount > previousItemsCount)
+        if (newItemsCount > lastItemsCount)
         {
-            // recreate the item/index map with increased size
+            // recreate the item index map with increased size
             ItemIndexMap = CreateItemIndexMap(newItems, newItemsCount);
             return;
         }
