@@ -110,12 +110,6 @@ public interface IFluxSetDataProvider<TModel>
     public bool IndexItems { get; set; }
 
     /// <summary>
-    /// Map of item indices.<br/>
-    /// Items are indexed if <see cref="IndexItems"/> is set to <see langword="true"/>.
-    /// </summary>
-    public IDictionary<TModel, int>? ItemIndexMap { get; set; }
-
-    /// <summary>
     /// Event triggered when a request was completed and resulting items were indexed.<br/>
     /// The event occurs if <see cref="IndexItems"/> is set to <see langword="true"/>.
     /// </summary>
@@ -126,4 +120,9 @@ public interface IFluxSetDataProvider<TModel>
     /// Items are indexed if <see cref="IndexItems"/> is set to <see langword="true"/>.
     /// </summary>
     public int IndexOf(TModel item);
+
+    /// <summary>
+    /// Restores ap of item indices.
+    /// </summary>
+    public void RestoreItemIndexMap(IDictionary<TModel, int> map);
 }

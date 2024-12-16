@@ -372,6 +372,11 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
     }
 
+    public void RestoreItemIndexMap(IDictionary<TModel, int> map)
+    {
+        ItemIndexMap = map;
+    }
+
     private void UpdateItemIndexMap(IEnumerable<TModel> newItems)
     {
         if (!IndexItems)
