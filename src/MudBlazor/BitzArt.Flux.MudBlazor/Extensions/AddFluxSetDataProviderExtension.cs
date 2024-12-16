@@ -22,9 +22,9 @@ public static class AddFluxSetDataProviderExtension
         setContextImplementationFactory ??= (serviceProvider)
             => serviceProvider.GetRequiredService<IFluxSetContext<TModel>>();
 
-        services.AddScoped<FluxSetDataProvider<TModel>>();
+        services.AddTransient<FluxSetDataProvider<TModel>>();
 
-        services.AddScoped<IFluxSetDataProvider<TModel>>(serviceProvider =>
+        services.AddTransient<IFluxSetDataProvider<TModel>>(serviceProvider =>
         {
             var provider = serviceProvider.GetRequiredService<FluxSetDataProvider<TModel>>();
             var setContext = setContextImplementationFactory!.Invoke(serviceProvider);

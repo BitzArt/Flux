@@ -1,6 +1,7 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -71,7 +72,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         await ResetSortAndReloadAsync(ignoreCancellation);
     }
 
-    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true)
     {
         if (Table is null) throw new InvalidOperationException(
@@ -203,6 +203,12 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         };
         var page = await SetContext.GetPageAsync(state.Page * state.PageSize, state.PageSize, parameters: parameters);
         var result = BuildTableData(page, currentQuery);
+
+        if (IndexItems)
+        {
+            UpdateItemIndexMap(result.Items!);
+            OnItemsIndexed?.Invoke(new(this, ItemIndexMap!));
+        }
 
         LastQuery = currentQuery;
         OnResult?.Invoke(new(this, LastQuery));
@@ -338,5 +344,80 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         currentQuery.Result = result;
 
         return result;
+    }
+
+    public bool IndexItems { get; set; } = false;
+
+    public IDictionary<TModel, int>? ItemIndexMap { get; set; }
+
+    public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
+
+    public int IndexOf(TModel item)
+    {
+        if (!IndexItems)
+            throw new InvalidOperationException(
+                "'IndexItems' should be set to 'true' before attempting to retrieve the index of an item.");
+
+        if (ItemIndexMap is null)
+            throw new InvalidOperationException(
+                "'ItemIndexMap' is null. Ensure items are indexed before attempting to retrieve the index of an item.");
+
+        try
+        {
+            return ItemIndexMap[item];
+        }
+        catch
+        {
+            return -1;
+        }
+    }
+
+    public void RestoreItemIndexMap(IDictionary<TModel, int> map)
+    {
+        ItemIndexMap = map;
+    }
+
+    private void UpdateItemIndexMap(IEnumerable<TModel> newItems)
+    {
+        if (!IndexItems)
+            throw new UnreachableException();
+
+        var newItemsCount = newItems.Count();
+
+        if (ItemIndexMap is null)
+        {
+            ItemIndexMap = CreateItemIndexMap(newItems, newItemsCount);
+            return;
+        }
+
+        var lastItems = LastQuery?.Result.Items;
+        var lastItemsCount = lastItems is not null ? lastItems.Count() : 0;
+
+        if (newItemsCount > lastItemsCount)
+        {
+            // recreate the item index map with increased size
+            ItemIndexMap = CreateItemIndexMap(newItems, newItemsCount);
+            return;
+        }
+
+        ItemIndexMap.Clear();
+        PopulateItemIndexMap(ItemIndexMap, newItems);
+    }
+
+    private static Dictionary<TModel, int> CreateItemIndexMap(IEnumerable<TModel> items, int mapSize)
+    {
+        var map = new Dictionary<TModel, int>(mapSize);
+        PopulateItemIndexMap(map, items);
+        return map;
+    }
+
+    private static void PopulateItemIndexMap(IDictionary<TModel, int> map, IEnumerable<TModel> items)
+    {
+        int index = 0;
+        foreach (var item in items)
+        {
+            map.Add(item, index);
+            index++;
+        }
     }
 }
