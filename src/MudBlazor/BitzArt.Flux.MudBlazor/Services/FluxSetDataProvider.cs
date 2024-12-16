@@ -1,6 +1,7 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -353,7 +354,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public int IndexOf(TModel item)
     {
-        if (IndexItems == false)
+        if (!IndexItems)
             throw new InvalidOperationException(""); // TODO: Add exception message
 
         if (ItemIndexMap is null)
@@ -371,6 +372,9 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private void UpdateItemIndexMap(IEnumerable<TModel> newItems)
     {
+        if (!IndexItems)
+            throw new UnreachableException();
+
         var newItemsCount = newItems.Count();
 
         if (ItemIndexMap is null)
