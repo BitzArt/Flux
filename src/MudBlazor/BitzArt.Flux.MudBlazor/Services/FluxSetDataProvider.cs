@@ -355,10 +355,12 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     public int IndexOf(TModel item)
     {
         if (!IndexItems)
-            throw new InvalidOperationException(""); // TODO: Add exception message
+            throw new InvalidOperationException(
+                "'IndexItems' should be set to 'true' before attempting to retrieve the index of an item.");
 
         if (ItemIndexMap is null)
-            throw new InvalidOperationException(""); // TODO: Add exception message
+            throw new InvalidOperationException(
+                "'ItemIndexMap' is null. Ensure items are indexed before attempting to retrieve the index of an item.");
 
         try
         {
