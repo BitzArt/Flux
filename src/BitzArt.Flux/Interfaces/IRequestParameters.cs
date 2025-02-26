@@ -3,12 +3,12 @@
 namespace BitzArt.Flux;
 
 /// <summary>
-/// Represents a collection of parameters to be used in an operation.
+/// Represents a collection of parameters to be used in a Flux operation.
 /// </summary>
 public interface IRequestParameters
 {
     /// <summary>
-    /// A collection of parameters to be used in an operation.
+    /// Values collection.
     /// </summary>
     public ICollection Values { get; }
 }

@@ -111,6 +111,7 @@ internal class FluxJsonServiceFactory(
 
     public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name)
         where TModel : class
+        where TKey : notnull
     {
         var loggerFactory = services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger("Flux");

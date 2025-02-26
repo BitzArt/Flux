@@ -25,5 +25,6 @@ public interface IFluxFactory
     /// Resolves a context for a specific Flux Service.
     /// </summary>
     public IFluxSetContext<TModel, TKey> GetSetContext<TModel, TKey>(IServiceProvider services, string? serviceName = null, string? setName = null)
-        where TModel : class;
+        where TModel : class
+        where TKey : notnull;
 }

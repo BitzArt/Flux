@@ -17,6 +17,7 @@ public static class AddSetExtension
     /// </summary>
     public static IFluxRestSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxRestServiceBuilder serviceBuilder, string? path = null, string? name = null)
         where TModel : class
+        where TKey : notnull
     {
         var builder = new FluxRestSetBuilder<TModel, TKey>(serviceBuilder, path);
 

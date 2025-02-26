@@ -48,6 +48,7 @@ internal class FluxFactory : IFluxFactory
         string? serviceName = null,
         string? setName = null)
         where TModel : class
+        where TKey : notnull
     {
         IFluxServiceFactory? serviceContext;
         var q = ServiceContexts.AsQueryable();

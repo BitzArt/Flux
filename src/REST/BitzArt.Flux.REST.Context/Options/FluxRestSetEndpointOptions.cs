@@ -5,10 +5,10 @@ namespace BitzArt.Flux.REST;
 internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
     string? path = null,
-    Func<TInputParameters?, IRestRequestParameters>? transformParametersFunc = null)
+    Func<TInputParameters, IRestRequestParameters>? transformParametersFunc = null)
     : IFluxRestSetEndpointOptions<TModel, TInputParameters>
     where TModel : class
-    where TInputParameters : IRequestParameters?
+    where TInputParameters : notnull, IRequestParameters
 {
     public IFluxRestSetOptions<TModel> SetOptions { get; set; } = setOptions;
 
@@ -52,7 +52,8 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
             return null;
 
         if (parameters.RequestParameters is not IRestRequestParameters restRequestParameters)
-            throw new ArgumentException(); // TODO: add exception message
+            throw new InvalidOperationException(
+                $"Unable to resolve {nameof(IRestRequestParameters)} for this request.");
 
         return restRequestParameters;
     }

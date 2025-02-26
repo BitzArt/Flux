@@ -36,7 +36,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     public Func<string, CancellationToken, object>? GetParametersFunc { get; set; }
 
     /// <inheritdoc cref="MudAutocomplete{T}.SearchFunc"/>
-    public new Func<string, CancellationToken, Task<IEnumerable<T>>> SearchFunc
+    public new Func<string?, CancellationToken, Task<IEnumerable<T>>?>? SearchFunc
     {
         get
         {
@@ -49,7 +49,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     }
 
     [Inject]
-    private IServiceProvider _serviceProvider { get; set; } = null!;
+    private IServiceProvider ServiceProvider { get; set; } = null!;
 
     private IFluxSetContext<T>? _context;
     private IFluxSetContext<T> Context
@@ -58,7 +58,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
         {
             if (_context is not null) return _context;
 
-            var flux = _serviceProvider.GetRequiredService<IFluxContext>();
+            var flux = ServiceProvider.GetRequiredService<IFluxContext>();
 
             _context = flux.Set<T>(ServiceName, SetName);
 
@@ -74,8 +74,10 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
         base.SearchFunc = HandleSearchAsync;
     }
 
-    private Task<IEnumerable<T>> HandleSearchAsync(string searchText, CancellationToken cancellationToken)
+    private Task<IEnumerable<T>> HandleSearchAsync(string? searchText, CancellationToken cancellationToken)
     {
+        searchText ??= string.Empty;
+
         if (SearchHandler is null)
             return SearchAsync(searchText, cancellationToken);
 

@@ -9,6 +9,7 @@ internal class FluxJsonSetContext<TModel, TKey>(
     IFluxJsonSetOptions<TModel> setOptions
     ) : FluxSetContext<TModel, TKey>
     where TModel : class
+    where TKey : notnull
 {
     // ================ Flux internal wiring ================
     internal readonly FluxJsonServiceOptions ServiceOptions = serviceOptions;

@@ -16,6 +16,7 @@ public class FluxServiceContext(IFluxServiceFactory provider, IServiceProvider s
     /// </summary>
     public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? name = null)
         where TModel : class
+        where TKey : notnull
         => Provider.CreateSetContext<TModel, TKey>(serviceProvider, name);
 
     /// <inheritdoc cref="Set{TModel, TKey}(string?)"/>"

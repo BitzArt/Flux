@@ -16,8 +16,10 @@ public interface IFluxServiceFactory
     /// </summary>
     public IFluxSetContext<TModel> CreateSetContext<TModel>(IServiceProvider services, string? name = null) where TModel : class;
 
-    /// <inheritdoc cref="CreateSetContext{TModel}(IServiceProvider, string?)"/>/>
-    public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name = null) where TModel : class;
+    /// <inheritdoc cref="CreateSetContext{TModel}(IServiceProvider, string?)"/>
+    public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name = null)
+        where TModel : class
+        where TKey : notnull;
 
     /// <summary>
     /// Register a new data Set.

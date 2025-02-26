@@ -3,7 +3,7 @@ namespace BitzArt.Flux.REST;
 internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
     : FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>, IFluxRestSetIdEndpointOptions<TModel, TInputParameters>
     where TModel : class
-    where TInputParameters : IRequestParameters?
+    where TInputParameters : notnull, IRequestParameters
 {
     public Func<TKey, string>? GetPathFunc { get; set; }
 
@@ -11,7 +11,7 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
         IFluxRestSetOptions<TModel> setOptions,
         string? path = null,
         Func<TKey, string>? getPath = null,
-        Func<TInputParameters?, IRestRequestParameters>? transformParameters = null)
+        Func<TInputParameters, IRestRequestParameters>? transformParameters = null)
         : base(setOptions, path, transformParameters)
     {
         if (getPath is not null)

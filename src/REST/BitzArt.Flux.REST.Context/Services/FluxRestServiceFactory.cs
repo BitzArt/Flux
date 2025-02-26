@@ -109,6 +109,7 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
 
     public IFluxSetContext<TModel, TKey> CreateSetContext<TModel, TKey>(IServiceProvider services, string? name)
         where TModel : class
+        where TKey : notnull
     {
         var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ServiceName);

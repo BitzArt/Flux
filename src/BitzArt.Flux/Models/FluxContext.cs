@@ -8,6 +8,7 @@ internal class FluxContext(IFluxFactory factory, IServiceProvider serviceProvide
 
     public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? service = null, string? set = null)
         where TModel : class
+        where TKey : notnull
         => factory.GetSetContext<TModel, TKey>(serviceProvider, service, set);
 
     public IFluxSetContext<TModel> Set<TModel>(string? service = null, string? set = null)
