@@ -23,11 +23,8 @@
 		<None Include="..\..\..\README.md" Pack="True" Visible="False" PackagePath="\" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.*" />
 	</ItemGroup>
 
 	<ItemGroup>
