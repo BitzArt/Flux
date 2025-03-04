@@ -3,7 +3,7 @@
 namespace BitzArt.Flux.REST;
 
 internal class RequestPreparationParameters<TInputParameters, TKey> : IRequestPreparationParameters
-    where TInputParameters : IRequestParameters?
+    where TInputParameters : IFluxOperationParameters?
 {
     public EndpointType EndpointType { get; set; }
 

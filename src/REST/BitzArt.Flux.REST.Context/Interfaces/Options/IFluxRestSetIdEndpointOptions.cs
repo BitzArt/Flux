@@ -3,7 +3,7 @@
 internal interface IFluxRestSetIdEndpointOptions<TModel, TInputParameters>
     : IFluxRestSetEndpointOptions<TModel, TInputParameters>, IFluxRestSetIdEndpointOptions<TModel>
     where TModel : class
-    where TInputParameters : IRequestParameters?
+    where TInputParameters : IFluxOperationParameters?
 {
 }
 

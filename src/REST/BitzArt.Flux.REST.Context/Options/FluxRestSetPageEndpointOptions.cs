@@ -6,10 +6,10 @@ namespace BitzArt.Flux.REST;
 internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
     string? path = null,
-    Func<TInputParameters?, IRestRequestParameters>? transformParameters = null)
+    Func<TInputParameters?, IFluxRestOperationParameters>? transformParameters = null)
     : FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions, path, transformParameters), IFluxRestSetPageEndpointOptions<TModel, TInputParameters>
     where TModel : class
-    where TInputParameters : IRequestParameters?
+    where TInputParameters : IFluxOperationParameters?
 {
     private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {

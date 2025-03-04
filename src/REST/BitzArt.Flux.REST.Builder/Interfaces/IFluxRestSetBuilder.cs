@@ -23,7 +23,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     /// <inheritdoc cref="WithEndpointExtension.WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
     public IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TParameters>(string endpoint)
-        where TParameters : IRequestParameters?
+        where TParameters : IFluxOperationParameters?
         => this.WithEndpoint<TModel, TKey, TParameters?>(endpoint);
 
     /// <summary>
@@ -35,7 +35,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TInputParameters>(
         string endpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
-        where TInputParameters : IRequestParameters?
+        where TInputParameters : IFluxOperationParameters?
         => this.WithEndpoint<TModel, TKey, TInputParameters?>(endpoint, transformParameters);
 
     /// <summary>
@@ -47,7 +47,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TOutputParameters>(
         string endpoint,
         Func<RequestParameters?, TOutputParameters> transformParameters)
-        where TOutputParameters : IRestRequestParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithEndpoint<TModel, TKey, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -59,8 +59,8 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TInputParameters, TOutputParameters>(
         string endpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
-        where TInputParameters : IRequestParameters?
-        where TOutputParameters : IRestRequestParameters
+        where TInputParameters : IFluxOperationParameters?
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithEndpoint<TModel, TKey, TInputParameters?, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -70,7 +70,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     ///  <inheritdoc cref="WithPageEndpointExtension.WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
     public IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TParameters>(string endpoint)
-        where TParameters : IRequestParameters?
+        where TParameters : IFluxOperationParameters?
         => this.WithPageEndpoint<TModel, TKey, TParameters?>(endpoint);
 
     /// <summary>
@@ -82,7 +82,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TInputParameters>(
         string endpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
-        where TInputParameters : IRequestParameters?
+        where TInputParameters : IFluxOperationParameters?
         => this.WithPageEndpoint<TModel, TKey, TInputParameters?>(endpoint, transformParameters);
 
     /// <summary>
@@ -94,7 +94,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TOutputParameters>(
         string endpoint,
         Func<RequestParameters?, TOutputParameters> transformParameters)
-        where TOutputParameters : IRestRequestParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithPageEndpoint<TModel, TKey, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -106,8 +106,8 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TInputParameters, TOutputParameters>(
         string endpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
-        where TInputParameters : notnull, IRequestParameters
-        where TOutputParameters : IRestRequestParameters
+        where TInputParameters : notnull, IFluxOperationParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithPageEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -117,7 +117,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     /// <inheritdoc cref="WithIdEndpointExtension.WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TParameters>(string endpoint)
-        where TParameters : notnull, IRequestParameters
+        where TParameters : notnull, IFluxOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TParameters>(endpoint);
 
     /// <summary>
@@ -127,7 +127,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     /// <inheritdoc cref="WithIdEndpointExtension.WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TParameters>(Func<TKey?, string> getEndpoint)
-        where TParameters : notnull, IRequestParameters
+        where TParameters : notnull, IFluxOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TParameters>(getEndpoint);
 
     /// <summary>
@@ -139,7 +139,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TInputParameters>(
         string endpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
-        where TInputParameters : notnull, IRequestParameters
+        where TInputParameters : notnull, IFluxOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TInputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -151,7 +151,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TOutputParameters>(
         string endpoint,
         Func<RequestParameters?, TOutputParameters> transformParameters)
-        where TOutputParameters : IRestRequestParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -163,8 +163,8 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TInputParameters, TOutputParameters>(
         string endpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
-        where TInputParameters : notnull, IRequestParameters
-        where TOutputParameters : IRestRequestParameters
+        where TInputParameters : notnull, IFluxOperationParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -176,7 +176,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TInputParameters>(
         Func<TKey, string> getEndpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
-        where TInputParameters : notnull, IRequestParameters
+        where TInputParameters : notnull, IFluxOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TInputParameters>(getEndpoint, transformParameters);
 
     /// <summary>
@@ -188,7 +188,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TOutputParameters>(
         Func<TKey, string> getEndpoint,
         Func<RequestParameters?, TOutputParameters> transformParameters)
-        where TOutputParameters : IRestRequestParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TOutputParameters>(getEndpoint, transformParameters);
 
     /// <summary>
@@ -200,7 +200,7 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     public IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TInputParameters, TOutputParameters>(
         Func<TKey, string> getEndpoint,
         Func<TInputParameters, TOutputParameters> transformParameters)
-        where TInputParameters : notnull, IRequestParameters
-        where TOutputParameters : IRestRequestParameters
+        where TInputParameters : notnull, IFluxOperationParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => this.WithIdEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(getEndpoint, transformParameters);
 }

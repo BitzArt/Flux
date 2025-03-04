@@ -1,17 +1,27 @@
 ﻿namespace BitzArt.Flux.REST;
 
-internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<TModel> setOptions)
+/// <summary>
+/// A collection of endpoints associated with a given Flux REST set.
+/// </summary>
+/// <typeparam name="TModel">Set's model type.</typeparam>
+/// <typeparam name="TKey">Set's key type.</typeparam>
+internal class FluxRestSetEndpointCollection<TModel, TKey>
     : IFluxRestSetEndpointCollection<TModel>
     where TModel : class
 {
+    public FluxRestSetEndpointCollection(IFluxRestSetOptions<TModel> setOptions)
+    {
+        SetOptions = setOptions;
+    }
+
     private readonly Dictionary<EndpointSignature, IFluxRestSetEndpointOptions<TModel>> _values = [];
 
-    public IFluxRestSetOptions<TModel> SetOptions { get; } = setOptions;
+    public IFluxRestSetOptions<TModel> SetOptions { get; }
 
-    private readonly DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey> _defaultOptions = new();
+    private readonly DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey> _defaultEndpointOptions = new();
 
     public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
-        where TInputParameters : IRequestParameters?
+        where TInputParameters : IFluxOperationParameters?
     {
         switch (endpointOptions)
         {
@@ -30,7 +40,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
     }
 
     private void Add<TInputParameters>(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
-        where TInputParameters : IRequestParameters?
+        where TInputParameters : IFluxOperationParameters?
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);
@@ -51,7 +61,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
     }
 
     public HttpRequestMessage Resolve<TInputParameters>(IRequestPreparationParameters parameters)
-        where TInputParameters : IRequestParameters?
+        where TInputParameters : IFluxOperationParameters?
     {
         var endpointOptions = ResolveOptions<TInputParameters>(parameters.EndpointType);
         var requestMessage = endpointOptions.PrepareRequest(parameters);
@@ -60,7 +70,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
     }
 
     private IFluxRestSetEndpointOptions<TModel, TInputParameters> ResolveOptions<TInputParameters>(EndpointType endpointType, string? endpointName = null)
-        where TInputParameters : IRequestParameters?
+        where TInputParameters : IFluxOperationParameters?
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);
@@ -71,7 +81,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
         if (endpointName is not null)
             throw new Exception($"{endpointType.GetFriendlyEndpointTypeName()} with name: '{endpointName}' not found.");
 
-        return _defaultOptions.GetDefaultInstance<TInputParameters>(SetOptions, endpointType);
+        return _defaultEndpointOptions.GetDefaultInstance<TInputParameters>(SetOptions, endpointType);
     }
 
     // TODO: When implementing 'Named endpoints' functionality: add endpoint name,

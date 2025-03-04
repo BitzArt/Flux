@@ -11,9 +11,9 @@ public sealed class RequestParameters(params object?[] parameters) : RequestPara
 /// A collection of parameters to be used in a Flux operation.
 /// </summary>
 /// <typeparam name="T">Type of the parameters.</typeparam>
-public class RequestParameters<T> : IRequestParameters
+public class RequestParameters<T> : IFluxOperationParameters
 {
-    ICollection IRequestParameters.Values => Parameters;
+    ICollection IFluxOperationParameters.Values => Parameters;
 
     /// <summary>
     /// Parameters collection.

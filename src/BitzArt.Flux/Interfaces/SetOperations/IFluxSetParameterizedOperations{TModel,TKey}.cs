@@ -18,13 +18,13 @@ public interface IFluxSetParameterizedOperations<TModel, TKey>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TModel> GetAsync<TInputParameters>(TKey id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IRequestParameters;
+        where TInputParameters : notnull, IFluxOperationParameters;
 
     // ============================== UpdateAsync ==============================
 
     /// <inheritdoc cref="UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(TKey id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IRequestParameters
+        where TInputParameters : notnull, IFluxOperationParameters
         => UpdateAsync<TInputParameters, TModel>(id, model, parameters, partial, cancellationToken);
 
     /// <summary>
@@ -39,5 +39,5 @@ public interface IFluxSetParameterizedOperations<TModel, TKey>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TKey id, TModel value, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IRequestParameters;
+        where TInputParameters : notnull, IFluxOperationParameters;
 }

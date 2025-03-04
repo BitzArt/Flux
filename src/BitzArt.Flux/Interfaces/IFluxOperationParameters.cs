@@ -5,10 +5,10 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Represents a collection of parameters to be used in a Flux operation.
 /// </summary>
-public interface IRequestParameters
+public interface IFluxOperationParameters
 {
     /// <summary>
-    /// Values collection.
+    /// Parameter value collection.
     /// </summary>
     public ICollection Values { get; }
 }

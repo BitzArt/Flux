@@ -6,7 +6,7 @@ namespace BitzArt.Flux;
 // TODO: Move this logic into endpoint options
 internal partial class RequestParameterParsingUtility
 {
-    public static string ParseRequestUrl(string path, IRestRequestParameters? parameters)
+    public static string ParseRequestUrl(string path, IFluxRestOperationParameters? parameters)
     {
         var matches = ParameterRegex().Matches(path);
         if (matches.Count == 0) return path;

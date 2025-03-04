@@ -2,9 +2,9 @@
 
 internal interface IFluxRestSetEndpointOptions<TModel, TInputParameters> : IFluxRestSetEndpointOptions<TModel>
     where TModel : class
-    where TInputParameters : IRequestParameters?
+    where TInputParameters : IFluxOperationParameters?
 {
-    public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; internal set; }
+    public Func<TInputParameters, IFluxRestOperationParameters>? TransformParametersFunc { get; internal set; }
 }
 
 internal interface IFluxRestSetEndpointOptions<TModel>

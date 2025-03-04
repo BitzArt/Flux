@@ -2,13 +2,13 @@
 
 namespace BitzArt.Flux;
 
-public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValuePair<string, object>>
+public class RestRequestParameters : IFluxRestOperationParameters, ICollection<KeyValuePair<string, object>>
 {
     public Dictionary<string, object> ValueMap => GetDictionary.Invoke();
 
     private readonly Dictionary<string, object> _parameters = [];
 
-    ICollection IRequestParameters.Values => ValueMap;
+    ICollection IFluxOperationParameters.Values => ValueMap;
 
     private ICollection<KeyValuePair<string, object>> _parameterCollection => ValueMap;
 

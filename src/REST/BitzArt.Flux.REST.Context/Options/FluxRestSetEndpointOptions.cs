@@ -5,10 +5,10 @@ namespace BitzArt.Flux.REST;
 internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
     string? path = null,
-    Func<TInputParameters, IRestRequestParameters>? transformParametersFunc = null)
+    Func<TInputParameters, IFluxRestOperationParameters>? transformParametersFunc = null)
     : IFluxRestSetEndpointOptions<TModel, TInputParameters>
     where TModel : class
-    where TInputParameters : notnull, IRequestParameters
+    where TInputParameters : notnull, IFluxOperationParameters
 {
     public IFluxRestSetOptions<TModel> SetOptions { get; set; } = setOptions;
 
@@ -16,7 +16,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     public string? Path { get; set; } = path;
 
     /// <inheritdoc/>
-    public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; set; } = transformParametersFunc;
+    public Func<TInputParameters, IFluxRestOperationParameters>? TransformParametersFunc { get; set; } = transformParametersFunc;
 
     public HttpRequestMessage PrepareRequest(IRequestPreparationParameters parameters)
     {
@@ -38,7 +38,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     private protected virtual string GetInitialPath()
         => CombinePath(SetOptions.ServiceOptions.BaseUrl, SetOptions.Path, Path);
 
-    private protected IRestRequestParameters? HandleInputParameters(IRequestPreparationParameters parameters)
+    private protected IFluxRestOperationParameters? HandleInputParameters(IRequestPreparationParameters parameters)
     {
         if (TransformParametersFunc is not null)
         {
@@ -51,9 +51,9 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
         if (parameters.RequestParameters is null)
             return null;
 
-        if (parameters.RequestParameters is not IRestRequestParameters restRequestParameters)
+        if (parameters.RequestParameters is not IFluxRestOperationParameters restRequestParameters)
             throw new InvalidOperationException(
-                $"Unable to resolve {nameof(IRestRequestParameters)} for this request.");
+                $"Unable to resolve {nameof(IFluxRestOperationParameters)} for this request.");
 
         return restRequestParameters;
     }

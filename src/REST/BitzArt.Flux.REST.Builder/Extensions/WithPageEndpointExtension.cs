@@ -29,7 +29,7 @@ public static class WithPageEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
-        where TParameters : IRequestParameters?
+        where TParameters : IFluxOperationParameters?
     {
         var options = new FluxRestSetPageEndpointOptions<TModel, TKey, TParameters>(builder.SetOptions, endpoint);
         builder.SetOptions.EndpointCollection.Add(options);
@@ -61,7 +61,7 @@ public static class WithPageEndpointExtension
         string endpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
         where TModel : class
-        where TInputParameters : IRequestParameters?
+        where TInputParameters : IFluxOperationParameters?
         => builder.WithPageEndpoint<TModel, TKey, TInputParameters?, RestRequestParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -75,7 +75,7 @@ public static class WithPageEndpointExtension
         string endpoint,
         Func<RequestParameters?, TOutputParameters> transformParameters)
         where TModel : class
-        where TOutputParameters : IRestRequestParameters
+        where TOutputParameters : IFluxRestOperationParameters
         => builder.WithPageEndpoint<TModel, TKey, RequestParameters?, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
@@ -89,8 +89,8 @@ public static class WithPageEndpointExtension
         string endpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
         where TModel : class
-        where TInputParameters : IRequestParameters?
-        where TOutputParameters : IRestRequestParameters
+        where TInputParameters : IFluxOperationParameters?
+        where TOutputParameters : IFluxRestOperationParameters
     {
         var options = new FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(builder.SetOptions, endpoint, (parameters) => transformParameters(parameters));
         builder.SetOptions.EndpointCollection.Add(options);
