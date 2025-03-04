@@ -1,7 +1,8 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// Parameterless operations for <see href="https://bitzart.github.io/Flux/">Flux</see> Sets.
+/// Parameterless operations for <see href="https://bitzart.github.io/Flux/">Flux</see> Sets. <br />
+/// Parameterized operations are covered by <see cref="IFluxSetParameterizedOperations{TModel,TKey}"/>.
 /// </summary>
 /// <typeparam name="TModel">Model type of the set.</typeparam>
 /// <typeparam name="TKey">Key type of the set.</typeparam>
