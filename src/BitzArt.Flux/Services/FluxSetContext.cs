@@ -5,7 +5,7 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Base class for set context implementations.
 /// </summary>
-public abstract partial class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKey>
+public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKey>
     where TModel : class
     where TKey : notnull
 {

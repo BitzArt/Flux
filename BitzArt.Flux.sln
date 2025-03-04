@@ -100,6 +100,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "theme", "theme", "{D6F7155D
 		docs\theme\favicon.png = docs\theme\favicon.png
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.REST.Builder", "src\REST\BitzArt.Flux.REST.Builder\BitzArt.Flux.REST.Builder.csproj", "{F040E34E-D8DD-421A-86A8-CE8D37007655}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,10 @@ Global
 		{CBB67562-DEED-4E07-814A-EF6FCB3D5533}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB67562-DEED-4E07-814A-EF6FCB3D5533}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBB67562-DEED-4E07-814A-EF6FCB3D5533}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F040E34E-D8DD-421A-86A8-CE8D37007655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F040E34E-D8DD-421A-86A8-CE8D37007655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F040E34E-D8DD-421A-86A8-CE8D37007655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F040E34E-D8DD-421A-86A8-CE8D37007655}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,6 +189,7 @@ Global
 		{7B8D8836-126D-4F12-AF45-7D5414F58850} = {3122077F-A7F9-4212-97D9-868217EF9D1C}
 		{4E6BDC28-D997-43B7-B0DE-C676636669FE} = {3122077F-A7F9-4212-97D9-868217EF9D1C}
 		{D6F7155D-4BB7-4251-8C92-795F8A9F332D} = {A2CF3320-C42E-44F5-B88A-2CC29EFB9460}
+		{F040E34E-D8DD-421A-86A8-CE8D37007655} = {DF7F7802-31AB-4CDC-A177-9982951AF2DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}

@@ -30,6 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\BitzArt.Flux.REST.Builder\BitzArt.Flux.REST.Builder.csproj" />
 	  <ProjectReference Include="..\BitzArt.Flux.REST.Context\BitzArt.Flux.REST.Context.csproj" />
 	</ItemGroup>
 
