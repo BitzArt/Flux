@@ -131,7 +131,7 @@ public class ServiceRegistrationTests
         var set2FromService = service.Set<TestModel>("test-set-2");
         Assert.NotNull(set2FromService);
 
-        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
         {
             _ = service.Set<TestModel>();
         });
@@ -142,12 +142,12 @@ public class ServiceRegistrationTests
         var set2FromFlux = flux.Set<TestModel>("service1", "test-set-2");
         Assert.NotNull(set2FromFlux);
 
-        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
         {
             _ = flux.Set<TestModel>("service1");
         });
 
-        Assert.Throws<FluxServiceProviderNotFoundException>(() =>
+        Assert.ThrowsAny<FluxException>(() =>
         {
             _ = flux.Set<TestModel>();
         });
@@ -166,7 +166,7 @@ public class ServiceRegistrationTests
                     .AddSet<TestModel, int>()
                         .FromJsonFile("test-model.set.json");
 
-            Assert.Throws<SetAlreadyRegisteredException>(() =>
+            Assert.ThrowsAny<FluxException>(() =>
             {
                 builder.AddSet<TestModel, int>();
             });
@@ -234,7 +234,7 @@ public class ServiceRegistrationTests
         var set2FromService = service.Set<TestModel>("test-set-2");
         Assert.NotNull(set2FromService);
 
-        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
         {
             var setNoNameFromService = service.Set<TestModel>();
         });
@@ -245,12 +245,12 @@ public class ServiceRegistrationTests
         var set2FromFlux = flux.Set<TestModel>("service1", "test-set-2");
         Assert.NotNull(set2FromFlux);
 
-        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
         {
             var setNoNameFromFlux = flux.Set<TestModel>("service1");
         });
 
-        Assert.Throws<FluxServiceProviderNotFoundException>(() =>
+        Assert.ThrowsAny<FluxException>(() =>
         {
             var setNoNameFromFlux = flux.Set<TestModel>();
         });

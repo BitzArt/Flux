@@ -22,11 +22,18 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============================== GetAsync ==============================
 
     /// <inheritdoc/>
+    public abstract Task<TModel> GetAsync(CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
     public Task<TModel> GetAsync(object id, CancellationToken cancellationToken = default)
         => GetAsync(CastId(id), cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<TModel> GetAsync(TKey id, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public abstract Task<TModel> GetAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
+        where TInputParameters : notnull, IFluxOperationParameters;
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync<TInputParameters>(object id, TInputParameters parameters, CancellationToken cancellationToken = default)

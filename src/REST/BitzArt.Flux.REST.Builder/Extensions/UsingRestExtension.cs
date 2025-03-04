@@ -23,12 +23,12 @@ public static class UsingRestExtension
         // If configuration action is null, do nothing
         builder.HttpClientConfiguration ??= (_, _) => { };
 
-        var httpClientBuilder = builder.Services.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
+        var httpClientBuilder = builder.ServiceCollection.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
         {
             builder.HttpClientConfiguration(serviceProvider, httpClient);
         });
 
-        builder.Services.AddScoped<IFluxServiceContext>(x =>
+        builder.ServiceCollection.AddScoped<IFluxServiceContext>(x =>
         {
             return new FluxServiceContext(fluxServiceProvider, x);
         });
@@ -45,12 +45,12 @@ public static class UsingRestExtension
         var fluxServiceProvider = builder.ServiceFactory;
         builder.Factory.ServiceContexts.Add(fluxServiceProvider);
 
-        builder.Services.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
+        builder.ServiceCollection.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
         {
             builder.HttpClientConfiguration?.Invoke(serviceProvider, httpClient);
         }).AddHttpMessageHandler<THandler>();
 
-        builder.Services.AddScoped<IFluxServiceContext>(x =>
+        builder.ServiceCollection.AddScoped<IFluxServiceContext>(x =>
         {
             return new FluxServiceContext(fluxServiceProvider, x);
         });

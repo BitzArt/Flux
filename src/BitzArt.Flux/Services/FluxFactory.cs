@@ -36,7 +36,7 @@ internal class FluxFactory : IFluxFactory
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
             if (serviceContexts.Count == 0) throw new FluxServiceProviderNotFoundException();
-            if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
+            if (serviceContexts.Count > 1) throw new FluxMultipleServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 
@@ -62,7 +62,7 @@ internal class FluxFactory : IFluxFactory
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
             if (serviceContexts.Count == 0) throw new FluxServiceProviderNotFoundException();
-            if (serviceContexts.Count > 1) throw new MultipleFluxServiceProviderFoundException();
+            if (serviceContexts.Count > 1) throw new FluxMultipleServiceProviderFoundException();
             serviceContext = serviceContexts.First();
         }
 

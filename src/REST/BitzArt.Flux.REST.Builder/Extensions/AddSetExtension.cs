@@ -21,7 +21,7 @@ public static class AddSetExtension
     {
         var builder = new FluxRestSetBuilder<TModel, TKey>(serviceBuilder, path);
 
-        var services = serviceBuilder.Services;
+        var services = serviceBuilder.ServiceCollection;
         var serviceFactory = serviceBuilder.ServiceFactory;
 
         serviceFactory.AddSet<TModel, TKey>(builder.SetOptions, name);

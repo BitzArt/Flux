@@ -8,7 +8,7 @@ internal class FluxJsonSetBuilder<TModel, TKey>(IFluxJsonServiceBuilder serviceB
 {
     public IFluxJsonServiceBuilder ServiceBuilder { get; init; } = serviceBuilder;
 
-    public IServiceCollection Services => ServiceBuilder.Services;
+    public IServiceCollection ServiceCollection => ServiceBuilder.ServiceCollection;
     public IFluxServiceFactory ServiceFactory => ServiceBuilder.ServiceFactory;
     public IFluxFactory Factory => ServiceBuilder.Factory;
     public FluxJsonServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;

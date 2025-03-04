@@ -4,14 +4,14 @@ namespace BitzArt.Flux;
 
 internal class FluxJsonServiceBuilder : IFluxJsonServiceBuilder
 {
-    public IServiceCollection Services { get; private set; }
+    public IServiceCollection ServiceCollection { get; private set; }
     public IFluxServiceFactory ServiceFactory { get; set; }
     public IFluxFactory Factory { get; init; }
     public FluxJsonServiceOptions ServiceOptions { get; init; }
 
     public FluxJsonServiceBuilder(IFluxServicePreBuilder prebuilder)
     {
-        Services = prebuilder.Services;
+        ServiceCollection = prebuilder.ServiceCollection;
         Factory = prebuilder.Factory;
         ServiceOptions = new FluxJsonServiceOptions();
 

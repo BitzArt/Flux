@@ -9,7 +9,7 @@ public interface IFluxSetParameterizedOperations<TModel, TKey>
 {
     // ============================== GetAsync ==============================
 
-    /// <summary>
+    /*/// <summary>
     /// Fetches an object from the set.
     /// </summary>
     /// <typeparam name="TInputParameters">Input parameters type.</typeparam>
@@ -18,14 +18,13 @@ public interface IFluxSetParameterizedOperations<TModel, TKey>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TModel> GetAsync<TInputParameters>(TKey id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IFluxOperationParameters;*/
 
     // ============================== UpdateAsync ==============================
 
     /// <inheritdoc cref="UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(TKey id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters
-        => UpdateAsync<TInputParameters, TModel>(id, model, parameters, partial, cancellationToken);
+        where TInputParameters : notnull, IFluxOperationParameters;
 
     /// <summary>
     /// Updates an existing object in the set.

@@ -17,7 +17,7 @@ internal class FluxRestSetBuilder<TModel, TKey>(IFluxRestServiceBuilder serviceB
 
     public IFluxRestServiceBuilder ServiceBuilder { get; init; } = serviceBuilder;
 
-    public IServiceCollection Services => ServiceBuilder.Services;
+    public IServiceCollection ServiceCollection => ServiceBuilder.ServiceCollection;
     public IFluxServiceFactory ServiceFactory => ServiceBuilder.ServiceFactory;
     public IFluxFactory Factory => ServiceBuilder.Factory;
     public FluxRestServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;

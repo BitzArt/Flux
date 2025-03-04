@@ -6,6 +6,6 @@ internal class FluxServicePreBuilder(IServiceCollection services, IFluxFactory f
     : IFluxServicePreBuilder
 {
     public string? Name { get; set; } = name;
-    public IServiceCollection Services { get; init; } = services;
+    public IServiceCollection ServiceCollection { get; init; } = services;
     public IFluxFactory Factory { get; init; } = factory;
 }

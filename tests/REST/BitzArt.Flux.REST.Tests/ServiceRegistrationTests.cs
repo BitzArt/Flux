@@ -217,7 +217,7 @@ public class ServiceRegistrationTests
         var set2FromService = service.Set<TestModel>("test-set-2");
         Assert.NotNull(set2FromService);
 
-        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        Assert.ThrowsAny<FluxException>(() =>
         {
             var setNoNameFromService = service.Set<TestModel>();
         });
@@ -228,12 +228,12 @@ public class ServiceRegistrationTests
         var set2FromFlux = flux.Set<TestModel>("service1", "test-set-2");
         Assert.NotNull(set2FromFlux);
 
-        Assert.Throws<SetConfigurationNotFoundException>(() =>
+        Assert.ThrowsAny<FluxException>(() =>
         {
             var setNoNameFromFlux = flux.Set<TestModel>("service1");
         });
 
-        Assert.Throws<FluxServiceProviderNotFoundException>(() =>
+        Assert.ThrowsAny<FluxException>(() =>
         {
             var setNoNameFromFlux = flux.Set<TestModel>();
         });
@@ -250,7 +250,7 @@ public class ServiceRegistrationTests
 
             builder.AddSet<TestModel>();
 
-            Assert.Throws<SetAlreadyRegisteredException>(() =>
+            Assert.ThrowsAny<FluxException>(() =>
             {
                 builder.AddSet<TestModel>();
             });

@@ -35,7 +35,7 @@ public static class AddSetExtension
     {
         var builder = new FluxJsonSetBuilder<TModel, TKey>(serviceBuilder);
 
-        var services = serviceBuilder.Services;
+        var services = serviceBuilder.ServiceCollection;
         var serviceFactory = serviceBuilder.ServiceFactory;
 
         serviceFactory.AddSet<TModel, TKey>(builder.SetOptions, name);

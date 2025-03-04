@@ -18,7 +18,7 @@ public interface IFluxServicePreBuilder
     /// <summary>
     /// The service collection where Flux Services are registered.
     /// </summary>
-    public IServiceCollection Services { get; }
+    public IServiceCollection ServiceCollection { get; }
 
     /// <summary>
     /// Flux Factory instance.

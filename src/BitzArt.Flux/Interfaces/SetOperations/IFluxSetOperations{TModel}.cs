@@ -7,8 +7,11 @@ public interface IFluxSetOperations<TModel>
 {
     // ============================== GetAsync ==============================
 
+    /*/// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
+    public Task<TModel> GetAsync(CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
-    public Task<TModel> GetAsync(object id, CancellationToken cancellationToken = default);
+    public Task<TModel> GetAsync(object id, CancellationToken cancellationToken = default);*/
 
     // ============================== GetAllAsync ==============================
 
@@ -36,16 +39,14 @@ public interface IFluxSetOperations<TModel>
     // ============================== UpdateAsync ==============================
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
-    public Task<TModel> UpdateAsync(object id, TModel model, bool partial = false, CancellationToken cancellationToken = default)
-        => UpdateAsync<TModel>(id, model, partial, cancellationToken);
-
-    /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
-    public Task<TResponse> UpdateAsync<TResponse>(object id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
-
-    /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
-    public Task<TModel> UpdateAsync(TModel model, bool partial = false, CancellationToken cancellationToken = default)
-        => UpdateAsync<TModel>(model, partial, cancellationToken);
+    public Task<TModel> UpdateAsync(TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
+    public Task<TModel> UpdateAsync(object id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TResponse>(object id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
 }
