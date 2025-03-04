@@ -5,7 +5,7 @@
 /// </summary>
 /// <typeparam name="TModel">Model type of the set.</typeparam>
 /// <typeparam name="TKey">Key type of the set.</typeparam>
-public interface IFluxSetParameterlessOperations<TModel, TKey>
+public interface IFluxSetOperations<TModel, TKey>
 {
     // ============================== GetAsync ==============================
 

@@ -1,7 +1,7 @@
 ﻿namespace BitzArt.Flux;
 
 /// <inheritdoc cref="IFluxSetContext{TModel, TKey}"/>
-public interface IFluxSetContext<TModel> : IFluxSetParameterlessOperations<TModel>, IFluxSetParameterizedOperations<TModel>
+public interface IFluxSetContext<TModel> : IFluxSetOperations<TModel>, IFluxSetParameterizedOperations<TModel>
     where TModel : class
 {
 }
@@ -13,7 +13,7 @@ public interface IFluxSetContext<TModel> : IFluxSetParameterlessOperations<TMode
 /// </summary>
 /// <typeparam name="TModel">Model type of the set.</typeparam>
 /// <typeparam name="TKey">Key type of the set.</typeparam>
-public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>, IFluxSetParameterlessOperations<TModel, TKey>, IFluxSetParameterizedOperations<TModel, TKey>
+public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>, IFluxSetOperations<TModel, TKey>, IFluxSetParameterizedOperations<TModel, TKey>
     where TModel : class
     where TKey : notnull
 {

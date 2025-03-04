@@ -2,8 +2,8 @@
 
 namespace BitzArt.Flux;
 
-/// <inheritdoc cref="IFluxSetParameterlessOperations{TModel,TKey}"/>
-public interface IFluxSetParameterlessOperations<TModel>
+/// <inheritdoc cref="IFluxSetOperations{TModel,TKey}"/>
+public interface IFluxSetOperations<TModel>
 {
     // ============================== GetAsync ==============================
 
