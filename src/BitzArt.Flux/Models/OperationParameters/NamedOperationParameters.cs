@@ -11,8 +11,8 @@ public class NamedOperationParameters : INamedOperationParameterCollection
 
     IDictionary<string, object> INamedOperationParameterCollection.Values => _parameters;
 
-    // This should never be called, use named parameters collection instead.
-    IEnumerable<object> IOperationParameterCollection.Values => throw new UnreachableException();
+    IEnumerable<object> IOperationParameterCollection.Values
+        => throw new InvalidOperationException("Named parameters collection should not be used as a simple list of parameters.");
 
     internal PrimaryOperationValues PrimaryValues { get; private set; }
 
