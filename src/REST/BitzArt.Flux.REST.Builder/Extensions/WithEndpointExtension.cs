@@ -17,7 +17,7 @@ public static class WithEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
-        where TParameters : notnull, IFluxOperationParameters
+        where TParameters : notnull, IOperationParameterCollection
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(builder.SetOptions, endpoint);
         builder.SetOptions.EndpointCollection.Add(options);
@@ -37,7 +37,7 @@ public static class WithEndpointExtension
         string endpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
         where TModel : class
-        where TInputParameters : IFluxOperationParameters?
+        where TInputParameters : IOperationParameterCollection?
         => builder.WithEndpoint<TModel, TKey, TInputParameters?, RestRequestParameters>(endpoint, transformParameters);
 
     public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TOutputParameters>(
@@ -53,7 +53,7 @@ public static class WithEndpointExtension
         string endpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
         where TModel : class
-        where TInputParameters : IFluxOperationParameters?
+        where TInputParameters : IOperationParameterCollection?
         where TOutputParameters : IFluxRestOperationParameters
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(builder.SetOptions, endpoint, (parameters) => transformParameters(parameters));

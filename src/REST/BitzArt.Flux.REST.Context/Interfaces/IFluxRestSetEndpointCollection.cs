@@ -9,8 +9,8 @@ internal interface IFluxRestSetEndpointCollection<TModel>
     where TModel : class
 {
     public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
-        where TInputParameters : IFluxOperationParameters?;
+        where TInputParameters : IOperationParameterCollection?;
 
     public HttpRequestMessage Resolve<TInputParameters>(IRequestPreparationParameters parameters)
-        where TInputParameters : IFluxOperationParameters?;
+        where TInputParameters : IOperationParameterCollection?;
 }

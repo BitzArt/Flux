@@ -8,7 +8,7 @@ public class RestRequestParameters : IFluxRestOperationParameters, ICollection<K
 
     private readonly Dictionary<string, object> _parameters = [];
 
-    ICollection IFluxOperationParameters.Values => ValueMap;
+    ICollection IOperationParameterCollection.Values => ValueMap;
 
     private ICollection<KeyValuePair<string, object>> _parameterCollection => ValueMap;
 

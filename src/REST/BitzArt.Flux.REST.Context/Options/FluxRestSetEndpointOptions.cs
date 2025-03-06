@@ -8,7 +8,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     Func<TInputParameters, IFluxRestOperationParameters>? transformParametersFunc = null)
     : IFluxRestSetEndpointOptions<TModel, TInputParameters>
     where TModel : class
-    where TInputParameters : notnull, IFluxOperationParameters
+    where TInputParameters : notnull, IOperationParameterCollection
 {
     public IFluxRestSetOptions<TModel> SetOptions { get; set; } = setOptions;
 

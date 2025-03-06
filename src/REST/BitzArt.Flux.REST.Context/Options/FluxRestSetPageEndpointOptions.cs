@@ -9,7 +9,7 @@ internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
     Func<TInputParameters?, IFluxRestOperationParameters>? transformParameters = null)
     : FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions, path, transformParameters), IFluxRestSetPageEndpointOptions<TModel, TInputParameters>
     where TModel : class
-    where TInputParameters : IFluxOperationParameters?
+    where TInputParameters : IOperationParameterCollection?
 {
     private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {

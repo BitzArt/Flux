@@ -5,12 +5,12 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Parameters for a REST request operation.
 /// </summary>
-public interface IFluxRestOperationParameters : IFluxOperationParameters
+public interface IFluxRestOperationParameters : IOperationParameterCollection
 {
     /// <summary>
     /// A map of parameter names and values.
     /// </summary>
     public Dictionary<string, object> ValueMap { get; }
 
-    ICollection IFluxOperationParameters.Values => ValueMap.Values;
+    ICollection IOperationParameterCollection.Values => ValueMap.Values;
 }

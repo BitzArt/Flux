@@ -12,7 +12,7 @@ internal class DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey>()
     private IFluxRestSetIdEndpointOptions<TModel>? _idEndpointOptions;
 
     public IFluxRestSetEndpointOptions<TModel, TInputParameters> GetDefaultInstance<TInputParameters>(IFluxRestSetOptions<TModel> setOptions, EndpointType endpointType)
-         where TInputParameters : notnull, IFluxOperationParameters
+         where TInputParameters : notnull, IOperationParameterCollection
     {
         var defaultOptions = endpointType switch
         {

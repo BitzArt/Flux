@@ -21,7 +21,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>
     private readonly DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey> _defaultEndpointOptions = new();
 
     public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
-        where TInputParameters : IFluxOperationParameters?
+        where TInputParameters : IOperationParameterCollection?
     {
         switch (endpointOptions)
         {
@@ -40,7 +40,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>
     }
 
     private void Add<TInputParameters>(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
-        where TInputParameters : IFluxOperationParameters?
+        where TInputParameters : IOperationParameterCollection?
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);
@@ -61,7 +61,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>
     }
 
     public HttpRequestMessage Resolve<TInputParameters>(IRequestPreparationParameters parameters)
-        where TInputParameters : IFluxOperationParameters?
+        where TInputParameters : IOperationParameterCollection?
     {
         var endpointOptions = ResolveOptions<TInputParameters>(parameters.EndpointType);
         var requestMessage = endpointOptions.PrepareRequest(parameters);
@@ -70,7 +70,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>
     }
 
     private IFluxRestSetEndpointOptions<TModel, TInputParameters> ResolveOptions<TInputParameters>(EndpointType endpointType, string? endpointName = null)
-        where TInputParameters : IFluxOperationParameters?
+        where TInputParameters : IOperationParameterCollection?
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);

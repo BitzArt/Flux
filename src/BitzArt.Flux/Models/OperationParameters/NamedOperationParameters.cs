@@ -1,0 +1,41 @@
+﻿using System.Diagnostics;
+
+namespace BitzArt.Flux;
+
+/// <summary>
+/// Can be used as a way to pass a collection of named parameters to a Flux operation.
+/// </summary>
+public class NamedOperationParameters : INamedOperationParameterCollection
+{
+    private readonly Dictionary<string, object> _parameters;
+
+    IDictionary<string, object> INamedOperationParameterCollection.Values => _parameters;
+
+    // This should never be called, use named parameters collection instead.
+    IEnumerable<object> IOperationParameterCollection.Values => throw new UnreachableException();
+
+    internal PrimaryOperationValues PrimaryValues { get; private set; }
+
+    /// <inheritdoc cref="NamedOperationParameters(IDictionary{string, object})"/>"
+    public NamedOperationParameters(params (string, object)[] parameters)
+        : this(parameters.Select(x => new KeyValuePair<string, object>(x.Item1, x.Item2)).ToArray()) { }
+
+    /// <inheritdoc cref="NamedOperationParameters(IDictionary{string, object})"/>"
+    public NamedOperationParameters(params KeyValuePair<string, object>[] parameters)
+        : this((IEnumerable<KeyValuePair<string, object>>)parameters) { }
+
+    /// <inheritdoc cref="NamedOperationParameters(IDictionary{string, object})"/>"
+    public NamedOperationParameters(IEnumerable<KeyValuePair<string, object>> parameters)
+        : this(new Dictionary<string, object>(parameters)) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NamedOperationParameters"/> class.
+    /// </summary>
+    /// <param name="parameters">Named arameters to be used in the operation.</param>
+    public NamedOperationParameters(IDictionary<string, object> parameters)
+    {
+        _parameters = new(parameters);
+
+        PrimaryValues = new();
+    }
+}

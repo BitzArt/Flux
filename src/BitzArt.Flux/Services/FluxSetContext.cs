@@ -33,16 +33,16 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public abstract Task<TModel> GetAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IOperationParameterCollection;
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync<TInputParameters>(object id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters
+        where TInputParameters : notnull, IOperationParameterCollection
         => GetAsync(CastId(id), parameters, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<TModel> GetAsync<TInputParameters>(TKey id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IOperationParameterCollection;
 
     // ============================== GetAllAsync ==============================
 
@@ -51,7 +51,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public abstract Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IOperationParameterCollection;
 
     // ============================== GetPageAsync ==============================
 
@@ -64,12 +64,12 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public Task<PageResult<TModel>> GetPageAsync<TInputParameters>(int offset, int limit, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters
+        where TInputParameters : notnull, IOperationParameterCollection
         => GetPageAsync(new PageRequest(offset, limit), parameters, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IOperationParameterCollection;
 
     // ============================== AddAsync ==============================
 
@@ -82,12 +82,12 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public Task<TModel> AddAsync<TInputParameters>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
-    where TInputParameters : notnull, IFluxOperationParameters
+    where TInputParameters : notnull, IOperationParameterCollection
         => AddAsync<TInputParameters, TModel>(value, parameters, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<TResponse> AddAsync<TInputParameters, TResponse>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IOperationParameterCollection;
 
     // ============================== UpdateAsync ==============================
 
@@ -115,29 +115,29 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public Task<TModel> UpdateAsync<TInputParameters>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-    where TInputParameters : notnull, IFluxOperationParameters
+    where TInputParameters : notnull, IOperationParameterCollection
         => UpdateAsync<TInputParameters, TModel>(model, parameters, partial, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IOperationParameterCollection;
 
     /// <inheritdoc/>
     public Task<TModel> UpdateAsync<TInputParameters>(object id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-    where TInputParameters : notnull, IFluxOperationParameters
+    where TInputParameters : notnull, IOperationParameterCollection
         => UpdateAsync<TInputParameters, TModel>(id, model, parameters, partial, cancellationToken);
 
     /// <inheritdoc/>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(object id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters
+        where TInputParameters : notnull, IOperationParameterCollection
         => UpdateAsync<TInputParameters, TResponse>(CastId(id), model, parameters, partial, cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> UpdateAsync<TInputParameters>(TKey id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-    where TInputParameters : notnull, IFluxOperationParameters
+    where TInputParameters : notnull, IOperationParameterCollection
         => UpdateAsync<TInputParameters, TModel>(id, model, parameters, partial, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TKey id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IFluxOperationParameters;
+        where TInputParameters : notnull, IOperationParameterCollection;
 }
