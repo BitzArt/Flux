@@ -8,5 +8,5 @@ public interface IModelOperationParameters
     /// <summary>
     /// The model to be used in the operation.
     /// </summary>
-    public object Model { get; set; }
+    public object Model { get; }
 }

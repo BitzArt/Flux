@@ -14,24 +14,24 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>
         SetOptions = setOptions;
     }
 
-    private readonly Dictionary<EndpointSignature, IFluxRestSetEndpointOptions<TModel>> _values = [];
+    private readonly Dictionary<EndpointSignature, IFluxRestSetEndpointContext<TModel>> _values = [];
 
     public IFluxRestSetOptions<TModel> SetOptions { get; }
 
     private readonly DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey> _defaultEndpointOptions = new();
 
-    public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
+    public void Add<TInputParameters>(IFluxRestSetEndpointContext<TModel, TInputParameters> endpointOptions)
         where TInputParameters : IOperationParameterCollection?
     {
         switch (endpointOptions)
         {
-            case IFluxRestSetIdEndpointOptions<TModel, TInputParameters> idEndpointOptions:
+            case IFluxRestSetIdEndpointContext<TModel, TInputParameters> idEndpointOptions:
                 Add(EndpointType.Id, idEndpointOptions);
                 break;
-            case IFluxRestSetPageEndpointOptions<TModel, TInputParameters> pageEnpointOptions:
+            case IFluxRestSetPageEndpointContext<TModel, TInputParameters> pageEnpointOptions:
                 Add(EndpointType.Page, pageEnpointOptions);
                 break;
-            case IFluxRestSetEndpointOptions<TModel, TInputParameters> defaultEndpointOptions:
+            case IFluxRestSetEndpointContext<TModel, TInputParameters> defaultEndpointOptions:
                 Add(EndpointType.Default, defaultEndpointOptions);
                 break;
             default:
@@ -39,7 +39,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>
         }
     }
 
-    private void Add<TInputParameters>(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
+    private void Add<TInputParameters>(EndpointType endpointType, IFluxRestSetEndpointContext<TModel, TInputParameters> endpointOptions)
         where TInputParameters : IOperationParameterCollection?
     {
         var inputParametersType = typeof(TInputParameters);
@@ -56,27 +56,27 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>
         {
             var underlyingTypeSignature = new EndpointSignature(endpointType, inputParametersUnderlyingType);
             if (!_values.TryAdd(underlyingTypeSignature, endpointOptions))
-                throw new InvalidOperationException($""); // TODO: add exception message
+                throw new InvalidOperationException($"");
         }
     }
 
     public HttpRequestMessage Resolve<TInputParameters>(IRequestPreparationParameters parameters)
         where TInputParameters : IOperationParameterCollection?
     {
-        var endpointOptions = ResolveOptions<TInputParameters>(parameters.EndpointType);
-        var requestMessage = endpointOptions.PrepareRequest(parameters);
+        var endpointContext = ResolveEndpoint<TInputParameters>(parameters.EndpointType);
+        var requestMessage = endpointContext.PrepareRequest(parameters);
 
         return requestMessage;
     }
 
-    private IFluxRestSetEndpointOptions<TModel, TInputParameters> ResolveOptions<TInputParameters>(EndpointType endpointType, string? endpointName = null)
+    private IFluxRestSetEndpointContext<TModel, TInputParameters> ResolveEndpoint<TInputParameters>(EndpointType endpointType, string? endpointName = null)
         where TInputParameters : IOperationParameterCollection?
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);
 
         if (_values.TryGetValue(signature, out var endpointOptions))
-            return (IFluxRestSetEndpointOptions<TModel, TInputParameters>)endpointOptions;
+            return (IFluxRestSetEndpointContext<TModel, TInputParameters>)endpointOptions;
 
         if (endpointName is not null)
             throw new Exception($"{endpointType.GetFriendlyEndpointTypeName()} with name: '{endpointName}' not found.");

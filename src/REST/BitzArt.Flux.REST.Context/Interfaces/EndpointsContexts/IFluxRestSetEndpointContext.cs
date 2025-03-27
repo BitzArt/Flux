@@ -1,13 +1,13 @@
 ﻿namespace BitzArt.Flux.REST;
 
-internal interface IFluxRestSetEndpointOptions<TModel, TInputParameters> : IFluxRestSetEndpointOptions<TModel>
+internal interface IFluxRestSetEndpointContext<TModel, TInputParameters> : IFluxRestSetEndpointContext<TModel>
     where TModel : class
     where TInputParameters : IOperationParameterCollection?
 {
     public Func<TInputParameters, IFluxRestOperationParameters>? TransformParametersFunc { get; internal set; }
 }
 
-internal interface IFluxRestSetEndpointOptions<TModel>
+internal interface IFluxRestSetEndpointContext<TModel>
     where TModel : class
 {
     /// <summary>

@@ -1,13 +1,13 @@
 namespace BitzArt.Flux.REST;
 
-internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
-    : FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>, IFluxRestSetIdEndpointOptions<TModel, TInputParameters>
+internal class FluxRestSetIdEndpointContext<TModel, TKey, TInputParameters>
+    : FluxRestSetEndpointContext<TModel, TKey, TInputParameters>, IFluxRestSetIdEndpointContext<TModel, TInputParameters>
     where TModel : class
     where TInputParameters : notnull, IOperationParameterCollection
 {
     public Func<TKey, string>? GetPathFunc { get; set; }
 
-    public FluxRestSetIdEndpointOptions(
+    public FluxRestSetIdEndpointContext(
         IFluxRestSetOptions<TModel> setOptions,
         string? path = null,
         Func<TKey, string>? getPath = null,

@@ -11,7 +11,6 @@ internal class RequestPreparationParameters<TInputParameters, TKey> : IRequestPr
 
     object? IRequestPreparationParameters.RequestParameters => RequestParameters;
 
-    // TODO: handle non-nullable types
     public TKey? Id { get; set; }
 
     object? IRequestPreparationParameters.Id => Id;

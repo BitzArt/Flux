@@ -10,9 +10,8 @@ public class NamedOperationParameters : INamedOperationParameterCollection
     IDictionary<string, object> INamedOperationParameterCollection.Values => _parameters;
 
     IEnumerable<object> IOperationParameterCollection.Values
-        => throw new InvalidOperationException("Named parameters collection should not be used as a simple list of parameters.");
-
-    internal PrimaryOperationValues PrimaryValues { get; private set; }
+        => throw new InvalidOperationException(
+            "Named parameters collection should not be used as a simple list of parameters. Use named values instead.");
 
     /// <inheritdoc cref="NamedOperationParameters(IDictionary{string, object})"/>"
     public NamedOperationParameters(params (string, object)[] parameters)
@@ -33,7 +32,5 @@ public class NamedOperationParameters : INamedOperationParameterCollection
     public NamedOperationParameters(IDictionary<string, object> parameters)
     {
         _parameters = new(parameters);
-
-        PrimaryValues = new();
     }
 }

@@ -16,7 +16,7 @@ internal static class EndpointTypeExtensions
             EndpointType.Default => "Endpoint",
             EndpointType.Page => "Page endpoint",
             EndpointType.Id => "Id endpoint",
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(endpointType), endpointType, null),
         };
     }
 }

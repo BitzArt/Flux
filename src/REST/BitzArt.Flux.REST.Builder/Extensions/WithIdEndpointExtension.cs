@@ -32,7 +32,7 @@ public static class WithIdEndpointExtension
         where TModel : class
         where TParameters : notnull, IOperationParameterCollection
     {
-        var options = new FluxRestSetIdEndpointOptions<TModel, TKey, TParameters>(builder.SetOptions, endpoint, (key) => endpoint);
+        var options = new FluxRestSetIdEndpointContext<TModel, TKey, TParameters>(builder.SetOptions, endpoint, (key) => endpoint);
         builder.SetOptions.EndpointCollection.Add(options);
 
         return builder;
@@ -62,7 +62,7 @@ public static class WithIdEndpointExtension
         where TModel : class
         where TParameters : notnull, IOperationParameterCollection
     {
-        var options = new FluxRestSetIdEndpointOptions<TModel, TKey, TParameters>(builder.SetOptions, null, getEndpoint);
+        var options = new FluxRestSetIdEndpointContext<TModel, TKey, TParameters>(builder.SetOptions, null, getEndpoint);
         builder.SetOptions.EndpointCollection.Add(options);
 
         return builder;
@@ -123,7 +123,7 @@ public static class WithIdEndpointExtension
         where TInputParameters : notnull, IOperationParameterCollection
         where TOutputParameters : IFluxRestOperationParameters
     {
-        var options = new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>(builder.SetOptions, endpoint, (key) => endpoint, (parameters) => transformParameters(parameters));
+        var options = new FluxRestSetIdEndpointContext<TModel, TKey, TInputParameters>(builder.SetOptions, endpoint, (key) => endpoint, (parameters) => transformParameters(parameters));
         builder.SetOptions.EndpointCollection.Add(options);
 
         return builder;
@@ -184,7 +184,7 @@ public static class WithIdEndpointExtension
         where TInputParameters : notnull, IOperationParameterCollection
         where TOutputParameters : notnull, IFluxRestOperationParameters
     {
-        var options = new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>(builder.SetOptions, null, getEndpoint, (parameters) => transformParameters(parameters));
+        var options = new FluxRestSetIdEndpointContext<TModel, TKey, TInputParameters>(builder.SetOptions, null, getEndpoint, (parameters) => transformParameters(parameters));
         builder.SetOptions.EndpointCollection.Add(options);
 
         return builder;

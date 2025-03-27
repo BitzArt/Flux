@@ -8,7 +8,7 @@
 internal interface IFluxRestSetEndpointCollection<TModel>
     where TModel : class
 {
-    public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
+    public void Add<TInputParameters>(IFluxRestSetEndpointContext<TModel, TInputParameters> endpointOptions)
         where TInputParameters : IOperationParameterCollection?;
 
     public HttpRequestMessage Resolve<TInputParameters>(IRequestPreparationParameters parameters)

@@ -15,8 +15,6 @@ public class OperationParameters : IOperationParameterCollection
 
     IEnumerable<object> IOperationParameterCollection.Values => _parameters;
 
-    internal PrimaryOperationValues PrimaryValues { get; private set; }
-
     /// <inheritdoc cref="OperationParameters(IEnumerable{object})"/>"
     public OperationParameters(params object[] parameters) : this((IEnumerable<object>)parameters) { }
 
@@ -27,7 +25,5 @@ public class OperationParameters : IOperationParameterCollection
     public OperationParameters(IEnumerable<object> parameters)
     {
         _parameters = [.. parameters];
-
-        PrimaryValues = new();
     }
 }

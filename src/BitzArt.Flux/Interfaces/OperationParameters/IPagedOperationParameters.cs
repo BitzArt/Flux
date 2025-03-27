@@ -10,5 +10,5 @@ public interface IPagedOperationParameters
     /// <summary>
     /// Pagination parameters.
     /// </summary>
-    public PageRequest PageRequest { get; set; }
+    public PageRequest PageRequest { get; }
 }

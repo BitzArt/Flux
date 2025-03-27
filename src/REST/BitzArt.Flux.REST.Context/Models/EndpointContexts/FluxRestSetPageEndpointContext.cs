@@ -1,20 +1,21 @@
 using BitzArt.Pagination;
+using System.Diagnostics;
 using System.Web;
 
 namespace BitzArt.Flux.REST;
 
-internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
+internal class FluxRestSetPageEndpointContext<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
     string? path = null,
     Func<TInputParameters?, IFluxRestOperationParameters>? transformParameters = null)
-    : FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions, path, transformParameters), IFluxRestSetPageEndpointOptions<TModel, TInputParameters>
+    : FluxRestSetEndpointContext<TModel, TKey, TInputParameters>(setOptions, path, transformParameters), IFluxRestSetPageEndpointContext<TModel, TInputParameters>
     where TModel : class
-    where TInputParameters : IOperationParameterCollection?
+    where TInputParameters : notnull, IOperationParameterCollection
 {
     private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {
         if (parameters.PageRequest is null)
-            throw new ArgumentNullException(); // TODO: add message
+            throw new UnreachableException("Page request is missing.");
 
         var path = GetInitialPath();
         path = ApplyPaginationParameters(path, parameters.PageRequest);

@@ -5,23 +5,23 @@ namespace BitzArt.Flux.REST;
 internal class DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey>()
     where TModel : class
 {
-    private IFluxRestSetEndpointOptions<TModel>? _defaultEndpointOptions;
+    private IFluxRestSetEndpointContext<TModel>? _defaultEndpointOptions;
 
-    private IFluxRestSetPageEndpointOptions<TModel>? _pageEndpointOptions;
+    private IFluxRestSetPageEndpointContext<TModel>? _pageEndpointOptions;
 
-    private IFluxRestSetIdEndpointOptions<TModel>? _idEndpointOptions;
+    private IFluxRestSetIdEndpointContext<TModel>? _idEndpointOptions;
 
-    public IFluxRestSetEndpointOptions<TModel, TInputParameters> GetDefaultInstance<TInputParameters>(IFluxRestSetOptions<TModel> setOptions, EndpointType endpointType)
+    public IFluxRestSetEndpointContext<TModel, TInputParameters> GetDefaultInstance<TInputParameters>(IFluxRestSetOptions<TModel> setOptions, EndpointType endpointType)
          where TInputParameters : notnull, IOperationParameterCollection
     {
         var defaultOptions = endpointType switch
         {
-            EndpointType.Default => _defaultEndpointOptions ??= new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions),
-            EndpointType.Page => _pageEndpointOptions ??= new FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(setOptions),
-            EndpointType.Id => _idEndpointOptions ??= new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>(setOptions),
+            EndpointType.Default => _defaultEndpointOptions ??= new FluxRestSetEndpointContext<TModel, TKey, TInputParameters>(setOptions),
+            EndpointType.Page => _pageEndpointOptions ??= new FluxRestSetPageEndpointContext<TModel, TKey, TInputParameters>(setOptions),
+            EndpointType.Id => _idEndpointOptions ??= new FluxRestSetIdEndpointContext<TModel, TKey, TInputParameters>(setOptions),
             _ => throw new UnreachableException("Invalid endpoint type.")
         };
 
-        return (IFluxRestSetEndpointOptions<TModel, TInputParameters>)defaultOptions;
+        return (IFluxRestSetEndpointContext<TModel, TInputParameters>)defaultOptions;
     }
 }

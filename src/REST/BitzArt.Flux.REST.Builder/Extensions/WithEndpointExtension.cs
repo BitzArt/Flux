@@ -19,7 +19,7 @@ public static class WithEndpointExtension
         where TModel : class
         where TParameters : notnull, IOperationParameterCollection
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(builder.SetOptions, endpoint);
+        var options = new FluxRestSetEndpointContext<TModel, TKey, TParameters>(builder.SetOptions, endpoint);
         builder.SetOptions.EndpointCollection.Add(options);
 
         return builder;
@@ -56,7 +56,7 @@ public static class WithEndpointExtension
         where TInputParameters : IOperationParameterCollection?
         where TOutputParameters : IFluxRestOperationParameters
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(builder.SetOptions, endpoint, (parameters) => transformParameters(parameters));
+        var options = new FluxRestSetEndpointContext<TModel, TKey, TInputParameters>(builder.SetOptions, endpoint, (parameters) => transformParameters(parameters));
         builder.SetOptions.EndpointCollection.Add(options);
 
         return builder;

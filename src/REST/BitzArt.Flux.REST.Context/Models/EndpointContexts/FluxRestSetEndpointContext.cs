@@ -2,11 +2,11 @@ using System.Diagnostics;
 
 namespace BitzArt.Flux.REST;
 
-internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
+internal class FluxRestSetEndpointContext<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
     string? path = null,
     Func<TInputParameters, IFluxRestOperationParameters>? transformParametersFunc = null)
-    : IFluxRestSetEndpointOptions<TModel, TInputParameters>
+    : IFluxRestSetEndpointContext<TModel, TInputParameters>
     where TModel : class
     where TInputParameters : notnull, IOperationParameterCollection
 {
@@ -58,8 +58,12 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
         return restRequestParameters;
     }
 
-    // TODO: Explicitly specify segments (service base url, set path, endpoint path, id (optional)).
-    // Handle leading slash in set path and endpoint path. Leading slash means absolute path relative to domain root.
-    private protected static string CombinePath(params string?[] segments)
-        => string.Join('/', segments.Where(x => !string.IsNullOrEmpty(x)).Select(x => x!.TrimEnd('/')));
+    private protected static string CombinePath(string? baseUrl, string? setPath, string? endpointPath, string? id = null)
+    {
+        var parts = new[] { baseUrl, setPath, endpointPath, id }
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Select(x => x!.TrimEnd('/'));
+
+        return string.Join('/', parts);
+    }
 }
