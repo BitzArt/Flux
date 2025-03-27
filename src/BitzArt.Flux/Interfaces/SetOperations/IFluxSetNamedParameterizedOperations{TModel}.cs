@@ -3,17 +3,17 @@
 namespace BitzArt.Flux;
 
 /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel,TKey}"/>
-public interface IFluxSetParameterizedOperations<TModel>
+public interface IFluxSetNamedParameterizedOperations<TModel>
 {
     // ============================== GetAsync ==============================
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
     public Task<TModel> GetAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
     public Task<TModel> GetAsync<TInputParameters>(object id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     // ============================== GetAllAsync ==============================
 
@@ -25,13 +25,13 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
-         where TInputParameters : notnull, IOperationParameterCollection;
+         where TInputParameters : notnull, INamedOperationParameterCollection;
 
     // ============================== GetPageAsync ==============================
 
     /// <inheritdoc cref="GetPageAsync{TInputParameters}(PageRequest, TInputParameters, CancellationToken)"/>
     public Task<PageResult<TModel>> GetPageAsync<TInputParameters>(int offset, int limit, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection
+        where TInputParameters : notnull, INamedOperationParameterCollection
         => GetPageAsync(new PageRequest(offset, limit), parameters, cancellationToken);
 
     /// <summary>
@@ -43,13 +43,13 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     // ============================== AddAsync ==============================
 
     /// <inheritdoc cref="AddAsync{TInputParameters,TResponse}(TModel, TInputParameters, CancellationToken)"/>
     public Task<TModel> AddAsync<TInputParameters>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection
+        where TInputParameters : notnull, INamedOperationParameterCollection
         => AddAsync<TInputParameters, TModel>(value, parameters, cancellationToken);
 
     /// <summary>
@@ -62,24 +62,24 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TResponse> AddAsync<TInputParameters, TResponse>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     // ============================== UpdateAsync ==============================
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection
+        where TInputParameters : notnull, INamedOperationParameterCollection
         => UpdateAsync<TInputParameters, TModel>(model, parameters, partial, cancellationToken);
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(object id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(object id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 }

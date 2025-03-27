@@ -7,11 +7,11 @@ public interface IFluxSetOperations<TModel>
 {
     // ============================== GetAsync ==============================
 
-    /*/// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
+    /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
     public Task<TModel> GetAsync(CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
-    public Task<TModel> GetAsync(object id, CancellationToken cancellationToken = default);*/
+    public Task<TModel> GetAsync(object id, CancellationToken cancellationToken = default);
 
     // ============================== GetAllAsync ==============================
 

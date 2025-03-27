@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux;
 
 /// <summary>
 /// Can be used as a way to pass a collection of named parameters to a Flux operation.

@@ -5,7 +5,7 @@
 /// </summary>
 /// <typeparam name="TModel">Model type of the set.</typeparam>
 /// <typeparam name="TKey">Key type of the set.</typeparam>
-public interface IFluxSetParameterizedOperations<TModel, TKey>
+public interface IFluxSetNamedParameterizedOperations<TModel, TKey>
 {
     // ============================== GetAsync ==============================
 
@@ -18,13 +18,13 @@ public interface IFluxSetParameterizedOperations<TModel, TKey>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TModel> GetAsync<TInputParameters>(TKey id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     // ============================== UpdateAsync ==============================
 
     /// <inheritdoc cref="UpdateAsync{TInputParameters, TResponse}(TKey, TModel, TInputParameters, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(TKey id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 
     /// <summary>
     /// Updates an existing object in the set.
@@ -38,5 +38,5 @@ public interface IFluxSetParameterizedOperations<TModel, TKey>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TKey id, TModel value, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+        where TInputParameters : notnull, INamedOperationParameterCollection;
 }

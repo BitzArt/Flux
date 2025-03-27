@@ -26,7 +26,7 @@ public class OperationParameters : IOperationParameterCollection
     /// <param name="parameters">Parameters to be used in the operation.</param>
     public OperationParameters(IEnumerable<object> parameters)
     {
-        _parameters = parameters.ToList();
+        _parameters = [.. parameters];
 
         PrimaryValues = new();
     }
