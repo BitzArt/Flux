@@ -261,11 +261,7 @@ public class ServiceRegistrationTests
     {
         var setContext = new FluxRestSetContext<TestModel, int>(null!, null!, null!, null!);
 
-        var parameters = new Dictionary<string, object>()
-        {
-            { "key", "value" }
-        };
-
-        _ = setContext.GetAsync(1, [new("1", 1)], CancellationToken.None);
+        var parameters = new OperationParameters(1, 2, 3);
+        _ = setContext.GetAsync(1, parameters, CancellationToken.None);
     }
 }

@@ -1,5 +1,4 @@
-﻿using BitzArt.Flux.Models;
-using BitzArt.Pagination;
+﻿using BitzArt.Pagination;
 
 namespace BitzArt.Flux;
 
@@ -21,26 +20,6 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     }
 
     // ============================== GetAsync ==============================
-
-    /// <inheritdoc/>
-    //public Task<TModel> GetAsync(TKey id, IEnumerable<(string, object)> namedParameters, CancellationToken cancellationToken = default)
-    //    => GetAsync(id, namedParameters.Select(x => new KeyValuePair<string, object>(x.Item1, x.Item2)), cancellationToken);
-
-    /// <inheritdoc/>
-    //public Task<TModel> GetAsync(TKey id, IEnumerable<KeyValuePair<string, object>> namedParameters, CancellationToken cancellationToken = default)
-    //    => GetAsync(id, new NamedOperationParameters(namedParameters), cancellationToken);
-
-    /// <inheritdoc/>
-    public Task<TModel> GetAsync(TKey id, NamedOperationParameters namedParameters, CancellationToken cancellationToken = default)
-        => GetAsync<NamedOperationParameters>(id, namedParameters, cancellationToken);
-
-    /// <inheritdoc/>
-    public Task<TModel> GetAsync(TKey id, OperationParameters parameters, CancellationToken cancellationToken = default)
-        => GetAsync<OperationParameters>(id, parameters, cancellationToken);
-
-    /// <inheritdoc/>
-    //public Task<TModel> GetAsync(TKey id, IEnumerable<object> parameters, CancellationToken cancellationToken = default)
-    //    => GetAsync(id, new OperationParameters(parameters), cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync(CancellationToken cancellationToken = default)

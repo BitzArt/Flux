@@ -5,7 +5,7 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Can be used as a way to pass a collection of named parameters to a Flux operation.
 /// </summary>
-public class NamedOperationParameters : INamedOperationParameterCollection, IEnumerable<KeyValuePair<string, object>>
+public class NamedOperationParameters : INamedOperationParameterCollection
 {
     private readonly Dictionary<string, object> _parameters;
 
@@ -31,10 +31,4 @@ public class NamedOperationParameters : INamedOperationParameterCollection, IEnu
     {
         _parameters = new(parameters);
     }
-
-    IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator() => _parameters.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => _parameters.GetEnumerator();
-
-    public void Add(string key, object value) => _parameters.Add(key, value);
 }

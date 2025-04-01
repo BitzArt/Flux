@@ -9,15 +9,6 @@ public interface IFluxSetParameterizedOperations<TModel, TKey>
 {
     // ============================== GetAsync ==============================
 
-    /// <inheritdoc cref="GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
-    //public Task<TModel> GetAsync(TKey id, IEnumerable<(string, object)> namedParameters, CancellationToken cancellationToken = default);
-
-    /// <inheritdoc cref="GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
-    //public Task<TModel> GetAsync(TKey id, IEnumerable<KeyValuePair<string, object>> namedParameters, CancellationToken cancellationToken = default);
-
-    /// <inheritdoc cref="GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
-    //public Task<TModel> GetAsync(TKey id, IEnumerable<object> parameters, CancellationToken cancellationToken = default);
-
     /// <summary>
     /// Fetches an object from the set.
     /// </summary>

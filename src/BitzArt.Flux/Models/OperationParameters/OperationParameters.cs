@@ -26,7 +26,7 @@ internal class EmptyOperationParameters : OperationParameters
 /// Consider using <see cref="NamedOperationParameters"/> if you wish to pass named parameters.
 /// </para>
 /// </summary>
-public class OperationParameters : IOperationParameterCollection, IEnumerable<object>
+public class OperationParameters : IOperationParameterCollection
 {
     /// <summary>
     /// Empty operation parameter collection - can be used when no parameters are passed to an operation.
@@ -48,10 +48,4 @@ public class OperationParameters : IOperationParameterCollection, IEnumerable<ob
     {
         Parameters = [.. parameters];
     }
-
-    IEnumerator<object> IEnumerable<object>.GetEnumerator() => Parameters.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => Parameters.GetEnumerator();
-
-    public void Add(object value) => Parameters = Parameters.Append(value);
 }
