@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux;
 
 /// <summary>
 /// Can be used when no parameters are passed to an operation.

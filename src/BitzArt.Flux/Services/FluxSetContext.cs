@@ -23,7 +23,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync(CancellationToken cancellationToken = default)
-        => GetAsync(new SetOperationValues(), cancellationToken);
+        => GetAsync(new GetOperationDescriptor(id: null, parameters: null), cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync(object id, CancellationToken cancellationToken = default)
@@ -31,12 +31,12 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync(TKey id, CancellationToken cancellationToken = default)
-        => GetAsync(new SetOperationValues(id: id), cancellationToken);
+        => GetAsync(new GetOperationDescriptor(id: id, parameters: null), cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection
-        => GetAsync(new SetOperationValues<TInputParameters>(parameters), cancellationToken);
+        => GetAsync(new GetOperationDescriptor(id: null, parameters: parameters), cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync<TInputParameters>(object id, TInputParameters parameters, CancellationToken cancellationToken = default)
@@ -46,24 +46,24 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     /// <inheritdoc/>
     public Task<TModel> GetAsync<TInputParameters>(TKey id, TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection
-        => GetAsync(new SetOperationValues<TInputParameters>(parameters, id: id), cancellationToken);
+        => GetAsync(new GetOperationDescriptor(id: id, parameters: parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<TModel> GetAsync(SetOperationValues values, CancellationToken cancellationToken = default);
+    public abstract Task<TModel> GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default);
 
     // ============================== GetAllAsync ==============================
 
     /// <inheritdoc/>
     public Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default)
-        => GetAllAsync(new SetOperationValues(), cancellationToken);
+        => GetAllAsync(new GetAllOperationDescriptor(parameters: null), cancellationToken);
 
     /// <inheritdoc/>
     public Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection
-        => GetAllAsync(new SetOperationValues<TInputParameters>(parameters), cancellationToken);
+        => GetAllAsync(new GetAllOperationDescriptor(parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<IEnumerable<TModel>> GetAllAsync(SetOperationValues values, CancellationToken cancellationToken = default);
+    public abstract Task<IEnumerable<TModel>> GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default);
 
     // ============================== GetPageAsync ==============================
 
@@ -73,7 +73,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken = default)
-        => GetPageAsync(new SetOperationValues(pageRequest: pageRequest), cancellationToken);
+        => GetPageAsync(new GetPageOperationDescriptor(pageRequest: pageRequest, parameters: null), cancellationToken);
 
     /// <inheritdoc/>
     public Task<PageResult<TModel>> GetPageAsync<TInputParameters>(int offset, int limit, TInputParameters parameters, CancellationToken cancellationToken = default)
@@ -83,10 +83,10 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     /// <inheritdoc/>
     public Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection
-        => GetPageAsync(new SetOperationValues<TInputParameters>(parameters, pageRequest: pageRequest), cancellationToken);
+        => GetPageAsync(new GetPageOperationDescriptor(pageRequest: pageRequest, parameters: parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<PageResult<TModel>> GetPageAsync(SetOperationValues values, CancellationToken cancellationToken = default);
+    public abstract Task<PageResult<TModel>> GetPageAsync(GetPageOperationDescriptor descriptor, CancellationToken cancellationToken = default);
 
     // ============================== AddAsync ==============================
 
@@ -95,7 +95,8 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
         => AddAsync<TModel>(value, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<TResponse> AddAsync<TResponse>(TModel value, CancellationToken cancellationToken = default);
+    public Task<TResponse> AddAsync<TResponse>(TModel value, CancellationToken cancellationToken = default)
+        => AddAsync<TResponse>(new AddOperationDescriptor(id: null, model: value, parameters: null), cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> AddAsync<TInputParameters>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
@@ -103,12 +104,12 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
         => AddAsync<TInputParameters, TModel>(value, parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<TResponse> AddAsync<TInputParameters, TResponse>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : notnull, IOperationParameterCollection;
+    public Task<TResponse> AddAsync<TInputParameters, TResponse>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
+        where TInputParameters : notnull, IOperationParameterCollection
+        => AddAsync<TResponse>(new AddOperationDescriptor(id: null, model: value, parameters: parameters), cancellationToken);
 
     /// <inheritdoc/>
-    //public abstract Task<TResponse> AddAsync<TInputParameters, TResponse>(TModel value, TInputParameters parameters, CancellationToken cancellationToken = default)
-    //    where TInputParameters : notnull, IOperationParameterCollection;
+    public abstract Task<TResponse> AddAsync<TResponse>(AddOperationDescriptor descriptor, CancellationToken cancellationToken = default);
 
     // ============================== UpdateAsync ==============================
 
@@ -161,4 +162,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     /// <inheritdoc/>
     public abstract Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TKey id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection;
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> UpdateAsync<TResponse>(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken = default);
 }

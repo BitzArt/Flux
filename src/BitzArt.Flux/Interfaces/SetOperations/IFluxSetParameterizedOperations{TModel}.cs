@@ -15,14 +15,6 @@ public interface IFluxSetParameterizedOperations<TModel>
     public Task<TModel> GetAsync<TInputParameters>(object id, TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection;
 
-    /// <summary>
-    /// Fetches an object from the set.
-    /// </summary>
-    /// <param name="values">Values to be used by an operation.</param>
-    /// <param name="cancellationToken">Cancellation token for this operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TModel> GetAsync(SetOperationValues values, CancellationToken cancellationToken = default);
-
     // ============================== GetAllAsync ==============================
 
     /// <summary>
@@ -34,14 +26,6 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
          where TInputParameters : notnull, IOperationParameterCollection;
-
-    /// <summary>
-    /// Fetches all objects from the set.
-    /// </summary>
-    /// <param name="values">Values to be used by an operation.</param>
-    /// <param name="cancellationToken">Cancellation token for this operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<IEnumerable<TModel>> GetAllAsync(SetOperationValues values, CancellationToken cancellationToken = default);
 
     // ============================== GetPageAsync ==============================
 
@@ -60,14 +44,6 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection;
-
-    /// <summary>
-    /// Fetches a page of objects from the set.
-    /// </summary>
-    /// <param name="values">Values to be used by an operation.</param>
-    /// <param name="cancellationToken">Cancellation token for this operation.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<PageResult<TModel>> GetPageAsync(SetOperationValues values, CancellationToken cancellationToken = default);
 
     // ============================== AddAsync ==============================
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux;
 
 /// <summary>
 /// Can be used as a way to pass a collection of named parameters to a Flux operation.
@@ -26,7 +24,7 @@ public class NamedOperationParameters : INamedOperationParameterCollection
     /// <summary>
     /// Initializes a new instance of the <see cref="NamedOperationParameters"/> class.
     /// </summary>
-    /// <param name="parameters">Named arameters to be used in the operation.</param>
+    /// <param name="parameters">Named parameters to be used in the operation.</param>
     public NamedOperationParameters(IDictionary<string, object> parameters)
     {
         _parameters = new(parameters);
