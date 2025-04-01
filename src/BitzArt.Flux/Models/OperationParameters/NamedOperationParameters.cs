@@ -1,9 +1,11 @@
-﻿namespace BitzArt.Flux;
+﻿using System.Collections;
+
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Can be used as a way to pass a collection of named parameters to a Flux operation.
 /// </summary>
-public class NamedOperationParameters : INamedOperationParameterCollection
+public class NamedOperationParameters : INamedOperationParameterCollection, IEnumerable<KeyValuePair<string, object>>
 {
     private readonly Dictionary<string, object> _parameters;
 
@@ -12,10 +14,6 @@ public class NamedOperationParameters : INamedOperationParameterCollection
     IEnumerable<object> IOperationParameterCollection.Values
         => throw new InvalidOperationException(
             "Named parameters collection should not be used as a simple list of parameters. Use named values instead.");
-
-    /// <inheritdoc cref="NamedOperationParameters(IDictionary{string, object})"/>"
-    public NamedOperationParameters(params (string, object)[] parameters)
-        : this(parameters.Select(x => new KeyValuePair<string, object>(x.Item1, x.Item2)).ToArray()) { }
 
     /// <inheritdoc cref="NamedOperationParameters(IDictionary{string, object})"/>"
     public NamedOperationParameters(params KeyValuePair<string, object>[] parameters)
@@ -33,4 +31,10 @@ public class NamedOperationParameters : INamedOperationParameterCollection
     {
         _parameters = new(parameters);
     }
+
+    IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator() => _parameters.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => _parameters.GetEnumerator();
+
+    public void Add(string key, object value) => _parameters.Add(key, value);
 }

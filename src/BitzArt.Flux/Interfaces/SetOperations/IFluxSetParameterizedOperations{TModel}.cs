@@ -7,6 +7,12 @@ public interface IFluxSetParameterizedOperations<TModel>
 {
     // ============================== GetAsync ==============================
 
+    /// <inheritdoc cref="GetAsync{TInputParameters}(TInputParameters, CancellationToken)"/>
+    //public Task<TModel> GetAsync(IEnumerable<KeyValuePair<string, object>> namedParameters, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="GetAsync{TInputParameters}(TInputParameters, CancellationToken)"/>
+    //public Task<TModel> GetAsync(IEnumerable<object> parameters, CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
     public Task<TModel> GetAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection;
@@ -14,6 +20,14 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <inheritdoc cref="IFluxSetParameterizedOperations{TModel, TKey}.GetAsync{TInputParameters}(TKey, TInputParameters, CancellationToken)"/>
     public Task<TModel> GetAsync<TInputParameters>(object id, TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection;
+
+    /// <summary>
+    /// Fetches an object from the set.
+    /// </summary>
+    /// <param name="values">Values to be used by an operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TModel> GetAsync(SetOperationValues values, CancellationToken cancellationToken = default);
 
     // ============================== GetAllAsync ==============================
 
@@ -26,6 +40,14 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
          where TInputParameters : notnull, IOperationParameterCollection;
+
+    /// <summary>
+    /// Fetches all objects from the set.
+    /// </summary>
+    /// <param name="values">Values to be used by an operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<IEnumerable<TModel>> GetAllAsync(SetOperationValues values, CancellationToken cancellationToken = default);
 
     // ============================== GetPageAsync ==============================
 
@@ -44,6 +66,14 @@ public interface IFluxSetParameterizedOperations<TModel>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
         where TInputParameters : notnull, IOperationParameterCollection;
+
+    /// <summary>
+    /// Fetches a page of objects from the set.
+    /// </summary>
+    /// <param name="values">Values to be used by an operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<PageResult<TModel>> GetPageAsync(SetOperationValues values, CancellationToken cancellationToken = default);
 
     // ============================== AddAsync ==============================
 
