@@ -13,19 +13,19 @@ public class UpdateOperationDescriptor : KeyedOperationDescriptor
     /// <summary>
     /// Model to be used in the operation.
     /// </summary>
-    public object Model { get; set; }
+    public object Value { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateOperationDescriptor"/> class.
     /// </summary>
     /// <param name="id">Identifier of the object to update (if applicable).</param>
-    /// <param name="model">Model to be used in the operation.</param>
+    /// <param name="value">Model to be used in the operation.</param>
     /// <param name="partial">Whether to perform a partial update (e.g. PATCH in REST).</param>
     /// <param name="parameters">Input parameters to be used in the operation.</param>
-    public UpdateOperationDescriptor(object? id, object model, bool partial, IOperationParameterCollection? parameters)
+    public UpdateOperationDescriptor(object? id, object value, bool partial, IOperationParameterCollection? parameters)
         : base(id, parameters)
     {
         Partial = partial;
-        Model = model;
+        Value = value;
     }
 }

@@ -3,6 +3,9 @@
 /// <summary>
 /// A collection of parameters to be used in a Flux operation. <br/>
 /// Such collection will be resolved by the Flux engine by passing them to the operation in their respective order.
+/// <para>
+/// For a collection of named parameters, see <see cref="INamedOperationParameterCollection"/>.
+/// </para>
 /// </summary>
 public interface IOperationParameterCollection
 {
