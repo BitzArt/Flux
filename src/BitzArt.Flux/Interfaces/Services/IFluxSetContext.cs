@@ -1,7 +1,9 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Pagination;
+
+namespace BitzArt.Flux;
 
 /// <inheritdoc cref="IFluxSetContext{TModel, TKey}"/>
-public interface IFluxSetContext<TModel> : IFluxSetOperations<TModel>, IFluxSetParameterizedOperations<TModel>
+public interface IFluxSetContext<TModel> : IFluxSetContext<TModel, object>
     where TModel : class
 {
 }
@@ -13,8 +15,206 @@ public interface IFluxSetContext<TModel> : IFluxSetOperations<TModel>, IFluxSetP
 /// </summary>
 /// <typeparam name="TModel">Model type of the set.</typeparam>
 /// <typeparam name="TKey">Key type of the set.</typeparam>
-public interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>, IFluxSetOperations<TModel, TKey>, IFluxSetParameterizedOperations<TModel, TKey>
+public interface IFluxSetContext<TModel, TKey>
     where TModel : class
     where TKey : notnull
 {
+    // ============================== GetAsync ==============================
+
+    /// <inheritdoc cref="GetAsync{TResponse}(TKey, IOperationParameterCollection?, CancellationToken)"/>
+    public Task<TModel> GetAsync(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="GetAsync{TResponse}(TKey, IOperationParameterCollection?, CancellationToken)"/>
+    public Task<TResponse> GetAsync<TResponse>(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="GetAsync{TResponse}(TKey, IOperationParameterCollection?, CancellationToken)"/>
+    public Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches an object from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="id">Unique identifier of the object to fetch.</param>
+    /// <param name="parameters">Parameters to be used in the operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetAsync<TResponse>(TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="GetAsync{TResponse}(GetOperationDescriptor, CancellationToken)"/>
+    public Task<TModel> GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches an object from the set.
+    /// </summary>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetAsync<TResponse>(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    // ============================== GetAllAsync ==============================
+
+    /// <inheritdoc cref="GetAllAsync{TResponse}(IOperationParameterCollection?, CancellationToken)"/>
+    public Task<IEnumerable<TModel>> GetAllAsync(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches all objects from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="parameters">Parameters to be used in the operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetAllAsync<TResponse>(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="GetAllAsync{TResponse}(GetAllOperationDescriptor, CancellationToken)"/>
+    public Task<IEnumerable<TModel>> GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches all objects from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetAllAsync<TResponse>(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    // ============================== GetPageAsync ==============================
+
+    /// <inheritdoc cref="GetPageAsync{TResponse}(int, int, IOperationParameterCollection?, CancellationToken)"/>
+    public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches a page of objects from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="offset">Page offset.</param>
+    /// <param name="limit">Page limit.</param>
+    /// <param name="parameters">Parameters used by the operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetPageAsync<TResponse>(int offset, int limit, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="GetPageAsync{TResponse}(PageRequest, IOperationParameterCollection?, CancellationToken)"/>
+    public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches a page of objects from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="pageRequest">A <see cref="PageRequest"/> containing page request parameters.</param>
+    /// <param name="parameters">Parameters used by the operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetPageAsync<TResponse>(PageRequest pageRequest, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="GetPageAsync{TResponse}(GetPageOperationDescriptor, CancellationToken)"/>
+    public Task<PageResult<TModel>> GetPageAsync(GetPageOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches a page of objects from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetPageAsync<TResponse>(GetPageOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    // ============================== AddAsync ==============================
+
+    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, IOperationParameterCollection?, CancellationToken)"/>
+    public Task AddAsync(TModel value, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, IOperationParameterCollection?, CancellationToken)"/>
+    public Task<TResponse> AddAsync<TResponse>(TModel value, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, IOperationParameterCollection?, CancellationToken)"/>
+    public Task AddAsync(TModel value, TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Adds a new object to the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="value">The value to add to the set.</param>
+    /// <param name="id">
+    /// Unique identifier of the object to add.
+    /// <para>
+    /// <b>Note:</b> For some <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux implementations</see>,<br/>
+    /// the presence of this identifier may result in a keyed operation (e.g. 'PUT' in REST),<br/>
+    /// rather than a non-keyed operation (e.g. 'POST' in REST).
+    /// </para>
+    /// </param>
+    /// <param name="parameters">Parameters used by the operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> AddAsync<TResponse>(TModel value, TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="AddAsync{TResponse}(AddOperationDescriptor, CancellationToken)"/>
+    public Task AddAsync(AddOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Adds a new object to the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> AddAsync<TResponse>(AddOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    // ============================== UpdateAsync ==============================
+
+    /// <inheritdoc cref="UpdateAsync(TModel, TKey, bool, IOperationParameterCollection?, CancellationToken)"/>
+    public Task UpdateAsync(TModel value, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="UpdateAsync{TResponse}(TModel, TKey, bool, IOperationParameterCollection?, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TResponse>(TModel value, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="UpdateAsync{TResponse}(TModel, TKey, bool, IOperationParameterCollection?, CancellationToken)"/>
+    public Task UpdateAsync(TModel value, TKey id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates an existing object in the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="value">The value to update the existing object with.</param>
+    /// <param name="id">Unique identifier of the object to update.</param>
+    /// <param name="parameters">Parameters used by the operation.</param>
+    /// <param name="partial">Whether to perform a partial update (e.g. PATCH in REST), rather than a full update (e.g. PUT in REST).</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> UpdateAsync<TResponse>(TModel value, TKey id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="UpdateAsync{TResponse}(UpdateOperationDescriptor, CancellationToken)"/>
+    public Task UpdateAsync(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates an existing object in the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> UpdateAsync<TResponse>(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    // ============================== ExecuteAsync ==============================
+
+    /// <summary>
+    /// Executes an operation on the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> ExecuteAsync<TResponse>(OperationDescriptor descriptor, CancellationToken cancellationToken = default)
+        => ((Task<TResponse>)ExecuteAsync(descriptor, typeof(TResponse), cancellationToken));
+
+    /// <inheritdoc cref="ExecuteAsync(OperationDescriptor, Type?, CancellationToken)"/>
+    public Task ExecuteAsync(OperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Executes an operation on the set.
+    /// </summary>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="responseType">Type to deserialize the response to (if any).</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default);
 }

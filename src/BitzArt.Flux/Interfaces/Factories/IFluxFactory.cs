@@ -13,7 +13,7 @@ public interface IFluxFactory
     /// <summary>
     /// Returns a service provider for a specific service name.
     /// </summary>
-    public IFluxServiceFactory GetServiceProvider(string name);
+    public IFluxServiceFactory GetServiceContext(string name);
 
     /// <summary>
     /// Resolves a context for a specific Flux Service.

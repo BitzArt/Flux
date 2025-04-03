@@ -1,15 +1,10 @@
-﻿namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Operations;
 
 /// <summary>
-/// 'Update' operation descriptor.
+/// 'Add' operation descriptor.
 /// </summary>
-public class UpdateOperationDescriptor : KeyedOperationDescriptor
+public class AddOperationDescriptor : KeyedOperationDescriptor
 {
-    /// <summary>
-    /// Whether to perform a partial update (e.g. PATCH in REST).
-    /// </summary>
-    public bool Partial { get; set; }
-
     /// <summary>
     /// Model to be used in the operation.
     /// </summary>
@@ -20,12 +15,10 @@ public class UpdateOperationDescriptor : KeyedOperationDescriptor
     /// </summary>
     /// <param name="id">Identifier of the object to update (if applicable).</param>
     /// <param name="value">Model to be used in the operation.</param>
-    /// <param name="partial">Whether to perform a partial update (e.g. PATCH in REST).</param>
     /// <param name="parameters">Input parameters to be used in the operation.</param>
-    public UpdateOperationDescriptor(object? id, object value, bool partial, IOperationParameterCollection? parameters)
+    public AddOperationDescriptor(object? id, object value, IOperationParameterCollection? parameters)
         : base(id, parameters)
     {
-        Partial = partial;
         Value = value;
     }
 }

@@ -9,12 +9,12 @@ internal class FluxFactory : IFluxFactory
         ServiceContexts = [];
     }
 
-    public IFluxServiceFactory GetServiceProvider(string name)
+    public IFluxServiceFactory GetServiceContext(string name)
     {
         var serviceContext = ServiceContexts.AsQueryable().FirstOrDefault(x => x.ServiceName == name);
 
         return serviceContext is null
-            ? throw new FluxServiceProviderNotFoundException()
+            ? throw new ServiceContextNotFoundException()
             : serviceContext;
     }
 
@@ -30,13 +30,13 @@ internal class FluxFactory : IFluxFactory
         if (serviceName is not null)
         {
             serviceContext = q.FirstOrDefault(x => x.ServiceName == serviceName);
-            if (serviceContext is null) throw new FluxServiceProviderNotFoundException();
+            if (serviceContext is null) throw new ServiceContextNotFoundException();
         }
         else
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
-            if (serviceContexts.Count == 0) throw new FluxServiceProviderNotFoundException();
-            if (serviceContexts.Count > 1) throw new FluxMultipleServiceProviderFoundException();
+            if (serviceContexts.Count == 0) throw new ServiceContextNotFoundException();
+            if (serviceContexts.Count > 1) throw new MultipleServiceContextsFoundException();
             serviceContext = serviceContexts.First();
         }
 
@@ -56,13 +56,13 @@ internal class FluxFactory : IFluxFactory
         if (serviceName is not null)
         {
             serviceContext = q.FirstOrDefault(x => x.ServiceName == serviceName);
-            if (serviceContext is null) throw new FluxServiceProviderNotFoundException();
+            if (serviceContext is null) throw new ServiceContextNotFoundException();
         }
         else
         {
             var serviceContexts = q.Where(x => x.ContainsSignature<TModel>(setName)).ToList();
-            if (serviceContexts.Count == 0) throw new FluxServiceProviderNotFoundException();
-            if (serviceContexts.Count > 1) throw new FluxMultipleServiceProviderFoundException();
+            if (serviceContexts.Count == 0) throw new ServiceContextNotFoundException();
+            if (serviceContexts.Count > 1) throw new MultipleServiceContextsFoundException();
             serviceContext = serviceContexts.First();
         }
 

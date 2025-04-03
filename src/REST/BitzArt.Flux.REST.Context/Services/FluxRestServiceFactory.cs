@@ -20,7 +20,7 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
 
         var signature = new FluxSetSignature(typeof(TModel), Name: name);
 
-        if (_setOptions.ContainsKey(signature)) throw FluxSetAlreadyRegisteredException.ByModelName(nameof(TModel));
+        if (_setOptions.ContainsKey(signature)) throw SetAlreadyRegisteredException.ByModelName(nameof(TModel));
         _setOptions.Add(signature, optionsCasted);
 
         if (name is not null)
@@ -38,9 +38,9 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
         var signatureFull = new FluxSetSignature(typeof(TModel), typeof(TKey), Name: name);
         var signatureMinimal = new FluxSetSignature(typeof(TModel), Name: name);
 
-        if (_setOptions.ContainsKey(signatureFull)) throw FluxSetAlreadyRegisteredException.ByModelName(nameof(TModel));
+        if (_setOptions.ContainsKey(signatureFull)) throw SetAlreadyRegisteredException.ByModelName(nameof(TModel));
         _setOptions.Add(signatureFull, optionsCasted);
-        if (_setOptions.ContainsKey(signatureMinimal)) throw FluxSetAlreadyRegisteredException.ByModelName(nameof(TModel));
+        if (_setOptions.ContainsKey(signatureMinimal)) throw SetAlreadyRegisteredException.ByModelName(nameof(TModel));
         _setOptions.Add(signatureMinimal, optionsCasted);
 
         if (name is not null)
@@ -69,7 +69,7 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
     {
         var signature = new FluxSetSignature(typeof(TModel), Name: name);
         var found = _setOptions.TryGetValue(signature, out var options);
-        if (!found) throw new FluxSetConfigurationNotFoundException();
+        if (!found) throw new SetConfigurationNotFoundException();
         return (IFluxRestSetOptions<TModel>)options!;
     }
 
@@ -78,7 +78,7 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
     {
         var signature = new FluxSetSignature(typeof(TModel), typeof(TKey), Name: name);
         var found = _setOptions.TryGetValue(signature, out var options);
-        if (!found) throw new FluxSetConfigurationNotFoundException();
+        if (!found) throw new SetConfigurationNotFoundException();
         return (FluxRestSetOptions<TModel, TKey>)options!;
     }
 

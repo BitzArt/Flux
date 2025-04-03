@@ -1,6 +1,7 @@
-﻿using BitzArt.Pagination;
+﻿using BitzArt.Flux.Operations;
+using BitzArt.Pagination;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Sets;
 
 /// <summary>
 /// Base class for set context implementations.
@@ -9,16 +10,6 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     where TModel : class
     where TKey : notnull
 {
-    // ============================== General ==============================
-
-    private static TKey CastId(object value)
-    {
-        if (value is not TKey valueCasted)
-            throw new InvalidOperationException($"Invalid key type. Expected '{typeof(TKey).Name}' but got '{value.GetType().Name}'.");
-
-        return valueCasted;
-    }
-
     // ============================== GetAsync ==============================
 
     /// <inheritdoc/>
@@ -28,14 +19,6 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     /// <inheritdoc/>
     public Task<TResponse> GetAsync<TResponse>(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => GetAsync<TResponse>(new GetOperationDescriptor(id: null, parameters: parameters), cancellationToken);
-
-    /// <inheritdoc/>
-    public Task<TModel> GetAsync(object id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => GetAsync<TModel>(id, parameters, cancellationToken);
-
-    /// <inheritdoc/>
-    public Task<TResponse> GetAsync<TResponse>(object id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => GetAsync<TResponse>(CastId(id), parameters, cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
@@ -108,14 +91,6 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
         => AddAsync<TResponse>(new AddOperationDescriptor(id: null, value: value, parameters: parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task AddAsync(TModel value, object id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => AddAsync(value, CastId(id), parameters, cancellationToken);
-
-    /// <inheritdoc/>
-    public Task<TResponse> AddAsync<TResponse>(TModel value, object id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => AddAsync<TResponse>(value, CastId(id), parameters, cancellationToken);
-
-    /// <inheritdoc/>
     public Task AddAsync(TModel value, TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => AddAsync(new AddOperationDescriptor(id: id, value: value, parameters: parameters), cancellationToken);
 
@@ -140,14 +115,6 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     /// <inheritdoc/>
     public Task<TResponse> UpdateAsync<TResponse>(TModel value, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => UpdateAsync<TResponse>(new UpdateOperationDescriptor(id: null, value: value, partial: partial, parameters: parameters), cancellationToken);
-
-    /// <inheritdoc/>
-    public Task UpdateAsync(TModel value, object id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => UpdateAsync(value, CastId(id), partial, parameters, cancellationToken);
-
-    /// <inheritdoc/>
-    public Task<TResponse> UpdateAsync<TResponse>(TModel value, object id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => UpdateAsync<TResponse>(value, CastId(id), partial, parameters, cancellationToken);
 
     /// <inheritdoc/>
     public Task UpdateAsync(TModel value, TKey id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)

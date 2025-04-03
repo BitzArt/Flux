@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Operations;
 
 /// <summary>
 /// Describes an operation to be executed by the Flux engine. <br />

@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Operations;
 
 /// <summary>
 /// 'Get All' operation descriptor.

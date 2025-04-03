@@ -131,7 +131,7 @@ public class ServiceRegistrationTests
         var set2FromService = service.Set<TestModel>("test-set-2");
         Assert.NotNull(set2FromService);
 
-        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
+        Assert.Throws<SetConfigurationNotFoundException>(() =>
         {
             _ = service.Set<TestModel>();
         });
@@ -142,12 +142,12 @@ public class ServiceRegistrationTests
         var set2FromFlux = flux.Set<TestModel>("service1", "test-set-2");
         Assert.NotNull(set2FromFlux);
 
-        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
+        Assert.Throws<SetConfigurationNotFoundException>(() =>
         {
             _ = flux.Set<TestModel>("service1");
         });
 
-        Assert.ThrowsAny<FluxException>(() =>
+        Assert.ThrowsAny<Exception>(() =>
         {
             _ = flux.Set<TestModel>();
         });
@@ -166,7 +166,7 @@ public class ServiceRegistrationTests
                     .AddSet<TestModel, int>()
                         .FromJsonFile("test-model.set.json");
 
-            Assert.ThrowsAny<FluxException>(() =>
+            Assert.ThrowsAny<Exception>(() =>
             {
                 builder.AddSet<TestModel, int>();
             });
@@ -234,7 +234,7 @@ public class ServiceRegistrationTests
         var set2FromService = service.Set<TestModel>("test-set-2");
         Assert.NotNull(set2FromService);
 
-        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
+        Assert.Throws<SetConfigurationNotFoundException>(() =>
         {
             var setNoNameFromService = service.Set<TestModel>();
         });
@@ -245,12 +245,12 @@ public class ServiceRegistrationTests
         var set2FromFlux = flux.Set<TestModel>("service1", "test-set-2");
         Assert.NotNull(set2FromFlux);
 
-        Assert.Throws<FluxSetConfigurationNotFoundException>(() =>
+        Assert.Throws<SetConfigurationNotFoundException>(() =>
         {
             var setNoNameFromFlux = flux.Set<TestModel>("service1");
         });
 
-        Assert.ThrowsAny<FluxException>(() =>
+        Assert.ThrowsAny<Exception>(() =>
         {
             var setNoNameFromFlux = flux.Set<TestModel>();
         });

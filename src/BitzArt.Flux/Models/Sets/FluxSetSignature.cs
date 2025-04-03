@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Sets;
 
 /// <summary>
 /// A signature of a Flux set.

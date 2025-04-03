@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Builder;
 
 internal class FluxBuilder(IServiceCollection services) : IFluxBuilder
 {
