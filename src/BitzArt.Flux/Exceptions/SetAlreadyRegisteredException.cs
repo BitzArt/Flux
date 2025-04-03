@@ -1,8 +1,7 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// An exception thrown when a Flux Set is already registered,
-/// and a new one is being registered with the same name.
+/// Indicates that a set with a matching signature has already been registered.
 /// </summary>
 public class SetAlreadyRegisteredException : Exception
 {

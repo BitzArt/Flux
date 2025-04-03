@@ -1,7 +1,7 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// An exception thrown when a Flux Set Configuration is not found.
+/// Indicates that the requested set configuration was not found.
 /// </summary>
 public class SetConfigurationNotFoundException : Exception
 {

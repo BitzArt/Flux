@@ -1,11 +1,11 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// An exception thrown when multiple Flux Service Providers are found.
+/// Indicates that multiple service contexts were found when only one was expected.
 /// </summary>
 public class MultipleServiceContextsFoundException : Exception
 {
-    internal const string DefaultMessage = "Multiple matching Flux Service Providers were found.";
+    internal const string DefaultMessage = "Multiple matching Flux Service Contexts were found.";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MultipleServiceContextsFoundException"/> class.

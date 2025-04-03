@@ -1,7 +1,7 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// An exception thrown when a Flux Service Provider is not found.
+/// Indicates that the requested Flux Service Context was not found.
 /// </summary>
 public class ServiceContextNotFoundException : Exception
 {
