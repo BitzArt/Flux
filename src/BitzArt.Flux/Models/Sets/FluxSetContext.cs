@@ -13,20 +13,20 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============================== GetAsync ==============================
 
     /// <inheritdoc/>
-    public Task<TModel> GetAsync(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+    public Task<TModel> GetAsync(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => GetAsync<TModel>(parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> GetAsync<TResponse>(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => GetAsync<TResponse>(new GetOperationDescriptor(id: null, parameters: parameters), cancellationToken);
+    public Task<TResponse> GetAsync<TResponse>(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => GetAsync<TResponse>(new GetOperationDescriptor(id: null, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+    public Task<TModel> GetAsync(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => GetAsync<TModel>(id, parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> GetAsync<TResponse>(TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => GetAsync<TResponse>(new GetOperationDescriptor(id: id, parameters: parameters), cancellationToken);
+    public Task<TResponse> GetAsync<TResponse>(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => GetAsync<TResponse>(new GetOperationDescriptor(id: id, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
     public Task<TModel> GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default)

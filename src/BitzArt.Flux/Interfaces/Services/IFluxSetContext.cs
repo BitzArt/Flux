@@ -22,14 +22,14 @@ public interface IFluxSetContext<TModel, TKey>
 {
     // ============================== GetAsync ==============================
 
-    /// <inheritdoc cref="GetAsync{TResponse}(TKey, IOperationParameterCollection?, CancellationToken)"/>
-    public Task<TModel> GetAsync(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="GetAsync{TResponse}(TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task<TModel> GetAsync(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="GetAsync{TResponse}(TKey, IOperationParameterCollection?, CancellationToken)"/>
-    public Task<TResponse> GetAsync<TResponse>(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="GetAsync{TResponse}(TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task<TResponse> GetAsync<TResponse>(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="GetAsync{TResponse}(TKey, IOperationParameterCollection?, CancellationToken)"/>
-    public Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="GetAsync{TResponse}(TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task<TModel> GetAsync(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches an object from the set.
@@ -39,7 +39,7 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="parameters">Parameters to be used in the operation.</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TResponse> GetAsync<TResponse>(TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    public Task<TResponse> GetAsync<TResponse>(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetAsync{TResponse}(GetOperationDescriptor, CancellationToken)"/>
     public Task<TModel> GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default);

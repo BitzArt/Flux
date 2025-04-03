@@ -1,3 +1,4 @@
+using BitzArt.Flux.Sets;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
@@ -49,5 +50,22 @@ public class ServiceRegistrationTests
 
         var context = serviceProvider.GetService<IFluxContext>();
         Assert.NotNull(context);
+    }
+
+    private class MyModel { }
+
+    private void Test()
+    {
+        FluxSetContext<MyModel, int> setContext = null!;
+
+        IEnumerable<KeyValuePair<string, object>> parameters =
+            [
+                new("a", 1),
+                new("b", 2),
+                new("c", 3)
+            ];
+
+        _ = setContext.GetAsync(1, new(1, 2, 3));
+        _ = setContext.GetAsync(1, new(parameters));
     }
 }
