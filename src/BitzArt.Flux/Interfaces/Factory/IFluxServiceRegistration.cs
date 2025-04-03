@@ -1,10 +1,10 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// Holds configuration of a specific external service.
-/// Can create new service contexts.
+/// Holds registration of a specific Flux service.
+/// Can create new instances of service context based on the configuration.
 /// </summary>
-public interface IFluxServiceFactory
+public interface IFluxServiceRegistration
 {
     /// <summary>
     /// Name of the service.

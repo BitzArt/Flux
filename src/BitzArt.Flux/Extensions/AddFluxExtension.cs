@@ -36,10 +36,4 @@ public static class AddFluxExtension
 
         return services;
     }
-
-    private class FluxAlreadyRegisteredException : Exception
-    {
-        private const string Msg = "Flux is already registered in this service collection";
-        public FluxAlreadyRegisteredException() : base(Msg) { }
-    }
 }

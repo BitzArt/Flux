@@ -1,11 +1,12 @@
 ﻿using BitzArt.Flux.REST;
+using BitzArt.Flux.Sets;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 
 internal class FluxRestServiceFactory(FluxRestServiceOptions options, string serviceName)
-    : IFluxServiceFactory
+    : IFluxServiceRegistration
 {
     private readonly FluxRestServiceOptions _serviceOptions = options;
 

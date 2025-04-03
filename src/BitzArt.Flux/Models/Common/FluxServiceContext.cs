@@ -6,21 +6,21 @@
 /// <remarks>
 /// Initializes a new instance of the <see cref="FluxServiceContext"/> class.
 /// </remarks>
-public class FluxServiceContext(IFluxServiceFactory provider, IServiceProvider serviceProvider)
+public class FluxServiceContext(IFluxServiceRegistration serviceRegistration, IServiceProvider serviceProvider)
     : IFluxServiceContext
 {
-    internal readonly IFluxServiceFactory Provider = provider;
+    internal readonly IFluxServiceRegistration ServiceRegistration = serviceRegistration;
 
     /// <summary>
-    /// Resolves a context for a specific preconfigured Flux Set within the service.
+    /// Resolves a context for a specific preconfigured set within a service.
     /// </summary>
     public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? name = null)
         where TModel : class
         where TKey : notnull
-        => Provider.CreateSetContext<TModel, TKey>(serviceProvider, name);
+        => ServiceRegistration.CreateSetContext<TModel, TKey>(serviceProvider, name);
 
     /// <inheritdoc cref="Set{TModel, TKey}(string?)"/>"
     public IFluxSetContext<TModel> Set<TModel>(string? name = null)
         where TModel : class
-        => Provider.CreateSetContext<TModel>(serviceProvider, name);
+        => ServiceRegistration.CreateSetContext<TModel>(serviceProvider, name);
 }

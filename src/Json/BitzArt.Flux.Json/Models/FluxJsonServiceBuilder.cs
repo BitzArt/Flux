@@ -5,14 +5,14 @@ namespace BitzArt.Flux;
 internal class FluxJsonServiceBuilder : IFluxJsonServiceBuilder
 {
     public IServiceCollection ServiceCollection { get; private set; }
-    public IFluxServiceFactory ServiceFactory { get; set; }
-    public IFluxFactory Factory { get; init; }
+    public IFluxServiceRegistration ServiceFactory { get; set; }
+    public IFluxFactory ServiceRegistration { get; init; }
     public FluxJsonServiceOptions ServiceOptions { get; init; }
 
     public FluxJsonServiceBuilder(IFluxServicePreBuilder prebuilder)
     {
         ServiceCollection = prebuilder.ServiceCollection;
-        Factory = prebuilder.Factory;
+        ServiceRegistration = prebuilder.Factory;
         ServiceOptions = new FluxJsonServiceOptions();
 
         if (prebuilder.Name is null) throw new Exception("Missing Name in Flux Service configuration. Specify service names when configuring external services.");

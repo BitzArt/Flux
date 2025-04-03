@@ -18,8 +18,8 @@ public class ServiceRegistrationTests
         var factory = serviceProvider.GetService<IFluxFactory>();
 
         Assert.NotNull(factory);
-        Assert.NotNull(factory.ServiceContexts);
-        Assert.Empty(factory.ServiceContexts);
+        Assert.NotNull(factory.ServiceRegistrations);
+        Assert.Empty(factory.ServiceRegistrations);
     }
 
     [Fact]

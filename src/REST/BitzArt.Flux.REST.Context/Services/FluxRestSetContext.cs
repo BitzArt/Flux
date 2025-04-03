@@ -1,4 +1,5 @@
-﻿using BitzArt.Pagination;
+﻿using BitzArt.Flux.Sets;
+using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 using System.Net.Mime;
 using System.Text;
@@ -12,11 +13,12 @@ internal class FluxRestSetContext<TModel, TKey>(
     ILogger logger,
     IFluxRestSetOptions<TModel> setOptions)
     : FluxSetContext<TModel, TKey>
-     where TModel : class
+    where TModel : class
+    where TKey : notnull
 {
     // ============================== General ==============================
 
-    internal IFluxRestSetOptions<TModel> SetOptions { get; set; } = setOptions;
+    internal IFluxRestSetOptions<TModel> Options { get; set; } = setOptions;
 
     internal readonly FluxRestServiceOptions ServiceOptions = serviceOptions;
 
@@ -55,7 +57,7 @@ internal class FluxRestSetContext<TModel, TKey>(
         var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Id, id, (path) =>
             new HttpRequestMessage(HttpMethod.Get, path));
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
 
         return await HandleRequestAsync<TModel>(requestMessage, cancellationToken);
     }
@@ -65,7 +67,7 @@ internal class FluxRestSetContext<TModel, TKey>(
         var preparationParameters = new RequestPreparationParameters<TInputParameters, TKey>(EndpointType.Id, id, parameters, (path) =>
             new HttpRequestMessage(HttpMethod.Get, path));
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
 
         return await HandleRequestAsync<TModel>(requestMessage, cancellationToken);
     }
@@ -77,7 +79,7 @@ internal class FluxRestSetContext<TModel, TKey>(
         var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Default, (path) =>
             new HttpRequestMessage(HttpMethod.Get, path));
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
 
         return await HandleRequestAsync<IEnumerable<TModel>>(requestMessage, cancellationToken);
     }
@@ -87,7 +89,7 @@ internal class FluxRestSetContext<TModel, TKey>(
         var preparationParameters = new RequestPreparationParameters<TInputParameters, TKey>(EndpointType.Default, parameters, (path) =>
             new HttpRequestMessage(HttpMethod.Get, path));
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
 
         return await HandleRequestAsync<IEnumerable<TModel>>(requestMessage, cancellationToken);
     }
@@ -99,7 +101,7 @@ internal class FluxRestSetContext<TModel, TKey>(
         var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Page, pageRequest, null, (path) =>
             new HttpRequestMessage(HttpMethod.Get, path));
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
 
         return await HandleRequestAsync<PageResult<TModel>>(requestMessage, cancellationToken);
     }
@@ -109,7 +111,7 @@ internal class FluxRestSetContext<TModel, TKey>(
         var preparationParameters = new RequestPreparationParameters<TInputParameters, TKey>(EndpointType.Page, pageRequest, parameters, (path) =>
              new HttpRequestMessage(HttpMethod.Get, path));
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
 
         return await HandleRequestAsync<PageResult<TModel>>(requestMessage, cancellationToken);
     }
@@ -126,7 +128,7 @@ internal class FluxRestSetContext<TModel, TKey>(
                 Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json)
             });
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
 
         return await HandleRequestAsync<TResponse>(requestMessage, cancellationToken);
     }
@@ -141,7 +143,7 @@ internal class FluxRestSetContext<TModel, TKey>(
                 Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json)
             });
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
 
         return await HandleRequestAsync<TResponse>(requestMessage, cancellationToken);
     }
@@ -159,7 +161,7 @@ internal class FluxRestSetContext<TModel, TKey>(
                 Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json)
             });
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
 
         return await HandleRequestAsync<TResponse>(requestMessage, cancellationToken);
     }
@@ -175,7 +177,7 @@ internal class FluxRestSetContext<TModel, TKey>(
                 Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json)
             });
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
 
         return await HandleRequestAsync<TResponse>(requestMessage, cancellationToken);
     }
@@ -191,7 +193,7 @@ internal class FluxRestSetContext<TModel, TKey>(
                 Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json)
             });
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
 
         return await HandleRequestAsync<TResponse>(requestMessage, cancellationToken);
     }
@@ -207,7 +209,7 @@ internal class FluxRestSetContext<TModel, TKey>(
                 Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json)
             });
 
-        var requestMessage = SetOptions.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
+        var requestMessage = Options.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
 
         return await HandleRequestAsync<TResponse>(requestMessage, cancellationToken);
     }

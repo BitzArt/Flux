@@ -18,7 +18,7 @@ public static class UsingRestExtension
         var builder = new FluxRestServiceBuilder(prebuilder, baseUrl);
 
         var fluxServiceProvider = builder.ServiceFactory;
-        builder.Factory.ServiceContexts.Add(fluxServiceProvider);
+        builder.ServiceRegistration.ServiceRegistrations.Add(fluxServiceProvider);
 
         // If configuration action is null, do nothing
         builder.HttpClientConfiguration ??= (_, _) => { };
@@ -43,7 +43,7 @@ public static class UsingRestExtension
         var builder = new FluxRestServiceBuilder(prebuilder, baseUrl);
 
         var fluxServiceProvider = builder.ServiceFactory;
-        builder.Factory.ServiceContexts.Add(fluxServiceProvider);
+        builder.ServiceRegistration.ServiceRegistrations.Add(fluxServiceProvider);
 
         builder.ServiceCollection.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
         {

@@ -8,12 +8,12 @@ public interface IFluxFactory
     /// <summary>
     /// Registered service contexts.
     /// </summary>
-    public ICollection<IFluxServiceFactory> ServiceContexts { get; }
+    public ICollection<IFluxServiceRegistration> ServiceRegistrations { get; }
 
     /// <summary>
     /// Returns a service provider for a specific service name.
     /// </summary>
-    public IFluxServiceFactory GetServiceContext(string name);
+    public IFluxServiceRegistration GetServiceRegistration(string name);
 
     /// <summary>
     /// Resolves a context for a specific Flux Service.

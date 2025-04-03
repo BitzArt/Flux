@@ -21,7 +21,7 @@ public static class UsingJsonExtension
         var builder = new FluxJsonServiceBuilder(prebuilder);
 
         var fluxServiceProvider = builder.ServiceFactory;
-        builder.Factory.ServiceContexts.Add(fluxServiceProvider);
+        builder.ServiceRegistration.ServiceRegistrations.Add(fluxServiceProvider);
 
         builder.ServiceCollection.AddScoped<IFluxServiceContext>(x =>
         {

@@ -4,7 +4,7 @@ internal class FluxContext(IFluxFactory factory, IServiceProvider serviceProvide
     : IFluxContext
 {
     public IFluxServiceContext Service(string serviceName)
-        => new FluxServiceContext(factory.GetServiceContext(serviceName), serviceProvider);
+        => new FluxServiceContext(factory.GetServiceRegistration(serviceName), serviceProvider);
 
     public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? service = null, string? set = null)
         where TModel : class

@@ -13,6 +13,6 @@ public static class AddServiceExtension
     /// </summary>
     public static IFluxServicePreBuilder AddService(this IFluxBuilder builder, string name)
     {
-        return new FluxServicePreBuilder(builder.Services, builder.Factory, name);
+        return new FluxServicePreBuilder(builder.ServiceCollection, builder.Factory, name);
     }
 }

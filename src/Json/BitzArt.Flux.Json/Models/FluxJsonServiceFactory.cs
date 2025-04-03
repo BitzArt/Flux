@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BitzArt.Flux.Sets;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
@@ -7,7 +8,7 @@ internal class FluxJsonServiceFactory(
     FluxJsonServiceOptions options,
     string serviceName,
     string? basePath = null
-    ) : IFluxServiceFactory
+    ) : IFluxServiceRegistration
 {
     private readonly FluxJsonServiceOptions _serviceOptions = options;
 

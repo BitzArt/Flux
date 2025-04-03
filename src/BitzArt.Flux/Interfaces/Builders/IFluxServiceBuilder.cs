@@ -16,10 +16,10 @@ public interface IFluxServiceBuilder
     /// <summary>
     /// Flux Service Factory instance.
     /// </summary>
-    public IFluxServiceFactory ServiceFactory { get; }
+    public IFluxServiceRegistration ServiceFactory { get; }
 
     /// <summary>
     /// Flux Factory instance.
     /// </summary>
-    public IFluxFactory Factory { get; }
+    public IFluxFactory ServiceRegistration { get; }
 }

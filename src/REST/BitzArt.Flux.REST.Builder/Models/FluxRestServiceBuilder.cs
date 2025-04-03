@@ -6,15 +6,15 @@ namespace BitzArt.Flux;
 internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
 {
     public IServiceCollection ServiceCollection { get; private set; }
-    public IFluxServiceFactory ServiceFactory { get; set; }
-    public IFluxFactory Factory { get; init; }
+    public IFluxServiceRegistration ServiceFactory { get; set; }
+    public IFluxFactory ServiceRegistration { get; init; }
     public FluxRestServiceOptions ServiceOptions { get; init; }
     public Action<IServiceProvider, HttpClient>? HttpClientConfiguration { get; set; }
 
     public FluxRestServiceBuilder(IFluxServicePreBuilder prebuilder, string? baseUrl)
     {
         ServiceCollection = prebuilder.ServiceCollection;
-        Factory = prebuilder.Factory;
+        ServiceRegistration = prebuilder.Factory;
         ServiceOptions = new(baseUrl);
         HttpClientConfiguration = null;
 

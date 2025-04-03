@@ -22,7 +22,7 @@ public class ServiceRegistrationTests
 
         var factory = serviceProvider.GetRequiredService<IFluxFactory>();
         Assert.NotNull(factory);
-        Assert.Empty(factory.ServiceContexts);
+        Assert.Empty(factory.ServiceRegistrations);
     }
 
     [Fact]
@@ -43,8 +43,8 @@ public class ServiceRegistrationTests
 
         var factory = serviceProvider.GetRequiredService<IFluxFactory>();
 
-        Assert.Single(factory.ServiceContexts);
-        var provider = factory.ServiceContexts.Single();
+        Assert.Single(factory.ServiceRegistrations);
+        var provider = factory.ServiceRegistrations.Single();
 
         Assert.Equal(serviceName, provider.ServiceName);
 
@@ -72,7 +72,7 @@ public class ServiceRegistrationTests
         var serviceProvider = services.BuildServiceProvider();
 
         var factory = serviceProvider.GetRequiredService<IFluxFactory>();
-        var provider = factory.ServiceContexts.Single();
+        var provider = factory.ServiceRegistrations.Single();
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel, int>>();
         Assert.NotNull(setContext);
