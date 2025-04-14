@@ -15,7 +15,7 @@ public class AddServiceExtensionTests
         var fluxBuilder = new FluxBuilder(services);
 
         // Act
-        var serviceBuilder = fluxBuilder.AddService("TestService");
+        var serviceBuilder = fluxBuilder.AddService("my-flux-service");
 
         // Assert
         Assert.NotNull(serviceBuilder);
@@ -28,7 +28,7 @@ public class AddServiceExtensionTests
         // Arrange
         var services = new ServiceCollection();
 
-        var serviceName = "TestService";
+        var serviceName = "my-flux-service";
         var fluxBuilder = new FluxBuilder(services);
 
         // Act
@@ -51,7 +51,7 @@ public class AddServiceExtensionTests
         // Arrange
         var services = new ServiceCollection();
 
-        var serviceName = "TestService";
+        var serviceName = "my-flux-service";
         var fluxBuilder = new FluxBuilder(services);
 
         // Act
@@ -75,8 +75,8 @@ public class AddServiceExtensionTests
         // Arrange
         var services = new ServiceCollection();
 
-        var serviceName1 = "TestService1";
-        var serviceName2 = "TestService2";
+        var serviceName1 = "my-flux-service-1";
+        var serviceName2 = "my-flux-service-2";
 
         var fluxBuilder = new FluxBuilder(services);
 

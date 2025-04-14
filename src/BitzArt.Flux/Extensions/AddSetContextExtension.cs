@@ -53,28 +53,32 @@ public static class AddSetContextExtension
         var modelType = genericArguments[0];
         var keyType = genericArguments[1];
 
-        if (keyType != typeof(object))
-        {
-            Type[] wrapperRegistrationInterfaces =
-            [
+        Type[] wrapperRegistrationInterfaces = keyType == typeof(object)
+            // if key is already of type 'object', register a wrapper to implement IFluxSetContext<TModel>
+            ? [
+                // IFluxSetContext<TModel>
+                typeof(IFluxSetContext<>).MakeGenericType(modelType)
+            ]
+            // if key is not already of type 'object', register a wrapper for both implicit and explicit TKey variants
+            : [
                 // IFluxSetContext<TModel>
                 typeof(IFluxSetContext<>).MakeGenericType(modelType),
                 // IFluxSetContext<TModel, object>
                 typeof(IFluxSetContext<,>).MakeGenericType(modelType, typeof(object))
             ];
-            var wrapperType = typeof(FluxSetContextUnspecifiedKeyTypeWrapper<,>).MakeGenericType(modelType, keyType);
+        var wrapperType = typeof(FluxSetContextUnspecifiedKeyTypeWrapper<,>).MakeGenericType(modelType, keyType);
 
-            foreach (var wrapperRegistrationInterface in wrapperRegistrationInterfaces)
+        foreach (var wrapperRegistrationInterface in wrapperRegistrationInterfaces)
+        {
+            foreach (var signature in possibleSignatures)
             {
-                foreach (var signature in possibleSignatures)
-                {
-                    ServiceDescriptor[] serviceDescriptors =
-                    [
-                        // keyed wrapper descriptor for internal consumption
-                        new(wrapperRegistrationInterface, signature, (sp, _) =>
+                ServiceDescriptor[] serviceDescriptors =
+                [
+                    // keyed wrapper descriptor for internal consumption
+                    new(wrapperRegistrationInterface, signature, (sp, _) =>
                         {
                             // retrieve actual set context
-                            var actualSetContext = sp.GetRequiredKeyedService(implementationType, signature);
+                            var actualSetContext = sp.GetRequiredKeyedService(registrationInterface, signature);
 
                             // create wrapper instance using the actual set context as a constructor argument
                             var wrapperInstance = Activator.CreateInstance(wrapperType, actualSetContext)!;
@@ -85,10 +89,9 @@ public static class AddSetContextExtension
 
                         // unkeyed wrapper descriptor for arbitrary external injection
                         new(wrapperRegistrationInterface, sp => sp.GetRequiredKeyedService(wrapperRegistrationInterface, signature), setLifetime)
-                    ];
+                ];
 
-                    builder.FluxBuilder.ServiceCollection.Add(serviceDescriptors);
-                }
+                builder.FluxBuilder.ServiceCollection.Add(serviceDescriptors);
             }
         }
 
