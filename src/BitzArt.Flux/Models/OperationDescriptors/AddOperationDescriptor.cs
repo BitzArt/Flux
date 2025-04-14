@@ -3,7 +3,7 @@
 /// <summary>
 /// 'Add' operation descriptor.
 /// </summary>
-public class AddOperationDescriptor : KeyedOperationDescriptor
+public sealed class AddOperationDescriptor : KeyedOperationDescriptor
 {
     /// <summary>
     /// Model to be used in the operation.

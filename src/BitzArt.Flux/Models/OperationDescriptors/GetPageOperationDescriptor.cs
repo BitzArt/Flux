@@ -5,7 +5,7 @@ namespace BitzArt.Flux.Operations;
 /// <summary>
 /// Operation descriptor for paged operations.
 /// </summary>
-public class GetPageOperationDescriptor : OperationDescriptor
+public sealed class GetPageOperationDescriptor : OperationDescriptor
 {
     /// <summary>
     /// Page request parameters.

@@ -3,7 +3,7 @@
 /// <summary>
 /// 'Get' operation descriptor.
 /// </summary>
-public class GetOperationDescriptor : KeyedOperationDescriptor
+public sealed class GetOperationDescriptor : KeyedOperationDescriptor
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="GetOperationDescriptor"/> class.

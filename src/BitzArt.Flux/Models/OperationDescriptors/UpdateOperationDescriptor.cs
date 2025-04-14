@@ -3,7 +3,7 @@
 /// <summary>
 /// 'Update' operation descriptor.
 /// </summary>
-public class UpdateOperationDescriptor : KeyedOperationDescriptor
+public sealed class UpdateOperationDescriptor : KeyedOperationDescriptor
 {
     /// <summary>
     /// Whether to perform a partial update (e.g. PATCH in REST).
