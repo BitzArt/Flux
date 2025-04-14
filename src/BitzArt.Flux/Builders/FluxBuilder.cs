@@ -2,8 +2,12 @@
 
 namespace BitzArt.Flux.Builder;
 
-internal class FluxBuilder(IServiceCollection services) : IFluxBuilder
+internal class FluxBuilder : IFluxBuilder
 {
-    public IServiceCollection ServiceCollection { get; private set; } = services;
-    public IFluxFactory Factory { get; init; } = new FluxFactory();
+    public IServiceCollection ServiceCollection { get; private init; }
+
+    public FluxBuilder(IServiceCollection serviceCollection)
+    {
+        ServiceCollection = serviceCollection;
+    }
 }

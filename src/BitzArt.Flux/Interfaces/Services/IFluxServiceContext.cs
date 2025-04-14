@@ -7,12 +7,20 @@
 public interface IFluxServiceContext
 {
     /// <summary>
+    /// Name of the service this context is for.
+    /// </summary>
+    public string ServiceName { get; }
+
+    /// <summary>
     /// Resolves a context for a specific preconfigured Flux Set.
     /// </summary>
-    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? name = null)
+    /// <typeparam name="TModel">Type of the model.</typeparam>
+    /// <typeparam name="TKey">Type of the key.</typeparam>
+    /// <param name="setName">Name of the set to resolve.</param>
+    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? setName = null)
         where TModel : class
         where TKey : notnull;
 
     /// <inheritdoc cref="Set{TModel, TKey}(string?)"/>
-    public IFluxSetContext<TModel> Set<TModel>(string? name = null) where TModel : class;
+    public IFluxSetContext<TModel> Set<TModel>(string? setName = null) where TModel : class;
 }

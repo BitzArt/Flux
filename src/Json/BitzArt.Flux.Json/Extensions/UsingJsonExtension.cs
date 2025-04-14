@@ -14,13 +14,13 @@ public static class UsingJsonExtension
     /// <returns>
     /// The <see cref="IFluxJsonServiceBuilder"/> for further service configuration.
     /// </returns>
-    public static IFluxJsonServiceBuilder UsingJson(this IFluxServicePreBuilder prebuilder)
+    public static IFluxJsonServiceBuilder UsingJson(this IFluxServiceBuilder prebuilder)
     {
         prebuilder.ServiceCollection.AddLogging();
 
         var builder = new FluxJsonServiceBuilder(prebuilder);
 
-        var fluxServiceProvider = builder.ServiceFactory;
+        var fluxServiceProvider = builder.Registration;
         builder.ServiceRegistration.ServiceRegistrations.Add(fluxServiceProvider);
 
         builder.ServiceCollection.AddScoped<IFluxServiceContext>(x =>

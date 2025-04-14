@@ -3,22 +3,12 @@ using BitzArt.Pagination;
 
 namespace BitzArt.Flux.Sets;
 
-/// <summary>
-/// Wrapper for <see cref="IFluxSetContext{TModel, TKey}"/> to allow using it with unspecified key type.
-/// </summary>
-/// <typeparam name="TModel"></typeparam>
-/// <typeparam name="TKey"></typeparam>
-public class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey> : IFluxSetContext<TModel>
+internal class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey>(IFluxSetContext<TModel, TKey> setContext) : IFluxSetContext<TModel>
     where TModel : class
     where TKey : notnull
 {
     // Actual set context with a specified key type
-    private readonly IFluxSetContext<TModel, TKey> _setContext;
-
-    public FluxSetContextUnspecifiedKeyTypeWrapper(IFluxSetContext<TModel, TKey> setContext)
-    {
-        _setContext = setContext;
-    }
+    private readonly IFluxSetContext<TModel, TKey> _setContext = setContext;
 
     private static TKey ConvertKey(object value)
     {
@@ -123,6 +113,9 @@ public class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey> : IFluxSetCon
         => _setContext.UpdateAsync<TResponse>(descriptor, cancellationToken);
 
     // ============================== ExecuteAsync ==============================
+
+    Task<TResponse> IFluxSetContext<TModel, object>.ExecuteAsync<TResponse>(OperationDescriptor descriptor, CancellationToken cancellationToken)
+        => _setContext.ExecuteAsync<TResponse>(descriptor, cancellationToken);
 
     Task IFluxSetContext<TModel, object>.ExecuteAsync(OperationDescriptor descriptor, CancellationToken cancellationToken)
         => _setContext.ExecuteAsync(descriptor, cancellationToken);

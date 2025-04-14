@@ -8,6 +8,8 @@ namespace BitzArt.Flux;
 /// </summary>
 public interface IFluxBuilder
 {
-    internal IFluxFactory Factory { get; }
-    internal IServiceCollection ServiceCollection { get; }
+    /// <summary>
+    /// The <see cref="IServiceCollection"/> instance this <see cref="IFluxBuilder"/> is using.
+    /// </summary>
+    public IServiceCollection ServiceCollection { get; }
 }

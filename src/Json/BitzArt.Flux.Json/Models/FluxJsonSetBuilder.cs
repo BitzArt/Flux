@@ -9,7 +9,7 @@ internal class FluxJsonSetBuilder<TModel, TKey>(IFluxJsonServiceBuilder serviceB
     public IFluxJsonServiceBuilder ServiceBuilder { get; init; } = serviceBuilder;
 
     public IServiceCollection ServiceCollection => ServiceBuilder.ServiceCollection;
-    public IFluxServiceRegistration ServiceFactory => ServiceBuilder.ServiceFactory;
+    public IFluxServiceRegistration Registration => ServiceBuilder.Registration;
     public IFluxFactory ServiceRegistration => ServiceBuilder.ServiceRegistration;
     public FluxJsonServiceOptions ServiceOptions => ServiceBuilder.ServiceOptions;
     public string? BaseFilePath => ServiceBuilder.ServiceOptions.BaseFilePath;

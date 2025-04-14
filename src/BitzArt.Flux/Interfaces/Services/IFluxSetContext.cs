@@ -204,8 +204,7 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="descriptor">Operation descriptor.</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TResponse> ExecuteAsync<TResponse>(OperationDescriptor descriptor, CancellationToken cancellationToken = default)
-        => ((Task<TResponse>)ExecuteAsync(descriptor, typeof(TResponse), cancellationToken));
+    public Task<TResponse> ExecuteAsync<TResponse>(OperationDescriptor descriptor, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="ExecuteAsync(OperationDescriptor, Type?, CancellationToken)"/>
     public Task ExecuteAsync(OperationDescriptor descriptor, CancellationToken cancellationToken = default);

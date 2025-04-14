@@ -13,11 +13,11 @@ public static class UsingRestExtension
     /// <returns>
     /// A <see cref="IFluxRestServiceBuilder"/> for further configuration.
     /// </returns>
-    public static IFluxRestServiceBuilder UsingRest(this IFluxServicePreBuilder prebuilder, string? baseUrl = null)
+    public static IFluxRestServiceBuilder UsingRest(this IFluxServiceBuilder prebuilder, string? baseUrl = null)
     {
         var builder = new FluxRestServiceBuilder(prebuilder, baseUrl);
 
-        var fluxServiceProvider = builder.ServiceFactory;
+        var fluxServiceProvider = builder.Registration;
         builder.ServiceRegistration.ServiceRegistrations.Add(fluxServiceProvider);
 
         // If configuration action is null, do nothing
@@ -36,13 +36,13 @@ public static class UsingRestExtension
         return builder;
     }
 
-    /// <inheritdoc cref="UsingRest(IFluxServicePreBuilder,string)"/>
-    public static IFluxRestServiceBuilder UsingRest<THandler>(this IFluxServicePreBuilder prebuilder, string? baseUrl = null)
+    /// <inheritdoc cref="UsingRest(IFluxServiceBuilder,string)"/>
+    public static IFluxRestServiceBuilder UsingRest<THandler>(this IFluxServiceBuilder prebuilder, string? baseUrl = null)
         where THandler : DelegatingHandler
     {
         var builder = new FluxRestServiceBuilder(prebuilder, baseUrl);
 
-        var fluxServiceProvider = builder.ServiceFactory;
+        var fluxServiceProvider = builder.Registration;
         builder.ServiceRegistration.ServiceRegistrations.Add(fluxServiceProvider);
 
         builder.ServiceCollection.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>

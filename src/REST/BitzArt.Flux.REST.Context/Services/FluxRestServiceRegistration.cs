@@ -19,7 +19,7 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
     {
         if (options is not IFluxRestSetOptions<TModel> optionsCasted) throw new Exception("Wrong options type");
 
-        var signature = new FluxSetSignature(typeof(TModel), Name: name);
+        var signature = new FluxSetSignature(typeof(TModel), SetName: name);
 
         if (_setOptions.ContainsKey(signature)) throw SetAlreadyRegisteredException.ByModelName(nameof(TModel));
         _setOptions.Add(signature, optionsCasted);
@@ -36,8 +36,8 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
     {
         if (options is not FluxRestSetOptions<TModel, TKey> optionsCasted) throw new Exception("Wrong options type");
 
-        var signatureFull = new FluxSetSignature(typeof(TModel), typeof(TKey), Name: name);
-        var signatureMinimal = new FluxSetSignature(typeof(TModel), Name: name);
+        var signatureFull = new FluxSetSignature(typeof(TModel), typeof(TKey), SetName: name);
+        var signatureMinimal = new FluxSetSignature(typeof(TModel), SetName: name);
 
         if (_setOptions.ContainsKey(signatureFull)) throw SetAlreadyRegisteredException.ByModelName(nameof(TModel));
         _setOptions.Add(signatureFull, optionsCasted);
@@ -68,7 +68,7 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
     private IFluxRestSetOptions<TModel> GetOptions<TModel>(string? name = null)
         where TModel : class
     {
-        var signature = new FluxSetSignature(typeof(TModel), Name: name);
+        var signature = new FluxSetSignature(typeof(TModel), SetName: name);
         var found = _setOptions.TryGetValue(signature, out var options);
         if (!found) throw new SetConfigurationNotFoundException();
         return (IFluxRestSetOptions<TModel>)options!;
@@ -77,7 +77,7 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
     private FluxRestSetOptions<TModel, TKey> GetOptions<TModel, TKey>(string? name = null)
         where TModel : class
     {
-        var signature = new FluxSetSignature(typeof(TModel), typeof(TKey), Name: name);
+        var signature = new FluxSetSignature(typeof(TModel), typeof(TKey), SetName: name);
         var found = _setOptions.TryGetValue(signature, out var options);
         if (!found) throw new SetConfigurationNotFoundException();
         return (FluxRestSetOptions<TModel, TKey>)options!;
@@ -85,13 +85,13 @@ internal class FluxRestServiceFactory(FluxRestServiceOptions options, string ser
 
     public bool ContainsSignature<TModel>(string? setName)
     {
-        var signature = new FluxSetSignature(typeof(TModel), Name: setName);
+        var signature = new FluxSetSignature(typeof(TModel), SetName: setName);
         return _setOptions.ContainsKey(signature);
     }
 
     public bool ContainsSignature<TModel, TKey>(string? setName)
     {
-        var signature = new FluxSetSignature(typeof(TModel), typeof(TKey), Name: setName);
+        var signature = new FluxSetSignature(typeof(TModel), typeof(TKey), SetName: setName);
         return _setOptions.ContainsKey(signature);
     }
 

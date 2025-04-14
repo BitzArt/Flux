@@ -1,17 +1,21 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.Sets;
+using Microsoft.Extensions.DependencyInjection;
 
-internal class FluxContext(IFluxFactory factory, IServiceProvider serviceProvider)
-    : IFluxContext
+namespace BitzArt.Flux;
+
+internal class FluxContext(IServiceProvider serviceProvider) : IFluxContext
 {
-    public IFluxServiceContext Service(string serviceName)
-        => new FluxServiceContext(factory.GetServiceRegistration(serviceName), serviceProvider);
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? service = null, string? set = null)
+    public IFluxServiceContext Service(string serviceName)
+        => _serviceProvider.GetRequiredKeyedService<IFluxServiceContext>(new FluxServiceSignature(serviceName));
+
+    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? serviceName = null, string? setName = null)
         where TModel : class
         where TKey : notnull
-        => factory.GetSetContext<TModel, TKey>(serviceProvider, service, set);
+        => _serviceProvider.GetRequiredKeyedService<IFluxSetContext<TModel, TKey>>(new FluxSetSignature(serviceName, setName));
 
-    public IFluxSetContext<TModel> Set<TModel>(string? service = null, string? set = null)
+    public IFluxSetContext<TModel> Set<TModel>(string? serviceName = null, string? setName = null)
         where TModel : class
-        => factory.GetSetContext<TModel>(serviceProvider, service, set);
+        => _serviceProvider.GetRequiredKeyedService<IFluxSetContext<TModel>>(new FluxSetSignature(serviceName, setName));
 }

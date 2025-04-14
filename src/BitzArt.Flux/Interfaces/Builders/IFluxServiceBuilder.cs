@@ -1,25 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux;
 
 /// <summary>
 /// Flux Service Builder instance.
-/// See <see href="https://bitzart.github.io/Flux/02.configure.html">Configure Flux</see> for more information.
+/// Use a <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementation</see>
+/// in order to create an actual Flux Service from this builder.
 /// </summary>
 public interface IFluxServiceBuilder
 {
     /// <summary>
-    /// Service collection where Flux Services are registered.
+    /// <see cref="IFluxBuilder"/> instance that was used to create this service builder.
     /// </summary>
-    public IServiceCollection ServiceCollection { get; }
+    public IFluxBuilder FluxBuilder { get; }
 
     /// <summary>
-    /// Flux Service Factory instance.
+    /// Name of the service this builder is creating.
     /// </summary>
-    public IFluxServiceRegistration ServiceFactory { get; }
-
-    /// <summary>
-    /// Flux Factory instance.
-    /// </summary>
-    public IFluxFactory ServiceRegistration { get; }
+    public string ServiceName { get; }
 }

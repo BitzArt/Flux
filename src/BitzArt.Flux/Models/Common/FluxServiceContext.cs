@@ -1,26 +1,22 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.Sets;
+using Microsoft.Extensions.DependencyInjection;
 
-/// <summary>
-/// A context for a Flux service.
-/// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="FluxServiceContext"/> class.
-/// </remarks>
-public class FluxServiceContext(IFluxServiceRegistration serviceRegistration, IServiceProvider serviceProvider)
-    : IFluxServiceContext
+namespace BitzArt.Flux;
+
+internal class FluxServiceContext(IServiceProvider serviceProvider, string name) : IFluxServiceContext
 {
-    internal readonly IFluxServiceRegistration ServiceRegistration = serviceRegistration;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly string _serviceName = name;
 
-    /// <summary>
-    /// Resolves a context for a specific preconfigured set within a service.
-    /// </summary>
-    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? name = null)
-        where TModel : class
-        where TKey : notnull
-        => ServiceRegistration.CreateSetContext<TModel, TKey>(serviceProvider, name);
+    string IFluxServiceContext.ServiceName => _serviceName;
 
-    /// <inheritdoc cref="Set{TModel, TKey}(string?)"/>"
-    public IFluxSetContext<TModel> Set<TModel>(string? name = null)
-        where TModel : class
-        => ServiceRegistration.CreateSetContext<TModel>(serviceProvider, name);
+    IFluxSetContext<TModel, TKey> IFluxServiceContext.Set<TModel, TKey>(string? setName)
+        => _serviceProvider.GetRequiredKeyedService<IFluxSetContext<TModel, TKey>>(
+            new FluxSetSignature(
+                serviceName: _serviceName,
+                setName: setName));
+
+    IFluxSetContext<TModel> IFluxServiceContext.Set<TModel>(string? setName)
+        => _serviceProvider.GetRequiredKeyedService<IFluxSetContext<TModel>>(
+            new FluxSetSignature(_serviceName, setName));
 }
