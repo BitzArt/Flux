@@ -38,8 +38,15 @@ public static class AddSetContextExtension
         
         foreach (var signature in possibleSignatures)
         {
-            var serviceDescriptor = new ServiceDescriptor(registrationInterface, signature, implementationType, setLifetime);
-            builder.FluxBuilder.ServiceCollection.Add(serviceDescriptor);
+            ServiceDescriptor[] serviceDescriptors =
+            [
+                // keyed descriptor for internal consumption
+                new(registrationInterface, signature, implementationType, setLifetime),
+
+                // unkeyed for arbitrary external injection
+                new(registrationInterface, implementationType, setLifetime)
+            ];
+            builder.FluxBuilder.ServiceCollection.Add(serviceDescriptors);
         }
 
         var genericArguments = registrationInterface.GetGenericArguments();
@@ -61,19 +68,26 @@ public static class AddSetContextExtension
             {
                 foreach (var signature in possibleSignatures)
                 {
-                    var serviceDescriptor = new ServiceDescriptor(wrapperRegistrationInterface, signature, (sp, _) =>
-                    {
-                        // retrieve actual set context
-                        var actualSetContext = sp.GetRequiredKeyedService(implementationType, signature);
+                    ServiceDescriptor[] serviceDescriptors =
+                    [
+                        // keyed wrapper descriptor for internal consumption
+                        new(wrapperRegistrationInterface, signature, (sp, _) =>
+                        {
+                            // retrieve actual set context
+                            var actualSetContext = sp.GetRequiredKeyedService(implementationType, signature);
 
-                        // create wrapper instance using the actual set context as a constructor argument
-                        var wrapperInstance = Activator.CreateInstance(wrapperType, actualSetContext)!;
+                            // create wrapper instance using the actual set context as a constructor argument
+                            var wrapperInstance = Activator.CreateInstance(wrapperType, actualSetContext)!;
 
-                        // return the wrapper instance
-                        return wrapperInstance;
-                    }, setLifetime);
+                            // return the wrapper instance
+                            return wrapperInstance;
+                        }, setLifetime),
 
-                    builder.FluxBuilder.ServiceCollection.Add(serviceDescriptor);
+                        // unkeyed wrapper descriptor for arbitrary external injection
+                        new(wrapperRegistrationInterface, sp => sp.GetRequiredKeyedService(wrapperRegistrationInterface, signature), setLifetime)
+                    ];
+
+                    builder.FluxBuilder.ServiceCollection.Add(serviceDescriptors);
                 }
             }
         }

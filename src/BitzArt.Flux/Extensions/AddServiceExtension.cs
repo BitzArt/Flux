@@ -1,5 +1,6 @@
 ﻿using BitzArt.Flux.Builder;
 using BitzArt.Flux.Sets;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BitzArt.Flux;
@@ -17,7 +18,19 @@ public static class AddServiceExtension
     /// <param name="serviceName">Name of the service to add.</param>
     public static IFluxServiceBuilder AddService(this IFluxBuilder fluxBuilder, string serviceName)
     {
-        fluxBuilder.ServiceCollection.TryAddKeyedScoped<IFluxServiceContext>(new FluxServiceSignature(serviceName));
+        ServiceDescriptor[] descriptors =
+        [
+            ServiceDescriptor.KeyedScoped(
+                typeof(IFluxServiceContext),
+                new FluxServiceSignature(serviceName),
+                (sp, _) => new FluxServiceContext(sp, serviceName)),
+
+            ServiceDescriptor.Scoped(
+                typeof(IFluxServiceContext),
+                sp => new FluxServiceContext(sp, serviceName)),
+        ];
+
+        fluxBuilder.ServiceCollection.Add(descriptors);
 
         return new FluxServiceBuilder(fluxBuilder, serviceName);
     }
