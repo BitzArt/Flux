@@ -30,16 +30,16 @@ public class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey> : IFluxSetCon
 
     // ============================== GetAsync ==============================
 
-    Task<TModel> IFluxSetContext<TModel, object>.GetAsync(IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TModel> IFluxSetContext<TModel, object>.GetAsync(OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetAsync(parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.GetAsync<TResponse>(IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.GetAsync<TResponse>(OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetAsync<TResponse>(parameters, cancellationToken);
 
-    Task<TModel> IFluxSetContext<TModel, object>.GetAsync(object id, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TModel> IFluxSetContext<TModel, object>.GetAsync(object id, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetAsync(ConvertKey(id), parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.GetAsync<TResponse>(object id, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.GetAsync<TResponse>(object id, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetAsync<TResponse>(ConvertKey(id), parameters, cancellationToken);
 
     Task<TModel> IFluxSetContext<TModel, object>.GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken)
@@ -50,10 +50,10 @@ public class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey> : IFluxSetCon
 
     // ============================== GetAllAsync ==============================
 
-    Task<IEnumerable<TModel>> IFluxSetContext<TModel, object>.GetAllAsync(IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<IEnumerable<TModel>> IFluxSetContext<TModel, object>.GetAllAsync(OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetAllAsync(parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.GetAllAsync<TResponse>(IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.GetAllAsync<TResponse>(OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetAllAsync<TResponse>(parameters, cancellationToken);
 
     Task<IEnumerable<TModel>> IFluxSetContext<TModel, object>.GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken)
@@ -64,16 +64,16 @@ public class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey> : IFluxSetCon
 
     // ============================== GetPageAsync ==============================
 
-    Task<PageResult<TModel>> IFluxSetContext<TModel, object>.GetPageAsync(int offset, int limit, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<PageResult<TModel>> IFluxSetContext<TModel, object>.GetPageAsync(int offset, int limit, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetPageAsync(offset, limit, parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.GetPageAsync<TResponse>(int offset, int limit, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.GetPageAsync<TResponse>(int offset, int limit, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetPageAsync<TResponse>(offset, limit, parameters, cancellationToken);
 
-    Task<PageResult<TModel>> IFluxSetContext<TModel, object>.GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<PageResult<TModel>> IFluxSetContext<TModel, object>.GetPageAsync(PageRequest pageRequest, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetPageAsync(pageRequest, parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.GetPageAsync<TResponse>(PageRequest pageRequest, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.GetPageAsync<TResponse>(PageRequest pageRequest, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.GetPageAsync<TResponse>(pageRequest, parameters, cancellationToken);
 
     Task<PageResult<TModel>> IFluxSetContext<TModel, object>.GetPageAsync(GetPageOperationDescriptor descriptor, CancellationToken cancellationToken)
@@ -84,16 +84,16 @@ public class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey> : IFluxSetCon
 
     // ============================== AddAsync ==============================
 
-    Task IFluxSetContext<TModel, object>.AddAsync(TModel value, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task IFluxSetContext<TModel, object>.AddAsync(TModel value, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.AddAsync(value, parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.AddAsync<TResponse>(TModel value, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.AddAsync<TResponse>(TModel value, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.AddAsync<TResponse>(value, parameters, cancellationToken);
 
-    Task IFluxSetContext<TModel, object>.AddAsync(TModel value, object id, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task IFluxSetContext<TModel, object>.AddAsync(TModel value, object id, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.AddAsync(value, ConvertKey(id), parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.AddAsync<TResponse>(TModel value, object id, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.AddAsync<TResponse>(TModel value, object id, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.AddAsync<TResponse>(value, ConvertKey(id), parameters, cancellationToken);
 
     Task IFluxSetContext<TModel, object>.AddAsync(AddOperationDescriptor descriptor, CancellationToken cancellationToken)
@@ -104,16 +104,16 @@ public class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey> : IFluxSetCon
 
     // ============================== UpdateAsync ==============================
 
-    Task IFluxSetContext<TModel, object>.UpdateAsync(TModel value, bool partial, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task IFluxSetContext<TModel, object>.UpdateAsync(TModel value, bool partial, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.UpdateAsync(value, partial, parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.UpdateAsync<TResponse>(TModel value, bool partial, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.UpdateAsync<TResponse>(TModel value, bool partial, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.UpdateAsync<TResponse>(value, partial, parameters, cancellationToken);
 
-    Task IFluxSetContext<TModel, object>.UpdateAsync(TModel value, object id, bool partial, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task IFluxSetContext<TModel, object>.UpdateAsync(TModel value, object id, bool partial, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.UpdateAsync(value, ConvertKey(id), partial, parameters, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel, object>.UpdateAsync<TResponse>(TModel value, object id, bool partial, IOperationParameterCollection? parameters, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel, object>.UpdateAsync<TResponse>(TModel value, object id, bool partial, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => _setContext.UpdateAsync<TResponse>(value, ConvertKey(id), partial, parameters, cancellationToken);
 
     Task IFluxSetContext<TModel, object>.UpdateAsync(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken)

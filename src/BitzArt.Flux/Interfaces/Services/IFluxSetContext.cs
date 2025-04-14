@@ -54,8 +54,8 @@ public interface IFluxSetContext<TModel, TKey>
 
     // ============================== GetAllAsync ==============================
 
-    /// <inheritdoc cref="GetAllAsync{TResponse}(IOperationParameterCollection?, CancellationToken)"/>
-    public Task<IEnumerable<TModel>> GetAllAsync(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="GetAllAsync{TResponse}(OperationParameterCollection?, CancellationToken)"/>
+    public Task<IEnumerable<TModel>> GetAllAsync(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches all objects from the set.
@@ -64,7 +64,7 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="parameters">Parameters to be used in the operation.</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TResponse> GetAllAsync<TResponse>(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    public Task<TResponse> GetAllAsync<TResponse>(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetAllAsync{TResponse}(GetAllOperationDescriptor, CancellationToken)"/>
     public Task<IEnumerable<TModel>> GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default);
@@ -80,8 +80,8 @@ public interface IFluxSetContext<TModel, TKey>
 
     // ============================== GetPageAsync ==============================
 
-    /// <inheritdoc cref="GetPageAsync{TResponse}(int, int, IOperationParameterCollection?, CancellationToken)"/>
-    public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="GetPageAsync{TResponse}(int, int, OperationParameterCollection?, CancellationToken)"/>
+    public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches a page of objects from the set.
@@ -92,10 +92,10 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="parameters">Parameters used by the operation.</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TResponse> GetPageAsync<TResponse>(int offset, int limit, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    public Task<TResponse> GetPageAsync<TResponse>(int offset, int limit, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="GetPageAsync{TResponse}(PageRequest, IOperationParameterCollection?, CancellationToken)"/>
-    public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="GetPageAsync{TResponse}(PageRequest, OperationParameterCollection?, CancellationToken)"/>
+    public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches a page of objects from the set.
@@ -105,7 +105,7 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="parameters">Parameters used by the operation.</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TResponse> GetPageAsync<TResponse>(PageRequest pageRequest, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    public Task<TResponse> GetPageAsync<TResponse>(PageRequest pageRequest, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetPageAsync{TResponse}(GetPageOperationDescriptor, CancellationToken)"/>
     public Task<PageResult<TModel>> GetPageAsync(GetPageOperationDescriptor descriptor, CancellationToken cancellationToken = default);
@@ -121,14 +121,14 @@ public interface IFluxSetContext<TModel, TKey>
 
     // ============================== AddAsync ==============================
 
-    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, IOperationParameterCollection?, CancellationToken)"/>
-    public Task AddAsync(TModel value, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task AddAsync(TModel value, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, IOperationParameterCollection?, CancellationToken)"/>
-    public Task<TResponse> AddAsync<TResponse>(TModel value, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task<TResponse> AddAsync<TResponse>(TModel value, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, IOperationParameterCollection?, CancellationToken)"/>
-    public Task AddAsync(TModel value, TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="AddAsync{TResponse}(TModel, TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task AddAsync(TModel value, TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new object to the set.
@@ -146,7 +146,7 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="parameters">Parameters used by the operation.</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TResponse> AddAsync<TResponse>(TModel value, TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    public Task<TResponse> AddAsync<TResponse>(TModel value, TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="AddAsync{TResponse}(AddOperationDescriptor, CancellationToken)"/>
     public Task AddAsync(AddOperationDescriptor descriptor, CancellationToken cancellationToken = default);
@@ -162,14 +162,14 @@ public interface IFluxSetContext<TModel, TKey>
 
     // ============================== UpdateAsync ==============================
 
-    /// <inheritdoc cref="UpdateAsync(TModel, TKey, bool, IOperationParameterCollection?, CancellationToken)"/>
-    public Task UpdateAsync(TModel value, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="UpdateAsync(TModel, TKey, bool, OperationParameterCollection?, CancellationToken)"/>
+    public Task UpdateAsync(TModel value, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="UpdateAsync{TResponse}(TModel, TKey, bool, IOperationParameterCollection?, CancellationToken)"/>
-    public Task<TResponse> UpdateAsync<TResponse>(TModel value, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="UpdateAsync{TResponse}(TModel, TKey, bool, OperationParameterCollection?, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TResponse>(TModel value, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="UpdateAsync{TResponse}(TModel, TKey, bool, IOperationParameterCollection?, CancellationToken)"/>
-    public Task UpdateAsync(TModel value, TKey id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="UpdateAsync{TResponse}(TModel, TKey, bool, OperationParameterCollection?, CancellationToken)"/>
+    public Task UpdateAsync(TModel value, TKey id, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates an existing object in the set.
@@ -181,7 +181,7 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="partial">Whether to perform a partial update (e.g. PATCH in REST), rather than a full update (e.g. PUT in REST).</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task<TResponse> UpdateAsync<TResponse>(TModel value, TKey id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+    public Task<TResponse> UpdateAsync<TResponse>(TModel value, TKey id, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="UpdateAsync{TResponse}(UpdateOperationDescriptor, CancellationToken)"/>
     public Task UpdateAsync(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken = default);

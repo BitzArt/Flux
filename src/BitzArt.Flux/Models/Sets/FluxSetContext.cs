@@ -39,12 +39,12 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============================== GetAllAsync ==============================
 
     /// <inheritdoc/>
-    public Task<IEnumerable<TModel>> GetAllAsync(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<TModel>> GetAllAsync(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => GetAllAsync<IEnumerable<TModel>>(parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> GetAllAsync<TResponse>(IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => GetAllAsync<TResponse>(new GetAllOperationDescriptor(parameters: parameters), cancellationToken);
+    public Task<TResponse> GetAllAsync<TResponse>(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => GetAllAsync<TResponse>(new GetAllOperationDescriptor(parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
     public Task<IEnumerable<TModel>> GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default)
@@ -57,20 +57,20 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============================== GetPageAsync ==============================
 
     /// <inheritdoc/>
-    public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+    public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => GetPageAsync<PageResult<TModel>>(offset, limit, parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> GetPageAsync<TResponse>(int offset, int limit, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+    public Task<TResponse> GetPageAsync<TResponse>(int offset, int limit, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => GetPageAsync<TResponse>(new PageRequest(offset, limit), parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+    public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
         => GetPageAsync<PageResult<TModel>>(pageRequest, parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> GetPageAsync<TResponse>(PageRequest pageRequest, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => GetPageAsync<TResponse>(new GetPageOperationDescriptor(pageRequest: pageRequest, parameters: parameters), cancellationToken);
+    public Task<TResponse> GetPageAsync<TResponse>(PageRequest pageRequest, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => GetPageAsync<TResponse>(new GetPageOperationDescriptor(pageRequest: pageRequest, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
     public Task<PageResult<TModel>> GetPageAsync(GetPageOperationDescriptor descriptor, CancellationToken cancellationToken = default)
@@ -83,20 +83,20 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============================== AddAsync ==============================
 
     /// <inheritdoc/>
-    public Task AddAsync(TModel value, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => AddAsync(new AddOperationDescriptor(id: null, value: value, parameters: parameters), cancellationToken);
+    public Task AddAsync(TModel value, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => AddAsync(new AddOperationDescriptor(id: null, value: value, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> AddAsync<TResponse>(TModel value, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => AddAsync<TResponse>(new AddOperationDescriptor(id: null, value: value, parameters: parameters), cancellationToken);
+    public Task<TResponse> AddAsync<TResponse>(TModel value, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => AddAsync<TResponse>(new AddOperationDescriptor(id: null, value: value, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task AddAsync(TModel value, TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => AddAsync(new AddOperationDescriptor(id: id, value: value, parameters: parameters), cancellationToken);
+    public Task AddAsync(TModel value, TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => AddAsync(new AddOperationDescriptor(id: id, value: value, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> AddAsync<TResponse>(TModel value, TKey id, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => AddAsync<TResponse>(new AddOperationDescriptor(id: id, value: value, parameters: parameters), cancellationToken);
+    public Task<TResponse> AddAsync<TResponse>(TModel value, TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => AddAsync<TResponse>(new AddOperationDescriptor(id: id, value: value, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
     public Task AddAsync(AddOperationDescriptor descriptor, CancellationToken cancellationToken = default)
@@ -109,20 +109,20 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============================== UpdateAsync ==============================
 
     /// <inheritdoc/>
-    public Task UpdateAsync(TModel value, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => UpdateAsync(new UpdateOperationDescriptor(id: null, value: value, partial: partial, parameters: parameters), cancellationToken);
+    public Task UpdateAsync(TModel value, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => UpdateAsync(new UpdateOperationDescriptor(id: null, value: value, partial: partial, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> UpdateAsync<TResponse>(TModel value, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => UpdateAsync<TResponse>(new UpdateOperationDescriptor(id: null, value: value, partial: partial, parameters: parameters), cancellationToken);
+    public Task<TResponse> UpdateAsync<TResponse>(TModel value, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => UpdateAsync<TResponse>(new UpdateOperationDescriptor(id: null, value: value, partial: partial, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task UpdateAsync(TModel value, TKey id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => UpdateAsync(new UpdateOperationDescriptor(id: id, value: value, partial: partial, parameters: parameters), cancellationToken);
+    public Task UpdateAsync(TModel value, TKey id, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => UpdateAsync(new UpdateOperationDescriptor(id: id, value: value, partial: partial, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
-    public Task<TResponse> UpdateAsync<TResponse>(TModel value, TKey id, bool partial = false, IOperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
-        => UpdateAsync<TResponse>(new UpdateOperationDescriptor(id: id, value: value, partial: partial, parameters: parameters), cancellationToken);
+    public Task<TResponse> UpdateAsync<TResponse>(TModel value, TKey id, bool partial = false, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => UpdateAsync<TResponse>(new UpdateOperationDescriptor(id: id, value: value, partial: partial, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
     public Task UpdateAsync(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken = default)
