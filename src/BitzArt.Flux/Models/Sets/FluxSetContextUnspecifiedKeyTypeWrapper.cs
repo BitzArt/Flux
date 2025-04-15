@@ -3,6 +3,13 @@ using BitzArt.Pagination;
 
 namespace BitzArt.Flux.Sets;
 
+/// <summary>
+/// A wrapper for <see cref="IFluxSetContext{TModel, TKey}"/> to allow injection as <see cref="IFluxSetContext{TModel}"/>
+/// (notice a lack of TKey generic parameter). <br />
+/// It uses the actual registered set context with a specified key type internally
+/// and delegates all calls to it,
+/// while converting the key type to the specified type when necessary.
+/// </summary>
 internal class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey>(IFluxSetContext<TModel, TKey> setContext) : IFluxSetContext<TModel>
     where TModel : class
     where TKey : notnull
