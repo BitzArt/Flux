@@ -6,28 +6,31 @@ namespace BitzArt.Flux.Sets;
 /// <summary>
 /// Extension methods for <see cref="IFluxServiceBuilder"/>.
 /// </summary>
-public static class AddSetContextExtension
+public static class FluxServiceBuilderExtensions
 {
+    /// <inheritdoc cref="AddSetContext(IFluxServiceBuilder, Type, string?, ServiceLifetime)"/>
+    public static IFluxServiceBuilder AddSetContext<TSetContext>(this IFluxServiceBuilder builder, string? setName, ServiceLifetime setLifetime)
+        where TSetContext : class
+        => builder.AddSetContext(typeof(TSetContext), setName, setLifetime);
+
     /// <summary>
     /// <para>
-    /// Registers a set context with all possible signatures in the service collection,
-    /// as well as an unspecified key wrapper for the provided set context, if necessary.
+    /// Registers a set context in the service collection using all possible signature combinations; <br />
+    /// Registers an unspecified key wrapper for the provided set context, if necessary.
     /// </para>
     /// <para>
-    /// This is an internal method and should not be used directly. <br />
-    /// It is only exposed for the purposes of creating new <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementations</see>.
+    /// This method is a part of internal implementation details and should not be used directly. <br />
+    /// It is only exposed for the purposes of <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementations</see>.
     /// </para>
     /// </summary>
-    /// <typeparam name="TSetContext"></typeparam>
     /// <param name="builder"><see cref="IFluxServiceBuilder"/> instance to add the set context to.</param>"
+    /// <param name="implementationType">Type of the set context to add.</param>
     /// <param name="setName">Name of the set to add.</param>
     /// <param name="setLifetime">Lifetime of the set context.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IFluxServiceBuilder AddSetContext<TSetContext>(this IFluxServiceBuilder builder, string? setName, ServiceLifetime setLifetime)
-        where TSetContext : class
+    public static IFluxServiceBuilder AddSetContext(this IFluxServiceBuilder builder, Type implementationType, string? setName, ServiceLifetime setLifetime)
     {
-        var implementationType = typeof(TSetContext);
         var registrationInterface = implementationType
             .GetInterfaces()
             .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IFluxSetContext<,>))
