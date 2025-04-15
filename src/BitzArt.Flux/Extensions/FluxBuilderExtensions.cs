@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace BitzArt.Flux;
 
 /// <summary>
-/// Extension methods for adding a service to an <see cref="IFluxBuilder"/>.
+/// Flux extension methods for <see cref="IFluxBuilder"/>.
 /// </summary>
-public static class AddServiceExtension
+public static class FluxBuilderExtensions
 {
     /// <summary>
     /// Adds a service to an <see cref="IFluxBuilder"/>. <br/>

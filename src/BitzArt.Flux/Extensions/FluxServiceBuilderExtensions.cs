@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace BitzArt.Flux.Sets;
 
 /// <summary>
-/// Extension methods for <see cref="IFluxServiceBuilder"/>.
+/// Flux extension methods for <see cref="IFluxServiceBuilder"/>.
 /// </summary>
 public static class FluxServiceBuilderExtensions
 {
@@ -38,7 +38,7 @@ public static class FluxServiceBuilderExtensions
                 $"The type '{implementationType.Name}' does not implement the required interface 'IFluxSetContext<TModel, TKey>'.");
 
         var possibleSignatures = GetPossibleSignatures(builder.ServiceName, setName).ToList();
-        
+
         foreach (var signature in possibleSignatures)
         {
             ServiceDescriptor[] serviceDescriptors =
