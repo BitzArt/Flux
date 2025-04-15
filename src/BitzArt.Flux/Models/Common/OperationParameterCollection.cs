@@ -5,10 +5,10 @@ namespace BitzArt.Flux;
 /// <summary>
 /// A collection of operation parameters.
 /// <para>
-/// Behaves either as <br />
-/// <see cref="IOperationParameterCollection"/> <br />
-/// or as <br />
-/// <see cref="INamedOperationParameterCollection"/> <br />
+/// Behaves either as
+/// <see cref="IOperationParameterCollection"/>
+/// or as
+/// <see cref="INamedOperationParameterCollection"/>
 /// based on the type of the parameters passed to it.
 /// </para>
 /// </summary>
