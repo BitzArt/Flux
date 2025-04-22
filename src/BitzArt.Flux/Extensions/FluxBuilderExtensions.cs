@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace BitzArt.Flux;
 
 /// <summary>
-/// Flux extension methods for <see cref="IFluxBuilder"/>.
+/// Extension methods for <see cref="IFluxBuilder"/>.
 /// </summary>
 public static class FluxBuilderExtensions
 {

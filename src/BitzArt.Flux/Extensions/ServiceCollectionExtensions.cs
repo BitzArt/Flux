@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace BitzArt.Flux;
 
 /// <summary>
-/// Flux extension methods for <see cref="IServiceCollection"/>.
+/// Extension methods for <see cref="IServiceCollection"/>.
 /// See <see href="https://bitzart.github.io/Flux/02.configure.html">Configure Flux</see> for more information.
 /// </summary>
 public static class ServiceCollectionExtensions

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace BitzArt.Flux.Sets;
 
 /// <summary>
-/// Flux extension methods for <see cref="IFluxServiceBuilder"/>.
+/// Extension methods for <see cref="IFluxServiceBuilder"/>.
 /// </summary>
 public static class FluxServiceBuilderExtensions
 {
