@@ -276,8 +276,7 @@ public class AddSetContextExtensionTests
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
-        var flux = serviceProvider.GetRequiredService<IFluxContext>();
-        var setContext = flux.Set<TestModel, object>(serviceName, setName);
+        var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel, object>>();
 
         Assert.NotNull(setContext);
 
