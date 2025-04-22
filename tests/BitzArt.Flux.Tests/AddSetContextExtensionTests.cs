@@ -7,12 +7,24 @@ namespace BitzArt.Flux;
 
 public class AddSetContextExtensionTests
 {
-    private class TestSetContextImplementation<TModel, TKey> : FluxSetContext<TModel, TKey>
+    private class TestSetContextImplementation<TModel, TKey> : FluxSetContext<TModel, TKey, TestSetContextConfiguration>
         where TModel : class
         where TKey : notnull
     {
+        public TestSetContextImplementation(TestSetContextConfiguration config) : base(config) { }
+
         public override Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
+    }
+
+    private record TestSetContextConfiguration
+    {
+        public string? Text { get; private init; }
+
+        public TestSetContextConfiguration(string? text = null)
+        {
+            Text = text;
+        }
     }
 
     private class TestModel { }
@@ -28,7 +40,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext<TestSetContextImplementation<TestModel, object>>(setName: null, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, object>(new()), setName: null, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -76,7 +88,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext<TestSetContextImplementation<TestModel, int>>(setName: null, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, int>(new()), setName: null, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -138,7 +150,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext<TestSetContextImplementation<TestModel, object>>(setName: setName, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, object>(new()), setName: setName, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -191,7 +203,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext<TestSetContextImplementation<TestModel, int>>(setName: setName, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, int>(new()), setName: setName, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -243,5 +255,35 @@ public class AddSetContextExtensionTests
 
             // ---------------------------------------------
         });
+    }
+
+    [Fact]
+    public void AddSetContext_KeylessNameless_ForwardsConfiguration()
+    {
+        // Arrange
+        var serviceName = "my-flux-service";
+        var setName = "my-flux-set";
+        var testText = "some-text";
+
+        var services = new ServiceCollection();
+        var fluxBuilder = new FluxBuilder(services);
+        var serviceBuilder = fluxBuilder.AddService(serviceName);
+
+        var configuration = new TestSetContextConfiguration(testText);
+
+        // Act
+        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, object>(configuration), setName: setName, setLifetime: ServiceLifetime.Transient);
+
+        // Assert
+        var serviceProvider = services.BuildServiceProvider();
+        var flux = serviceProvider.GetRequiredService<IFluxContext>();
+        var setContext = flux.Set<TestModel, object>(serviceName, setName);
+
+        Assert.NotNull(setContext);
+
+        Assert.IsType<TestSetContextImplementation<TestModel, object>>(setContext);
+        var testSetContext = (TestSetContextImplementation<TestModel, object>)setContext;
+        
+        Assert.Equal(testText, testSetContext.Configuration.Text);
     }
 }

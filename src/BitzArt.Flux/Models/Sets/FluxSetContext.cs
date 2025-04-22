@@ -14,16 +14,16 @@ public abstract class FluxSetContext<TModel, TKey, TConfig> : IFluxSetContext<TM
     /// <summary>
     /// Initializes a new instance of the <see cref="FluxSetContext{TModel, TKey, TConfig}"/> class.
     /// </summary>
-    /// <param name="config"></param>
-    public FluxSetContext(TConfig config)
+    /// <param name="configuration"></param>
+    public FluxSetContext(TConfig configuration)
     {
-        Config = config;
+        Configuration = configuration;
     }
 
     // =============================== Config ==============================
 
     /// <inheritdoc/>
-    public TConfig Config { get; private init; }
+    public TConfig Configuration { get; private init; }
 
     // ============================== GetAsync ==============================
 
