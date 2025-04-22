@@ -6,10 +6,25 @@ namespace BitzArt.Flux.Sets;
 /// <summary>
 /// Base class for set context implementations.
 /// </summary>
-public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKey>
+public abstract class FluxSetContext<TModel, TKey, TConfig> : IFluxSetContext<TModel, TKey>
     where TModel : class
     where TKey : notnull
+    where TConfig : notnull
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FluxSetContext{TModel, TKey, TConfig}"/> class.
+    /// </summary>
+    /// <param name="config"></param>
+    public FluxSetContext(TConfig config)
+    {
+        Config = config;
+    }
+
+    // =============================== Config ==============================
+
+    /// <inheritdoc/>
+    public TConfig Config { get; private init; }
+
     // ============================== GetAsync ==============================
 
     /// <inheritdoc/>
@@ -29,8 +44,20 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
         => GetAsync<TResponse>(new GetOperationDescriptor(id: id, parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
+    public Task<TModel> GetAsync(Action<GetOperationDescriptor> configureOperation, CancellationToken cancellationToken = default)
+        => GetAsync<TModel>(configureOperation, cancellationToken);
+
+    /// <inheritdoc/>
     public Task<TModel> GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default)
         => GetAsync<TModel>(descriptor, cancellationToken);
+
+    /// <inheritdoc/>
+    public Task<TResponse> GetAsync<TResponse>(Action<GetOperationDescriptor> configureOperation, CancellationToken cancellationToken = default)
+    {
+        var descriptor = new GetOperationDescriptor(id: null, parameters: null);
+        configureOperation.Invoke(descriptor);
+        return GetAsync<TResponse>(descriptor, cancellationToken);
+    }
 
     /// <inheritdoc/>
     public Task<TResponse> GetAsync<TResponse>(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default)
@@ -47,8 +74,20 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
         => GetAllAsync<TResponse>(new GetAllOperationDescriptor(parameters: parameters?.Parameters), cancellationToken);
 
     /// <inheritdoc/>
+    public Task<IEnumerable<TModel>> GetAllAsync(Action<GetAllOperationDescriptor> configureOperation, CancellationToken cancellationToken = default)
+        => GetAllAsync<IEnumerable<TModel>>(configureOperation, cancellationToken);
+
+    /// <inheritdoc/>
     public Task<IEnumerable<TModel>> GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default)
         => GetAllAsync<IEnumerable<TModel>>(descriptor, cancellationToken);
+
+    /// <inheritdoc/>
+    public Task<TResponse> GetAllAsync<TResponse>(Action<GetAllOperationDescriptor> configureOperation, CancellationToken cancellationToken = default)
+    {
+        var descriptor = new GetAllOperationDescriptor(parameters: null);
+        configureOperation.Invoke(descriptor);
+        return GetAllAsync<TResponse>(descriptor, cancellationToken);
+    }
 
     /// <inheritdoc/>
     public Task<TResponse> GetAllAsync<TResponse>(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default)

@@ -8,11 +8,6 @@ namespace BitzArt.Flux.Sets;
 /// </summary>
 public static class FluxServiceBuilderExtensions
 {
-    /// <inheritdoc cref="AddSetContext(IFluxServiceBuilder, Type, string?, ServiceLifetime)"/>
-    public static IFluxServiceBuilder AddSetContext<TSetContext>(this IFluxServiceBuilder builder, string? setName, ServiceLifetime setLifetime)
-        where TSetContext : class
-        => builder.AddSetContext(typeof(TSetContext), setName, setLifetime);
-
     /// <summary>
     /// <para>
     /// Registers a set context in the service collection using all possible signature combinations; <br />
@@ -24,18 +19,16 @@ public static class FluxServiceBuilderExtensions
     /// </para>
     /// </summary>
     /// <param name="builder"><see cref="IFluxServiceBuilder"/> instance to add the set context to.</param>"
-    /// <param name="implementationType">Type of the set context to add.</param>
+    /// <param name="implementationFactory">Factory method to create the set context.</param>
     /// <param name="setName">Name of the set to add.</param>
     /// <param name="setLifetime">Lifetime of the set context.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IFluxServiceBuilder AddSetContext(this IFluxServiceBuilder builder, Type implementationType, string? setName, ServiceLifetime setLifetime)
+    public static IFluxServiceBuilder AddSetContext<TModel, TKey>(this IFluxServiceBuilder builder, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory, string? setName, ServiceLifetime setLifetime)
+        where TModel : class
+        where TKey : notnull
     {
-        var registrationInterface = implementationType
-            .GetInterfaces()
-            .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IFluxSetContext<,>))
-            ?? throw new InvalidOperationException(
-                $"The type '{implementationType.Name}' does not implement the required interface 'IFluxSetContext<TModel, TKey>'.");
+        var registrationInterface = typeof(IFluxSetContext<TModel, TKey>);
 
         var possibleSignatures = GetPossibleSignatures(builder.ServiceName, setName).ToList();
 
@@ -44,10 +37,10 @@ public static class FluxServiceBuilderExtensions
             ServiceDescriptor[] serviceDescriptors =
             [
                 // keyed descriptor for internal consumption
-                new(registrationInterface, signature, implementationType, setLifetime),
+                new(registrationInterface, signature, (sp, key) => implementationFactory.Invoke(sp), setLifetime),
 
                 // unkeyed for arbitrary external injection
-                new(registrationInterface, implementationType, setLifetime)
+                new(registrationInterface, implementationFactory, setLifetime)
             ];
             builder.FluxBuilder.ServiceCollection.Add(serviceDescriptors);
         }

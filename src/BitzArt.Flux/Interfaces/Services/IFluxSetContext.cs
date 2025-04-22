@@ -41,8 +41,19 @@ public interface IFluxSetContext<TModel, TKey>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TResponse> GetAsync<TResponse>(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
+    /// <inheritdoc cref="GetAsync{TResponse}(Action{GetOperationDescriptor}, CancellationToken)"/>
+    public Task<TModel> GetAsync(Action<GetOperationDescriptor> configureOperation, CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="GetAsync{TResponse}(GetOperationDescriptor, CancellationToken)"/>
     public Task<TModel> GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches an object from the set.
+    /// </summary>
+    /// <param name="configureOperation">Operation configuration.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetAsync<TResponse>(Action<GetOperationDescriptor> configureOperation, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches an object from the set.
@@ -66,8 +77,20 @@ public interface IFluxSetContext<TModel, TKey>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TResponse> GetAllAsync<TResponse>(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
+    /// <inheritdoc cref="GetAllAsync{TResponse}(Action{GetAllOperationDescriptor}, CancellationToken)"/>
+    public Task<IEnumerable<TModel>> GetAllAsync(Action<GetAllOperationDescriptor> configureOperation, CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="GetAllAsync{TResponse}(GetAllOperationDescriptor, CancellationToken)"/>
     public Task<IEnumerable<TModel>> GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Fetches all objects from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="configureOperation">Operation configuration.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> GetAllAsync<TResponse>(Action<GetAllOperationDescriptor> configureOperation, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches all objects from the set.
