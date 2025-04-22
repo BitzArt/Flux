@@ -25,4 +25,8 @@ public interface INamedOperationParameterCollection : IOperationParameterCollect
     /// Named parameter key-value pairs.
     /// </summary>
     public new IDictionary<string, object> Values { get; }
+
+    IEnumerable<object> IOperationParameterCollection.Values
+        => throw new InvalidOperationException(
+                "Named parameters collection should not be used as a simple list of parameters. Use named values instead.");
 }
