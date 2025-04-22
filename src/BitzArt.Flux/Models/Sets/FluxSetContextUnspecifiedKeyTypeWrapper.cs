@@ -39,8 +39,14 @@ internal class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey>(IFluxSetCon
     Task<TResponse> IFluxSetContext<TModel, object>.GetAsync<TResponse>(object id, OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => InnerSetContext.GetAsync<TResponse>(ConvertKey(id), parameters, cancellationToken);
 
+    Task<TModel> IFluxSetContext<TModel, object>.GetAsync(Action<GetOperationDescriptor> configureOperation, CancellationToken cancellationToken)
+        => InnerSetContext.GetAsync(configureOperation, cancellationToken);
+
     Task<TModel> IFluxSetContext<TModel, object>.GetAsync(GetOperationDescriptor descriptor, CancellationToken cancellationToken)
         => InnerSetContext.GetAsync(descriptor, cancellationToken);
+
+    Task<TResponse> IFluxSetContext<TModel, object>.GetAsync<TResponse>(Action<GetOperationDescriptor> configureOperation, CancellationToken cancellationToken)
+        => InnerSetContext.GetAsync<TResponse>(configureOperation, cancellationToken);
 
     Task<TResponse> IFluxSetContext<TModel, object>.GetAsync<TResponse>(GetOperationDescriptor descriptor, CancellationToken cancellationToken)
         => InnerSetContext.GetAsync<TResponse>(descriptor, cancellationToken);
@@ -53,8 +59,14 @@ internal class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey>(IFluxSetCon
     Task<TResponse> IFluxSetContext<TModel, object>.GetAllAsync<TResponse>(OperationParameterCollection? parameters, CancellationToken cancellationToken)
         => InnerSetContext.GetAllAsync<TResponse>(parameters, cancellationToken);
 
+    Task<IEnumerable<TModel>> IFluxSetContext<TModel, object>.GetAllAsync(Action<GetAllOperationDescriptor> configureOperation, CancellationToken cancellationToken)
+        => InnerSetContext.GetAllAsync(configureOperation, cancellationToken);
+
     Task<IEnumerable<TModel>> IFluxSetContext<TModel, object>.GetAllAsync(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken)
         => InnerSetContext.GetAllAsync(descriptor, cancellationToken);
+
+    Task<TResponse> IFluxSetContext<TModel, object>.GetAllAsync<TResponse>(Action<GetAllOperationDescriptor> configureOperation, CancellationToken cancellationToken)
+        => InnerSetContext.GetAllAsync<TResponse>(configureOperation, cancellationToken);
 
     Task<TResponse> IFluxSetContext<TModel, object>.GetAllAsync<TResponse>(GetAllOperationDescriptor descriptor, CancellationToken cancellationToken)
         => InnerSetContext.GetAllAsync<TResponse>(descriptor, cancellationToken);
