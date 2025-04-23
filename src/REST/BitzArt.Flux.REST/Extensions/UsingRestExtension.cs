@@ -25,7 +25,10 @@ public static class UsingRestExtension
         IFluxRestServiceBuilder builder = new FluxRestServiceBuilder(sourceBuilder, baseUrl);
 
         var httpClientBuilder = builder.ServiceCollection
-            .AddHttpClient(builder.ServiceName, builder.HttpClientConfiguration.Invoke);
+            .AddHttpClient(builder.ServiceName, (serviceProvider, httpClient) =>
+            {
+                builder.HttpClientConfiguration?.Invoke(serviceProvider, httpClient);
+            });
 
         configureHttpClient?.Invoke(httpClientBuilder);
 
