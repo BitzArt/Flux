@@ -19,7 +19,10 @@ public static class UsingRestExtension
     /// <returns>
     /// A <see cref="IFluxRestServiceBuilder"/> for further configuration.
     /// </returns>
-    [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance")]
+    [SuppressMessage(
+        "Performance",
+        "CA1859:Use concrete types when possible for improved performance",
+        Justification = "Interface cast is required to access default implementation methods.")]
     public static IFluxRestServiceBuilder UsingRest(this IFluxServiceBuilder sourceBuilder, string? baseUrl = null, Action<IHttpClientBuilder>? configureHttpClient = null)
     {
         IFluxRestServiceBuilder builder = new FluxRestServiceBuilder(sourceBuilder, baseUrl);
