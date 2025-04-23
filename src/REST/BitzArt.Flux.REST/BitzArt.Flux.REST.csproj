@@ -30,8 +30,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BitzArt.Flux.REST.Builder\BitzArt.Flux.REST.Builder.csproj" />
-	  <ProjectReference Include="..\BitzArt.Flux.REST.Context\BitzArt.Flux.REST.Context.csproj" />
+	  <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\BitzArt.Flux\BitzArt.Flux.csproj" />
 	</ItemGroup>
 
 </Project>
