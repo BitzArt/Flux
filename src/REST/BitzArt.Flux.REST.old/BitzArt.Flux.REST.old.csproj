@@ -29,4 +29,8 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Options\" />
+	</ItemGroup>
+
 </Project>
