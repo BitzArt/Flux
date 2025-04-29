@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 /// <summary>
 /// Flux REST service builder.
@@ -11,7 +9,8 @@ public interface IFluxRestServiceBuilder : IFluxServiceBuilder
 
     internal ServiceOptions ServiceOptions { get; }
 
-    IServiceCollection IFluxBuilder.ServiceCollection => SourceBuilder.ServiceCollection;
+    // ================ Inherited members ================
+
     IFluxBuilder IFluxServiceBuilder.FluxBuilder => SourceBuilder.FluxBuilder;
     string IFluxServiceBuilder.ServiceName => SourceBuilder.ServiceName;
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 /// <summary>
 /// Flux REST set builder.
@@ -12,9 +10,8 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
 {
     internal IFluxRestServiceBuilder ServiceBuilder { get; }
 
-    IServiceCollection IFluxBuilder.ServiceCollection => ServiceBuilder.ServiceCollection;
-    IFluxBuilder IFluxServiceBuilder.FluxBuilder => ServiceBuilder.FluxBuilder;
-    string IFluxServiceBuilder.ServiceName => ServiceBuilder.ServiceName;
+    // ================ Inherited members ================
+
     IFluxServiceBuilder IFluxRestServiceBuilder.SourceBuilder => ServiceBuilder.SourceBuilder;
     ServiceOptions IFluxRestServiceBuilder.ServiceOptions => ServiceBuilder.ServiceOptions;
 }
