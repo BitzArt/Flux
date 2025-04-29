@@ -16,7 +16,7 @@ public static class AddServiceExtension
     /// </summary>
     /// <param name="fluxBuilder"><see cref="IFluxBuilder"/> instance to add the service to.</param>
     /// <param name="serviceName">Name of the service to add.</param>
-    public static IFluxServiceBuilder AddService(this IFluxBuilder fluxBuilder, string serviceName)
+    public static IFluxServiceProtocolConfigurator AddService(this IFluxBuilder fluxBuilder, string serviceName)
     {
         ServiceDescriptor[] descriptors =
         [
@@ -37,6 +37,6 @@ public static class AddServiceExtension
         // for the purposes of maintaining service name cohesion.
         fluxBuilder.OnServiceAdded(serviceName);
 
-        return new FluxServiceBuilder(fluxBuilder, serviceName);
+        return new FluxServiceProtocolConfigurator(fluxBuilder, serviceName);
     }
 }

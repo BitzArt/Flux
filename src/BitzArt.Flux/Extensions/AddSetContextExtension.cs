@@ -24,13 +24,13 @@ public static class AddSetContextExtension
     /// <param name="setLifetime">Lifetime of the set context.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IFluxServiceBuilder AddSetContext<TModel, TKey>(this IFluxServiceBuilder builder, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory, string? setName, ServiceLifetime setLifetime)
+    public static IFluxBuilder AddSetContext<TModel, TKey>(this IFluxBuilder builder, string serviceName, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory, string? setName, ServiceLifetime setLifetime)
         where TModel : class
         where TKey : notnull
     {
         var registrationInterface = typeof(IFluxSetContext<TModel, TKey>);
 
-        var possibleSignatures = GetPossibleSignatures(builder.ServiceName, setName).ToList();
+        var possibleSignatures = GetPossibleSignatures(serviceName, setName).ToList();
 
         foreach (var signature in possibleSignatures)
         {
@@ -42,7 +42,7 @@ public static class AddSetContextExtension
                 // unkeyed for arbitrary external injection
                 new(registrationInterface, implementationFactory, setLifetime)
             ];
-            builder.FluxBuilder.ServiceCollection.Add(serviceDescriptors);
+            builder.ServiceCollection.Add(serviceDescriptors);
         }
 
         var genericArguments = registrationInterface.GetGenericArguments();
@@ -87,7 +87,7 @@ public static class AddSetContextExtension
                         new(wrapperRegistrationInterface, sp => sp.GetRequiredKeyedService(wrapperRegistrationInterface, signature), setLifetime)
                 ];
 
-                builder.FluxBuilder.ServiceCollection.Add(serviceDescriptors);
+                builder.ServiceCollection.Add(serviceDescriptors);
             }
         }
 

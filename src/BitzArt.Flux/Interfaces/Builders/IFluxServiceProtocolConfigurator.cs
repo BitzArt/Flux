@@ -4,8 +4,10 @@ namespace BitzArt.Flux;
 
 /// <summary>
 /// Flux Service Builder.
+/// Use a <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementation</see>
+/// in order to configure protocol for the service.
 /// </summary>
-public interface IFluxServiceBuilder : IFluxBuilder
+public interface IFluxServiceProtocolConfigurator : IFluxBuilder
 {
     /// <summary>
     /// <see cref="IFluxBuilder"/> instance that was used to create this service builder.
@@ -13,7 +15,7 @@ public interface IFluxServiceBuilder : IFluxBuilder
     public IFluxBuilder FluxBuilder { get; }
 
     /// <summary>
-    /// Name of the service this builder is creating.
+    /// Name of the service being configured.
     /// </summary>
     public string ServiceName { get; }
 

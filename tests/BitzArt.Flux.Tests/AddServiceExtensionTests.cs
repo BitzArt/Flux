@@ -19,7 +19,7 @@ public class AddServiceExtensionTests
 
         // Assert
         Assert.NotNull(serviceBuilder);
-        Assert.IsType<FluxServiceBuilder>(serviceBuilder);
+        Assert.IsType<FluxServiceProtocolConfigurator>(serviceBuilder);
     }
 
     [Fact]

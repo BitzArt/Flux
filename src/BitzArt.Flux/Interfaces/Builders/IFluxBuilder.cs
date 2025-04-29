@@ -27,7 +27,7 @@ public interface IFluxBuilder
 
     /// <summary>
     /// <para>
-    /// Notifies the builder that a service has been terminated.
+    /// Notifies the builder that a service's protocol has been configured.
     /// </para>
     /// <para>
     /// This is a part of internal implementation details and should not be used directly. <br />
@@ -35,6 +35,6 @@ public interface IFluxBuilder
     /// </para>
     /// </summary>
     /// <param name="name">Name of the terminated service.</param>
-    /// <param name="terminatedBuilder">Builder instance created as a result of the termination.</param>
-    public void OnServiceTerminated(string name, IFluxServiceBuilder terminatedBuilder);
+    /// <param name="serviceBuilder">Service builder instance created as a result of the termination.</param>
+    public void OnServiceProtocolConfigured(string name, IFluxServiceBuilder serviceBuilder);
 }

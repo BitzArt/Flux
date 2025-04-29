@@ -28,7 +28,7 @@ internal class FluxBuilder : IFluxBuilder, IDisposable
         }
     }
 
-    public void OnServiceTerminated(string name, IFluxServiceBuilder terminatedBuilder)
+    public void OnServiceProtocolConfigured(string name, IFluxServiceBuilder terminatedBuilder)
     {
         if (!_serviceRegistrations.TryGetValue(name, out var registration))
         {

@@ -8,24 +8,24 @@ namespace BitzArt.Flux.REST;
 /// </summary>
 public static class UsingRestExtension
 {
-    /// <inheritdoc cref="UsingRest(IFluxServiceBuilder,string)"/>
-    public static IFluxRestServiceBuilder UsingRest<THandler>(this IFluxServiceBuilder sourceBuilder, string? baseUrl = null)
+    /// <inheritdoc cref="UsingRest(IFluxServiceProtocolConfigurator,string)"/>
+    public static IFluxRestServiceBuilder UsingRest<THandler>(this IFluxServiceProtocolConfigurator protocolConfigurator, string? baseUrl = null)
         where THandler : DelegatingHandler
-        => sourceBuilder.UsingRest(baseUrl, (builder) => builder.AddHttpMessageHandler<THandler>());
+        => protocolConfigurator.UsingRest(baseUrl, (builder) => builder.AddHttpMessageHandler<THandler>());
 
     /// <summary>
-    /// Terminates the <see cref="IFluxServiceBuilder"/> by configuring it to use a REST service.
+    /// Configures the <see cref="IFluxServiceProtocolConfigurator"/> by configuring it to use a REST service.
     /// </summary>
     /// <returns>
-    /// A <see cref="IFluxRestServiceBuilder"/> for further configuration.
+    /// A <see cref="IFluxRestServiceBuilder"/> for further service configuration.
     /// </returns>
     [SuppressMessage(
         "Performance",
         "CA1859:Use concrete types when possible for improved performance",
         Justification = "Interface cast is necessary to access default implementation methods.")]
-    public static IFluxRestServiceBuilder UsingRest(this IFluxServiceBuilder sourceBuilder, string? baseUrl = null, Action<IHttpClientBuilder>? configureHttpClient = null)
+    public static IFluxRestServiceBuilder UsingRest(this IFluxServiceProtocolConfigurator protocolConfigurator, string? baseUrl = null, Action<IHttpClientBuilder>? configureHttpClient = null)
     {
-        IFluxRestServiceBuilder builder = new FluxRestServiceBuilder(sourceBuilder, baseUrl);
+        IFluxRestServiceBuilder builder = new FluxRestServiceBuilder(protocolConfigurator.FluxBuilder, protocolConfigurator.ServiceName, baseUrl);
 
         var httpClientBuilder = builder.ServiceCollection
             .AddHttpClient(builder.ServiceName, (serviceProvider, httpClient) =>
@@ -39,7 +39,7 @@ public static class UsingRestExtension
         // service termination by a REST implementation,
         // ensuring that the service builder can not be used for
         // further terminations.
-        sourceBuilder.OnServiceTerminated(builder.ServiceName, builder);
+        protocolConfigurator.OnServiceProtocolConfigured(builder.ServiceName, builder);
 
         return builder;
     }

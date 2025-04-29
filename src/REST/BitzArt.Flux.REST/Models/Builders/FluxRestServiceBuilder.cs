@@ -2,12 +2,14 @@
 
 internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
 {
-    public IFluxServiceBuilder SourceBuilder { get; set; }
+    public IFluxBuilder FluxBuilder { get; set; }
+    public string ServiceName { get; set; }
     public FluxRestServiceOptions ServiceOptions { get; set; }
 
-    public FluxRestServiceBuilder(IFluxServiceBuilder sourceBuilder, string? baseUrl)
+    public FluxRestServiceBuilder(IFluxBuilder fluxBuilder, string serviceName, string? baseUrl)
     {
-        SourceBuilder = sourceBuilder;
+        FluxBuilder = fluxBuilder;
+        ServiceName = serviceName;
         ServiceOptions = new(baseUrl);
     }
 }

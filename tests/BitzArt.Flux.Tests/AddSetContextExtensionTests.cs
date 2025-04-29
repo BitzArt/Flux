@@ -40,7 +40,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, object>(new()), setName: null, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(serviceName, sp => new TestSetContextImplementation<TestModel, object>(new()), setName: null, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -88,7 +88,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, int>(new()), setName: null, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(serviceName, sp => new TestSetContextImplementation<TestModel, int>(new()), setName: null, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -150,7 +150,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, object>(new()), setName: setName, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(serviceName, sp => new TestSetContextImplementation<TestModel, object>(new()), setName: setName, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -203,7 +203,7 @@ public class AddSetContextExtensionTests
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, int>(new()), setName: setName, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(serviceName, sp => new TestSetContextImplementation<TestModel, int>(new()), setName: setName, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -272,7 +272,7 @@ public class AddSetContextExtensionTests
         var configuration = new TestSetContextConfiguration(testText);
 
         // Act
-        serviceBuilder.AddSetContext(sp => new TestSetContextImplementation<TestModel, object>(configuration), setName: setName, setLifetime: ServiceLifetime.Transient);
+        serviceBuilder.AddSetContext(serviceName, sp => new TestSetContextImplementation<TestModel, object>(configuration), setName: setName, setLifetime: ServiceLifetime.Transient);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
