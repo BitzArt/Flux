@@ -20,7 +20,7 @@ public static class AddFluxExtension
     /// <returns>The <see cref="IServiceCollection"/> instance to allow chaining.</returns>
     public static IServiceCollection AddFlux(this IServiceCollection services, Action<IFluxBuilder> configure)
     {
-        var builder = new FluxBuilder(services);
+        using var builder = new FluxBuilder(services);
         configure(builder);
 
         services.TryAddScoped<IFluxContext>(x => new FluxContext(x));
