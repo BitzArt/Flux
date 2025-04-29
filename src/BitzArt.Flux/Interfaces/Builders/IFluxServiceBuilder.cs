@@ -22,4 +22,6 @@ public interface IFluxServiceBuilder : IFluxBuilder
     // ================ Inherited members ================
 
     IServiceCollection IFluxBuilder.ServiceCollection => FluxBuilder.ServiceCollection;
+    void IFluxBuilder.OnServiceAdded(string name) => FluxBuilder.OnServiceAdded(name);
+    void IFluxBuilder.OnServiceTerminated(string name, IFluxServiceBuilder terminatedBuilder) => FluxBuilder.OnServiceTerminated(name, terminatedBuilder);
 }

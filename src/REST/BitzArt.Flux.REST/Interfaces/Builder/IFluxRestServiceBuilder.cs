@@ -7,7 +7,7 @@ public interface IFluxRestServiceBuilder : IFluxServiceBuilder
 {
     internal IFluxServiceBuilder SourceBuilder { get; }
 
-    internal ServiceOptions ServiceOptions { get; }
+    internal FluxRestServiceOptions ServiceOptions { get; }
 
     // ================ Inherited members ================
 

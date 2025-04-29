@@ -1,5 +1,4 @@
-﻿using BitzArt.Flux.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BitzArt.Flux.REST;
@@ -26,7 +25,7 @@ public static class UsingRestExtension
         Justification = "Interface cast is necessary to access default implementation methods.")]
     public static IFluxRestServiceBuilder UsingRest(this IFluxServiceBuilder sourceBuilder, string? baseUrl = null, Action<IHttpClientBuilder>? configureHttpClient = null)
     {
-        IFluxRestServiceBuilder builder = new ServiceBuilder(sourceBuilder, baseUrl);
+        IFluxRestServiceBuilder builder = new FluxRestServiceBuilder(sourceBuilder, baseUrl);
 
         var httpClientBuilder = builder.ServiceCollection
             .AddHttpClient(builder.ServiceName, (serviceProvider, httpClient) =>
@@ -36,10 +35,11 @@ public static class UsingRestExtension
 
         configureHttpClient?.Invoke(httpClientBuilder);
 
-        // --- Important! ---
-        // Terminate the builder to avoid additional terminations
-        // of the same service builder.
-        sourceBuilder.Terminate();
+        // Notify the source builder of a
+        // service termination by a REST implementation,
+        // ensuring that the service builder can not be used for
+        // further terminations.
+        sourceBuilder.OnServiceTerminated(builder.ServiceName, builder);
 
         return builder;
     }

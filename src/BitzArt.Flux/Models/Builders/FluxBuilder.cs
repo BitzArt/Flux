@@ -1,6 +1,5 @@
-﻿using BitzArt.Flux.Sets;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 
 namespace BitzArt.Flux.Builder;
 
@@ -8,27 +7,38 @@ internal class FluxBuilder : IFluxBuilder
 {
     public IServiceCollection ServiceCollection { get; private init; }
 
+    private readonly ConcurrentDictionary<string, FluxServiceRegistration> _serviceRegistrations;
+    private record FluxServiceRegistration
+    {
+        public IFluxServiceBuilder? TerminatedBuilder { get; set; } = null;
+    }
+
     public FluxBuilder(IServiceCollection serviceCollection)
     {
         ServiceCollection = serviceCollection;
+
+        _serviceRegistrations = [];
     }
 
-    public IFluxServiceBuilder AddService(string serviceName)
+    public void OnServiceAdded(string name)
     {
-        ServiceDescriptor[] descriptors =
-        [
-            ServiceDescriptor.KeyedScoped(
-                typeof(IFluxServiceContext),
-                new FluxServiceSignature(serviceName),
-                (sp, _) => new FluxServiceContext(sp, serviceName)),
+        if (!_serviceRegistrations.TryAdd(name, new()))
+        {
+            throw new InvalidOperationException($"Service with name '{name}' already exists.");
+        }
+    }
 
-            ServiceDescriptor.Scoped(
-                typeof(IFluxServiceContext),
-                sp => new FluxServiceContext(sp, serviceName)),
-        ];
+    public void OnServiceTerminated(string name, IFluxServiceBuilder terminatedBuilder)
+    {
+        if (!_serviceRegistrations.TryGetValue(name, out var registration))
+        {
+            throw new InvalidOperationException($"Service with name '{name}' was not found and thus can not be terminated.");
+        }
+        if (registration.TerminatedBuilder is not null)
+        {
+            throw new InvalidOperationException($"Service with name '{name}' has already been terminated previously.");
+        }
 
-        ServiceCollection.Add(descriptors);
-
-        return new FluxServiceBuilder(this, serviceName);
+        registration.TerminatedBuilder = terminatedBuilder;
     }
 }

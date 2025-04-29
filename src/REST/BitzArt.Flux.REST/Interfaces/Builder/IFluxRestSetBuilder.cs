@@ -13,5 +13,5 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder
     // ================ Inherited members ================
 
     IFluxServiceBuilder IFluxRestServiceBuilder.SourceBuilder => ServiceBuilder.SourceBuilder;
-    ServiceOptions IFluxRestServiceBuilder.ServiceOptions => ServiceBuilder.ServiceOptions;
+    FluxRestServiceOptions IFluxRestServiceBuilder.ServiceOptions => ServiceBuilder.ServiceOptions;
 }

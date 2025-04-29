@@ -8,7 +8,7 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Extension methods for <see cref="IFluxBuilder"/>.
 /// </summary>
-public static class FluxBuilderExtensions
+public static class AddServiceExtension
 {
     /// <summary>
     /// Adds a service to an <see cref="IFluxBuilder"/>. <br/>
@@ -31,6 +31,11 @@ public static class FluxBuilderExtensions
         ];
 
         fluxBuilder.ServiceCollection.Add(descriptors);
+
+        // Notify the source builder of a service addition,
+        // allowing it to keep track of this service's registration
+        // for the purposes of maintaining service name cohesion.
+        fluxBuilder.OnServiceAdded(serviceName);
 
         return new FluxServiceBuilder(fluxBuilder, serviceName);
     }

@@ -1,11 +1,11 @@
 ﻿namespace BitzArt.Flux.REST;
 
-internal class SetBuilder<TModel, TKey> : IFluxRestSetBuilder<TModel, TKey>
+internal class FluxRestSetBuilder<TModel, TKey> : IFluxRestSetBuilder<TModel, TKey>
     where TModel : class
 {
     public IFluxRestServiceBuilder ServiceBuilder { get; set; }
 
-    public SetBuilder(IFluxRestServiceBuilder serviceBuilder)
+    public FluxRestSetBuilder(IFluxRestServiceBuilder serviceBuilder)
     {
         ServiceBuilder = serviceBuilder;
     }

@@ -1,13 +1,12 @@
-﻿using BitzArt.Flux.Sets;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace BitzArt.Flux.Services;
+namespace BitzArt.Flux.Sets;
 
 /// <summary>
 /// Extension methods for <see cref="IFluxServiceBuilder"/>.
 /// </summary>
-public static class FluxServiceBuilderExtensions
+public static class AddSetContextExtension
 {
     /// <summary>
     /// <para>
@@ -113,25 +112,5 @@ public static class FluxServiceBuilderExtensions
                 yield return new FluxSetSignature(serviceSignature, possibleSetName);
             }
         }
-    }
-
-    /// <summary>
-    /// <para>
-    /// Terminates the <see cref="IFluxServiceBuilder"/>, restricting any further terminations.
-    /// </para>
-    /// <para>
-    /// This method is a part of internal implementation details and should not be used directly. <br />
-    /// It is only exposed for the purposes of <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementations</see>.
-    /// </para>
-    /// </summary>
-    public static void Terminate(this IFluxServiceBuilder builder)
-    {
-        if (builder is not ITerminatable terminatable)
-        {
-            throw new InvalidOperationException(
-                $"The {nameof(IFluxServiceBuilder)} instance does not implement {nameof(ITerminatable)}.");
-        }
-
-        terminatable.Terminate();
     }
 }
