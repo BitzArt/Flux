@@ -1,5 +1,4 @@
-﻿
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 internal class SetBuilder<TModel, TKey> : IFluxRestSetBuilder<TModel, TKey>
     where TModel : class
