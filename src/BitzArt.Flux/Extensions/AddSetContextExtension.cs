@@ -6,7 +6,7 @@ namespace BitzArt.Flux.Sets;
 /// <summary>
 /// Extension methods for <see cref="IFluxServiceBuilder"/>.
 /// </summary>
-public static class AddFluxSetContextExtension
+public static class AddSetContextExtension
 {
     /// <summary>
     /// <para>
@@ -25,7 +25,7 @@ public static class AddFluxSetContextExtension
     /// <param name="setLifetime">Lifetime of the set context.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IServiceCollection AddSetContext<TModel, TKey>(this IServiceCollection services, string serviceName, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory, string? setName, ServiceLifetime setLifetime)
+    public static IServiceCollection AddSetContext<TModel, TKey>(this IServiceCollection services, string serviceName, string? setName, ServiceLifetime setLifetime, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory)
         where TModel : class
         where TKey : notnull
     {

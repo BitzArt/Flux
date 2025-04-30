@@ -3,6 +3,30 @@ using BitzArt.Pagination;
 
 namespace BitzArt.Flux.Sets;
 
+/// <inheritdoc/>
+/// <typeparam name="TModel">Model type.</typeparam>
+/// <typeparam name="TKey">Key type.</typeparam>
+/// <typeparam name="TConfig">Configuration object type.</typeparam>
+public abstract class FluxSetContext<TModel, TKey, TConfig> : FluxSetContext<TModel, TKey>
+    where TModel : class
+    where TKey : notnull
+    where TConfig : notnull
+{
+    /// <summary>
+    /// Set configuration.
+    /// </summary>
+    public TConfig Configuration { get; private init; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FluxSetContext{TModel, TKey, TConfig}"/> class.
+    /// </summary>
+    /// <param name="configuration"></param>
+    public FluxSetContext(TConfig configuration)
+    {
+        Configuration = configuration;
+    }
+}
+
 /// <summary>
 /// <para>
 /// Base class for set context implementations.
@@ -12,25 +36,12 @@ namespace BitzArt.Flux.Sets;
 /// It is only exposed for the purposes of <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementations</see>.
 /// </para>
 /// </summary>
-public abstract class FluxSetContext<TModel, TKey, TConfig> : IFluxSetContext<TModel, TKey>
+/// <typeparam name="TModel">Model type.</typeparam>
+/// <typeparam name="TKey">Key type.</typeparam>
+public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKey>
     where TModel : class
     where TKey : notnull
-    where TConfig : notnull
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FluxSetContext{TModel, TKey, TConfig}"/> class.
-    /// </summary>
-    /// <param name="configuration"></param>
-    public FluxSetContext(TConfig configuration)
-    {
-        Configuration = configuration;
-    }
-
-    // =============================== Config ==============================
-
-    /// <inheritdoc/>
-    public TConfig Configuration { get; private init; }
-
     // ============================== GetAsync ==============================
 
     /// <inheritdoc/>

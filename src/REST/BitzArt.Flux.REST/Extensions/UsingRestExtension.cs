@@ -9,6 +9,7 @@ namespace BitzArt.Flux.REST;
 public static class UsingRestExtension
 {
     /// <inheritdoc cref="UsingRest(IFluxServiceProtocolConfigurator,string)"/>
+    /// <typeparam name="THandler"><see cref="DelegatingHandler"/> type for the HTTP client to use.</typeparam>
     public static IFluxRestServiceBuilder UsingRest<THandler>(this IFluxServiceProtocolConfigurator protocolConfigurator, string? baseUrl = null)
         where THandler : DelegatingHandler
         => protocolConfigurator.UsingRest(baseUrl, (builder) => builder.AddHttpMessageHandler<THandler>());
@@ -30,7 +31,7 @@ public static class UsingRestExtension
         var httpClientBuilder = builder.ServiceCollection
             .AddHttpClient(builder.ServiceName, (serviceProvider, httpClient) =>
             {
-                builder.ServiceOptions.HttpClientConfiguration?.Invoke(serviceProvider, httpClient);
+                builder.ServiceConfiguration.HttpClientConfiguration?.Invoke(serviceProvider, httpClient);
             });
 
         configureHttpClient?.Invoke(httpClientBuilder);

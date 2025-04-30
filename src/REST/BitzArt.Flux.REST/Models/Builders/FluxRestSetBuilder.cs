@@ -5,11 +5,11 @@ internal class FluxRestSetBuilder<TModel, TKey> : IFluxRestSetBuilder<TModel, TK
     where TModel : class
 {
     public IFluxRestServiceBuilder ServiceBuilder { get; set; }
-    public FluxRestSetOptions SetOptions { get; set; }
+    public FluxRestSetConfiguration SetConfiguration { get; set; }
 
     public FluxRestSetBuilder(IFluxRestServiceBuilder serviceBuilder, string? path = null)
     {
         ServiceBuilder = serviceBuilder;
-        SetOptions = new(ServiceBuilder.ServiceOptions, path);
+        SetConfiguration = new(ServiceBuilder.ServiceConfiguration, path);
     }
 }
