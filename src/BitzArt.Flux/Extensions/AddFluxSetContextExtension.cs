@@ -6,7 +6,7 @@ namespace BitzArt.Flux.Sets;
 /// <summary>
 /// Extension methods for <see cref="IFluxServiceBuilder"/>.
 /// </summary>
-public static class AddSetContextExtension
+public static class AddFluxSetContextExtension
 {
     /// <summary>
     /// <para>
@@ -14,17 +14,18 @@ public static class AddSetContextExtension
     /// Registers an unspecified key wrapper for the provided set context, if necessary.
     /// </para>
     /// <para>
-    /// This method is a part of internal implementation details and should not be used directly. <br />
+    /// <b>Note:</b> This method is a part of internal implementation details and should not be used directly. <br />
     /// It is only exposed for the purposes of <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementations</see>.
     /// </para>
     /// </summary>
-    /// <param name="builder"><see cref="IFluxServiceBuilder"/> instance to add the set context to.</param>"
+    /// <param name="services">Service collection to add the set context to.</param>
+    /// <param name="serviceName">Name of the service this set context belongs to.</param>
     /// <param name="implementationFactory">Factory method to create the set context.</param>
     /// <param name="setName">Name of the set to add.</param>
     /// <param name="setLifetime">Lifetime of the set context.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IFluxBuilder AddSetContext<TModel, TKey>(this IFluxBuilder builder, string serviceName, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory, string? setName, ServiceLifetime setLifetime)
+    public static IServiceCollection AddSetContext<TModel, TKey>(this IServiceCollection services, string serviceName, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory, string? setName, ServiceLifetime setLifetime)
         where TModel : class
         where TKey : notnull
     {
@@ -36,13 +37,13 @@ public static class AddSetContextExtension
         {
             ServiceDescriptor[] serviceDescriptors =
             [
-                // keyed descriptor for internal consumption
+                // keyed descriptor for package internal consumption
                 new(registrationInterface, signature, (sp, key) => implementationFactory.Invoke(sp), setLifetime),
 
-                // unkeyed for arbitrary external injection
+                // unkeyed for arbitrary injection
                 new(registrationInterface, implementationFactory, setLifetime)
             ];
-            builder.ServiceCollection.Add(serviceDescriptors);
+            services.Add(serviceDescriptors);
         }
 
         var genericArguments = registrationInterface.GetGenericArguments();
@@ -50,12 +51,14 @@ public static class AddSetContextExtension
         var keyType = genericArguments[1];
 
         Type[] wrapperRegistrationInterfaces = keyType == typeof(object)
-            // if key is already of type 'object', register a wrapper to implement IFluxSetContext<TModel>
+            // if key is already of type 'object',
+            // register a wrapper to implement IFluxSetContext<TModel> (no TKey argument)
             ? [
                 // IFluxSetContext<TModel>
                 typeof(IFluxSetContext<>).MakeGenericType(modelType)
             ]
-            // if key is not already of type 'object', register a wrapper for both implicit and explicit TKey variants
+            // if key is not already of type 'object',
+            // register a wrapper for both implicit and explicit TKey variants
             : [
                 // IFluxSetContext<TModel>
                 typeof(IFluxSetContext<>).MakeGenericType(modelType),
@@ -87,19 +90,22 @@ public static class AddSetContextExtension
                         new(wrapperRegistrationInterface, sp => sp.GetRequiredKeyedService(wrapperRegistrationInterface, signature), setLifetime)
                 ];
 
-                builder.ServiceCollection.Add(serviceDescriptors);
+                services.Add(serviceDescriptors);
             }
         }
 
-        return builder;
+        return services;
     }
 
     private static IEnumerable<FluxSetSignature> GetPossibleSignatures(string serviceName, string? setName)
     {
-        // register the set context for both the specified and unspecified service name
+        // register the set context for queries with
+        // both specified and unspecified service name parameter
         string?[] possibleServiceNames = [serviceName, null];
 
-        // if the set is registered using a name, register both named and unnamed variants of the context
+        // if the set is registered using a name,
+        // register the set context for queries with
+        // both named and unnamed variants of the set context
         string?[] possibleSetNames = setName is not null ? [setName, null] : [null];
 
         // enumerate all possible combinations of service and set names

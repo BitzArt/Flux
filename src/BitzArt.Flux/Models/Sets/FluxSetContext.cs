@@ -4,7 +4,13 @@ using BitzArt.Pagination;
 namespace BitzArt.Flux.Sets;
 
 /// <summary>
+/// <para>
 /// Base class for set context implementations.
+/// </para>
+/// <para>
+/// <b>Note:</b> This class is a part of internal implementation details and should not be used directly. <br />
+/// It is only exposed for the purposes of <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementations</see>.
+/// </para>
 /// </summary>
 public abstract class FluxSetContext<TModel, TKey, TConfig> : IFluxSetContext<TModel, TKey>
     where TModel : class

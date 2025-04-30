@@ -3,7 +3,7 @@
 namespace BitzArt.Flux;
 
 /// <summary>
-/// Flux Service Builder.
+/// Flux Service protocol configurator.
 /// Use a <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementation</see>
 /// in order to configure protocol for the service.
 /// </summary>

@@ -47,11 +47,11 @@ internal class FluxBuilder : IFluxBuilder, IDisposable
         var unterminated = _serviceRegistrations
             .Where(kvp => kvp.Value.TerminatedBuilder is null)
             .ToList();
-        
+
         if (unterminated.Count > 0)
         {
             var names = string.Join(", ", unterminated.Select(kvp => kvp.Key));
-            
+
             throw new InvalidOperationException(
                 $"The following flux services have not been terminated: {names}. " +
                 $"Use a Flux implementation of your choice in order to finalize their configuration.");
