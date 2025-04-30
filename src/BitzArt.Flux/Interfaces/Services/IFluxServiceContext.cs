@@ -16,11 +16,11 @@ public interface IFluxServiceContext
     /// </summary>
     /// <typeparam name="TModel">Type of the model.</typeparam>
     /// <typeparam name="TKey">Type of the key.</typeparam>
-    /// <param name="setName">Name of the set to resolve.</param>
-    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? setName = null)
+    /// <param name="setKey">Key of the set to resolve.</param>
+    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(object? setKey = null)
         where TModel : class
         where TKey : notnull;
 
-    /// <inheritdoc cref="Set{TModel, TKey}(string?)"/>
-    public IFluxSetContext<TModel> Set<TModel>(string? setName = null) where TModel : class;
+    /// <inheritdoc cref="Set{TModel, TKey}(object?)"/>
+    public IFluxSetContext<TModel> Set<TModel>(object? setKey = null) where TModel : class;
 }

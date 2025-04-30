@@ -1,4 +1,6 @@
-﻿namespace BitzArt.Flux.REST;
+﻿using BitzArt.Flux.Operations;
+
+namespace BitzArt.Flux.REST;
 
 internal class FluxRestSetConfiguration
 {
@@ -9,11 +11,16 @@ internal class FluxRestSetConfiguration
     /// </summary>
     public string? Path { get; }
 
-    public FluxRestSetEndpointCollection EndpointCollection { get; } = new();
+    public FluxRestSetEndpointCollection Endpoints { get; } = new();
 
     public FluxRestSetConfiguration(FluxRestServiceConfiguration serviceOptions, string? path = null)
     {
         ServiceConfiguration = serviceOptions;
         Path = path;
+    }
+
+    internal FluxRestSetEndpoint ResolveEndpoint(OperationDescriptor descriptor)
+    {
+        throw new NotImplementedException();
     }
 }

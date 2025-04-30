@@ -15,7 +15,7 @@ public interface IFluxServiceProtocolConfigurator : IFluxBuilder
     public IFluxBuilder FluxBuilder { get; }
 
     /// <summary>
-    /// Name of the service being configured.
+    /// Name of the flux service being configured.
     /// </summary>
     public string ServiceName { get; }
 

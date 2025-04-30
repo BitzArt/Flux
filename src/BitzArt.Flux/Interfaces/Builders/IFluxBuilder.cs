@@ -34,7 +34,7 @@ public interface IFluxBuilder
     /// It is only exposed for the purposes of <see href="https://bitzart.github.io/Flux/04.implementations.html">Flux Implementations</see>.
     /// </para>
     /// </summary>
-    /// <param name="name">Name of the terminated service.</param>
-    /// <param name="serviceBuilder">Service builder instance created as a result of the termination.</param>
+    /// <param name="name">Name of the service.</param>
+    /// <param name="serviceBuilder">Service builder instance created as a result of the protocol configuration.</param>
     public void OnServiceProtocolConfigured(string name, IFluxServiceBuilder serviceBuilder);
 }

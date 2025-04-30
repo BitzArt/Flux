@@ -10,13 +10,13 @@ internal class FluxServiceContext(IServiceProvider serviceProvider, string name)
 
     string IFluxServiceContext.ServiceName => _serviceName;
 
-    IFluxSetContext<TModel, TKey> IFluxServiceContext.Set<TModel, TKey>(string? setName)
+    IFluxSetContext<TModel, TKey> IFluxServiceContext.Set<TModel, TKey>(object? setKey)
         => _serviceProvider.GetRequiredKeyedService<IFluxSetContext<TModel, TKey>>(
             new FluxSetSignature(
                 serviceName: _serviceName,
-                setName: setName));
+                setKey: setKey));
 
-    IFluxSetContext<TModel> IFluxServiceContext.Set<TModel>(string? setName)
+    IFluxSetContext<TModel> IFluxServiceContext.Set<TModel>(object? setKey)
         => _serviceProvider.GetRequiredKeyedService<IFluxSetContext<TModel>>(
-            new FluxSetSignature(_serviceName, setName));
+            new FluxSetSignature(_serviceName, setKey));
 }

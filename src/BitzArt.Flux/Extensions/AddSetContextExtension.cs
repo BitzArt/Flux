@@ -21,17 +21,17 @@ public static class AddSetContextExtension
     /// <param name="services">Service collection to add the set context to.</param>
     /// <param name="serviceName">Name of the service this set context belongs to.</param>
     /// <param name="implementationFactory">Factory method to create the set context.</param>
-    /// <param name="setName">Name of the set to add.</param>
+    /// <param name="setKey">Key of the set to add.</param>
     /// <param name="setLifetime">Lifetime of the set context.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IServiceCollection AddSetContext<TModel, TKey>(this IServiceCollection services, string serviceName, string? setName, ServiceLifetime setLifetime, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory)
+    public static IServiceCollection AddSetContext<TModel, TKey>(this IServiceCollection services, string serviceName, object? setKey, ServiceLifetime setLifetime, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory)
         where TModel : class
         where TKey : notnull
     {
         var registrationInterface = typeof(IFluxSetContext<TModel, TKey>);
 
-        var possibleSignatures = GetPossibleSignatures(serviceName, setName).ToList();
+        var possibleSignatures = GetPossibleSignatures(serviceName, setKey).ToList();
 
         foreach (var signature in possibleSignatures)
         {
@@ -97,25 +97,25 @@ public static class AddSetContextExtension
         return services;
     }
 
-    private static IEnumerable<FluxSetSignature> GetPossibleSignatures(string serviceName, string? setName)
+    private static IEnumerable<FluxSetSignature> GetPossibleSignatures(string serviceName, object? setKey)
     {
         // register the set context for queries with
         // both specified and unspecified service name parameter
         string?[] possibleServiceNames = [serviceName, null];
 
-        // if the set is registered using a name,
+        // if the set is registered using a key,
         // register the set context for queries with
-        // both named and unnamed variants of the set context
-        string?[] possibleSetNames = setName is not null ? [setName, null] : [null];
+        // both keyed and unkeyed variants of the set context
+        object?[] possibleSetKeys = setKey is not null ? [setKey, null] : [null];
 
         // enumerate all possible combinations of service and set names
         foreach (var possibleServiceName in possibleServiceNames)
         {
             var serviceSignature = new FluxServiceSignature(possibleServiceName);
 
-            foreach (var possibleSetName in possibleSetNames)
+            foreach (var possibleSetKey in possibleSetKeys)
             {
-                yield return new FluxSetSignature(serviceSignature, possibleSetName);
+                yield return new FluxSetSignature(serviceSignature, possibleSetKey);
             }
         }
     }

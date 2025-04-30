@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace BitzArt.Flux.Builder;
 
@@ -10,7 +12,7 @@ internal class FluxBuilder : IFluxBuilder, IDisposable
     private readonly ConcurrentDictionary<string, FluxServiceRegistration> _serviceRegistrations;
     private record FluxServiceRegistration
     {
-        public IFluxServiceBuilder? TerminatedBuilder { get; set; } = null;
+        public IFluxServiceBuilder? ConfiguredBuilder { get; set; } = null;
     }
 
     public FluxBuilder(IServiceCollection serviceCollection)
@@ -32,20 +34,20 @@ internal class FluxBuilder : IFluxBuilder, IDisposable
     {
         if (!_serviceRegistrations.TryGetValue(name, out var registration))
         {
-            throw new InvalidOperationException($"Service with name '{name}' was not found and thus can not be terminated.");
+            throw new UnreachableException($"Service '{name}' was not found and can not be marked as terminated.");
         }
-        if (registration.TerminatedBuilder is not null)
+        if (registration.ConfiguredBuilder is not null)
         {
-            throw new InvalidOperationException($"Service with name '{name}' has already been terminated previously.");
+            throw new InvalidOperationException($"Service '{name}' has already been configured previously.");
         }
 
-        registration.TerminatedBuilder = terminatedBuilder;
+        registration.ConfiguredBuilder = terminatedBuilder;
     }
 
     public void Dispose()
     {
         var unterminated = _serviceRegistrations
-            .Where(kvp => kvp.Value.TerminatedBuilder is null)
+            .Where(kvp => kvp.Value.ConfiguredBuilder is null)
             .ToList();
 
         if (unterminated.Count > 0)

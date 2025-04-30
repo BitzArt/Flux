@@ -18,7 +18,7 @@ public interface IFluxContext
     /// See <see href="https://bitzart.github.io/Flux/03.use.html">Use Flux</see> for more information
     /// on how to use Flux Sets.
     /// </summary>
-    public IFluxSetContext<TModel> Set<TModel>(string? serviceName = null, string? setName = null)
+    public IFluxSetContext<TModel> Set<TModel>(string? serviceName = null, object? setKey = null)
         where TModel : class;
 
     /// <summary>
@@ -26,7 +26,7 @@ public interface IFluxContext
     /// See <see href="https://bitzart.github.io/Flux/03.use.html">Use Flux</see> for more information
     /// on how to use Flux Sets.
     /// </summary>
-    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? serviceName = null, string? setName = null)
+    public IFluxSetContext<TModel, TKey> Set<TModel, TKey>(string? serviceName = null, object? setKey = null)
         where TModel : class
         where TKey : notnull;
 }

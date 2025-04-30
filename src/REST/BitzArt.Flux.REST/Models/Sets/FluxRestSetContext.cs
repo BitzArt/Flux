@@ -11,6 +11,8 @@ internal class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
 
     public override Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
+        var endpoint = Configuration.ResolveEndpoint(descriptor);
+
         throw new NotImplementedException();
     }
 }

@@ -8,10 +8,10 @@ namespace BitzArt.Flux.REST;
 /// </summary>
 public static class AddSetExtension
 {
-    /// <inheritdoc cref="AddSet{TModel, TKey}(IFluxRestServiceBuilder, string?, string?, ServiceLifetime)"/>
-    public static IFluxRestSetBuilder<TModel, object> AddSet<TModel>(this IFluxRestServiceBuilder serviceBuilder, string? setName = null, string? path = null, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+    /// <inheritdoc cref="AddSet{TModel, TKey}(IFluxRestServiceBuilder, object?, string?, ServiceLifetime)"/>
+    public static IFluxRestSetBuilder<TModel, object> AddSet<TModel>(this IFluxRestServiceBuilder serviceBuilder, object? setKey = null, string? path = null, ServiceLifetime lifetime = ServiceLifetime.Scoped)
         where TModel : class
-        => AddSet<TModel, object>(serviceBuilder, setName, path);
+        => AddSet<TModel, object>(serviceBuilder, setKey, path, lifetime);
 
     /// <summary>
     /// Configures a set context for the specified model type and key type.
@@ -19,18 +19,18 @@ public static class AddSetExtension
     /// <typeparam name="TModel">Set model type.</typeparam>
     /// <typeparam name="TKey">Set key type.</typeparam>
     /// <param name="serviceBuilder">Flux service builder to register the set with.</param>
-    /// <param name="setName">Set name (if any).</param>
+    /// <param name="setKey">Set key (if any).</param>
     /// <param name="path">Set path part (if any), relative to the service base path.</param>
     /// <param name="lifetime">Set context lifetime.</param>
     /// <returns><see cref="IFluxRestSetBuilder{TModel, TKey}"/> for further configuration.</returns>"/>
-    public static IFluxRestSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxRestServiceBuilder serviceBuilder, string? setName = null, string? path = null, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+    public static IFluxRestSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxRestServiceBuilder serviceBuilder, object? setKey = null, string? path = null, ServiceLifetime lifetime = ServiceLifetime.Scoped)
         where TModel : class
         where TKey : notnull
     {
         var serviceCollection = serviceBuilder.ServiceCollection;
         var builder = new FluxRestSetBuilder<TModel, TKey>(serviceBuilder, path);
 
-        serviceCollection.AddSetContext(serviceBuilder.ServiceName, setName, lifetime,
+        serviceCollection.AddSetContext(serviceBuilder.ServiceName, setKey, lifetime,
             serviceProvider => new FluxRestSetContext<TModel, TKey>(builder.SetConfiguration));
 
         return builder;
