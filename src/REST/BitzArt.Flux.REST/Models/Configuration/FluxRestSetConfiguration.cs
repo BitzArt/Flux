@@ -18,5 +18,5 @@ internal class FluxRestSetConfiguration
     }
 
     internal FluxRestSetEndpointInfo ResolveEndpoint(OperationDescriptor descriptor)
-        => Endpoints.Resolve(descriptor);
+        => Endpoints.Resolve(descriptor, this);
 }

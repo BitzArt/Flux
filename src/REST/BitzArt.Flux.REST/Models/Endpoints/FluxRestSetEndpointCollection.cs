@@ -2,7 +2,7 @@
 
 internal class FluxRestSetEndpointCollection
 {
-    public FluxRestSetEndpointInfo Resolve(OperationDescriptor descriptor)
+    public FluxRestSetEndpointInfo Resolve(OperationDescriptor descriptor, FluxRestSetConfiguration setConfiguration)
     {
         throw new NotImplementedException();
     }
