@@ -1,5 +1,4 @@
-﻿using BitzArt.Flux.Operations;
-using BitzArt.Pagination;
+﻿using BitzArt.Pagination;
 
 namespace BitzArt.Flux;
 

@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux.Operations;
+﻿namespace BitzArt.Flux;
 
 /// <summary>
 /// 'Add' operation descriptor.

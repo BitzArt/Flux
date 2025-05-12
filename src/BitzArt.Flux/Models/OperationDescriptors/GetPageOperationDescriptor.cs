@@ -1,6 +1,6 @@
 ﻿using BitzArt.Pagination;
 
-namespace BitzArt.Flux.Operations;
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Operation descriptor for paged operations.
