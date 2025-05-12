@@ -11,4 +11,6 @@ internal class FluxRestSetBuilder<TModel, TKey> : IFluxRestSetBuilder<TModel, TK
         ServiceBuilder = serviceBuilder;
         SetConfiguration = new(ServiceBuilder.ServiceConfiguration, path);
     }
+
+    public object ImplementationName => "REST";
 }

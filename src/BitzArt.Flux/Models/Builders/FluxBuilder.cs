@@ -38,7 +38,7 @@ internal class FluxBuilder : IFluxBuilder, IDisposable
         }
         if (registration.ConfiguredBuilder is not null)
         {
-            throw new InvalidOperationException($"Service '{name}' has already been configured previously.");
+            throw new InvalidOperationException($"Service '{name}' has already been configured previously by the implementation: '{registration.ConfiguredBuilder.ImplementationName}'.");
         }
 
         registration.ConfiguredBuilder = terminatedBuilder;

@@ -2,6 +2,8 @@
 
 internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
 {
+    string IFluxServiceBuilder.ImplementationName => "REST";
+
     public IFluxBuilder FluxBuilder { get; set; }
     public string ServiceName { get; set; }
     public FluxRestServiceConfiguration ServiceConfiguration { get; set; }

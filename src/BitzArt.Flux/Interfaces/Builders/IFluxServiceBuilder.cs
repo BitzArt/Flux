@@ -17,6 +17,11 @@ public interface IFluxServiceBuilder : IFluxBuilder
     /// </summary>
     public string ServiceName { get; }
 
+    /// <summary>
+    /// Name of the implementation this service is using.
+    /// </summary>
+    public string ImplementationName { get; }
+
     // ================ Inherited members ================
 
     IServiceCollection IFluxBuilder.ServiceCollection => FluxBuilder.ServiceCollection;
