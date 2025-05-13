@@ -2,7 +2,7 @@
 
 namespace BitzArt.Flux.REST;
 
-internal class FluxRestServiceConfiguration(string? baseUrl)
+internal class ServiceConfiguration(string? baseUrl)
 {
     public string? BaseUrl { get; set; } = baseUrl;
 

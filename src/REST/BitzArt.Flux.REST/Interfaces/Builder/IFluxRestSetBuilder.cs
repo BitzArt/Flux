@@ -16,5 +16,6 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder, IF
 
     IServiceCollection IFluxBuilder.ServiceCollection => FluxBuilder.ServiceCollection;
     IFluxServiceBuilder IFluxSetBuilder.ServiceBuilder => ServiceBuilder;
-    FluxRestServiceConfiguration IFluxRestServiceBuilder.ServiceConfiguration => ServiceBuilder.ServiceConfiguration;
+    ServiceConfiguration IFluxRestServiceBuilder.ServiceConfiguration => ServiceBuilder.ServiceConfiguration;
+    string IFluxServiceBuilder.ImplementationName => ServiceBuilder.ImplementationName;
 }

@@ -5,5 +5,5 @@
 /// </summary>
 public interface IFluxRestServiceBuilder : IFluxServiceBuilder
 {
-    internal FluxRestServiceConfiguration ServiceConfiguration { get; }
+    internal ServiceConfiguration ServiceConfiguration { get; }
 }
