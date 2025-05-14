@@ -44,7 +44,7 @@ internal class SetConfiguration
         _endpoints[operationType] = configuration;
     }
 
-    private static void ConsiderReplace(EndpointConfiguration existingConfiguration, EndpointConfiguration newConfiguration, Type operationType)
+    private void ConsiderReplace(EndpointConfiguration existingConfiguration, EndpointConfiguration newConfiguration, Type operationType)
     {
         if (!existingConfiguration.CanBeOverridden(newConfiguration)) return;
 
@@ -54,6 +54,8 @@ internal class SetConfiguration
             throw new InvalidOperationException($"Cannot replace existing endpoint configuration. " +
                 $"The new configuration is identical to the existing one in terms of endpoint resolver hierarchy.");
         }
+
+        _endpoints[operationType] = newConfiguration;
     }
 
     public HttpRequestMessage Resolve(OperationDescriptor descriptor)
