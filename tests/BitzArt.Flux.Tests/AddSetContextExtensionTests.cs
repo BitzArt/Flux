@@ -286,7 +286,7 @@ public class AddSetContextExtensionTests
 
         Assert.IsType<TestSetContextImplementation<TestModel, object>>(setContext);
         var testSetContext = (TestSetContextImplementation<TestModel, object>)setContext;
-        
+
         Assert.Equal(testText, testSetContext.Configuration.Text);
     }
 }

@@ -9,7 +9,7 @@ public class PathEndpointConfigurationTests
     {
         // Arrange
         var serviceConfiguration = new ServiceConfiguration(null);
-        var setConfiguration = new TestSetConfiguration(serviceConfiguration, null);
+        var setConfiguration = new SetConfiguration(serviceConfiguration, null);
 
         // Act
         var endpointConfiguration = new PathEndpointConfiguration(serviceConfiguration, setConfiguration, HttpMethods.All, null);
