@@ -2,8 +2,7 @@
 
 namespace BitzArt.Flux.REST;
 
-internal class SetConfiguration<TModel, TKey>
-    where TModel : class
+internal class SetConfiguration
 {
     public ServiceConfiguration ServiceConfiguration { get; }
 
@@ -12,7 +11,7 @@ internal class SetConfiguration<TModel, TKey>
     /// </summary>
     public string? Path { get; }
 
-    public SetEndpointCollection<TModel, TKey> Endpoints { get; }
+    public SetEndpointCollection Endpoints { get; }
 
     public SetConfiguration(ServiceConfiguration serviceOptions, string? path = null)
     {
@@ -21,7 +20,4 @@ internal class SetConfiguration<TModel, TKey>
 
         Endpoints = new(this);
     }
-
-    internal HttpRequestMessage ResolveHttpRequest(OperationDescriptor descriptor)
-        => Endpoints.Resolve(descriptor);
 }

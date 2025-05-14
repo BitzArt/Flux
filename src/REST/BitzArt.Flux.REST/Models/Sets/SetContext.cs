@@ -3,13 +3,13 @@ using System.Text.Json;
 
 namespace BitzArt.Flux.REST;
 
-internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfiguration<TModel, TKey>>
+internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfiguration>
     where TModel : class
     where TKey : notnull
 {
     private readonly HttpClient _httpClient;
 
-    public SetContext(SetConfiguration<TModel, TKey> configuration, HttpClient httpClient) : base(configuration)
+    public SetContext(SetConfiguration configuration, HttpClient httpClient) : base(configuration)
     {
         _httpClient = httpClient;
     }
@@ -19,7 +19,7 @@ internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfig
 
     private async Task<object?> ExecuteInternalAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
-        var httpRequestMessage = Configuration.ResolveHttpRequest(descriptor);
+        var httpRequestMessage = Configuration.Endpoints.Resolve(descriptor);
 
         var response = await _httpClient.SendAsync(httpRequestMessage, cancellationToken);
 
