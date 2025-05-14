@@ -23,7 +23,7 @@ public static class UsingRestExtension
     [SuppressMessage(
         "Performance",
         "CA1859:Use concrete types when possible for improved performance",
-        Justification = "Interface cast is necessary to access default implementation methods.")]
+        Justification = "Interface cast necessary to access default implementation methods.")]
     public static IFluxRestServiceBuilder UsingRest(this IFluxServiceProtocolConfigurator protocolConfigurator, string? baseUrl = null, Action<IHttpClientBuilder>? configureHttpClient = null)
     {
         IFluxRestServiceBuilder builder = new ServiceBuilder(protocolConfigurator.FluxBuilder, protocolConfigurator.ServiceName, baseUrl);
@@ -31,6 +31,11 @@ public static class UsingRestExtension
         var httpClientBuilder = builder.ServiceCollection
             .AddHttpClient(builder.ServiceName, (serviceProvider, httpClient) =>
             {
+                if (!string.IsNullOrWhiteSpace(baseUrl))
+                {
+                    httpClient.BaseAddress = new(baseUrl);
+                }
+
                 builder.ServiceConfiguration.HttpClientConfiguration?.Invoke(serviceProvider, httpClient);
             });
 

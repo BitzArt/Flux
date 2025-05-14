@@ -56,3 +56,20 @@ public enum HttpMethods
     /// </summary>
     All = Get | Head | Post | Put | Delete | Connect | Options | Trace | Patch
 }
+
+/// <summary>
+/// Extension methods for <see cref="HttpMethods"/> enum.
+/// </summary>
+public static class HttpMethodsExtensions
+{
+    /// <summary>
+    /// Determines whether the source <see cref="HttpMethods"/> is a subset of the target <see cref="HttpMethods"/>.
+    /// </summary>
+    /// <param name="source">Source <see cref="HttpMethods"/>.</param>
+    /// <param name="target">Target <see cref="HttpMethods"/>.</param>
+    /// <returns><see langword="true"/> if the source is a subset of the target or equal to it; otherwise, <see langword="false"/>.</returns>
+    public static bool IsSubsetOf(this HttpMethods source, HttpMethods target)
+    {
+        return (source & target) == source;
+    }
+}
