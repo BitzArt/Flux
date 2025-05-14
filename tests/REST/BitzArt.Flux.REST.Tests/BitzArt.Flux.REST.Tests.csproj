@@ -4,7 +4,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<RootNamespace>BitzArt.Flux</RootNamespace>
+		<RootNamespace>BitzArt.Flux.REST</RootNamespace>
 
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>

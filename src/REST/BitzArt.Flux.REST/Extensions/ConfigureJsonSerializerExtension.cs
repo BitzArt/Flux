@@ -15,7 +15,7 @@ public static class ConfigureJsonSerializerExtension
     /// <param name="configure"><see cref="JsonSerializerOptions"/> configuration action.</param>
     public static IFluxRestServiceBuilder ConfigureJsonSerializer(this IFluxRestServiceBuilder builder, Action<JsonSerializerOptions> configure)
     {
-        configure.Invoke(builder.ServiceConfiguration.SerializerOptions);
+        configure.Invoke(builder.ServiceConfiguration.JsonSerializerOptions);
 
         return builder;
     }

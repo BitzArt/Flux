@@ -6,7 +6,7 @@ internal class ServiceConfiguration
 {
     public string? BasePath { get; set; }
 
-    public JsonSerializerOptions SerializerOptions { get; set; } = new();
+    public JsonSerializerOptions JsonSerializerOptions { get; set; } = new();
     public Action<IServiceProvider, HttpClient>? HttpClientConfiguration { get; set; }
 
     public ServiceConfiguration(string? basePath)

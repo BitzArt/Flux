@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace BitzArt.Flux.REST.Endpoints;
+﻿namespace BitzArt.Flux.REST.Endpoints;
 
 internal sealed class PathEndpointConfiguration : EndpointConfiguration
 {
@@ -22,72 +20,7 @@ internal sealed class PathEndpointConfiguration : EndpointConfiguration
     public override IEnumerable<Type> OperationTypes => _operationTypes.AsReadOnly();
 
     public override HttpRequestMessage Resolve(OperationDescriptor descriptor)
-    {
-        var httpMethod = GetHttpMethod(descriptor);
-        var path = GetPath(descriptor);
-        var body = GetBody(descriptor);
-
-        var requestMessage = new HttpRequestMessage(httpMethod, path);
-        requestMessage.Headers.Accept.Add(new("application/json"));
-        requestMessage.Content = body;
-
-        return requestMessage;
-    }
-
-    private static HttpMethod GetHttpMethod(OperationDescriptor descriptor)
-        => descriptor switch
-        {
-            GetOperationDescriptor => HttpMethod.Get,
-
-            GetAllOperationDescriptor => HttpMethod.Get,
-
-            GetPageOperationDescriptor => HttpMethod.Get,
-
-            AddOperationDescriptor addOperationDescriptor
-                => addOperationDescriptor.Id is null ? HttpMethod.Post : HttpMethod.Put,
-
-            UpdateOperationDescriptor updateOperationDescriptor
-                => updateOperationDescriptor.Partial ? HttpMethod.Patch : HttpMethod.Put,
-
-            RemoveOperationDescriptor => HttpMethod.Delete,
-
-            _ => throw new UnreachableException($"Unsupported operation type: {descriptor.GetType().Name}.")
-        };
-
-    private string GetPath(OperationDescriptor descriptor)
-    {
-        var parts = new List<string>(4);
-
-        ConsiderPathPart(parts, ServiceConfiguration.BasePath);
-        ConsiderPathPart(parts, SetConfiguration.Path);
-        ConsiderPathPart(parts, _path);
-        ConsiderPathPart(parts, GetIdPart(descriptor));
-
-        var path = string.Join('/', parts);
-
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            throw new InvalidOperationException("Path cannot be empty.");
-        }
-
-        return path;
-    }
-
-    private static void ConsiderPathPart(List<string> parts, string? part)
-    {
-        if (string.IsNullOrEmpty(part)) return;
-
-        parts.Add(part);
-    }
-
-    private static string? GetIdPart(OperationDescriptor descriptor)
-    {
-        if (descriptor is not KeyedOperationDescriptor keyedDescriptor) return null;
-
-        if (keyedDescriptor.Id is null) return null;
-
-        return keyedDescriptor.Id.ToString();
-    }
+        => EndpointResolverUtility.Resolve(SetConfiguration, _path, descriptor);
 
     private static List<Type> GetOperationTypes(HttpMethods methods)
     {

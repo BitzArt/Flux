@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace BitzArt.Flux.REST.Endpoints;
+﻿namespace BitzArt.Flux.REST.Endpoints;
 
 internal abstract class EndpointConfiguration
 {
@@ -47,20 +45,5 @@ internal abstract class EndpointConfiguration
         if (newConfiguration.HttpMethods.IsSubsetOf(HttpMethods)) return true;
 
         return false;
-    }
-
-    protected StringContent? GetBody(OperationDescriptor descriptor)
-    {
-        if (descriptor is not ModelOperationDescriptor modelDescriptor) return null;
-
-        if (modelDescriptor.Value is null) return null;
-
-        var jsonSerializerOptions = ServiceConfiguration.SerializerOptions;
-
-        var json = JsonSerializer.Serialize(modelDescriptor.Value, modelDescriptor.Value.GetType(), jsonSerializerOptions);
-
-        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-        return content;
     }
 }

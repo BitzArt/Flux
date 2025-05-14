@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.REST;
 
 public class DelegatingHandlerTests
 {

@@ -35,7 +35,7 @@ internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfig
 
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        var data = JsonSerializer.Deserialize(content, responseType, Configuration.ServiceConfiguration.SerializerOptions);
+        var data = JsonSerializer.Deserialize(content, responseType, Configuration.ServiceConfiguration.JsonSerializerOptions);
 
         return data;
     }
