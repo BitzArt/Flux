@@ -3,13 +3,8 @@
 /// <summary>
 /// 'Add' operation descriptor.
 /// </summary>
-public sealed class AddOperationDescriptor : KeyedOperationDescriptor
+public sealed class AddOperationDescriptor : ModelOperationDescriptor
 {
-    /// <summary>
-    /// Model to be used in the operation.
-    /// </summary>
-    public object Value { get; set; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateOperationDescriptor"/> class.
     /// </summary>
@@ -17,8 +12,5 @@ public sealed class AddOperationDescriptor : KeyedOperationDescriptor
     /// <param name="value">Model to be used in the operation.</param>
     /// <param name="parameters">Input parameters to be used in the operation.</param>
     public AddOperationDescriptor(object? id, object value, IOperationParameterCollection? parameters)
-        : base(id, parameters)
-    {
-        Value = value;
-    }
+        : base(id, value, parameters) { }
 }

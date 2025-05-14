@@ -3,17 +3,12 @@
 /// <summary>
 /// 'Update' operation descriptor.
 /// </summary>
-public sealed class UpdateOperationDescriptor : KeyedOperationDescriptor
+public sealed class UpdateOperationDescriptor : ModelOperationDescriptor
 {
     /// <summary>
     /// Whether to perform a partial update (e.g. PATCH in REST).
     /// </summary>
     public bool Partial { get; set; }
-
-    /// <summary>
-    /// Model to be used in the operation.
-    /// </summary>
-    public object Value { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateOperationDescriptor"/> class.
@@ -23,9 +18,8 @@ public sealed class UpdateOperationDescriptor : KeyedOperationDescriptor
     /// <param name="partial">Whether to perform a partial update (e.g. PATCH in REST).</param>
     /// <param name="parameters">Input parameters to be used in the operation.</param>
     public UpdateOperationDescriptor(object? id, object value, bool partial, IOperationParameterCollection? parameters)
-        : base(id, parameters)
+        : base(id, value, parameters)
     {
         Partial = partial;
-        Value = value;
     }
 }
