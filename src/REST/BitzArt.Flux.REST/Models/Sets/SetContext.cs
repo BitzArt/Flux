@@ -19,7 +19,7 @@ internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfig
 
     private async Task<object?> ExecuteInternalAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
-        var httpRequestMessage = Configuration.Endpoints.Resolve(descriptor);
+        var httpRequestMessage = Configuration.Resolve(descriptor);
 
         var response = await _httpClient.SendAsync(httpRequestMessage, cancellationToken);
 

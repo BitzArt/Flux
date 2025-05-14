@@ -1,7 +1,8 @@
-﻿using BitzArt.Flux.Sets;
+﻿using BitzArt.Flux.REST;
+using BitzArt.Flux.Sets;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Extension methods for configuring set contexts with an <see cref="IFluxServiceBuilder"/>.
@@ -31,7 +32,14 @@ public static class AddSetExtension
         var builder = new SetBuilder<TModel, TKey>(serviceBuilder, path);
 
         serviceCollection.AddSetContext(serviceBuilder.ServiceName, setKey, lifetime,
-            serviceProvider => new SetContext<TModel, TKey>(builder.SetConfiguration));
+            serviceProvider =>
+            {
+                var httpClient = serviceProvider
+                    .GetRequiredService<IHttpClientFactory>()
+                    .CreateClient(serviceBuilder.ServiceName);
+
+                return new SetContext<TModel, TKey>(builder.SetConfiguration, httpClient);
+            });
 
         return builder;
     }

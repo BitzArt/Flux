@@ -1,4 +1,6 @@
-﻿namespace BitzArt.Flux.REST.Endpoints;
+﻿using System.Text.Json;
+
+namespace BitzArt.Flux.REST.Endpoints;
 
 internal abstract class EndpointConfiguration
 {
@@ -13,11 +15,6 @@ internal abstract class EndpointConfiguration
     protected readonly SetConfiguration SetConfiguration;
 
     /// <summary>
-    /// Collection of endpoints for this set.
-    /// </summary>
-    protected readonly SetEndpointCollection EndpointCollection;
-
-    /// <summary>
     /// HTTP methods provided with this configuration.
     /// </summary>
     internal readonly HttpMethods HttpMethods;
@@ -25,12 +22,10 @@ internal abstract class EndpointConfiguration
     public EndpointConfiguration(
         ServiceConfiguration serviceConfiguration,
         SetConfiguration setConfiguration,
-        SetEndpointCollection endpointCollection,
         HttpMethods httpMethods)
     {
         ServiceConfiguration = serviceConfiguration;
         SetConfiguration = setConfiguration;
-        EndpointCollection = endpointCollection;
 
         HttpMethods = httpMethods;
     }
@@ -44,10 +39,28 @@ internal abstract class EndpointConfiguration
 
     public virtual bool CanBeOverridden(EndpointConfiguration newConfiguration)
     {
-        // Can be overridden by another configuration if the new configuration's
-        // HttpMethods are a subset of the current configuration's HttpMethods
+        // Unless specified otherwise, an endpoint configuration
+        // can be overridden by another endpoint configuration
+        // during endpoint configuration phase
+        // if the new configuration's HttpMethods are a subset
+        // of the current configuration's HttpMethods
         if (newConfiguration.HttpMethods.IsSubsetOf(HttpMethods)) return true;
 
         return false;
+    }
+
+    protected StringContent? GetBody(OperationDescriptor descriptor)
+    {
+        if (descriptor is not ModelOperationDescriptor modelDescriptor) return null;
+
+        if (modelDescriptor.Value is null) return null;
+
+        var jsonSerializerOptions = ServiceConfiguration.SerializerOptions;
+
+        var json = JsonSerializer.Serialize(modelDescriptor.Value, modelDescriptor.Value.GetType(), jsonSerializerOptions);
+
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+        return content;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BitzArt.Flux.REST.Endpoints;
+﻿using System.Diagnostics;
+
+namespace BitzArt.Flux.REST.Endpoints;
 
 internal sealed class PathEndpointConfiguration : EndpointConfiguration
 {
@@ -8,16 +10,16 @@ internal sealed class PathEndpointConfiguration : EndpointConfiguration
     public PathEndpointConfiguration(
         ServiceConfiguration serviceConfiguration,
         SetConfiguration setConfiguration,
-        SetEndpointCollection endpointCollection,
         HttpMethods httpMethods,
         string? path)
-        : base(serviceConfiguration, setConfiguration, endpointCollection, httpMethods)
+        : base(serviceConfiguration, setConfiguration, httpMethods)
     {
-        _path = path;
-        _operationTypes = [.. httpMethods.GetOperationTypes()];
+        _path = path?.TrimEnd('/');
+
+        _operationTypes = GetOperationTypes(httpMethods);
     }
 
-    public override IEnumerable<Type> OperationTypes => _operationTypes;
+    public override IEnumerable<Type> OperationTypes => _operationTypes.AsReadOnly();
 
     public override HttpRequestMessage Resolve(OperationDescriptor descriptor)
     {
@@ -27,35 +29,67 @@ internal sealed class PathEndpointConfiguration : EndpointConfiguration
 
         var requestMessage = new HttpRequestMessage(httpMethod, path);
         requestMessage.Headers.Accept.Add(new("application/json"));
-
-        if (body is not null)
-        {
-            requestMessage.Content = body;
-            requestMessage.Content.Headers.ContentType = new("application/json");
-        }
+        requestMessage.Content = body;
 
         return requestMessage;
     }
 
-    private HttpMethod GetHttpMethod(OperationDescriptor descriptor)
-    {
-        throw new NotImplementedException();
-    }
+    private static HttpMethod GetHttpMethod(OperationDescriptor descriptor)
+        => descriptor switch
+        {
+            GetOperationDescriptor => HttpMethod.Get,
+
+            GetAllOperationDescriptor => HttpMethod.Get,
+
+            GetPageOperationDescriptor => HttpMethod.Get,
+
+            AddOperationDescriptor addOperationDescriptor
+                => addOperationDescriptor.Id is null ? HttpMethod.Post : HttpMethod.Put,
+
+            UpdateOperationDescriptor updateOperationDescriptor
+                => updateOperationDescriptor.Partial ? HttpMethod.Patch : HttpMethod.Put,
+
+            RemoveOperationDescriptor => HttpMethod.Delete,
+
+            _ => throw new UnreachableException($"Unsupported operation type: {descriptor.GetType().Name}.")
+        };
 
     private string GetPath(OperationDescriptor descriptor)
     {
-        throw new NotImplementedException();
+        var parts = new List<string>(4);
+
+        ConsiderPathPart(parts, ServiceConfiguration.BasePath);
+        ConsiderPathPart(parts, SetConfiguration.Path);
+        ConsiderPathPart(parts, _path);
+        ConsiderPathPart(parts, GetIdPart(descriptor));
+
+        var path = string.Join('/', parts);
+
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new InvalidOperationException("Path cannot be empty.");
+        }
+
+        return path;
     }
 
-    private StringContent? GetBody(OperationDescriptor descriptor)
+    private static void ConsiderPathPart(List<string> parts, string? part)
     {
-        throw new NotImplementedException();
-    }
-}
+        if (string.IsNullOrEmpty(part)) return;
 
-internal static class PathEndpointConfigurationHttpMethodsExtensions
-{
-    public static List<Type> GetOperationTypes(this HttpMethods methods)
+        parts.Add(part);
+    }
+
+    private static string? GetIdPart(OperationDescriptor descriptor)
+    {
+        if (descriptor is not KeyedOperationDescriptor keyedDescriptor) return null;
+
+        if (keyedDescriptor.Id is null) return null;
+
+        return keyedDescriptor.Id.ToString();
+    }
+
+    private static List<Type> GetOperationTypes(HttpMethods methods)
     {
         // Currently, there are 6 possible operation types,
         // hence the maximum capacity.
@@ -76,6 +110,11 @@ internal static class PathEndpointConfigurationHttpMethodsExtensions
         if (methods.HasFlag(HttpMethods.Put) || methods.HasFlag(HttpMethods.Patch))
         {
             results.Add(typeof(UpdateOperationDescriptor));
+        }
+
+        if (methods.HasFlag(HttpMethods.Delete))
+        {
+            results.Add(typeof(RemoveOperationDescriptor));
         }
 
         return results;

@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BitzArt.Flux.REST;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Extension methods for configuring a REST Flux service.
