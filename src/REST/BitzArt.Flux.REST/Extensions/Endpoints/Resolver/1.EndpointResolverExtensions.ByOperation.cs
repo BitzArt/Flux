@@ -6,10 +6,8 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Extension methods for configuring <see cref="IFluxRestSetBuilder{TModel, TKey}"/>
 /// </summary>
-public static class EndpointResolverExtensions
+public static partial class EndpointResolverExtensions
 {
-    // ==============================================================
-
     /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,HttpRequestMessage},HttpMethods)"/>
     public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, HttpRequestMessage> requestMessageResolver)
         where TModel : class
@@ -40,7 +38,7 @@ public static class EndpointResolverExtensions
         where TOperationDescriptor : OperationDescriptor
         => builder.WithEndpoint(requestMessageResolver, HttpMethods.Delete);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,HttpRequestMessage},HttpMethods)"/>/>
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,HttpRequestMessage},HttpMethods)"/>
     public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, HttpRequestMessage> requestMessageResolver, HttpMethods methods = HttpMethods.All)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
