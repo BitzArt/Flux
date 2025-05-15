@@ -3,29 +3,52 @@
 internal sealed class ResolverEndpointConfiguration<TOperation> : EndpointConfiguration
     where TOperation : OperationDescriptor
 {
-    public override IEnumerable<Type> OperationTypes => [typeof(TOperation)];
+    private readonly IEnumerable<Type> _supportedOperationTypes;
+    public override IEnumerable<Type> OperationTypes => _supportedOperationTypes;
 
-    private readonly Func<TOperation, HttpRequestMessage> _resolver;
+    private readonly IEnumerable<HttpMethod> _supportedHttpMethods;
+    public override IEnumerable<HttpMethod> SupportedHttpMethods => _supportedHttpMethods;
+
+    private readonly Func<TOperation, IServiceProvider, HttpRequestMessage> _resolver;
 
     public ResolverEndpointConfiguration(
         ServiceConfiguration serviceConfiguration,
         SetConfiguration setConfiguration,
         HttpMethods httpMethods,
-        Func<TOperation, HttpRequestMessage> resolver)
+        Func<TOperation, IServiceProvider, HttpRequestMessage> resolver)
         : base(serviceConfiguration, setConfiguration, httpMethods)
     {
         _resolver = resolver;
+
+        _supportedOperationTypes = [.. OperationDescriptor.Types.Concrete
+            .Where(type => type
+                .IsAssignableTo(typeof(TOperation)))];
+
+        _supportedHttpMethods = typeof(TOperation)
+            .GetSupportedHttpMethods()
+            .FilterBy(HttpMethods);
     }
 
-    public override HttpRequestMessage Resolve(OperationDescriptor descriptor)
+    public override HttpRequestMessage Resolve(OperationDescriptor descriptor, IServiceProvider serviceProvider)
     {
         if (descriptor is not TOperation operation)
         {
             throw new InvalidOperationException($"Invalid operation type: {descriptor.GetType().Name}. Expected: {typeof(TOperation).Name}.");
         }
 
-        return _resolver.Invoke(operation);
+        return _resolver.Invoke(operation, serviceProvider);
     }
 
-    public override bool CanBeOverridden(EndpointConfiguration newConfiguration) => false;
+    public override bool CanBeOverridden(EndpointConfiguration newConfiguration)
+    {
+        var newConfigurationType = newConfiguration.GetType();
+
+        // only allow replacing by another ResolverEndpointConfiguration
+        if (newConfigurationType.IsGenericType) return false;
+        if (newConfigurationType.GetGenericTypeDefinition() != typeof(ResolverEndpointConfiguration<>)) return false;
+
+        if (!newConfiguration.SupportedHttpMethods.IsSubsetOf(SupportedHttpMethods)) return false;
+
+        return true;
+    }
 }

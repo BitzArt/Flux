@@ -17,12 +17,19 @@ public abstract class FluxSetContext<TModel, TKey, TConfig> : FluxSetContext<TMo
     public TConfig Configuration { get; private init; }
 
     /// <summary>
+    /// Service provider.
+    /// </summary>
+    public IServiceProvider ServiceProvider { get; private init; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="FluxSetContext{TModel, TKey, TConfig}"/> class.
     /// </summary>
-    /// <param name="configuration"></param>
-    public FluxSetContext(TConfig configuration)
+    /// <param name="configuration">Set configuration.</param>
+    /// <param name="serviceProvider">Service provider.</param>
+    public FluxSetContext(TConfig configuration, IServiceProvider serviceProvider)
     {
         Configuration = configuration;
+        ServiceProvider = serviceProvider;
     }
 }
 

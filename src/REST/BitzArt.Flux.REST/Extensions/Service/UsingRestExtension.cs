@@ -1,5 +1,6 @@
 ﻿using BitzArt.Flux.REST;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BitzArt.Flux;
@@ -28,6 +29,8 @@ public static class UsingRestExtension
     public static IFluxRestServiceBuilder UsingRest(this IFluxServiceProtocolConfigurator protocolConfigurator, string? baseUrl = null, Action<IHttpClientBuilder>? configureHttpClient = null)
     {
         IFluxRestServiceBuilder builder = new ServiceBuilder(protocolConfigurator.FluxBuilder, protocolConfigurator.ServiceName, baseUrl);
+
+        builder.ServiceCollection.TryAddSingleton<IHttpRequestMessageResolver, HttpRequestMessageResolver>();
 
         var httpClientBuilder = builder.ServiceCollection
             .AddHttpClient(builder.ServiceName, (serviceProvider, httpClient) =>

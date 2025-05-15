@@ -1,44 +1,28 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace BitzArt.Flux.REST;
 
-internal static class EndpointResolverUtility
+internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
 {
-    public static HttpRequestMessage Resolve(
+    public HttpRequestMessage Resolve(
         SetConfiguration setConfiguration,
         string? endpointPath,
         OperationDescriptor descriptor)
     {
-        var httpMethod = GetHttpMethod(descriptor);
+        var httpMethod = descriptor.GetExpectedHttpMethod();
         var path = GetPath(setConfiguration.ServiceConfiguration.BasePath, setConfiguration.Path, endpointPath, descriptor);
+        var queryString = GetQueryString(descriptor);
+        var uri = new Uri($"{path}{queryString}", UriKind.RelativeOrAbsolute);
         var body = GetBody(descriptor, setConfiguration.ServiceConfiguration.JsonSerializerOptions);
 
-        var requestMessage = new HttpRequestMessage(httpMethod, path);
+        var requestMessage = new HttpRequestMessage(httpMethod, uri);
         requestMessage.Headers.Accept.Add(new("application/json"));
         requestMessage.Content = body;
 
         return requestMessage;
     }
-
-    private static HttpMethod GetHttpMethod(OperationDescriptor descriptor) => descriptor switch
-    {
-        GetOperationDescriptor => HttpMethod.Get,
-
-        GetAllOperationDescriptor => HttpMethod.Get,
-
-        GetPageOperationDescriptor => HttpMethod.Get,
-
-        AddOperationDescriptor addOperationDescriptor
-            => addOperationDescriptor.Id is null ? HttpMethod.Post : HttpMethod.Put,
-
-        UpdateOperationDescriptor updateOperationDescriptor
-            => updateOperationDescriptor.Partial ? HttpMethod.Patch : HttpMethod.Put,
-
-        RemoveOperationDescriptor => HttpMethod.Delete,
-
-        _ => throw new UnreachableException($"Unsupported operation type: {descriptor.GetType().Name}.")
-    };
 
     private static string GetPath(
         string? serviceBasePath,
@@ -62,6 +46,16 @@ internal static class EndpointResolverUtility
 
         return path;
     }
+
+    private static QueryString GetQueryString(OperationDescriptor descriptor)
+        => descriptor switch
+        {
+            GetPageOperationDescriptor getPageOperationDescriptor => getPageOperationDescriptor.PageRequest.ToQueryString(),
+
+            OperationDescriptor => QueryString.Empty,
+
+            _ => throw new UnreachableException($"Unsupported operation type: {descriptor.GetType().Name}.")
+        };
 
     private static void ConsiderPathPart(List<string> parts, string? part)
     {

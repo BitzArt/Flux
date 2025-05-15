@@ -72,4 +72,41 @@ public static class HttpMethodsExtensions
     {
         return (source & target) == source;
     }
+
+    private static readonly IReadOnlyDictionary<HttpMethods, HttpMethod> _map =
+        new Dictionary<HttpMethods, HttpMethod>
+        {
+            [HttpMethods.Get] = HttpMethod.Get,
+            [HttpMethods.Head] = HttpMethod.Head,
+            [HttpMethods.Post] = HttpMethod.Post,
+            [HttpMethods.Put] = HttpMethod.Put,
+            [HttpMethods.Delete] = HttpMethod.Delete,
+            [HttpMethods.Connect] = new HttpMethod("CONNECT"),
+            [HttpMethods.Options] = HttpMethod.Options,
+            [HttpMethods.Trace] = new HttpMethod("TRACE"),
+            [HttpMethods.Patch] = new HttpMethod("PATCH")
+        };
+
+    /// <summary>
+    /// Given a bitmask of HttpMethods, return the matching HttpMethod instances.
+    /// </summary>
+    public static IEnumerable<HttpMethod> ToHttpMethods(this HttpMethods flags)
+    {
+        // iterate only non-zero defined flags
+        foreach (var kvp in _map)
+        {
+            if (flags.HasFlag(kvp.Key))
+                yield return kvp.Value;
+        }
+    }
+
+    /// <summary>
+    /// Filter an existing sequence of HttpMethod by the flags bitmask.
+    /// </summary>
+    public static IEnumerable<HttpMethod> FilterBy(this IEnumerable<HttpMethod> available, HttpMethods flags)
+    {
+        // turn flags → methods once, then intersect
+        var allowed = new HashSet<HttpMethod>(flags.ToHttpMethods());
+        return available.Where(allowed.Contains);
+    }
 }

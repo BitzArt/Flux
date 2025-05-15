@@ -38,7 +38,7 @@ public static class AddSetExtension
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(serviceBuilder.ServiceName);
 
-                return new SetContext<TModel, TKey>(builder.SetConfiguration, httpClient);
+                return new SetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, httpClient);
             });
 
         return builder;

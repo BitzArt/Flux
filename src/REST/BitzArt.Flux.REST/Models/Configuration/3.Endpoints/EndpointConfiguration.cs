@@ -33,7 +33,9 @@ internal abstract class EndpointConfiguration
     /// </summary>
     public abstract IEnumerable<Type> OperationTypes { get; }
 
-    public abstract HttpRequestMessage Resolve(OperationDescriptor descriptor);
+    public virtual IEnumerable<HttpMethod> SupportedHttpMethods => HttpMethods.ToHttpMethods();
+
+    public abstract HttpRequestMessage Resolve(OperationDescriptor descriptor, IServiceProvider serviceProvider);
 
     public virtual bool CanBeOverridden(EndpointConfiguration newConfiguration)
     {
@@ -42,7 +44,7 @@ internal abstract class EndpointConfiguration
         // during endpoint configuration phase
         // if the new configuration's HttpMethods are a subset
         // of the current configuration's HttpMethods
-        if (newConfiguration.HttpMethods.IsSubsetOf(HttpMethods)) return true;
+        if (newConfiguration.SupportedHttpMethods.IsSubsetOf(SupportedHttpMethods)) return true;
 
         return false;
     }

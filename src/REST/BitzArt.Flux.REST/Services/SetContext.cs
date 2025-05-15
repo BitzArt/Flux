@@ -9,7 +9,7 @@ internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfig
 {
     private readonly HttpClient _httpClient;
 
-    public SetContext(SetConfiguration configuration, HttpClient httpClient) : base(configuration)
+    public SetContext(SetConfiguration configuration, IServiceProvider serviceProvider, HttpClient httpClient) : base(configuration, serviceProvider)
     {
         _httpClient = httpClient;
     }
@@ -19,7 +19,7 @@ internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfig
 
     private async Task<object?> ExecuteInternalAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
-        var httpRequestMessage = Configuration.Resolve(descriptor);
+        var httpRequestMessage = Configuration.Resolve(descriptor, ServiceProvider);
 
         var response = await _httpClient.SendAsync(httpRequestMessage, cancellationToken);
 

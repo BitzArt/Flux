@@ -18,4 +18,38 @@ public abstract class OperationDescriptor
     {
         Parameters = parameters;
     }
+
+    /// <summary>
+    /// A static class containing information about available <see cref="OperationDescriptor"/> types.
+    /// </summary>
+    public static class Types
+    {
+        /// <summary>
+        /// All <see cref="OperationDescriptor"/> types.
+        /// </summary>
+        public static IEnumerable<Type> All =>  Base.Concat(Concrete).ToList().AsReadOnly();
+
+        /// <summary>
+        /// Concrete <see cref="OperationDescriptor"/> types.
+        /// </summary>
+        public static IEnumerable<Type> Concrete => new[]
+        {
+            typeof(GetOperationDescriptor),
+            typeof(GetAllOperationDescriptor),
+            typeof(GetPageOperationDescriptor),
+            typeof(AddOperationDescriptor),
+            typeof(UpdateOperationDescriptor),
+            typeof(RemoveOperationDescriptor)
+        }.AsReadOnly();
+
+        /// <summary>
+        /// Base <see cref="OperationDescriptor"/> types.
+        /// </summary>
+        public static IEnumerable<Type> Base => new[]
+        {
+            typeof(ModelOperationDescriptor),
+            typeof(KeyedOperationDescriptor),
+            typeof(OperationDescriptor)
+        }.AsReadOnly();
+    }
 }

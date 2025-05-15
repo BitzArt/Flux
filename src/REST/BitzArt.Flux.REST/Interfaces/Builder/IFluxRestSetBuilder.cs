@@ -12,6 +12,8 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder, IF
 {
     internal new IFluxRestServiceBuilder ServiceBuilder { get; }
 
+    internal SetConfiguration SetConfiguration { get; }
+
     // ================ Inherited members ================
 
     IServiceCollection IFluxBuilder.ServiceCollection => FluxBuilder.ServiceCollection;

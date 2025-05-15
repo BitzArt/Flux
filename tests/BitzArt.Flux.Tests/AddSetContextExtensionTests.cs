@@ -10,7 +10,7 @@ public class AddSetContextExtensionTests
         where TModel : class
         where TKey : notnull
     {
-        public TestSetContextImplementation(TestSetContextConfiguration config) : base(config) { }
+        public TestSetContextImplementation(TestSetContextConfiguration config) : base(config, null!) { }
 
         public override Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();

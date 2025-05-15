@@ -1,10 +1,13 @@
 ﻿using BitzArt.Flux.REST.Endpoints;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux.REST;
 
 internal class SetConfiguration
 {
-    private protected readonly Dictionary<Type, EndpointConfiguration> _endpoints;
+    private record EndpointResolverSignature(Type OperationType, HttpMethod HttpMethod);
+
+    private readonly Dictionary<EndpointResolverSignature, EndpointConfiguration> _endpoints;
 
     public ServiceConfiguration ServiceConfiguration { get; private init; }
 
@@ -22,29 +25,35 @@ internal class SetConfiguration
     public void Add(EndpointConfiguration configuration)
     {
         var supportedOperationTypes = configuration.OperationTypes;
+        var supportedHttpMethods = configuration.SupportedHttpMethods;
 
         foreach (var operationType in supportedOperationTypes)
         {
-            Add(configuration, operationType);
+            foreach (var httpMethod in supportedHttpMethods)
+            {
+                Add(configuration, operationType, httpMethod);
+            }
         }
     }
 
-    private void Add(EndpointConfiguration configuration, Type operationType)
+    private void Add(EndpointConfiguration configuration, Type operationType, HttpMethod httpMethod)
     {
-        if (_endpoints.TryGetValue(operationType, out var existingConfig))
+        var signature = new EndpointResolverSignature(operationType, httpMethod);
+
+        if (_endpoints.TryGetValue(signature, out var existingConfig))
         {
             // Existing configuration found for the operation type,
-            // considering replacing it with the new one.
-            ConsiderReplace(existingConfig, configuration, operationType);
+            // considering replacing it with a new one.
+            ConsiderReplace(existingConfig, configuration, signature);
             return;
         }
 
         // No existing configuration found for the operation type,
         // adding the new one.
-        _endpoints[operationType] = configuration;
+        _endpoints[signature] = configuration;
     }
 
-    private void ConsiderReplace(EndpointConfiguration existingConfiguration, EndpointConfiguration newConfiguration, Type operationType)
+    private void ConsiderReplace(EndpointConfiguration existingConfiguration, EndpointConfiguration newConfiguration, EndpointResolverSignature signature)
     {
         if (!existingConfiguration.CanBeOverridden(newConfiguration)) return;
 
@@ -55,18 +64,22 @@ internal class SetConfiguration
                 $"The new configuration is identical to the existing one in terms of endpoint resolver hierarchy.");
         }
 
-        _endpoints[operationType] = newConfiguration;
+        _endpoints[signature] = newConfiguration;
     }
 
-    public HttpRequestMessage Resolve(OperationDescriptor descriptor)
+    public HttpRequestMessage Resolve(OperationDescriptor descriptor, IServiceProvider serviceProvider)
     {
         var operationType = descriptor.GetType();
+        var expectedHttpMethod = descriptor.GetExpectedHttpMethod();
 
-        if (_endpoints.TryGetValue(operationType, out var endpointConfiguration))
+        var signature = new EndpointResolverSignature(operationType, expectedHttpMethod);
+
+        if (_endpoints.TryGetValue(signature, out var endpointConfiguration))
         {
-            return endpointConfiguration.Resolve(descriptor);
+            return endpointConfiguration.Resolve(descriptor, serviceProvider);
         }
 
-        return EndpointResolverUtility.Resolve(this, null, descriptor);
+        var resolver = serviceProvider.GetRequiredService<IHttpRequestMessageResolver>();
+        return resolver.Resolve(this, null, descriptor);
     }
 }

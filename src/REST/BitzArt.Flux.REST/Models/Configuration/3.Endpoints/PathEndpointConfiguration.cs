@@ -1,4 +1,6 @@
-﻿namespace BitzArt.Flux.REST.Endpoints;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace BitzArt.Flux.REST.Endpoints;
 
 internal sealed class PathEndpointConfiguration : EndpointConfiguration
 {
@@ -19,8 +21,11 @@ internal sealed class PathEndpointConfiguration : EndpointConfiguration
 
     public override IEnumerable<Type> OperationTypes => _operationTypes.AsReadOnly();
 
-    public override HttpRequestMessage Resolve(OperationDescriptor descriptor)
-        => EndpointResolverUtility.Resolve(SetConfiguration, _path, descriptor);
+    public override HttpRequestMessage Resolve(OperationDescriptor descriptor, IServiceProvider serviceProvider)
+    {
+        var resolver = serviceProvider.GetRequiredService<IHttpRequestMessageResolver>();
+        return resolver.Resolve(SetConfiguration, _path, descriptor);
+    }
 
     private static List<Type> GetOperationTypes(HttpMethods methods)
     {
