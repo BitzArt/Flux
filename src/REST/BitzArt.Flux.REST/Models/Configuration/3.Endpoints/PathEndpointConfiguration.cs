@@ -8,11 +8,10 @@ internal sealed class PathEndpointConfiguration : EndpointConfiguration
     private readonly List<Type> _operationTypes;
 
     public PathEndpointConfiguration(
-        ServiceConfiguration serviceConfiguration,
         SetConfiguration setConfiguration,
         HttpMethods httpMethods,
         string? path)
-        : base(serviceConfiguration, setConfiguration, httpMethods)
+        : base(setConfiguration, httpMethods)
     {
         _path = path?.TrimEnd('/');
 

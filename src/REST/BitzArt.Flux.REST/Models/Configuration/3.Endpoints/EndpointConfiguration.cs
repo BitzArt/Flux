@@ -18,12 +18,11 @@ internal abstract class EndpointConfiguration
     internal readonly HttpMethods HttpMethods;
 
     public EndpointConfiguration(
-        ServiceConfiguration serviceConfiguration,
         SetConfiguration setConfiguration,
         HttpMethods httpMethods)
     {
-        ServiceConfiguration = serviceConfiguration;
         SetConfiguration = setConfiguration;
+        ServiceConfiguration = setConfiguration.ServiceConfiguration;
 
         HttpMethods = httpMethods;
     }

@@ -12,7 +12,7 @@ public class PathEndpointConfigurationTests
         var setConfiguration = new SetConfiguration(serviceConfiguration, null);
 
         // Act
-        var endpointConfiguration = new PathEndpointConfiguration(serviceConfiguration, setConfiguration, HttpMethods.All, null);
+        var endpointConfiguration = new PathEndpointConfiguration(setConfiguration, HttpMethods.All, null);
 
         // Assert
         Assert.Equal(6, endpointConfiguration.OperationTypes.Count());

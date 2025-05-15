@@ -12,11 +12,10 @@ internal sealed class ResolverEndpointConfiguration<TOperation> : EndpointConfig
     private readonly Func<TOperation, IServiceProvider, HttpRequestMessage> _resolver;
 
     public ResolverEndpointConfiguration(
-        ServiceConfiguration serviceConfiguration,
         SetConfiguration setConfiguration,
         HttpMethods httpMethods,
         Func<TOperation, IServiceProvider, HttpRequestMessage> resolver)
-        : base(serviceConfiguration, setConfiguration, httpMethods)
+        : base(setConfiguration, httpMethods)
     {
         _resolver = resolver;
 
