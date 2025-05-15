@@ -3,11 +3,12 @@ using BitzArt.Flux.REST.Endpoints;
 
 namespace BitzArt.Flux;
 
-/// <summary>
-/// Extension methods for configuring <see cref="IFluxRestSetBuilder{TModel, TKey}"/>
-/// </summary>
-public static partial class EndpointResolverExtensions
+public static partial class HttpRequestMessageResolverConfigurationExtensions
 {
+    // ==============================================================
+    //       TOperationDescriptor => HttpRequestMessage
+    // ==============================================================
+
     /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,HttpRequestMessage},HttpMethods)"/>
     public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, HttpRequestMessage> requestMessageResolver)
         where TModel : class
@@ -44,6 +45,8 @@ public static partial class EndpointResolverExtensions
         where TOperationDescriptor : OperationDescriptor
         => builder.WithEndpoint((TOperationDescriptor operation, IServiceProvider _) => requestMessageResolver.Invoke(operation), methods);
 
+    // ==============================================================
+    //  TOperationDescriptor, IServiceProvider => HttpRequestMessage
     // ==============================================================
 
     /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,HttpRequestMessage},HttpMethods)"/>

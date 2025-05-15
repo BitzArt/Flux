@@ -4,18 +4,21 @@ namespace BitzArt.Flux.REST.Endpoints;
 
 internal sealed class PathEndpointConfiguration : EndpointConfiguration
 {
+    private bool _allIncluded;
     private readonly string? _path;
     private readonly List<Type> _operationTypes;
 
     public PathEndpointConfiguration(
         SetConfiguration setConfiguration,
         HttpMethods httpMethods,
-        string? path)
+        string? path,
+        bool allIncluded = false)
         : base(setConfiguration, httpMethods)
     {
         _path = path?.TrimEnd('/');
 
         _operationTypes = GetOperationTypes(httpMethods);
+        _allIncluded = allIncluded;
     }
 
     public override IEnumerable<Type> OperationTypes => _operationTypes.AsReadOnly();
@@ -23,7 +26,7 @@ internal sealed class PathEndpointConfiguration : EndpointConfiguration
     public override HttpRequestMessage Resolve(OperationDescriptor descriptor, IServiceProvider serviceProvider)
     {
         var resolver = serviceProvider.GetRequiredService<IHttpRequestMessageResolver>();
-        return resolver.Resolve(SetConfiguration, _path, descriptor);
+        return resolver.Resolve(SetConfiguration, _path, descriptor, _allIncluded);
     }
 
     private static List<Type> GetOperationTypes(HttpMethods methods)

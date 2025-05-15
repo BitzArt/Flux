@@ -9,12 +9,12 @@ internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
     public HttpRequestMessage Resolve(
         SetConfiguration setConfiguration,
         string? endpointPath,
-        OperationDescriptor descriptor)
+        OperationDescriptor descriptor,
+        bool allIncluded = false)
     {
         var httpMethod = descriptor.GetExpectedHttpMethod();
-        var path = GetPath(setConfiguration.ServiceConfiguration.BasePath, setConfiguration.Path, endpointPath, descriptor);
-        var queryString = GetQueryString(descriptor);
-        var uri = new Uri($"{path}{queryString}", UriKind.RelativeOrAbsolute);
+        var uri = GetUri(setConfiguration, endpointPath, descriptor, allIncluded);
+        
         var body = GetBody(descriptor, setConfiguration.ServiceConfiguration.JsonSerializerOptions);
 
         var requestMessage = new HttpRequestMessage(httpMethod, uri);
@@ -22,6 +22,24 @@ internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
         requestMessage.Content = body;
 
         return requestMessage;
+    }
+
+    private static Uri GetUri(
+        SetConfiguration setConfiguration,
+        string? endpointPath,
+        OperationDescriptor descriptor,
+        bool allIncluded)
+    {
+        if (allIncluded)
+        {
+            return new Uri(endpointPath!, UriKind.RelativeOrAbsolute);
+        }
+
+        var path = GetPath(setConfiguration.ServiceConfiguration.BasePath, setConfiguration.Path, endpointPath, descriptor);
+        var queryString = GetQueryString(descriptor);
+        var uri = new Uri($"{path}{queryString}", UriKind.RelativeOrAbsolute);
+
+        return uri;
     }
 
     private static string GetPath(
