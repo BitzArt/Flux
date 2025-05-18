@@ -43,7 +43,7 @@ internal sealed class ResolverEndpointConfiguration<TOperation> : EndpointConfig
         var newConfigurationType = newConfiguration.GetType();
 
         // only allow replacing by another ResolverEndpointConfiguration
-        if (newConfigurationType.IsGenericType) return false;
+        if (!newConfigurationType.IsGenericType) return false;
         if (newConfigurationType.GetGenericTypeDefinition() != typeof(ResolverEndpointConfiguration<>)) return false;
 
         if (!newConfiguration.SupportedHttpMethods.IsSubsetOf(SupportedHttpMethods)) return false;
