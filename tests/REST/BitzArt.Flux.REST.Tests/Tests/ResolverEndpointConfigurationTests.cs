@@ -2,7 +2,7 @@
 
 namespace BitzArt.Flux.REST;
 
-public class HandlerEndpointConfigurationTests
+public class ResolverEndpointConfigurationTests
 {
     [Fact]
     public async Task WithEndpoint_WithHttpRequestMessageResolver_ShouldUseResolverForMatchingOperations()
