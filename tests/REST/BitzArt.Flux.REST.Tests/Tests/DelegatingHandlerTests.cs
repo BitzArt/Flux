@@ -10,13 +10,13 @@ public class DelegatingHandlerTests
     {
         var services = new ServiceCollection();
 
-        var testHandler = new TestHandler();
-        services.AddSingleton(testHandler);
+        var called = false;
+        services.AddSingleton(new TestDelegatingHandler(() => called = true));
 
         services.AddFlux(flux =>
         {
             flux.AddService("test-service")
-                .UsingRest<TestHandler>("http://test")
+                .UsingRest<TestDelegatingHandler>("http://test")
 
                 .AddSet<object>();
         });
@@ -26,17 +26,6 @@ public class DelegatingHandlerTests
         var set = provider.GetRequiredService<IFluxSetContext<object>>();
         set.AddAsync<object>(new object());
 
-        Assert.True(testHandler.Called);
-    }
-
-    private class TestHandler : DelegatingHandler
-    {
-        public bool Called { get; private set; } = false;
-
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            Called = true;
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
-        }
+        Assert.True(called);
     }
 }
