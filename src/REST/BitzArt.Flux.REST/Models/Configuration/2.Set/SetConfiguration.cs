@@ -29,8 +29,15 @@ internal class SetConfiguration
 
         foreach (var operationType in supportedOperationTypes)
         {
+            var operationMethods = operationType.GetSupportedHttpMethods().ToHashSet();
             foreach (var httpMethod in supportedHttpMethods)
             {
+                if (!operationMethods.Contains(httpMethod))
+                {
+                    // If the operation type does not support the HTTP method,
+                    // skip adding this configuration for this operation type.
+                    continue;
+                }
                 Add(configuration, operationType, httpMethod);
             }
         }

@@ -197,13 +197,16 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============================== ExecuteAsync ==============================
 
     /// <inheritdoc/>
-    public Task<TResponse> ExecuteAsync<TResponse>(OperationDescriptor descriptor, CancellationToken cancellationToken = default)
-        => ((Task<TResponse>)ExecuteAsync(descriptor, typeof(TResponse), cancellationToken));
+    public async Task<TResponse> ExecuteAsync<TResponse>(OperationDescriptor descriptor, CancellationToken cancellationToken = default)
+    {
+        var result = await ExecuteAsync(descriptor, typeof(TResponse), cancellationToken);
+        return (TResponse)result!;
+    }
 
     /// <inheritdoc/>
     public Task ExecuteAsync(OperationDescriptor descriptor, CancellationToken cancellationToken = default)
         => ExecuteAsync(descriptor, null, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default);
+    public abstract Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default);
 }

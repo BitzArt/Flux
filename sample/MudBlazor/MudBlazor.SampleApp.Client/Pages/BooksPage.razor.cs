@@ -28,7 +28,7 @@ public partial class BooksPage : ComponentBase
         await InvokeAsync(StateHasChanged);
     }
 
-    private OperationParameterCollection GetBooksParameters(TableState state)
+    private IOperationParameterCollection GetBooksParameters(TableState state)
     {
         var parameters = new List<KeyValuePair<string, object>>();
 
@@ -49,7 +49,7 @@ public partial class BooksPage : ComponentBase
             parameters.Add(new("search", _search));
         }
 
-        return new(parameters);
+        return new OperationParameterCollection(parameters).Parameters;
     }
 
     private async Task OnAuthorSelectedAsync(Author author)

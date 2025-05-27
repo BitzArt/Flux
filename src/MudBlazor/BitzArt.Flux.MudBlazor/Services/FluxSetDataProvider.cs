@@ -298,16 +298,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         // no new parameters, no comparison
         if (newParameters is null) return false;
 
-        // different number of parameters
-        if (lastParameters.Values.Count() != newParameters.Values.Count()) return false;
-
-        // compare each parameter
-        for (var i = 0; i < lastParameters.Values.Count(); i++)
-        {
-            if (!lastParameters.Values.ElementAt(i).Equals(newParameters.Values.ElementAt(i))) return false;
-        }
-
-        // no change detected
-        return true;
+        return lastParameters.Equals(newParameters);
     }
 }

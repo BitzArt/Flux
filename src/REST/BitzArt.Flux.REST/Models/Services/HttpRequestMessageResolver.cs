@@ -36,7 +36,7 @@ internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
         }
 
         var path = GetPath(setConfiguration.ServiceConfiguration.BasePath, setConfiguration.Path, endpointPath, descriptor);
-        var queryString = GetQueryString(descriptor);
+        var queryString = descriptor.GetQueryString();
         var uri = new Uri($"{path}{queryString}", UriKind.RelativeOrAbsolute);
 
         return uri;
@@ -64,16 +64,6 @@ internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
 
         return path;
     }
-
-    private static QueryString GetQueryString(OperationDescriptor descriptor)
-        => descriptor switch
-        {
-            GetPageOperationDescriptor getPageOperationDescriptor => getPageOperationDescriptor.PageRequest.ToQueryString(),
-
-            OperationDescriptor => QueryString.Empty,
-
-            _ => throw new UnreachableException($"Unsupported operation type: {descriptor.GetType().Name}.")
-        };
 
     private static void ConsiderPathPart(List<string> parts, string? part)
     {

@@ -238,5 +238,5 @@ public interface IFluxSetContext<TModel, TKey>
     /// <param name="responseType">Type to deserialize the response to (if any).</param>
     /// <param name="cancellationToken">Cancellation token for this operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default);
+    public Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default);
 }

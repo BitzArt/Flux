@@ -89,6 +89,21 @@ public class OperationParameterCollection
         {
             Parameters = [.. parameters];
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not IOperationParameterCollection other)
+            {
+                return false;
+            }
+
+            if (obj is INamedOperationParameterCollection)
+            {
+                return false;
+            }
+
+            return ReferenceEquals(this, obj) || Parameters.SequenceEqual(other.Values);
+        }
     }
 
     // ==================== Named ====================
@@ -117,6 +132,21 @@ public class OperationParameterCollection
         public NamedParameters(IEnumerable<KeyValuePair<string, object>> parameters)
         {
             _parameters = parameters;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not IOperationParameterCollection)
+            {
+                return false;
+            }
+
+            if (obj is not INamedOperationParameterCollection other)
+            {
+                return false;
+            }
+
+            return ReferenceEquals(this, obj) || _parameters.SequenceEqual(other.Values);
         }
     }
 }

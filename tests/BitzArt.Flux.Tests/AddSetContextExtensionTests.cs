@@ -12,7 +12,7 @@ public class AddSetContextExtensionTests
     {
         public TestSetContextImplementation(TestSetContextConfiguration config) : base(config, null!) { }
 
-        public override Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
+        public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
     }
 

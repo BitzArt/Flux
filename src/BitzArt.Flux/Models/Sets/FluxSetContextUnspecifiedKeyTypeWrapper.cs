@@ -138,6 +138,6 @@ internal class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey>(IFluxSetCon
     Task IFluxSetContext<TModel, object>.ExecuteAsync(OperationDescriptor descriptor, CancellationToken cancellationToken)
         => InnerSetContext.ExecuteAsync(descriptor, cancellationToken);
 
-    Task IFluxSetContext<TModel, object>.ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken)
+    Task<object?> IFluxSetContext<TModel, object>.ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken)
         => InnerSetContext.ExecuteAsync(descriptor, responseType, cancellationToken);
 }

@@ -13,7 +13,7 @@ public static class ToQueryStringExtension
     /// </summary>
     /// <param name="descriptor">Operation descriptor to convert.</param>
     /// <returns>A query string with the leading '?' character, or an empty string if no parameters are present.</returns>
-    public static string GetQueryString(this OperationDescriptor descriptor)
+    public static QueryString GetQueryString(this OperationDescriptor descriptor)
     {
         var query = new QueryString();
 
@@ -29,7 +29,7 @@ public static class ToQueryStringExtension
             query = query.Add(operationSpecific!.Value);
         }
 
-        return query.ToString();
+        return query;
     }
 
     private static QueryString? GetParameters(IOperationParameterCollection? parameters)

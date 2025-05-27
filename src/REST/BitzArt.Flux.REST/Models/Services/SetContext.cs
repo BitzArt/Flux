@@ -14,10 +14,7 @@ internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfig
         _httpClient = httpClient;
     }
 
-    public override Task ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
-        => ExecuteInternalAsync(descriptor, responseType, cancellationToken: cancellationToken);
-
-    private async Task<object?> ExecuteInternalAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
+    public override async Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
         var httpRequestMessage = Configuration.Resolve(descriptor, ServiceProvider);
 
