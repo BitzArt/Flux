@@ -3,7 +3,7 @@
 namespace BitzArt.Flux;
 
 /// <summary>
-/// Operation descriptor for paged operations.
+/// 'Get Page' operation descriptor.
 /// </summary>
 public sealed class GetPageOperationDescriptor : OperationDescriptor
 {

@@ -1,5 +1,8 @@
 ﻿namespace BitzArt.Flux;
 
+/// <summary>
+/// 'Remove' operation descriptor.
+/// </summary>
 public sealed class RemoveOperationDescriptor : KeyedOperationDescriptor
 {
     /// <summary>

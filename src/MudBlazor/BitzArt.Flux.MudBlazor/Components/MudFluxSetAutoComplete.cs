@@ -87,12 +87,12 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     private async Task<IEnumerable<T>> SearchAsync(string searchText, CancellationToken cancellationToken)
     {
         var parameters = await GetParametersAsync(searchText, cancellationToken);
-        var page = await Context.GetPageAsync(0, MaxItems ?? 10, parameters);
+        var page = await Context.GetPageAsync(0, MaxItems ?? 10, parameters, cancellationToken);
 
         return page.Items!;
     }
 
-    private async Task<object[]?> GetParametersAsync(string searchText, CancellationToken cancellationToken)
+    private async Task<OperationParameterCollection?> GetParametersAsync(string searchText, CancellationToken cancellationToken)
     {
         if (GetParametersFunc is null)
         {
@@ -101,12 +101,10 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
 
         var funcResult = GetParametersFunc.Invoke(searchText, cancellationToken);
 
-        return funcResult switch
-        {
-            IEnumerable<object> parameters => parameters.ToArray(),
-            Task<object[]> task => await task,
-            Task<IEnumerable<object>> task => (await task).ToArray(),
-            _ => throw new InvalidOperationException($"The result of GetParameters function should either be {nameof(IEnumerable<object>)}, {nameof(Task<object[]>)} or {nameof(Task<IEnumerable<object>>)}.")
-        };
+        if (funcResult is OperationParameterCollection parameters) return parameters;
+        if (funcResult is Task<OperationParameterCollection> task) return await task;
+
+        throw new NotSupportedException($"The type '{funcResult.GetType().Name}' is not supported as a return type for {nameof(GetParametersFunc)}. " +
+                $"It must be of type {nameof(OperationParameterCollection)} or Task<{nameof(OperationParameterCollection)}>.");
     }
 }

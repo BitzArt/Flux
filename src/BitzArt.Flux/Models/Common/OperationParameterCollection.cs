@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 
 namespace BitzArt.Flux;
 
@@ -25,12 +26,45 @@ public class OperationParameterCollection
 
     private readonly ParametersType _parametersType;
 
-    internal IOperationParameterCollection Parameters => _parametersType switch
+    /// <summary>
+    /// <para>
+    /// Collection of parameters to be used in the operation.
+    /// </para>
+    /// <para>
+    /// <b>Note:</b> This value will implement <see cref="INamedOperationParameterCollection"/>
+    /// in cases where named parameters are provided. <br />
+    /// In such cases, the <see cref="IOperationParameterCollection.Values"/> property
+    /// will not be available (and will throw an exception if an attempt is made to access it),
+    /// and the <see cref="INamedOperationParameterCollection.Values"/> property should be used instead
+    /// (which requires this value to be cast to <see cref="INamedOperationParameterCollection"/> first).
+    /// </para>
+    /// </summary>
+    public IOperationParameterCollection Parameters => _parametersType switch
     {
         ParametersType.Simple => _simpleParameters!,
         ParametersType.Named => _namedParameters!,
         _ => throw new UnreachableException($"Unexpected ParametersType value: '{_parametersType}'")
     };
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OperationParameterCollection"/> class
+    /// </summary>
+    /// <param name="parameters">Parameters to be used in the operation.</param>
+    public OperationParameterCollection(IOperationParameterCollection parameters)
+    {
+        switch (parameters)
+        {
+            case INamedOperationParameterCollection namedParameters:
+                _namedParameters = new NamedParameters(namedParameters.Values);
+                _parametersType = ParametersType.Named;
+                break;
+
+            default:
+                _simpleParameters = new SimpleParameters(parameters.Values);
+                _parametersType = ParametersType.Simple;
+                break;
+        }
+    }
 
     // ==================== Simple ====================
 
@@ -59,28 +93,16 @@ public class OperationParameterCollection
 
     // ==================== Named ====================
 
-    /// <inheritdoc cref="OperationParameterCollection(IDictionary{string, object})"/>
-    public OperationParameterCollection(params (string, object)[] parameters)
-        : this(parameters.ToDictionary(p => p.Item1, p => p.Item2)) { }
-
-    /// <inheritdoc cref="OperationParameterCollection(IEnumerable{KeyValuePair{string, object}})"/>
-    public OperationParameterCollection(params KeyValuePair<string, object>[] parameters)
-        : this((IEnumerable<KeyValuePair<string, object>>)parameters) { }
-
     /// <inheritdoc cref="OperationParameterCollection(IEnumerable{KeyValuePair{string, object}})"/>
     public OperationParameterCollection(IEnumerable<(string, object)> parameters)
         : this(parameters.Select(x => new KeyValuePair<string, object>(x.Item1, x.Item2))) { }
-
-    /// <inheritdoc cref="OperationParameterCollection(IDictionary{string, object})"/>
-    public OperationParameterCollection(IEnumerable<KeyValuePair<string, object>> parameters)
-        : this(new Dictionary<string, object>(parameters)) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationParameterCollection"/> class
     /// as a named collection of parameters.
     /// </summary>
     /// <param name="parameters">Parameters to be used in the operation.</param>
-    public OperationParameterCollection(IDictionary<string, object> parameters)
+    public OperationParameterCollection(IEnumerable<KeyValuePair<string, object>> parameters)
     {
         _namedParameters = new NamedParameters(parameters);
         _parametersType = ParametersType.Named;
@@ -88,17 +110,13 @@ public class OperationParameterCollection
 
     private class NamedParameters : INamedOperationParameterCollection
     {
-        private readonly Dictionary<string, object> _parameters;
+        private readonly IEnumerable<KeyValuePair<string, object>> _parameters;
 
-        IDictionary<string, object> INamedOperationParameterCollection.Values => _parameters;
+        IEnumerable<KeyValuePair<string, object>> INamedOperationParameterCollection.Values => _parameters;
 
-        IEnumerable<object> IOperationParameterCollection.Values
-            => throw new InvalidOperationException(
-                "Named parameters collection should not be used as a simple list of parameters. Use named values instead.");
-
-        public NamedParameters(IDictionary<string, object> parameters)
+        public NamedParameters(IEnumerable<KeyValuePair<string, object>> parameters)
         {
-            _parameters = new(parameters);
+            _parameters = parameters;
         }
     }
 }

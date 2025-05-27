@@ -1,4 +1,7 @@
-﻿namespace BitzArt.Flux;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace BitzArt.Flux;
 
 /// <summary>
 /// <para>
@@ -24,7 +27,7 @@ public interface INamedOperationParameterCollection : IOperationParameterCollect
     /// <summary>
     /// Named parameter key-value pairs.
     /// </summary>
-    public new IDictionary<string, object> Values { get; }
+    public new IEnumerable<KeyValuePair<string, object>> Values { get; }
 
     IEnumerable<object> IOperationParameterCollection.Values
         => throw new InvalidOperationException(

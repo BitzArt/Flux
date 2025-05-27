@@ -1,4 +1,7 @@
-﻿namespace BitzArt.Flux;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace BitzArt.Flux;
 
 /// <summary>
 /// <para>
