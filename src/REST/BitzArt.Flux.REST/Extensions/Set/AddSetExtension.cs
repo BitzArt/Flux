@@ -1,6 +1,7 @@
 ﻿using BitzArt.Flux.REST;
 using BitzArt.Flux.Sets;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 
@@ -37,6 +38,9 @@ public static class AddSetExtension
                 var httpClient = serviceProvider
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(serviceBuilder.ServiceName);
+
+                var logger = serviceProvider.GetRequiredService<ILoggerFactory>()
+                    .CreateLogger("Flux");
 
                 return new FluxRestSetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, httpClient);
             });

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux.Sets;
 
@@ -25,7 +26,7 @@ public static class AddSetContextExtension
     /// <param name="setLifetime">Lifetime of the set context.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IServiceCollection AddSetContext<TModel, TKey>(this IServiceCollection services, string serviceName, object? setKey, ServiceLifetime setLifetime, Func<IServiceProvider, IFluxSetContext<TModel, TKey>> implementationFactory)
+    public static IServiceCollection AddSetContext<TModel, TKey>(this IServiceCollection services, string serviceName, object? setKey, ServiceLifetime setLifetime, Func<IServiceProvider, ILogger, IFluxSetContext<TModel, TKey>> implementationFactory)
         where TModel : class
         where TKey : notnull
     {
@@ -38,7 +39,13 @@ public static class AddSetContextExtension
             ServiceDescriptor[] serviceDescriptors =
             [
                 // keyed descriptor for package internal consumption
-                new(registrationInterface, signature, (sp, key) => implementationFactory.Invoke(sp), setLifetime),
+                new(registrationInterface, signature, (sp, key) =>
+                {
+                    var logger = sp.GetRequiredService<ILoggerFactory>()
+                        .CreateLogger("Flux");
+
+                    return implementationFactory.Invoke(sp, logger);
+                }, setLifetime),
 
                 // unkeyed for arbitrary injection
                 new(registrationInterface, implementationFactory, setLifetime)
