@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 /// <summary>
 /// Flux REST set builder.
 /// </summary>
 /// <typeparam name="TModel">Set model type.</typeparam>
 /// <typeparam name="TKey">Set key type.</typeparam>
-public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder, IFluxSetBuilder
+public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder, IFluxSetBuilder<TModel, TKey>
     where TModel : class
 {
     internal new IFluxRestServiceBuilder ServiceBuilder { get; }
@@ -16,8 +14,6 @@ public interface IFluxRestSetBuilder<TModel, TKey> : IFluxRestServiceBuilder, IF
 
     // ================ Inherited members ================
 
-    IServiceCollection IFluxBuilder.ServiceCollection => FluxBuilder.ServiceCollection;
     IFluxServiceBuilder IFluxSetBuilder.ServiceBuilder => ServiceBuilder;
     FluxRestServiceConfiguration IFluxRestServiceBuilder.ServiceConfiguration => ServiceBuilder.ServiceConfiguration;
-    string IFluxServiceBuilder.ImplementationName => ServiceBuilder.ImplementationName;
 }
