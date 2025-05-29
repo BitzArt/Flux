@@ -21,7 +21,7 @@ internal class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
         var httpRequestMessage = Configuration.Resolve(descriptor, ServiceProvider);
 
         var operationName = descriptor.GetFriendlyOperationName();
-        Logger.LogInformation("{operationName}: {uri}", operationName, httpRequestMessage.RequestUri);
+        Logger.LogInformation("[{type}] {operationName}: {uri}", typeof(TModel).Name, operationName, httpRequestMessage.RequestUri);
 
         var response = await _httpClient.SendAsync(httpRequestMessage, cancellationToken);
 
