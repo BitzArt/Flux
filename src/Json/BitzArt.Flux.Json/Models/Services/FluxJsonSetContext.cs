@@ -1,4 +1,5 @@
 ﻿using BitzArt.Flux.Sets;
+using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux.Json;
 
@@ -7,8 +8,8 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     where TKey : notnull
 {
 
-    public FluxJsonSetContext(FluxJsonSetConfiguration configuration, IServiceProvider serviceProvider)
-        : base(configuration, serviceProvider) { }
+    public FluxJsonSetContext(FluxJsonSetConfiguration configuration, IServiceProvider serviceProvider, ILogger logger)
+        : base(configuration, serviceProvider, logger) { }
 
     public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {

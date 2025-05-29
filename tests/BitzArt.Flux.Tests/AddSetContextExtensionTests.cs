@@ -1,6 +1,7 @@
 using BitzArt.Flux.Builder;
 using BitzArt.Flux.Sets;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace BitzArt.Flux;
 
@@ -10,7 +11,9 @@ public class AddSetContextExtensionTests
         where TModel : class
         where TKey : notnull
     {
-        public TestSetContextImplementation(TestSetContextConfiguration config) : base(config, null!) { }
+        public new TestSetContextConfiguration Configuration => base.Configuration;
+
+        public TestSetContextImplementation(TestSetContextConfiguration config) : base(config, null!, NullLogger.Instance) { }
 
         public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
@@ -35,11 +38,12 @@ public class AddSetContextExtensionTests
         var serviceName = "my-flux-service";
 
         var services = new ServiceCollection();
+        services.AddLogging();
         var fluxBuilder = new FluxBuilder(services);
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        services.AddSetContext(serviceName, setKey: null, setLifetime: ServiceLifetime.Transient, sp
+        services.AddSetContext(serviceName, setKey: null, setLifetime: ServiceLifetime.Transient, (sp, logger)
             => new TestSetContextImplementation<TestModel, object>(new()));
 
         // Assert
@@ -84,11 +88,12 @@ public class AddSetContextExtensionTests
         var serviceName = "my-flux-service";
 
         var services = new ServiceCollection();
+        services.AddLogging();
         var fluxBuilder = new FluxBuilder(services);
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        services.AddSetContext(serviceName, setKey: null, setLifetime: ServiceLifetime.Transient, sp
+        services.AddSetContext(serviceName, setKey: null, setLifetime: ServiceLifetime.Transient, (sp, logger)
             => new TestSetContextImplementation<TestModel, int>(new()));
 
         // Assert
@@ -147,11 +152,12 @@ public class AddSetContextExtensionTests
         var setKey = "my-flux-set";
 
         var services = new ServiceCollection();
+        services.AddLogging();
         var fluxBuilder = new FluxBuilder(services);
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        services.AddSetContext(serviceName, setKey: setKey, setLifetime: ServiceLifetime.Transient, sp
+        services.AddSetContext(serviceName, setKey: setKey, setLifetime: ServiceLifetime.Transient, (sp, logger)
             => new TestSetContextImplementation<TestModel, object>(new()));
 
         // Assert
@@ -201,11 +207,12 @@ public class AddSetContextExtensionTests
         var setKey = "my-flux-set";
 
         var services = new ServiceCollection();
+        services.AddLogging();
         var fluxBuilder = new FluxBuilder(services);
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         // Act
-        services.AddSetContext(serviceName, setKey: setKey, setLifetime: ServiceLifetime.Transient, sp
+        services.AddSetContext(serviceName, setKey: setKey, setLifetime: ServiceLifetime.Transient, (sp, logger)
             => new TestSetContextImplementation<TestModel, int>(new()));
 
         // Assert
@@ -269,13 +276,14 @@ public class AddSetContextExtensionTests
         var testText = "some-text";
 
         var services = new ServiceCollection();
+        services.AddLogging();
         var fluxBuilder = new FluxBuilder(services);
         var serviceBuilder = fluxBuilder.AddService(serviceName);
 
         var configuration = new TestSetContextConfiguration(testText);
 
         // Act
-        services.AddSetContext(serviceName, setKey: setKey, setLifetime: ServiceLifetime.Transient, sp
+        services.AddSetContext(serviceName, setKey: setKey, setLifetime: ServiceLifetime.Transient, (sp, logger)
             => new TestSetContextImplementation<TestModel, object>(configuration));
 
         // Assert

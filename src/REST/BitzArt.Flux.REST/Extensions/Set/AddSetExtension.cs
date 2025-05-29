@@ -33,16 +33,13 @@ public static class AddSetExtension
         var builder = new FluxRestSetBuilder<TModel, TKey>(serviceBuilder, path);
 
         serviceCollection.AddSetContext(serviceBuilder.ServiceName, setKey, lifetime,
-            serviceProvider =>
+            (serviceProvider, logger) =>
             {
                 var httpClient = serviceProvider
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(serviceBuilder.ServiceName);
 
-                var logger = serviceProvider.GetRequiredService<ILoggerFactory>()
-                    .CreateLogger("Flux");
-
-                return new FluxRestSetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, httpClient);
+                return new FluxRestSetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, logger, httpClient);
             });
 
         return builder;
