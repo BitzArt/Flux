@@ -94,6 +94,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Json", "Json", "{60545FAA-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.Json.old", "src\Json\BitzArt.Flux.Json.old\BitzArt.Flux.Json.old.csproj", "{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.Json", "src\Json\BitzArt.Flux.Json\BitzArt.Flux.Json.csproj", "{97AF5810-523C-41B1-B81C-7E4BCCB9E686}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,10 @@ Global
 		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97AF5810-523C-41B1-B81C-7E4BCCB9E686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97AF5810-523C-41B1-B81C-7E4BCCB9E686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97AF5810-523C-41B1-B81C-7E4BCCB9E686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97AF5810-523C-41B1-B81C-7E4BCCB9E686}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,6 +172,7 @@ Global
 		{596D5843-5398-514B-1FBB-AF86587DB290} = {A945B0FD-90F7-4609-92CC-0D61BD9D07AC}
 		{60545FAA-D618-49CA-93DB-8DDB487AE107} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
 		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943} = {60545FAA-D618-49CA-93DB-8DDB487AE107}
+		{97AF5810-523C-41B1-B81C-7E4BCCB9E686} = {60545FAA-D618-49CA-93DB-8DDB487AE107}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}

@@ -30,6 +30,8 @@ public static class UsingRestExtension
     {
         IFluxRestServiceBuilder builder = new FluxRestServiceBuilder(protocolConfigurator.FluxBuilder, protocolConfigurator.ServiceName, baseUrl);
 
+        builder.ServiceCollection.AddLogging();
+
         builder.ServiceCollection.TryAddSingleton<IHttpRequestMessageResolver, HttpRequestMessageResolver>();
 
         var httpClientBuilder = builder.ServiceCollection
@@ -45,10 +47,6 @@ public static class UsingRestExtension
 
         configureHttpClient?.Invoke(httpClientBuilder);
 
-        // Notify the source builder of a
-        // service termination by a REST implementation,
-        // ensuring that the service builder can not be used for
-        // further terminations.
         protocolConfigurator.OnServiceProtocolConfigured(builder.ServiceName, builder);
 
         return builder;
