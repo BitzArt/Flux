@@ -90,6 +90,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.SampleApp.Client"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.SampleApp", "sample\MudBlazor\MudBlazor.SampleApp\MudBlazor.SampleApp.csproj", "{596D5843-5398-514B-1FBB-AF86587DB290}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Json", "Json", "{60545FAA-D618-49CA-93DB-8DDB487AE107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitzArt.Flux.Json.old", "src\Json\BitzArt.Flux.Json.old\BitzArt.Flux.Json.old.csproj", "{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,6 +136,10 @@ Global
 		{596D5843-5398-514B-1FBB-AF86587DB290}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{596D5843-5398-514B-1FBB-AF86587DB290}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{596D5843-5398-514B-1FBB-AF86587DB290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +164,8 @@ Global
 		{8186A3B9-2CFC-3A89-A13A-642221C9EDEF} = {A945B0FD-90F7-4609-92CC-0D61BD9D07AC}
 		{4AC71847-7374-A1C6-5A63-DC9C38604A18} = {A945B0FD-90F7-4609-92CC-0D61BD9D07AC}
 		{596D5843-5398-514B-1FBB-AF86587DB290} = {A945B0FD-90F7-4609-92CC-0D61BD9D07AC}
+		{60545FAA-D618-49CA-93DB-8DDB487AE107} = {A0FAE66D-5574-463E-8723-E28ECEE565EE}
+		{AC632FC5-8C39-7B19-4E22-3D22CC9D9943} = {60545FAA-D618-49CA-93DB-8DDB487AE107}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}
