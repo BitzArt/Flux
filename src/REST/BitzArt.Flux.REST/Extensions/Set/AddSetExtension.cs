@@ -29,7 +29,7 @@ public static class AddSetExtension
         where TKey : notnull
     {
         var serviceCollection = serviceBuilder.ServiceCollection;
-        var builder = new SetBuilder<TModel, TKey>(serviceBuilder, path);
+        var builder = new FluxRestSetBuilder<TModel, TKey>(serviceBuilder, path);
 
         serviceCollection.AddSetContext(serviceBuilder.ServiceName, setKey, lifetime,
             serviceProvider =>
@@ -38,7 +38,7 @@ public static class AddSetExtension
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(serviceBuilder.ServiceName);
 
-                return new SetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, httpClient);
+                return new FluxRestSetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, httpClient);
             });
 
         return builder;

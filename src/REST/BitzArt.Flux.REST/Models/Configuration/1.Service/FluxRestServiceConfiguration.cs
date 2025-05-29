@@ -2,14 +2,14 @@
 
 namespace BitzArt.Flux.REST;
 
-internal class ServiceConfiguration
+internal class FluxRestServiceConfiguration
 {
     public string? BasePath { get; set; }
 
     public JsonSerializerOptions JsonSerializerOptions { get; set; } = new();
     public Action<IServiceProvider, HttpClient>? HttpClientConfiguration { get; set; }
 
-    public ServiceConfiguration(string? basePath)
+    public FluxRestServiceConfiguration(string? basePath)
     {
         BasePath = basePath?.TrimEnd('/');
     }

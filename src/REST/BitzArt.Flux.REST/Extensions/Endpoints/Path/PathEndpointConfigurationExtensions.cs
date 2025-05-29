@@ -59,7 +59,7 @@ public static partial class PathEndpointConfigurationExtensions
     {
         var setConfiguration = builder.SetConfiguration;
 
-        var endpointConfiguration = new PathEndpointConfiguration(setConfiguration, methods, path, allIncluded: false);
+        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, methods, path, allIncluded: false);
 
         setConfiguration.Add(endpointConfiguration);
 

@@ -4,12 +4,12 @@ namespace BitzArt.Flux.REST;
 
 public class SetConfigurationTests
 {
-    private class TestEndpointConfiguration : EndpointConfiguration
+    private class TestEndpointConfiguration : FluxRestEndpointConfiguration
     {
         private readonly Func<OperationDescriptor, IServiceProvider, HttpRequestMessage> _resolver;
 
         public TestEndpointConfiguration(
-            SetConfiguration setConfiguration,
+            FluxRestSetConfiguration setConfiguration,
             HttpMethods httpMethods = HttpMethods.All,
             Func<OperationDescriptor, IServiceProvider, HttpRequestMessage>? resolver = null)
             : base(setConfiguration, httpMethods)
@@ -28,7 +28,7 @@ public class SetConfigurationTests
     public void Add_TestEndpointConfiguration_ShouldUseResolver()
     {
         // Arrange
-        var setConfiguration = new SetConfiguration(new ServiceConfiguration(null), null);
+        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration(null), null);
 
         bool resolverCalled = false;
         var requestMessage = new HttpRequestMessage();
@@ -55,7 +55,7 @@ public class SetConfigurationTests
     public void Replace_WithHttpMethodsSubset_ShouldReplace()
     {
         // Arrange
-        var setConfiguration = new SetConfiguration(new ServiceConfiguration(null), null);
+        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration(null), null);
 
         bool configuration1Called = false;
         var configuration1RequestMessage = new HttpRequestMessage();
@@ -93,7 +93,7 @@ public class SetConfigurationTests
     public void Replace_WithHttpMethodsNotSubset_ShouldNotReplace()
     {
         // Arrange
-        var setConfiguration = new SetConfiguration(new ServiceConfiguration(null), null);
+        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration(null), null);
 
         bool configuration1Called = false;
         var configuration1RequestMessage = new HttpRequestMessage();

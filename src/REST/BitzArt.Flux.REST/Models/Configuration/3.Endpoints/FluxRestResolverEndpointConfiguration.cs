@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux.REST.Endpoints;
 
-internal sealed class ResolverEndpointConfiguration<TOperation> : EndpointConfiguration
+internal sealed class FluxRestResolverEndpointConfiguration<TOperation> : FluxRestEndpointConfiguration
     where TOperation : OperationDescriptor
 {
     private readonly IEnumerable<Type> _supportedOperationTypes;
@@ -11,8 +11,8 @@ internal sealed class ResolverEndpointConfiguration<TOperation> : EndpointConfig
 
     private readonly Func<TOperation, IServiceProvider, HttpRequestMessage> _resolver;
 
-    public ResolverEndpointConfiguration(
-        SetConfiguration setConfiguration,
+    public FluxRestResolverEndpointConfiguration(
+        FluxRestSetConfiguration setConfiguration,
         HttpMethods httpMethods,
         Func<TOperation, IServiceProvider, HttpRequestMessage> resolver)
         : base(setConfiguration, httpMethods)
@@ -38,13 +38,13 @@ internal sealed class ResolverEndpointConfiguration<TOperation> : EndpointConfig
         return _resolver.Invoke(operation, serviceProvider);
     }
 
-    public override bool CanBeOverridden(EndpointConfiguration newConfiguration)
+    public override bool CanBeOverridden(FluxRestEndpointConfiguration newConfiguration)
     {
         var newConfigurationType = newConfiguration.GetType();
 
         // only allow replacing by another ResolverEndpointConfiguration
         if (!newConfigurationType.IsGenericType) return false;
-        if (newConfigurationType.GetGenericTypeDefinition() != typeof(ResolverEndpointConfiguration<>)) return false;
+        if (newConfigurationType.GetGenericTypeDefinition() != typeof(FluxRestResolverEndpointConfiguration<>)) return false;
 
         if (!newConfiguration.SupportedHttpMethods.IsSubsetOf(SupportedHttpMethods)) return false;
 

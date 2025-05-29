@@ -96,7 +96,7 @@ public static partial class PathResolverConfigurationExtensions
     {
         var setConfiguration = builder.SetConfiguration;
 
-        var endpointConfiguration = new ResolverEndpointConfiguration<TOperationDescriptor>(setConfiguration, methods, (descriptor, serviceProvider) =>
+        var endpointConfiguration = new FluxRestResolverEndpointConfiguration<TOperationDescriptor>(setConfiguration, methods, (descriptor, serviceProvider) =>
         {
             var requestMessageResolver = serviceProvider.GetRequiredService<IHttpRequestMessageResolver>();
             

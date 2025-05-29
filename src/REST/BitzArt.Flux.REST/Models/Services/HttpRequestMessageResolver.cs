@@ -7,7 +7,7 @@ namespace BitzArt.Flux.REST;
 internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
 {
     public HttpRequestMessage Resolve(
-        SetConfiguration setConfiguration,
+        FluxRestSetConfiguration setConfiguration,
         string? endpointPath,
         OperationDescriptor descriptor,
         bool allIncluded = false)
@@ -25,7 +25,7 @@ internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
     }
 
     private static Uri GetUri(
-        SetConfiguration setConfiguration,
+        FluxRestSetConfiguration setConfiguration,
         string? endpointPath,
         OperationDescriptor descriptor,
         bool allIncluded)

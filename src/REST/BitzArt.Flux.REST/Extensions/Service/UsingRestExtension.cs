@@ -28,7 +28,7 @@ public static class UsingRestExtension
         Justification = "Interface cast necessary to access default implementation methods.")]
     public static IFluxRestServiceBuilder UsingRest(this IFluxServiceProtocolConfigurator protocolConfigurator, string? baseUrl = null, Action<IHttpClientBuilder>? configureHttpClient = null)
     {
-        IFluxRestServiceBuilder builder = new ServiceBuilder(protocolConfigurator.FluxBuilder, protocolConfigurator.ServiceName, baseUrl);
+        IFluxRestServiceBuilder builder = new FluxRestServiceBuilder(protocolConfigurator.FluxBuilder, protocolConfigurator.ServiceName, baseUrl);
 
         builder.ServiceCollection.TryAddSingleton<IHttpRequestMessageResolver, HttpRequestMessageResolver>();
 

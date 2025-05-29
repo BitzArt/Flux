@@ -3,13 +3,13 @@ using System.Text.Json;
 
 namespace BitzArt.Flux.REST;
 
-internal class SetContext<TModel, TKey> : FluxSetContext<TModel, TKey, SetConfiguration>
+internal class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, FluxRestSetConfiguration>
     where TModel : class
     where TKey : notnull
 {
     private readonly HttpClient _httpClient;
 
-    public SetContext(SetConfiguration configuration, IServiceProvider serviceProvider, HttpClient httpClient) : base(configuration, serviceProvider)
+    public FluxRestSetContext(FluxRestSetConfiguration configuration, IServiceProvider serviceProvider, HttpClient httpClient) : base(configuration, serviceProvider)
     {
         _httpClient = httpClient;
     }

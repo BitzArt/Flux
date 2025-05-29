@@ -1,24 +1,24 @@
 ﻿namespace BitzArt.Flux.REST.Endpoints;
 
-internal abstract class EndpointConfiguration
+internal abstract class FluxRestEndpointConfiguration
 {
     /// <summary>
     /// Owner service's configuration.
     /// </summary>
-    protected readonly ServiceConfiguration ServiceConfiguration;
+    protected readonly FluxRestServiceConfiguration ServiceConfiguration;
 
     /// <summary>
     /// Owner set's configuration.
     /// </summary>
-    protected readonly SetConfiguration SetConfiguration;
+    protected readonly FluxRestSetConfiguration SetConfiguration;
 
     /// <summary>
     /// HTTP methods provided with this configuration.
     /// </summary>
     internal readonly HttpMethods HttpMethods;
 
-    public EndpointConfiguration(
-        SetConfiguration setConfiguration,
+    public FluxRestEndpointConfiguration(
+        FluxRestSetConfiguration setConfiguration,
         HttpMethods httpMethods)
     {
         SetConfiguration = setConfiguration;
@@ -36,7 +36,7 @@ internal abstract class EndpointConfiguration
 
     public abstract HttpRequestMessage Resolve(OperationDescriptor descriptor, IServiceProvider serviceProvider);
 
-    public virtual bool CanBeOverridden(EndpointConfiguration newConfiguration)
+    public virtual bool CanBeOverridden(FluxRestEndpointConfiguration newConfiguration)
     {
         // Unless specified otherwise, an endpoint configuration
         // can be overridden by another endpoint configuration

@@ -10,11 +10,11 @@ public class PathEndpointConfigurationTests
     public void Ctor_AllHttpMethods_ShouldCreateForAllOperationTypes()
     {
         // Arrange
-        var serviceConfiguration = new ServiceConfiguration(null);
-        var setConfiguration = new SetConfiguration(serviceConfiguration, null);
+        var serviceConfiguration = new FluxRestServiceConfiguration(null);
+        var setConfiguration = new FluxRestSetConfiguration(serviceConfiguration, null);
 
         // Act
-        var endpointConfiguration = new PathEndpointConfiguration(setConfiguration, HttpMethods.All, null);
+        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, HttpMethods.All, null);
 
         // Assert
         Assert.Equal(6, endpointConfiguration.OperationTypes.Count());

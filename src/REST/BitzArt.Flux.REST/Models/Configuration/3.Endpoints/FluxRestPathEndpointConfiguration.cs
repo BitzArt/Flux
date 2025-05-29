@@ -2,14 +2,14 @@
 
 namespace BitzArt.Flux.REST.Endpoints;
 
-internal sealed class PathEndpointConfiguration : EndpointConfiguration
+internal sealed class FluxRestPathEndpointConfiguration : FluxRestEndpointConfiguration
 {
     private bool _allIncluded;
     private readonly string? _path;
     private readonly List<Type> _operationTypes;
 
-    public PathEndpointConfiguration(
-        SetConfiguration setConfiguration,
+    public FluxRestPathEndpointConfiguration(
+        FluxRestSetConfiguration setConfiguration,
         HttpMethods httpMethods,
         string? path,
         bool allIncluded = false)

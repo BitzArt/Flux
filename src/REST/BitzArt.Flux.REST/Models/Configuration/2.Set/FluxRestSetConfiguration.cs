@@ -3,17 +3,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux.REST;
 
-internal class SetConfiguration
+internal class FluxRestSetConfiguration
 {
     private record EndpointResolverSignature(Type OperationType, HttpMethod HttpMethod);
 
-    private readonly Dictionary<EndpointResolverSignature, EndpointConfiguration> _endpoints;
+    private readonly Dictionary<EndpointResolverSignature, FluxRestEndpointConfiguration> _endpoints;
 
-    public ServiceConfiguration ServiceConfiguration { get; private init; }
+    public FluxRestServiceConfiguration ServiceConfiguration { get; private init; }
 
     internal string? Path { get; private init; }
 
-    public SetConfiguration(ServiceConfiguration serviceConfiguration, string? path = null)
+    public FluxRestSetConfiguration(FluxRestServiceConfiguration serviceConfiguration, string? path = null)
     {
         ServiceConfiguration = serviceConfiguration;
 
@@ -22,7 +22,7 @@ internal class SetConfiguration
         _endpoints = [];
     }
 
-    public void Add(EndpointConfiguration configuration)
+    public void Add(FluxRestEndpointConfiguration configuration)
     {
         var supportedOperationTypes = configuration.OperationTypes;
         var supportedHttpMethods = configuration.SupportedHttpMethods;
@@ -43,7 +43,7 @@ internal class SetConfiguration
         }
     }
 
-    private void Add(EndpointConfiguration configuration, Type operationType, HttpMethod httpMethod)
+    private void Add(FluxRestEndpointConfiguration configuration, Type operationType, HttpMethod httpMethod)
     {
         var signature = new EndpointResolverSignature(operationType, httpMethod);
 
@@ -60,7 +60,7 @@ internal class SetConfiguration
         _endpoints[signature] = configuration;
     }
 
-    private void ConsiderReplace(EndpointConfiguration existingConfiguration, EndpointConfiguration newConfiguration, EndpointResolverSignature signature)
+    private void ConsiderReplace(FluxRestEndpointConfiguration existingConfiguration, FluxRestEndpointConfiguration newConfiguration, EndpointResolverSignature signature)
     {
         if (!existingConfiguration.CanBeOverridden(newConfiguration)) return;
 

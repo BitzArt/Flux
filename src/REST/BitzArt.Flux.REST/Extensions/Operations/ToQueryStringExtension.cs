@@ -9,10 +9,13 @@ namespace BitzArt.Flux;
 public static class ToQueryStringExtension
 {
     /// <summary>
-    /// Converts the <see cref="OperationDescriptor"/> to a query string representation.
+    /// Builds a <see cref="QueryString"/> for the given <see cref="OperationDescriptor"/>.
+    /// The resulting query string will include named parameters
+    /// if provided parameter collection implements <see cref="INamedOperationParameterCollection"/>,
+    /// as well as operation-specific parameters such as pagination parameters for <see cref="GetPageOperationDescriptor"/>.
     /// </summary>
     /// <param name="descriptor">Operation descriptor to convert.</param>
-    /// <returns>A query string with the leading '?' character, or an empty string if no parameters are present.</returns>
+    /// <returns>A <see cref="QueryString"/> representing HTTP query parameters in this operation.</returns>
     public static QueryString GetQueryString(this OperationDescriptor descriptor)
     {
         var query = new QueryString();

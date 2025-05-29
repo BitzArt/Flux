@@ -94,7 +94,7 @@ public static partial class HttpRequestMessageResolverConfigurationExtensions
         where TOperationDescriptor : OperationDescriptor
     {
         var setConfiguration = builder.SetConfiguration;
-        var endpointConfiguration = new ResolverEndpointConfiguration<TOperationDescriptor>(setConfiguration, methods, requestMessageResolver);
+        var endpointConfiguration = new FluxRestResolverEndpointConfiguration<TOperationDescriptor>(setConfiguration, methods, requestMessageResolver);
         setConfiguration.Add(endpointConfiguration);
 
         return builder;
