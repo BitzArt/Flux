@@ -185,7 +185,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             return LastQuery!.Data.ToTableData();
 
         var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
-        var page = await SetContext.GetPageAsync(pageRequest, parameters: parameters is not null ? new(parameters) : null, cancellationToken);
+        var descriptor = new GetPageOperationDescriptor(pageRequest, parameters);
+        var page = await SetContext.ExecuteAsync<PageResult<TModel>>(descriptor, cancellationToken);
 
         LastQuery = new(state, parameters!, page);
         OnResult?.Invoke(new(this, LastQuery));
