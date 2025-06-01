@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace BitzArt.Flux.MudBlazor;
@@ -16,70 +15,83 @@ internal class OperationParameterCollectionJsonConverter : JsonConverter<IOperat
             return null;
         }
 
-        return payload switch
-        {
-            NamedParameterCollectionPayload named => named,
-            SimpleParameterCollectionPayload simple => simple,
-            _ => throw new UnreachableException()
-        };
+        return payload.GetCollection();
     }
 
     public override void Write(Utf8JsonWriter writer, IOperationParameterCollection value, JsonSerializerOptions options)
     {
         ParameterCollectionPayload payload = value switch
         {
-            INamedOperationParameterCollection named => new NamedParameterCollectionPayload
-            {
-                Values = named.Values.Select(x => new KeyValuePair<string, TypedValue<object>>(x.Key, TypedValue.From(x.Value)))
-            },
-            _ => new SimpleParameterCollectionPayload
-            {
-                Values = value.Values.Select(TypedValue.From)
-            }
+            OperationParameterCollection.SimpleParameters simpleParameters => new SimpleParameterCollectionPayload(simpleParameters),
+            OperationParameterCollection.NamedParameters namedParameters => new NamedParameterCollectionPayload(namedParameters),
+            _ => new CustomParameterCollectionPayload(value)
         };
 
         var converter = (JsonConverter<ParameterCollectionPayload>)options.GetConverter(typeof(ParameterCollectionPayload));
         converter.Write(writer, payload, options);
     }
 
-    private class NamedParameterCollectionPayload : ParameterCollectionPayload, INamedOperationParameterCollection
-    {
-        [JsonPropertyName("values")]
-        public IEnumerable<KeyValuePair<string, TypedValue<object>>> Values { get; set; }
-
-        IEnumerable<KeyValuePair<string, object>> INamedOperationParameterCollection.Values
-            => [.. Values.Select(x => new KeyValuePair<string, object>(x.Key, x.Value.Value!))];
-
-        public NamedParameterCollectionPayload(IEnumerable<KeyValuePair<string, TypedValue<object>>> values)
-        {
-            Values = values;
-        }
-
-        public NamedParameterCollectionPayload()
-        {
-            Values = [];
-        }
-    }
-
-    private class SimpleParameterCollectionPayload : ParameterCollectionPayload, IOperationParameterCollection
+    private sealed class SimpleParameterCollectionPayload : ParameterCollectionPayload
     {
         [JsonPropertyName("values")]
         public IEnumerable<TypedValue> Values { get; set; }
 
-        IEnumerable<object> IOperationParameterCollection.Values => [.. Values.Select(x => x.Value!)];
+        public override IOperationParameterCollection GetCollection()
+            => new OperationParameterCollection.SimpleParameters([.. Values.Select(x => x.Value!)]);
 
-        public SimpleParameterCollectionPayload(IEnumerable<TypedValue> values)
+        public SimpleParameterCollectionPayload(OperationParameterCollection.SimpleParameters collection)
         {
-            Values = values;
+            Values = collection.Values.Select(x => TypedValue.From(x));
         }
-
         public SimpleParameterCollectionPayload()
         {
-            Values = [];
+            Values = null!;
         }
     }
 
-    [JsonDerivedType(typeof(NamedParameterCollectionPayload), typeDiscriminator: "named")]
+    private sealed class NamedParameterCollectionPayload : ParameterCollectionPayload
+    {
+        [JsonPropertyName("values")]
+        public IEnumerable<KeyValuePair<string, TypedValue>> Values { get; set; }
+
+        public override IOperationParameterCollection GetCollection()
+            => new OperationParameterCollection.NamedParameters([.. Values.Select(x => new KeyValuePair<string, object>(x.Key, x.Value.Value!))]);
+
+        public NamedParameterCollectionPayload(OperationParameterCollection.NamedParameters collection)
+        {
+            Values = collection.Values.Select(x => new KeyValuePair<string, TypedValue>(x.Key, TypedValue.From(x.Value)));
+        }
+
+        public NamedParameterCollectionPayload()
+        {
+            Values = null!;
+        }
+    }
+
+    private sealed class CustomParameterCollectionPayload : ParameterCollectionPayload
+    {
+        [JsonPropertyName("collection")]
+        [JsonConverter(typeof(TypedValueJsonConverter))]
+        public IOperationParameterCollection Collection { get; set; }
+
+        public override IOperationParameterCollection GetCollection() => Collection;
+
+        public CustomParameterCollectionPayload(IOperationParameterCollection collection)
+        {
+            Collection = collection;
+        }
+
+        public CustomParameterCollectionPayload()
+        {
+            Collection = null!;
+        }
+    }
+
     [JsonDerivedType(typeof(SimpleParameterCollectionPayload), typeDiscriminator: "simple")]
-    private abstract class ParameterCollectionPayload { }
+    [JsonDerivedType(typeof(NamedParameterCollectionPayload), typeDiscriminator: "named")]
+    [JsonDerivedType(typeof(CustomParameterCollectionPayload), typeDiscriminator: "custom")]
+    private abstract class ParameterCollectionPayload
+    {
+        public abstract IOperationParameterCollection GetCollection();
+    }
 }

@@ -293,12 +293,11 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private static bool CompareParameters(IOperationParameterCollection? lastParameters, IOperationParameterCollection? newParameters)
     {
-        // no last parameters, no comparison
-        if (lastParameters is null) return false;
+        if (newParameters is null)
+        {
+            return lastParameters is null;
+        }
 
-        // no new parameters, no comparison
-        if (newParameters is null) return false;
-
-        return lastParameters.Equals(newParameters);
+        return newParameters.Equals(lastParameters);
     }
 }

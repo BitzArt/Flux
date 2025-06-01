@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text.Json;
 
 namespace BitzArt.Flux;
 
@@ -79,15 +78,20 @@ public class OperationParameterCollection
         _parametersType = ParametersType.Simple;
     }
 
-    private class SimpleParameters : IOperationParameterCollection
+    internal class SimpleParameters : IOperationParameterCollection
     {
-        private protected virtual IEnumerable<object> Parameters { get; set; }
+        public IEnumerable<object> Values { get; set; }
 
-        IEnumerable<object> IOperationParameterCollection.Values => Parameters;
+        IEnumerable<object> IOperationParameterCollection.Values => Values;
 
-        public SimpleParameters(IEnumerable<object> parameters)
+        public SimpleParameters(IEnumerable<object> values)
         {
-            Parameters = [.. parameters];
+            Values = [.. values];
+        }
+
+        public SimpleParameters()
+        {
+            Values = null!;
         }
 
         public override bool Equals(object? obj)
@@ -102,7 +106,13 @@ public class OperationParameterCollection
                 return false;
             }
 
-            return ReferenceEquals(this, obj) || Parameters.SequenceEqual(other.Values);
+            return ReferenceEquals(this, obj) || Values.SequenceEqual(other.Values);
+        }
+
+        public override int GetHashCode()
+        {
+            return Values
+                .Aggregate(0, (hash, value) => HashCode.Combine(hash, value.GetHashCode()));
         }
     }
 
@@ -116,22 +126,27 @@ public class OperationParameterCollection
     /// Initializes a new instance of the <see cref="OperationParameterCollection"/> class
     /// as a named collection of parameters.
     /// </summary>
-    /// <param name="parameters">Parameters to be used in the operation.</param>
-    public OperationParameterCollection(IEnumerable<KeyValuePair<string, object>> parameters)
+    /// <param name="values">Parameters to be used in the operation.</param>
+    public OperationParameterCollection(IEnumerable<KeyValuePair<string, object>> values)
     {
-        _namedParameters = new NamedParameters(parameters);
+        _namedParameters = new NamedParameters(values);
         _parametersType = ParametersType.Named;
     }
 
-    private class NamedParameters : INamedOperationParameterCollection
+    internal class NamedParameters : INamedOperationParameterCollection
     {
-        private readonly IEnumerable<KeyValuePair<string, object>> _parameters;
+        public IEnumerable<KeyValuePair<string, object>> Values { get; set; }
 
-        IEnumerable<KeyValuePair<string, object>> INamedOperationParameterCollection.Values => _parameters;
+        IEnumerable<KeyValuePair<string, object>> INamedOperationParameterCollection.Values => Values;
 
-        public NamedParameters(IEnumerable<KeyValuePair<string, object>> parameters)
+        public NamedParameters(IEnumerable<KeyValuePair<string, object>> values)
         {
-            _parameters = parameters;
+            Values = values;
+        }
+
+        public NamedParameters()
+        {
+            Values = null!;
         }
 
         public override bool Equals(object? obj)
@@ -146,7 +161,13 @@ public class OperationParameterCollection
                 return false;
             }
 
-            return ReferenceEquals(this, obj) || _parameters.SequenceEqual(other.Values);
+            return ReferenceEquals(this, obj) || Values.SequenceEqual(other.Values);
+        }
+
+        public override int GetHashCode()
+        {
+            return Values
+                .Aggregate(0, (hash, kvp) => HashCode.Combine(hash, kvp.Key.GetHashCode(), kvp.Value.GetHashCode()));
         }
     }
 }

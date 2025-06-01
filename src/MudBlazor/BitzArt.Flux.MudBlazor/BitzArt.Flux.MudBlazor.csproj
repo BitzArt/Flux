@@ -30,6 +30,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <PackageReference Include="BitzArt.Json.TypedValues" Version="0.2.2" />
 	  <PackageReference Include="MudBlazor" Version="8.6.0" />
 	</ItemGroup>
 
