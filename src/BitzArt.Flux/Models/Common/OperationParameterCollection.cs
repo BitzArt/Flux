@@ -151,6 +151,11 @@ public class OperationParameterCollection
 
         public override bool Equals(object? obj)
         {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             if (obj is not IOperationParameterCollection)
             {
                 return false;
@@ -161,7 +166,23 @@ public class OperationParameterCollection
                 return false;
             }
 
-            return ReferenceEquals(this, obj) || Values.SequenceEqual(other.Values);
+            for (int i = 0; i < Values.Count(); i++)
+            {
+                var kvp = Values.ElementAt(i);
+                var otherKvp = other.Values.ElementAt(i);
+
+                if (kvp.Key != otherKvp.Key)
+                {
+                    return false;
+                }
+
+                if (kvp.Value != otherKvp.Value)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public override int GetHashCode()
