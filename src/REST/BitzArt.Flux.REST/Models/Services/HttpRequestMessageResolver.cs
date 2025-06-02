@@ -179,7 +179,7 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
             var queryString = leftoverParameters.Count == 0
                     ? string.Empty
                     : "QueryString:\n" + string.Join('\n', leftoverParameters.Select(kvp
-                        => kvp.Value is IEnumerable enumerable
+                        => kvp.Value is IEnumerable enumerable && enumerable is not string
                         ? $"[{kvp.Key}]: {GetEnumerableParameterString(enumerable)}"
                         : $"[{kvp.Key}]: '{kvp.Value}';"));
 
