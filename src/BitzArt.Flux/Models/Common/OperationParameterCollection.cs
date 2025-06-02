@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 
 namespace BitzArt.Flux;
 
@@ -96,6 +97,11 @@ public class OperationParameterCollection
 
         public override bool Equals(object? obj)
         {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             if (obj is not IOperationParameterCollection other)
             {
                 return false;
@@ -106,7 +112,25 @@ public class OperationParameterCollection
                 return false;
             }
 
-            return ReferenceEquals(this, obj) || Values.SequenceEqual(other.Values);
+            for (int i = 0; i < Values.Count(); i++)
+            {
+                var value = Values.ElementAt(i);
+                var otherValue = other.Values.ElementAt(i);
+
+                if (value is IEnumerable enumerable && otherValue is IEnumerable otherEnumerable)
+                {
+                    if (!enumerable.Cast<object>().SequenceEqual(otherEnumerable.Cast<object>()))
+                    {
+                        return false;
+                    }
+                }
+                else if (value != otherValue)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public override int GetHashCode()
@@ -176,7 +200,14 @@ public class OperationParameterCollection
                     return false;
                 }
 
-                if (kvp.Value != otherKvp.Value)
+                if (kvp.Value is IEnumerable enumerable && otherKvp.Value is IEnumerable otherEnumerable)
+                {
+                    if (!enumerable.Cast<object>().SequenceEqual(otherEnumerable.Cast<object>()))
+                    {
+                        return false;
+                    }
+                }
+                else if (kvp.Value != otherKvp.Value)
                 {
                     return false;
                 }
