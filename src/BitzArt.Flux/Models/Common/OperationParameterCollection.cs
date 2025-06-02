@@ -112,6 +112,11 @@ public class OperationParameterCollection
                 return false;
             }
 
+            if (Values.Count() != other.Values.Count())
+            {
+                return false;
+            }
+
             for (int i = 0; i < Values.Count(); i++)
             {
                 var value = Values.ElementAt(i);
@@ -124,7 +129,7 @@ public class OperationParameterCollection
                         return false;
                     }
                 }
-                else if (value != otherValue)
+                else if (!value.Equals(otherValue))
                 {
                     return false;
                 }
@@ -190,6 +195,11 @@ public class OperationParameterCollection
                 return false;
             }
 
+            if (Values.Count() != other.Values.Count())
+            {
+                return false;
+            }
+
             for (int i = 0; i < Values.Count(); i++)
             {
                 var kvp = Values.ElementAt(i);
@@ -207,11 +217,12 @@ public class OperationParameterCollection
                         return false;
                     }
                 }
-                else if (kvp.Value != otherKvp.Value)
+                else if (!kvp.Value.Equals(otherKvp.Value))
                 {
                     return false;
                 }
             }
+
 
             return true;
         }
