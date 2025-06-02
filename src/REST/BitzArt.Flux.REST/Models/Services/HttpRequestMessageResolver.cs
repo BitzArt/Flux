@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections;
+using System.Linq;
 using System.Text.Json;
 
 namespace BitzArt.Flux.REST;
@@ -171,18 +172,30 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
 
         if (appliedParameters.Count > 0 || leftoverParameters.Count > 0)
         {
-            _logger.LogDebug("{replaced}\n{query}",
-                appliedParameters.Count == 0
+            var replaced = appliedParameters.Count == 0
                     ? string.Empty
-                    : "Replaced:\n" + string.Join('\n', appliedParameters.Select(kvp => $"[{kvp.Key}]: '{kvp.Value}';")),
-                leftoverParameters.Count == 0
+                    : "Replaced:\n" + string.Join('\n', appliedParameters.Select(kvp => $"[{kvp.Key}]: '{kvp.Value}';"));
+
+            var queryString = leftoverParameters.Count == 0
                     ? string.Empty
-                    : "QueryString:\n" + string.Join('\n', leftoverParameters.Select(kvp => $"[{kvp.Key}]: '{kvp.Value}';")));
+                    : "QueryString:\n" + string.Join('\n', leftoverParameters.Select(kvp
+                        => kvp.Value is IEnumerable enumerable
+                        ? $"[{kvp.Key}]: {GetEnumerableParameterString(enumerable)}"
+                        : $"[{kvp.Key}]: '{kvp.Value}';"));
+
+            _logger.LogDebug("{replaced}\n{query}", replaced, queryString);
+                
         }  
 
         (path, query) = Split(path);
 
         return path;
+    }
+
+    private static string GetEnumerableParameterString(IEnumerable enumerable)
+    {
+        var items = enumerable.Cast<object>().Select(item => item is null ? "'null'" : $"'{item}'");
+        return $"[{string.Join(", ", items)}]";
     }
 
     private string? Replace(
