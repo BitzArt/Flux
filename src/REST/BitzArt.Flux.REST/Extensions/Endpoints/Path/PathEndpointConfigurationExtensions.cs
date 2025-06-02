@@ -9,33 +9,28 @@ namespace BitzArt.Flux;
 public static partial class PathEndpointConfigurationExtensions
 {
     /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
+    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
         where TModel : class
-        where TOperationDescriptor : OperationDescriptor
         => builder.WithEndpoint(path, HttpMethods.Get);
 
     /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
+    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
         where TModel : class
-        where TOperationDescriptor : OperationDescriptor
         => builder.WithEndpoint(path, HttpMethods.Post);
 
     /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
+    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
         where TModel : class
-        where TOperationDescriptor : OperationDescriptor
         => builder.WithEndpoint(path, HttpMethods.Put);
 
     /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
+    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
         where TModel : class
-        where TOperationDescriptor : OperationDescriptor
         => builder.WithEndpoint(path, HttpMethods.Patch);
 
     /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
+    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path)
         where TModel : class
-        where TOperationDescriptor : OperationDescriptor
         => builder.WithEndpoint(path, HttpMethods.Delete);
 
     /// <summary>
@@ -59,7 +54,7 @@ public static partial class PathEndpointConfigurationExtensions
     {
         var setConfiguration = builder.SetConfiguration;
 
-        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, methods, path, allIncluded: false);
+        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, methods, path);
 
         setConfiguration.Add(endpointConfiguration);
 
