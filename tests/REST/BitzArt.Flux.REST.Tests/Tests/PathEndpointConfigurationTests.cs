@@ -14,7 +14,7 @@ public class PathEndpointConfigurationTests
         var setConfiguration = new FluxRestSetConfiguration(serviceConfiguration, null);
 
         // Act
-        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, HttpMethods.All, null);
+        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, HttpMethods.All, null, false, false);
 
         // Assert
         Assert.Equal(6, endpointConfiguration.OperationTypes.Count());

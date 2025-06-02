@@ -1,19 +1,23 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using System.Collections;
 using System.Text.Json;
 
 namespace BitzArt.Flux.REST;
 
-internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
+internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpRequestMessageResolver
 {
+    private readonly ILogger _logger = loggerFactory.CreateLogger("Flux");
+
     public HttpRequestMessage Resolve(
         FluxRestSetConfiguration setConfiguration,
         string? endpointPath,
         OperationDescriptor descriptor,
-        bool allIncluded = false)
+        bool pathComplete = false,
+        bool queryComplete = false)
     {
         var httpMethod = descriptor.GetExpectedHttpMethod();
-        var uri = GetUri(setConfiguration, endpointPath, descriptor, allIncluded);
+        var uri = GetUri(setConfiguration, endpointPath, descriptor, pathComplete, queryComplete);
         
         var body = GetBody(descriptor, setConfiguration.ServiceConfiguration.JsonSerializerOptions);
 
@@ -24,20 +28,25 @@ internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
         return requestMessage;
     }
 
-    private static Uri GetUri(
+    private Uri GetUri(
         FluxRestSetConfiguration setConfiguration,
         string? endpointPath,
         OperationDescriptor descriptor,
-        bool allIncluded)
+        bool pathComplete = false,
+        bool queryComplete = false)
     {
-        if (allIncluded)
+        var path = pathComplete
+            ? endpointPath
+            : GetPath(setConfiguration.ServiceConfiguration.BasePath, setConfiguration.Path, endpointPath, descriptor);
+
+        path = ApplyParameters(path, descriptor.Parameters, out var leftoverParameters, out var query);
+
+        if (!queryComplete && leftoverParameters is not null)
         {
-            return new Uri(endpointPath!, UriKind.RelativeOrAbsolute);
+            query = query + GetQueryString(leftoverParameters);
         }
 
-        var path = GetPath(setConfiguration.ServiceConfiguration.BasePath, setConfiguration.Path, endpointPath, descriptor);
-        var queryString = descriptor.GetQueryString();
-        var uri = new Uri($"{path}{queryString}", UriKind.RelativeOrAbsolute);
+        var uri = new Uri($"{path}{query.Value}", UriKind.RelativeOrAbsolute);
 
         return uri;
     }
@@ -79,6 +88,203 @@ internal class HttpRequestMessageResolver : IHttpRequestMessageResolver
         if (keyedDescriptor.Id is null) return null;
 
         return keyedDescriptor.Id?.ToString();
+    }
+
+    private string? ApplyParameters(
+        string? path,
+        IOperationParameterCollection? parameters,
+        out List<KeyValuePair<string, object>>? leftoverParameters,
+        out QueryString query)
+    {
+        if (parameters is null)
+        {
+            (path, query) = Split(path);
+            leftoverParameters = null;
+            return path;
+        }
+
+        return parameters switch
+        {
+            INamedOperationParameterCollection named => Replace(path, named, out leftoverParameters, out query),
+            _ => Replace(path, parameters, out leftoverParameters, out query)
+        };
+    }
+
+    private string? Replace(
+        string? path,
+        INamedOperationParameterCollection parameters,
+        out List<KeyValuePair<string, object>> leftoverParameters,
+        out QueryString query)
+    {
+        if (path is null)
+        {
+            query = QueryString.Empty;
+            leftoverParameters = [.. parameters.Values];
+            return null;
+        }
+
+        leftoverParameters = new(parameters.Values.Count());
+        var appliedParameters = new List<KeyValuePair<string, string>>(parameters.Values.Count());
+
+        foreach (var parameter in parameters.Values)
+        {
+            var value = parameter.Value.ToString() ?? string.Empty;
+            var replaced = path.Replace($"{{{parameter.Key}}}", value);
+
+            if (replaced == path)
+            {
+                leftoverParameters.Add(parameter);
+            }
+            else
+            {
+                path = replaced;
+                appliedParameters.Add(new(parameter.Key, value));
+            }
+        }
+
+        if (path.Contains('{'))
+        {
+            var startIndex = path.IndexOf('{');
+            var endIndex = path.IndexOf('}', startIndex);
+            var parameterName = (endIndex < 0
+                ? null
+                : path.Substring(startIndex + 1, endIndex - startIndex - 1))
+                ?? throw new InvalidOperationException("Invalid endpoint path format");
+
+            throw new InvalidOperationException($"Required parameter '{parameterName}' Is missing from the received parameter collection.");
+        }
+
+        if (appliedParameters.Count > 0 || leftoverParameters.Count > 0)
+        {
+            _logger.LogDebug("{replaced}\n{query}",
+                appliedParameters.Count == 0
+                    ? string.Empty
+                    : "Replaced:\n" + string.Join('\n', appliedParameters.Select(kvp => $"[{kvp.Key}]: '{kvp.Value}';")),
+                leftoverParameters.Count == 0
+                    ? string.Empty
+                    : "QueryString:\n" + string.Join('\n', leftoverParameters.Select(kvp => $"[{kvp.Key}]: '{kvp.Value}';")));
+        }  
+
+        (path, query) = Split(path);
+
+        return path;
+    }
+
+    private string? Replace(
+        string? path,
+        IOperationParameterCollection parameters,
+        out List<KeyValuePair<string, object>>? leftoverParameters,
+        out QueryString query)
+    {
+        leftoverParameters = null;
+
+        if (path is null)
+        {
+            query = QueryString.Empty;
+            return null;
+        }
+
+        var providedParameterCount = parameters.Values.Count();
+        var lastIndex = providedParameterCount - 1;
+
+        var appliedParameters = new List<KeyValuePair<string, string>>(providedParameterCount);
+
+        var parameterCounter = 0;
+        while(true)
+        {
+            var parameterStartIndex = path.IndexOf('{');
+            if (parameterStartIndex < 0)
+            {
+                break; // No more parameters to replace
+            }
+            var parameterEndIndex = path.IndexOf('}', parameterStartIndex);
+            if (parameterEndIndex < 0)
+            {
+                throw new InvalidOperationException("Unable to propagate parameters: Invalid path format.");
+            }
+            var parameterName = path.Substring(parameterStartIndex + 1, parameterEndIndex - parameterStartIndex - 1);
+
+            if (parameterCounter > lastIndex)
+            {
+                throw new InvalidOperationException($"Unable to propagate parameter '{parameterName}'. No parameter values left.");
+            }
+
+            var parameterValue = parameters.Values.ElementAt(parameterCounter).ToString() ?? string.Empty;
+            appliedParameters.Add(new KeyValuePair<string, string>(parameterName, parameterValue));
+
+            path = path.Remove(parameterStartIndex, parameterEndIndex - parameterStartIndex + 1)
+                       .Insert(parameterStartIndex, parameterValue);
+
+            parameterCounter++;
+        }
+
+        if (appliedParameters.Count != providedParameterCount)
+        {
+            throw new InvalidOperationException($"Parameter count mismatch. Received {providedParameterCount} parameters, but only {appliedParameters.Count} are declared in endpoint path.");
+        }
+
+        if (appliedParameters.Count > 0)
+        {
+            _logger.LogDebug("{replaceLog}", "Replaced:\n" + string.Join('\n', appliedParameters.Select(kvp => $"[{kvp.Key}]: '{kvp.Value}';")));
+        }
+
+        (path, query) = Split(path);
+
+        return path;
+    }
+
+    private static PathSplitResult Split(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return new(string.Empty, QueryString.Empty);
+        }
+
+        var queryIndex = path.IndexOf('?');
+
+        if (queryIndex < 0)
+        {
+            return new(path, QueryString.Empty);
+        }
+
+        var queryString = new QueryString(path[queryIndex..]);
+        var pathWithoutQuery = path[..queryIndex].TrimEnd('/');
+
+        return new(pathWithoutQuery, queryString);
+    }
+
+    private record PathSplitResult(string Path, QueryString Query);
+
+    private static QueryString GetQueryString(List<KeyValuePair<string, object>> leftoverParameters)
+    {
+        if (leftoverParameters.Count == 0)
+        {
+            return QueryString.Empty;
+        }
+
+        var query = new QueryString();
+        foreach (var parameter in leftoverParameters)
+        {
+            query = parameter.Value switch
+            {
+                IEnumerable enumerable when enumerable is not string => query.Add(GetQueryString(enumerable)),
+                _ => query.Add(parameter.Key, parameter.Value.ToString())
+            };
+        }
+
+        return query;
+    }
+
+    private static QueryString GetQueryString(IEnumerable enumerableParameter)
+    {
+        var query = new QueryString();
+        var index = 0;
+        foreach (var item in enumerableParameter)
+        {
+            query = query.Add($"item[{index}]", item is not null ? item.ToString() : "null");
+            index++;
+        }
+        return query;
     }
 
     private static StringContent? GetBody(OperationDescriptor descriptor, JsonSerializerOptions jsonSerializerOptions)
