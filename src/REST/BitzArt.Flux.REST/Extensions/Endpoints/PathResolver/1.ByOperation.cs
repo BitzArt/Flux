@@ -11,75 +11,75 @@ public static partial class PathResolverConfigurationExtensions
     //     TOperationDescriptor => string
     // ==============================================================
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Get);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Get);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Post);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Post);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Put);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Put);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Patch);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Patch);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Delete);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Delete);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool pathComplete = false, bool queryComplete = false, HttpMethods methods = HttpMethods.All)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, string> resolvePath, bool queryComplete = false, HttpMethods methods = HttpMethods.All)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint((TOperationDescriptor descriptor, IServiceProvider _) => resolvePath.Invoke(descriptor), pathComplete, queryComplete, methods);
+        => builder.WithEndpoint((TOperationDescriptor descriptor, IServiceProvider _) => resolvePath.Invoke(descriptor), queryComplete, methods);
 
     // ==============================================================
     //     TOperationDescriptor, IServiceProvider => string
     // ==============================================================
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Get);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Get);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Post);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Post);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Put);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Put);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Patch);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Patch);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey,TOperationDescriptor}(IFluxRestSetBuilder{TModel,TKey},Func{TOperationDescriptor,IServiceProvider,string},bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool queryComplete = false)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
-        => builder.WithEndpoint(resolvePath, pathComplete, queryComplete, HttpMethods.Delete);
+        => builder.WithEndpoint(resolvePath, queryComplete, HttpMethods.Delete);
 
     /// <summary>
     /// Configures the <see cref="IFluxRestSetBuilder{TModel, TKey}"/> to use a custom endpoint resolver for the given operation type.
@@ -105,7 +105,7 @@ public static partial class PathResolverConfigurationExtensions
     /// </param>
     /// <param name="methods">Allowed HTTP methods for this endpoint resolver.</param>
     /// <returns><see cref="IFluxRestSetBuilder{TModel, TKey}"/> to allow chaining.</returns>
-    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool pathComplete = false, bool queryComplete = false, HttpMethods methods = HttpMethods.All)
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TOperationDescriptor>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TOperationDescriptor, IServiceProvider, string> resolvePath, bool queryComplete = false, HttpMethods methods = HttpMethods.All)
         where TModel : class
         where TOperationDescriptor : OperationDescriptor
     {
@@ -117,7 +117,7 @@ public static partial class PathResolverConfigurationExtensions
             
             var path = resolvePath.Invoke(descriptor, serviceProvider);
             
-            var requestMessage = requestMessageResolver.Resolve(setConfiguration, path, descriptor, pathComplete, queryComplete);
+            var requestMessage = requestMessageResolver.Resolve(setConfiguration, path, descriptor, true, queryComplete);
 
             return requestMessage;
         });

@@ -8,30 +8,30 @@ namespace BitzArt.Flux;
 /// </summary>
 public static partial class PathEndpointConfigurationExtensions
 {
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithGet<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool queryComplete = false)
         where TModel : class
-        => builder.WithEndpoint(path, pathComplete, queryComplete, HttpMethods.Get);
+        => builder.WithEndpoint(path, queryComplete, HttpMethods.Get);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPost<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool queryComplete = false)
         where TModel : class
-        => builder.WithEndpoint(path, pathComplete, queryComplete, HttpMethods.Post);
+        => builder.WithEndpoint(path, queryComplete, HttpMethods.Post);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPut<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool queryComplete = false)
         where TModel : class
-        => builder.WithEndpoint(path, pathComplete, queryComplete, HttpMethods.Put);
+        => builder.WithEndpoint(path, queryComplete, HttpMethods.Put);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithPatch<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool queryComplete = false)
         where TModel : class
-        => builder.WithEndpoint(path, pathComplete, queryComplete, HttpMethods.Patch);
+        => builder.WithEndpoint(path, queryComplete, HttpMethods.Patch);
 
-    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,bool,HttpMethods)"/>
-    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool pathComplete = false, bool queryComplete = false)
+    /// <inheritdoc cref="WithEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string,bool,HttpMethods)"/>
+    public static IFluxRestSetBuilder<TModel, TKey> WithDelete<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool queryComplete = false)
         where TModel : class
-        => builder.WithEndpoint(path, pathComplete, queryComplete, HttpMethods.Delete);
+        => builder.WithEndpoint(path, queryComplete, HttpMethods.Delete);
 
     /// <summary>
     /// <para>
@@ -62,12 +62,12 @@ public static partial class PathEndpointConfigurationExtensions
     /// </para>
     /// <param name="methods">Allowed HTTP methods for this endpoint resolver.</param>
     /// <returns><see cref="IFluxRestSetBuilder{TModel, TKey}"/> to allow chaining.</returns>
-    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool pathComplete = false, bool queryComplete = false, HttpMethods methods = HttpMethods.All)
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool queryComplete = false, HttpMethods methods = HttpMethods.All)
         where TModel : class
     {
         var setConfiguration = builder.SetConfiguration;
 
-        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, methods, path, pathComplete, queryComplete);
+        var endpointConfiguration = new FluxRestPathEndpointConfiguration(setConfiguration, methods, path, false, queryComplete);
 
         setConfiguration.Add(endpointConfiguration);
 
