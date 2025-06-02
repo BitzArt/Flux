@@ -41,9 +41,17 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
 
         path = ApplyParameters(path, descriptor.Parameters, out var leftoverParameters, out var query);
 
-        if (!queryComplete && leftoverParameters is not null)
+        if (!queryComplete)
         {
-            query = query + GetQueryString(leftoverParameters);
+            if (leftoverParameters is not null)
+            {
+                query = query + GetQueryString(leftoverParameters);
+            }
+
+            if (descriptor is GetPageOperationDescriptor pageDescriptor)
+            {
+                query = query + pageDescriptor.PageRequest.ToQueryString();
+            }
         }
 
         var uri = new Uri($"{path}{query.Value}", UriKind.RelativeOrAbsolute);
@@ -98,8 +106,15 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
     {
         if (parameters is null)
         {
-            (path, query) = Split(path);
             leftoverParameters = null;
+
+            if (path is null)
+            {
+                query = QueryString.Empty;
+                return null;
+            }
+
+            (path, query) = Split(path);
             return path;
         }
 
