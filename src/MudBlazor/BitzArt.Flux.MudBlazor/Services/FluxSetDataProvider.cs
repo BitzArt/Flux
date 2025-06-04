@@ -5,11 +5,6 @@ using System.Reflection;
 
 namespace BitzArt.Flux.MudBlazor;
 
-// TODO: ? Extract reset logic ?
-// TODO: ? Extract page state comparison logic ?
-// TODO: Cleanup and refactor
-// TODO: Forward CancellationToken
-
 internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFluxSetDataProvider<TModel>
     where TModel : class
 {
@@ -22,7 +17,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public Func<TableState, CancellationToken, Task<TableData<TModel>>> Data => GetDataAsync;
 
-    public Func<TableState, object[]>? GetParameters { get; set; } = null;
+    public Func<TableState, IOperationParameterCollection>? GetParameters { get; set; } = null;
 
     public event OnResultHandler<TModel>? OnResult;
 
@@ -109,7 +104,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public bool ShouldResetPageOnOrderDirectionChanged { get; set; } = true;
 
-    public Func<object[], object[], bool>? ShouldResetPageOnParameters { get; set; } = null;
+    public Func<IOperationParameterCollection?, IOperationParameterCollection?, bool>? ShouldResetPageOnParameters { get; set; } = null;
 
     public MudTable<TModel>? Table { get; set; }
 
@@ -161,7 +156,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
     {
-        object[] parameters = GetParameters is not null ? GetParameters(state) : [];
+        IOperationParameterCollection? parameters = GetParameters?.Invoke(state);
 
         if (ShouldReset(state, parameters))
         {
@@ -186,19 +181,20 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
         }
 
-        if (CompareWithLastRequest(state, parameters)) 
+        if (CompareWithLastRequest(state, parameters))
             return LastQuery!.Data.ToTableData();
 
         var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
-        var page = await SetContext.GetPageAsync(pageRequest, parameters: parameters);
+        var descriptor = new GetPageOperationDescriptor(pageRequest, parameters);
+        var page = await SetContext.ExecuteAsync<PageResult<TModel>>(descriptor, cancellationToken);
 
-        LastQuery = new(state, parameters, page);
+        LastQuery = new(state, parameters!, page);
         OnResult?.Invoke(new(this, LastQuery));
 
         return page.ToTableData();
     }
 
-    private bool ShouldReset(TableState state, object[] newParameters)
+    private bool ShouldReset(TableState state, IOperationParameterCollection? newParameters)
     {
         // already resetting, do not loop infinitely
         if (_resetting) return false;
@@ -239,7 +235,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     private bool ShouldResetDynamic() =>
         ShouldResetPage is not null && ShouldResetPage.Invoke() == true;
 
-    private bool ShouldResetDynamicOnParameters(object[] newParameters)
+    private bool ShouldResetDynamicOnParameters(IOperationParameterCollection? newParameters)
     {
         var lastParameters = LastQuery?.Parameters;
 
@@ -266,7 +262,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return false;
     }
 
-    private bool CompareWithLastRequest(TableState newState, object[] newParameters)
+    private bool CompareWithLastRequest(TableState newState, IOperationParameterCollection? newParameters)
     {
         // no last query, no comparison
         if (LastQuery is null) return false;
@@ -295,21 +291,13 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return true;
     }
 
-    private static bool CompareParameters(object[]? lastParameters, object[] newParameters)
+    private static bool CompareParameters(IOperationParameterCollection? lastParameters, IOperationParameterCollection? newParameters)
     {
-        // no last parameters, no comparison
-        if (lastParameters is null) return false;
-
-        // different number of parameters
-        if (lastParameters.Length != newParameters.Length) return false;
-
-        // compare each parameter
-        for (var i = 0; i < lastParameters.Length; i++)
+        if (newParameters is null)
         {
-            if (!lastParameters[i].Equals(newParameters[i])) return false;
+            return lastParameters is null;
         }
 
-        // no change detected
-        return true;
+        return newParameters.Equals(lastParameters);
     }
 }

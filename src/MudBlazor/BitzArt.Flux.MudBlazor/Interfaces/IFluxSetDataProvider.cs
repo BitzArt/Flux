@@ -22,7 +22,7 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Can be set to provide parameters for the request.
     /// </summary>
-    public Func<TableState, object[]>? GetParameters { get; set; }
+    public Func<TableState, IOperationParameterCollection>? GetParameters { get; set; }
 
     /// <summary>
     /// Event triggered when a request was completed and results are available.
@@ -76,7 +76,7 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Dynamically determine whether to reset page when processing a request based on last and new parameters or not.
     /// </summary>
-    public Func<object[], object[], bool>? ShouldResetPageOnParameters { get; set; }
+    public Func<IOperationParameterCollection?, IOperationParameterCollection?, bool>? ShouldResetPageOnParameters { get; set; }
 
     /// <summary>
     /// Identifies if the data provider is currently working on loading data.

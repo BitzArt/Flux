@@ -25,21 +25,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BitzArt.LinqExtensions" Version="1.7.0" />
-		<PackageReference Include="BitzArt.Pagination" Version="1.15.1" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+		<PackageReference Include="BitzArt.LinqExtensions" Version="2.1.2" />
+		<PackageReference Include="BitzArt.Pagination" Version="1.18.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>BitzArt.Flux.MudBlazor</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>BitzArt.Flux.Tests</_Parameter1>
-		</AssemblyAttribute>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-			<_Parameter1>BitzArt.Flux.REST.Tests</_Parameter1>
-		</AssemblyAttribute>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-			<_Parameter1>BitzArt.Flux.Json.Tests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 

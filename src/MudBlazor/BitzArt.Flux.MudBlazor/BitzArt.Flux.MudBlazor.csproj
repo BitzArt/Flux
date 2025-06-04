@@ -30,8 +30,8 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <PackageReference Include="BitzArt.Json.TypedObjects" Version="0.1.0" />
-	  <PackageReference Include="MudBlazor" Version="7.15.0" />
+	  <PackageReference Include="BitzArt.Json.TypedValues" Version="0.2.2" />
+	  <PackageReference Include="MudBlazor" Version="8.6.0" />
 	</ItemGroup>
 
 	<ItemGroup>

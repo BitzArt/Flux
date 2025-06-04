@@ -28,19 +28,28 @@ public partial class BooksPage : ComponentBase
         await InvokeAsync(StateHasChanged);
     }
 
-    private object[] GetBooksParameters(TableState state)
+    private IOperationParameterCollection GetBooksParameters(TableState state)
     {
-        var query = HttpUtility.ParseQueryString(string.Empty);
+        var parameters = new List<KeyValuePair<string, object>>();
 
-        if (_selectedAuthor is not null) query["authorId"] = _selectedAuthor.Id.ToString();
+        if (_selectedAuthor is not null)
+        {
+            parameters.Add(new("authorId", _selectedAuthor.Id!));
+        }
         if (!string.IsNullOrWhiteSpace(state.SortLabel) && state.SortDirection != SortDirection.None)
-            query["order"] = state.SortLabel;
-        if (state.SortDirection == SortDirection.Descending) query["desc"] = "true";
-        if (!string.IsNullOrWhiteSpace(_search)) query["search"] = _search;
+        {
+            parameters.Add(new("sortLabel", state.SortLabel));
+        }
+        if (state.SortDirection == SortDirection.Descending)
+        {
+            parameters.Add(new("desc", true));
+        }
+        if (!string.IsNullOrWhiteSpace(_search))
+        {
+            parameters.Add(new("search", _search));
+        }
 
-        var queryString = query.Count > 0 ? $"?{query}" : string.Empty;
-
-        return [queryString];
+        return new OperationParameterCollection(parameters).Parameters;
     }
 
     private async Task OnAuthorSelectedAsync(Author author)

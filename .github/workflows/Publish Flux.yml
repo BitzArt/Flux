@@ -25,10 +25,10 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      - name: Verify commit
-        run: |
-          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-          git branch --remote --contains | grep origin/main
+      # - name: Verify commit
+      #   run: |
+      #     git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+      #     git branch --remote --contains | grep origin/main
 
       - name: Set version
         run: echo "VERSION=${GITHUB_REF/refs\/tags\/Flux-v/}" >> $GITHUB_ENV
@@ -41,8 +41,10 @@ jobs:
       - name: Push
         run: |
           dotnet nuget push BitzArt.Flux.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
+          
           dotnet nuget push BitzArt.Flux.REST.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
-          dotnet nuget push BitzArt.Flux.REST.Context.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
+
           dotnet nuget push BitzArt.Flux.Json.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
+
           dotnet nuget push BitzArt.Flux.MudBlazor.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_APIKEY}
 

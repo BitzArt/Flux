@@ -5,7 +5,7 @@ namespace BitzArt.Flux;
 public class FromJsonFileExtensionTests
 {
     [Fact]
-    public async Task FromJsonFile_WithBasePath_ReadsJsonData()
+    public async Task FromJsonFile_WithBasePath_ShouldReadJsonData()
     {
         var services = new ServiceCollection();
 
@@ -30,7 +30,7 @@ public class FromJsonFileExtensionTests
     }
 
     [Fact]
-    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithDot_ReadsJsonData()
+    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithDot_ShouldReadJsonData()
     {
         var services = new ServiceCollection();
 
@@ -54,7 +54,7 @@ public class FromJsonFileExtensionTests
     }
 
     [Fact]
-    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithNoDot_ReadsJsonData()
+    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithNoDot_ShouldReadJsonData()
     {
         var services = new ServiceCollection();
 
@@ -78,7 +78,7 @@ public class FromJsonFileExtensionTests
     }
 
     [Fact]
-    public async Task FromJsonFile_BasePathGlobalByGettingCurrentDirectory_ReadsJsonData()
+    public async Task FromJsonFile_BasePathGlobalByGettingCurrentDirectory_ShouldReadJsonData()
     {
         var services = new ServiceCollection();
 

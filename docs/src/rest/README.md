@@ -16,3 +16,5 @@
 3. [Custom Variables](03.variables.md)
    - [Custom Page endpoint with parent id example](03.variables.md#custom-page-endpoint-with-parent-id-example)
 4. [Pagination](04.pagination.md)
+5. [Advanced Scenarios](05.advanced.md)
+   - [Custom HTTP Message Handlers](05.advanced.md#custom-http-message-handlers)

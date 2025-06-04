@@ -1,5 +1,6 @@
 ﻿using BitzArt.Flux;
 using BitzArt.Flux.MudBlazor;
+using BitzArt.Pagination;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MudBlazor.SampleApp;
@@ -11,12 +12,9 @@ public static class AddFluxExtension
         services.AddFlux(x =>
         {
             x.AddService("library-web-api")
-            .UsingRest(baseUrl.TrimEnd('/') + "/api")
-                .AddSet<Author, int>()
-                    .WithEndpoint("authors")
-                .AddSet<Book, int>()
-                    .WithEndpoint("books")
-                    .WithPageEndpoint("books{query}");
+                .UsingRest(baseUrl.TrimEnd('/') + "/api")
+                .AddSet<Author, int>("authors")
+                .AddSet<Book, int>("books");
         });
 
         services.AddFluxSetDataProvider<Book>();

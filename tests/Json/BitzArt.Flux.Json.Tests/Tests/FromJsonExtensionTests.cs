@@ -4,7 +4,7 @@ namespace BitzArt.Flux;
 
 public class FromJsonExtensionTests
 {
-    private string jsonData =
+    private readonly string jsonData =
         """
         [
             {
@@ -17,7 +17,7 @@ public class FromJsonExtensionTests
         """;
 
     [Fact]
-    public async Task FromJson_ValidJson_ReadsJsonData()
+    public async Task FromJson_ValidJson_ShouldReadJsonData()
     {
         var services = new ServiceCollection();
 
@@ -45,7 +45,7 @@ public class FromJsonExtensionTests
     }
 
     [Fact]
-    public void FromJson_EmptyString_ThrowsOnAddingSet()
+    public void FromJson_EmptyString_ShouldThrowOnAddingSet()
     {
         var services = new ServiceCollection();
 
@@ -63,7 +63,7 @@ public class FromJsonExtensionTests
     }
 
     [Fact]
-    public void FromJson_Null_ThrowsOnAddingSet()
+    public void FromJson_Null_ShouldThrowOnAddingSet()
     {
         var services = new ServiceCollection();
 

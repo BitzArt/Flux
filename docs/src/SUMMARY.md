@@ -15,4 +15,5 @@
   - [Configuring endpoints](rest/02.endpoints.md)
   - [Custom Variables](rest/03.variables.md)
   - [Pagination](rest/04.pagination.md)
+  - [Advanced Scenarios](rest/05.advanced.md)
 - [Flux.JSON](json/01.introduction.md)
