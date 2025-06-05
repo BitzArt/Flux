@@ -34,7 +34,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     /// A function that retrieves search request parameters.
     /// </summary>
     [Parameter]
-    public Func<string, CancellationToken, IOperationParameterCollection>? GetParametersFunc { get; set; }
+    public Func<string, CancellationToken, object>? GetParametersFunc { get; set; }
 
     /// <inheritdoc cref="MudAutocomplete{T}.SearchFunc"/>
     public new Func<string?, CancellationToken, Task<IEnumerable<T>>?>? SearchFunc
