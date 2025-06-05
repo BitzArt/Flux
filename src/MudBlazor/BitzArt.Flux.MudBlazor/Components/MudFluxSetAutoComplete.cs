@@ -1,4 +1,5 @@
 ﻿using BitzArt.Flux;
+using BitzArt.Pagination;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,7 +34,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     /// A function that retrieves search request parameters.
     /// </summary>
     [Parameter]
-    public Func<string, CancellationToken, object>? GetParametersFunc { get; set; }
+    public Func<string, CancellationToken, IOperationParameterCollection>? GetParametersFunc { get; set; }
 
     /// <inheritdoc cref="MudAutocomplete{T}.SearchFunc"/>
     public new Func<string?, CancellationToken, Task<IEnumerable<T>>?>? SearchFunc
@@ -86,13 +87,16 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
 
     private async Task<IEnumerable<T>> SearchAsync(string searchText, CancellationToken cancellationToken)
     {
+        var pageRequest = new PageRequest(0, MaxItems ?? 10);
         var parameters = await GetParametersAsync(searchText, cancellationToken);
-        var page = await Context.GetPageAsync(0, MaxItems ?? 10, parameters, cancellationToken);
+        var descriptor = new GetPageOperationDescriptor(pageRequest, parameters);
+
+        var page = await Context.GetPageAsync(descriptor, cancellationToken);
 
         return page.Items!;
     }
 
-    private async Task<OperationParameterCollection?> GetParametersAsync(string searchText, CancellationToken cancellationToken)
+    private async Task<IOperationParameterCollection?> GetParametersAsync(string searchText, CancellationToken cancellationToken)
     {
         if (GetParametersFunc is null)
         {
@@ -101,10 +105,10 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
 
         var funcResult = GetParametersFunc.Invoke(searchText, cancellationToken);
 
-        if (funcResult is OperationParameterCollection parameters) return parameters;
-        if (funcResult is Task<OperationParameterCollection> task) return await task;
+        if (funcResult is IOperationParameterCollection parameters) return parameters;
+        if (funcResult is Task<IOperationParameterCollection> task) return await task;
 
         throw new NotSupportedException($"The type '{funcResult.GetType().Name}' is not supported as a return type for {nameof(GetParametersFunc)}. " +
-                $"It must be of type {nameof(OperationParameterCollection)} or Task<{nameof(OperationParameterCollection)}>.");
+                $"It must be of type implementing {nameof(IOperationParameterCollection)} or Task<{nameof(IOperationParameterCollection)}>.");
     }
 }
