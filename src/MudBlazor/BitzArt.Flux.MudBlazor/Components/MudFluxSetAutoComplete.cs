@@ -34,7 +34,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     /// A function that retrieves search request parameters.
     /// </summary>
     [Parameter]
-    public Func<string, CancellationToken, IOperationParameterCollection>? GetParameters { get; set; }
+    public Func<string, IOperationParameterCollection>? GetParameters { get; set; }
 
     /// <summary>
     /// A function that returns a task that retrieves search request parameters.
@@ -103,7 +103,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     private async Task<IOperationParameterCollection?> RetrieveParametersAsync(string searchText, CancellationToken cancellationToken)
     {
         var parameters = GetParameters is not null
-            ? GetParameters.Invoke(searchText, cancellationToken)
+            ? GetParameters.Invoke(searchText)
             : GetParametersAsync is not null
                 ? await GetParametersAsync.Invoke(searchText, cancellationToken)
                 : null;
