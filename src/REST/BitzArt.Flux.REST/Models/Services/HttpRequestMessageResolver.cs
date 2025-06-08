@@ -295,7 +295,7 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
         {
             query = parameter.Value switch
             {
-                IEnumerable enumerable when enumerable is not string => query.Add(GetQueryString(enumerable)),
+                IEnumerable enumerable when enumerable is not string => query.Add(GetQueryString(enumerable, parameter.Key)),
                 _ => query.Add(parameter.Key, parameter.Value.ToString())
             };
         }
@@ -303,13 +303,13 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
         return query;
     }
 
-    private static QueryString GetQueryString(IEnumerable enumerableParameter)
+    private static QueryString GetQueryString(IEnumerable enumerableParameter, string name)
     {
         var query = new QueryString();
         var index = 0;
         foreach (var item in enumerableParameter)
         {
-            query = query.Add($"item[{index}]", item is not null ? item.ToString() : "null");
+            query = query.Add($"{name}[{index}]", item is not null ? item.ToString() : "null");
             index++;
         }
         return query;
