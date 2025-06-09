@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace BitzArt.Flux.MudBlazor;
@@ -51,8 +52,11 @@ internal class OperationParameterCollectionJsonConverter : JsonConverter<IOperat
 
     private sealed class NamedParameterCollectionPayload : ParameterCollectionPayload
     {
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors, typeof(KeyValuePair<string, TypedValue>))]
+        private IEnumerable<KeyValuePair<string, TypedValue>> values;
+
         [JsonPropertyName("values")]
-        public IEnumerable<KeyValuePair<string, TypedValue>> Values { get; set; }
+        public IEnumerable<KeyValuePair<string, TypedValue>> Values { get => values; set => values = value; }
 
         public override IOperationParameterCollection GetCollection()
             => new OperationParameterCollection.NamedParameters([.. Values.Select(x => new KeyValuePair<string, object>(x.Key, x.Value.Value!))]);
