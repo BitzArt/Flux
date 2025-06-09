@@ -12,7 +12,7 @@ namespace BitzArt.Flux.REST;
 /// conditions.
 /// </para>
 /// <para>
-/// When registered with a <see cref="ServiceLifetime.Transient"/> lifetime,
+/// When registered with <see cref="ServiceLifetime.Transient"/>,
 /// a single instance of the interceptor will be created for each request,
 /// handling both the request and response phases.
 /// </para>

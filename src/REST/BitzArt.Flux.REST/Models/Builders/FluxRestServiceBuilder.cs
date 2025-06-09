@@ -12,6 +12,6 @@ internal class FluxRestServiceBuilder : IFluxRestServiceBuilder
     {
         FluxBuilder = fluxBuilder;
         ServiceName = serviceName;
-        ServiceConfiguration = new(baseUrl);
+        ServiceConfiguration = new(serviceName, baseUrl);
     }
 }

@@ -28,7 +28,7 @@ public class SetConfigurationTests
     public void Add_TestEndpointConfiguration_ShouldUseResolver()
     {
         // Arrange
-        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration(null), null);
+        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration("my-service", null), null);
 
         bool resolverCalled = false;
         var requestMessage = new HttpRequestMessage();
@@ -55,7 +55,7 @@ public class SetConfigurationTests
     public void Replace_WithHttpMethodsSubset_ShouldReplace()
     {
         // Arrange
-        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration(null), null);
+        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration("my-service", null), null);
 
         bool configuration1Called = false;
         var configuration1RequestMessage = new HttpRequestMessage();
@@ -93,7 +93,7 @@ public class SetConfigurationTests
     public void Replace_WithHttpMethodsNotSubset_ShouldNotReplace()
     {
         // Arrange
-        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration(null), null);
+        var setConfiguration = new FluxRestSetConfiguration(new FluxRestServiceConfiguration("my-service", null), null);
 
         bool configuration1Called = false;
         var configuration1RequestMessage = new HttpRequestMessage();

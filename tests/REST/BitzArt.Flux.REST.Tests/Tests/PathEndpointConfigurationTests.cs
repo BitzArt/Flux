@@ -10,7 +10,7 @@ public class PathEndpointConfigurationTests
     public void Ctor_AllHttpMethods_ShouldCreateForAllOperationTypes()
     {
         // Arrange
-        var serviceConfiguration = new FluxRestServiceConfiguration(null);
+        var serviceConfiguration = new FluxRestServiceConfiguration(ServiceName, null);
         var setConfiguration = new FluxRestSetConfiguration(serviceConfiguration, null);
 
         // Act

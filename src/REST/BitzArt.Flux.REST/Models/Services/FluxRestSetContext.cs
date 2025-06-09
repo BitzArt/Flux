@@ -1,4 +1,5 @@
 ﻿using BitzArt.Flux.Sets;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
@@ -9,11 +10,14 @@ internal class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     where TKey : notnull
 {
     private readonly HttpClient _httpClient;
+    private readonly IFluxRestInterceptor? _interceptor;
 
     public FluxRestSetContext(FluxRestSetConfiguration configuration, IServiceProvider serviceProvider, ILogger logger, HttpClient httpClient)
         : base(configuration, serviceProvider, logger)
     {
         _httpClient = httpClient;
+
+        _interceptor = serviceProvider.GetKeyedService<IFluxRestInterceptor>(Configuration.ServiceConfiguration.ServiceName);
     }
 
     public override async Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
@@ -23,7 +27,17 @@ internal class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
         var operationName = descriptor.GetFriendlyOperationName();
         Logger.LogInformation("[{type}] {operationName}: {uri}", typeof(TModel).Name, operationName, httpRequestMessage.RequestUri);
 
+        if (_interceptor is not null)
+        {
+            await _interceptor.OnRequestAsync(_httpClient, httpRequestMessage, cancellationToken);
+        }
+
         var response = await _httpClient.SendAsync(httpRequestMessage, cancellationToken);
+
+        if (_interceptor is not null)
+        {
+            await _interceptor.OnResponseAsync(_httpClient, response, cancellationToken);
+        }
 
         if (!response.IsSuccessStatusCode)
         {
