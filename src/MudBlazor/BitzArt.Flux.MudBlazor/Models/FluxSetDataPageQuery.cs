@@ -24,12 +24,12 @@ public record FluxSetDataPageQuery<TModel>
     /// <summary>
     /// Result data.
     /// </summary>
-    public PageResult<TModel> Data { get; set; } = null!;
+    public PageResult<TModel, PageRequest> Data { get; set; } = null!;
 
     /// <summary>
     /// Creates a new instance of <see cref="FluxSetDataPageQuery{TModel}"/>.
     /// </summary>
-    public FluxSetDataPageQuery(TableState tableState, IOperationParameterCollection parameters, PageResult<TModel> data) : this()
+    public FluxSetDataPageQuery(TableState tableState, IOperationParameterCollection parameters, PageResult<TModel, PageRequest> data) : this()
     {
         TableState = tableState;
         Parameters = parameters;

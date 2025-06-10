@@ -38,7 +38,7 @@ public partial class BooksPage : ComponentBase
         }
         if (!string.IsNullOrWhiteSpace(state.SortLabel) && state.SortDirection != SortDirection.None)
         {
-            parameters.Add(new("sortLabel", state.SortLabel));
+            parameters.Add(new("order", state.SortLabel));
         }
         if (state.SortDirection == SortDirection.Descending)
         {
