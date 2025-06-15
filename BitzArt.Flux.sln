@@ -58,6 +58,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rest", "rest", "{4E6BDC28-D
 		docs\src\rest\03.variables.md = docs\src\rest\03.variables.md
 		docs\src\rest\04.pagination.md = docs\src\rest\04.pagination.md
 		docs\src\rest\05.advanced.md = docs\src\rest\05.advanced.md
+		docs\src\rest\06.errors.md = docs\src\rest\06.errors.md
 		docs\src\rest\README.md = docs\src\rest\README.md
 	EndProjectSection
 EndProject
