@@ -1,4 +1,5 @@
 ﻿using BitzArt.Flux.Sets;
+using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux.Json;
@@ -7,11 +8,87 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     where TModel : class
     where TKey : notnull
 {
+    internal FluxJsonSetOptions<TModel, TKey> SetOptions { get; set; }
 
-    public FluxJsonSetContext(FluxJsonSetConfiguration configuration, IServiceProvider serviceProvider, ILogger logger)
-        : base(configuration, serviceProvider, logger) { }
+    public FluxJsonSetContext(FluxJsonSetConfiguration configuration, IServiceProvider serviceProvider, ILogger logger, FluxJsonSetOptions<TModel, TKey> setOptions)
+        : base(configuration, serviceProvider, logger)
+    {
+        SetOptions = setOptions ?? throw new ArgumentNullException(nameof(setOptions), "Set options cannot be null.");
+    }
 
-    public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
+    public override async Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
+    {
+        var operationName = descriptor.GetFriendlyOperationName();
+
+        Logger.LogInformation("[{type}] {operationName}", typeof(TModel).Name, operationName);
+
+        var data = await ResolveDataAsync(descriptor, cancellationToken);
+
+        return data;
+    }
+
+    private async Task<object?> ResolveDataAsync(OperationDescriptor descriptor, CancellationToken cancellationToken)
+    {
+        switch (descriptor)
+        {
+            case GetOperationDescriptor getOperation:
+                return await GetAsync((TKey)getOperation.Id!, getOperation.Parameters);
+            case GetAllOperationDescriptor getAllOperation:
+                return await GetAllAsync(getAllOperation.Parameters);
+            case GetPageOperationDescriptor pageOperation:
+                return await GetPageAsync(pageOperation.PageRequest, pageOperation.Parameters);
+            case AddOperationDescriptor addOperation:
+                return await AddAsync((TModel)addOperation.Value!, addOperation.Parameters);
+            case UpdateOperationDescriptor updateOperation:
+                if (updateOperation.Id is null)
+                    return await UpdateAsync((TModel)updateOperation.Value!, updateOperation.Partial, updateOperation.Parameters);
+                return await UpdateAsync((TKey)updateOperation.Id!, (TModel)updateOperation.Value!, updateOperation.Partial, updateOperation.Parameters);
+            default:
+                Logger.LogError("Unsupported operation type: {operationType}", descriptor.GetType().Name);
+                throw new NotSupportedException($"Operation type '{descriptor.GetType().Name}' is not supported in JSON set context.");
+        }
+    }
+
+    private Task<IEnumerable<TModel>> GetAllAsync(IOperationParameterCollection? parameters = null)
+    {
+        Logger.LogInformation("GetAll {type}", typeof(TModel).Name);
+
+        return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
+    }
+
+    private Task<PageResult<TModel, PageRequest>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null)
+    {
+        Logger.LogInformation("GetPage {type}", typeof(TModel).Name);
+
+        return Task.FromResult(SetOptions.Items!.ToPage(pageRequest));
+    }
+
+    private Task<TModel> GetAsync(TKey? id, IOperationParameterCollection? parameters = null)
+    {
+        Logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
+
+        var existingItem = SetOptions.Items!.FirstOrDefault(item =>
+        {
+            if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
+
+            var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
+            return itemId is not null && itemId.Equals(id);
+        }) ?? throw new FluxItemNotFoundException<TModel>(id);
+
+        return Task.FromResult(existingItem);
+    }
+
+    private Task<TModel> AddAsync(TModel model, IOperationParameterCollection? parameters = null)
+    {
+        throw new NotSupportedException();
+    }
+
+    private Task<TModel> UpdateAsync(TModel model, bool partial = false, IOperationParameterCollection? parameters = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    private Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, IOperationParameterCollection? parameters = null)
     {
         throw new NotImplementedException();
     }
