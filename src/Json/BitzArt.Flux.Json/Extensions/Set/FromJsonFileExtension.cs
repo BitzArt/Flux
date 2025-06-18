@@ -1,6 +1,6 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 /// <summary>
 /// Extension methods for configuring a set from a JSON dataset file.
@@ -27,8 +27,8 @@ public static class FromJsonFileExtension
         string filePath)
         where TModel : class
     {
-        var path = GetFilePath(filePath, builder.ServiceOptions.BaseFilePath);
-        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path, builder.ServiceOptions.SerializerOptions);
+        var path = GetFilePath(filePath, builder.ServiceConfiguration.BaseFilePath);
+        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path, builder.ServiceConfiguration.JsonSerializerOptions);
 
         return builder;
     }

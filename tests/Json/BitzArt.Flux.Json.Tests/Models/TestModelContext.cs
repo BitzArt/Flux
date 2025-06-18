@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BitzArt.Flux.Json;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
 namespace BitzArt.Flux;
@@ -14,14 +15,12 @@ internal static class TestSetContext
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson()
-                    .WithBaseFilePath("Data")
-                    .ConfigureJson(json =>
-                    {
-                        json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                        json.Converters.Add(new JsonStringEnumConverter());
-                        json.WriteIndented = true;
-                    })
+                .UsingJson("Data", json =>
+                {
+                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    json.Converters.Add(new JsonStringEnumConverter());
+                    json.WriteIndented = true;
+                })
                     .AddSet<TestModel, int>()
                         .FromJsonFile("test-model.set.json")
                         .WithKey(x => x.Id!.Value);

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 /// <summary>
 /// Extension methods for configuring the key property of a set.
@@ -25,6 +25,7 @@ public static class WithKeyExtension
     /// </returns>
     public static IFluxJsonSetBuilder<TModel, TKey> WithKey<TModel, TKey>(this IFluxJsonSetBuilder<TModel, TKey> builder, Expression<Func<TModel, TKey>> expression)
         where TModel : class
+        where TKey : notnull
     {
         var options = (FluxJsonSetOptions<TModel, TKey>)builder.SetOptions;
         options.KeyPropertyExpression = expression;

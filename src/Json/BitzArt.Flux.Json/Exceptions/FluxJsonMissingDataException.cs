@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Json;
 
 internal class FluxJsonMissingDataException : Exception
 {

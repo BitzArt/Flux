@@ -1,7 +1,6 @@
 ﻿using BitzArt.Flux.REST;
 using BitzArt.Flux.Sets;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux;
 

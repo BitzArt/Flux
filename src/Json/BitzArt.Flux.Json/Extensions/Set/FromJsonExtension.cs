@@ -1,6 +1,6 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 /// <summary>
 /// Extension methods for configuring a set from a JSON dataset string.
@@ -28,7 +28,7 @@ public static class FromJsonExtension
         where TModel : class
     {
         builder.SetOptions.Items =
-            JsonSerializer.Deserialize<List<TModel>>(json, builder.ServiceOptions.SerializerOptions)
+            JsonSerializer.Deserialize<List<TModel>>(json, builder.ServiceConfiguration.JsonSerializerOptions)
             ?? throw new FluxJsonDeserializationException<List<TModel>>();
 
         return builder;

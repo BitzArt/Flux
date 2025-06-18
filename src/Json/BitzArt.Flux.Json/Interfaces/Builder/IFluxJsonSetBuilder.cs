@@ -12,6 +12,8 @@ public interface IFluxJsonSetBuilder<TModel, TKey> : IFluxJsonServiceBuilder, IF
 
     internal FluxJsonSetConfiguration SetConfiguration { get; }
 
+    internal IFluxJsonSetOptions<TModel> SetOptions { get; }
+
     // ================ Inherited members ================
 
     IFluxServiceBuilder IFluxSetBuilder.ServiceBuilder => ServiceBuilder;

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 internal class FluxJsonSetOptions<TModel, TKey> : IFluxJsonSetOptions<TModel>
     where TModel : class

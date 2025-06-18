@@ -1,3 +1,4 @@
+using BitzArt.Flux.Json;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
@@ -12,11 +13,10 @@ public class FromJsonFileExtensionTests
         services.AddFlux(flux =>
         {
             flux.AddService("service 1")
-                .UsingJson()
-                    .WithBaseFilePath("Data")
-                    .AddSet<TestModel>()
-                        .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                .UsingJson("Data")
+                    .AddSet<TestModel, int>()
+                    .FromJsonFile("test-model.set.json")
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -38,9 +38,9 @@ public class FromJsonFileExtensionTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                .AddSet<TestModel>()
+                    .AddSet<TestModel, int>()
                     .FromJsonFile("./Data/test-model.set.json")
-                    .WithKey(x => x.Id!);
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -62,9 +62,9 @@ public class FromJsonFileExtensionTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                    .AddSet<TestModel>()
-                        .FromJsonFile("Data/test-model.set.json")
-                        .WithKey(x => x.Id!);
+                    .AddSet<TestModel, int>()
+                    .FromJsonFile("Data/test-model.set.json")
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
@@ -88,11 +88,10 @@ public class FromJsonFileExtensionTests
         services.AddFlux(flux =>
         {
             flux.AddService("service 1")
-                .UsingJson()
-                    .WithBaseFilePath(dataDirectory)
-                    .AddSet<TestModel>()
-                        .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                .UsingJson(dataDirectory)
+                    .AddSet<TestModel, int>()
+                    .FromJsonFile("test-model.set.json")
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
