@@ -11,3 +11,4 @@
 1. [Introduction](01.introduction.md)
    - [Installation](01.introduction.md#installation)
    - [Usage](01.introduction.md#usage)
+   - [Usage](02.configuration.md#usage)

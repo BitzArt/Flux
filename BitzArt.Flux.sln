@@ -49,6 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "json", "json", "{7B8D8836-1
 	ProjectSection(SolutionItems) = preProject
 		docs\src\json\01.introduction.md = docs\src\json\01.introduction.md
 		docs\src\json\README.md = docs\src\json\README.md
+		docs\src\json\02.configuration.md = docs\src\json\02.configuration.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rest", "rest", "{4E6BDC28-D997-43B7-B0DE-C676636669FE}"
@@ -58,8 +59,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rest", "rest", "{4E6BDC28-D
 		docs\src\rest\03.variables.md = docs\src\rest\03.variables.md
 		docs\src\rest\04.pagination.md = docs\src\rest\04.pagination.md
 		docs\src\rest\05.advanced.md = docs\src\rest\05.advanced.md
-		docs\src\rest\README.md = docs\src\rest\README.md
 		docs\src\rest\06.interceptors.md = docs\src\rest\06.interceptors.md
+		docs\src\rest\README.md = docs\src\rest\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "theme", "theme", "{D6F7155D-4BB7-4251-8C92-795F8A9F332D}"
