@@ -16,5 +16,4 @@
   - [Custom Variables](rest/03.variables.md)
   - [Pagination](rest/04.pagination.md)
   - [Advanced Scenarios](rest/05.advanced.md)
-  - [Error Handling](rest/06.errors.md)
 - [Flux.JSON](json/01.introduction.md)
