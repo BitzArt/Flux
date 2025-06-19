@@ -63,17 +63,16 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
         return Task.FromResult(SetOptions.Items!.ToPage(pageRequest));
     }
 
-    private Task<TModel> GetAsync(TKey? id, IOperationParameterCollection? parameters = null)
+    private Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null)
     {
         Logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
 
-        var existingItem = SetOptions.Items!.FirstOrDefault(item =>
-        {
-            if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
+        if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
 
-            var itemId = SetOptions.KeyPropertyExpression.Compile().Invoke(item);
-            return itemId is not null && itemId.Equals(id);
-        }) ?? throw new FluxItemNotFoundException<TModel>(id);
+        if (id is null) throw new ArgumentNullException(nameof(id), "The key cannot be null.");
+
+        if (SetOptions.KeyedItems is null || !SetOptions.KeyedItems.TryGetValue(id, out var existingItem))
+            throw new FluxItemNotFoundException<TModel>(id);
 
         return Task.FromResult(existingItem);
     }

@@ -7,5 +7,5 @@ internal interface IFluxJsonSetOptions<TModel>
 {
     public ICollection<TModel>? Items { get; set; }
 
-    public Expression<Func<TModel, object>>? KeyPropertyExpression { get; set; }
+    internal Expression<Func<TModel, object>>? KeyPropertyExpression { get; set; }
 }
