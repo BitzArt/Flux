@@ -9,12 +9,12 @@ namespace BitzArt.Flux;
 public static class WithInterceptorExtension
 {
     /// <summary>
-    /// Configures an <see cref="IFluxRestInterceptor"/> for a Flux REST service.
+    /// Configures an <see cref="IFluxRestInterceptor">IFluxRestInterceptor</see> for a Flux REST service.
     /// </summary>
     /// <remarks>
     /// When registered with <see cref="ServiceLifetime.Transient"/>,
     /// a single instance of the interceptor will be created for each request,
-    /// handling both the request and response phases.
+    /// handling both request and response phases.
     /// </remarks>
     /// <typeparam name="TInterceptor">Interceptor type that implements <see cref="IFluxRestInterceptor"/>.</typeparam>
     /// <param name="builder">Flux REST service builder.</param>
