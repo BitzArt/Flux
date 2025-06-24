@@ -27,7 +27,7 @@ public static class AddSetExtension
         serviceCollection.AddSetContext(serviceBuilder.ServiceName, setKey, lifetime,
             (serviceProvider, logger) =>
             {
-                return new FluxJsonSetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, logger, builder.SetOptions);
+                return new FluxJsonSetContext<TModel, TKey>(builder.SetConfiguration, serviceProvider, logger);
             });
 
         return builder;

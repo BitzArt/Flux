@@ -4,16 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux.Json;
 
-internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, FluxJsonSetConfiguration>
+internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, FluxJsonSetConfiguration<TModel, TKey>>
     where TModel : class
     where TKey : notnull
 {
-    internal FluxJsonSetOptions<TModel, TKey> SetOptions { get; set; }
-
-    public FluxJsonSetContext(FluxJsonSetConfiguration configuration, IServiceProvider serviceProvider, ILogger logger, FluxJsonSetOptions<TModel, TKey> setOptions)
+    public FluxJsonSetContext(FluxJsonSetConfiguration<TModel, TKey> configuration, IServiceProvider serviceProvider, ILogger logger)
         : base(configuration, serviceProvider, logger)
     {
-        SetOptions = setOptions ?? throw new ArgumentNullException(nameof(setOptions), "Set options cannot be null.");
     }
 
     public override async Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
@@ -53,25 +50,25 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     {
         Logger.LogInformation("GetAll {type}", typeof(TModel).Name);
 
-        return Task.FromResult<IEnumerable<TModel>>(SetOptions.Items!);
+        return Task.FromResult<IEnumerable<TModel>>(Configuration.DataCollection.Items!);
     }
 
     private Task<PageResult<TModel, PageRequest>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null)
     {
         Logger.LogInformation("GetPage {type}", typeof(TModel).Name);
 
-        return Task.FromResult(SetOptions.Items!.ToPage(pageRequest));
+        return Task.FromResult(Configuration.DataCollection.Items!.ToPage(pageRequest));
     }
 
     private Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null)
     {
         Logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
 
-        if (SetOptions.KeyPropertyExpression is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
+        if (Configuration.DataCollection.KeyPropertySelector is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
 
         if (id is null) throw new ArgumentNullException(nameof(id), "The key cannot be null.");
 
-        if (SetOptions.KeyedItems is null || !SetOptions.KeyedItems.TryGetValue(id, out var existingItem))
+        if (Configuration.DataCollection.KeyedItems is null || !Configuration.DataCollection.KeyedItems.TryGetValue(id, out var existingItem))
             throw new FluxItemNotFoundException<TModel>(id);
 
         return Task.FromResult(existingItem);

@@ -28,7 +28,7 @@ public static class FromJsonFileExtension
         where TModel : class
     {
         var path = GetFilePath(filePath, builder.ServiceConfiguration.BaseFilePath);
-        builder.SetOptions.Items = TryGetItemsFromJsonFile<TModel>(path, builder.ServiceConfiguration.JsonSerializerOptions);
+        builder.SetConfiguration.DataCollection.Items = TryGetItemsFromJsonFile<TModel>(path, builder.ServiceConfiguration.JsonSerializerOptions);
 
         return builder;
     }

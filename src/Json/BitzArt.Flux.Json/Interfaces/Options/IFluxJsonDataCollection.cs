@@ -2,10 +2,10 @@
 
 namespace BitzArt.Flux.Json;
 
-internal interface IFluxJsonSetOptions<TModel>
+internal interface IFluxJsonDataCollection<TModel>
     where TModel : class
 {
     public ICollection<TModel>? Items { get; set; }
 
-    internal Expression<Func<TModel, object>>? KeyPropertyExpression { get; set; }
+    internal Func<TModel, object>? KeyPropertySelector { get; set; }
 }

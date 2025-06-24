@@ -27,8 +27,10 @@ public static class WithKeyExtension
         where TModel : class
         where TKey : notnull
     {
-        var options = (FluxJsonSetOptions<TModel, TKey>)builder.SetOptions;
-        options.KeyPropertyExpression = expression;
+        var options = builder.SetConfiguration.DataCollection;
+
+        var keyPropertySelector = expression.Compile();
+        options.KeyPropertySelector = keyPropertySelector;
 
         return builder;
     }
