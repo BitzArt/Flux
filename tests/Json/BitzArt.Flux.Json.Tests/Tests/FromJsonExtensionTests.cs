@@ -20,6 +20,7 @@ public class FromJsonExtensionTests
     [Fact]
     public async Task FromJson_ValidJson_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         services.AddFlux(flux =>
@@ -35,8 +36,10 @@ public class FromJsonExtensionTests
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
         Assert.Equal(2, data.Count());
@@ -48,8 +51,10 @@ public class FromJsonExtensionTests
     [Fact]
     public void FromJson_EmptyString_ShouldThrowOnAddingSet()
     {
+        // Arrange
         var services = new ServiceCollection();
 
+        // Act/Assert
         Assert.ThrowsAny<Exception>(() =>
         {
             services.AddFlux(flux =>
@@ -66,8 +71,10 @@ public class FromJsonExtensionTests
     [Fact]
     public void FromJson_Null_ShouldThrowOnAddingSet()
     {
+        // Arrange
         var services = new ServiceCollection();
 
+        // Act/Assert
         Assert.ThrowsAny<Exception>(() =>
         {
             services.AddFlux(flux =>

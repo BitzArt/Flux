@@ -112,9 +112,8 @@ internal class FluxJsonDataCollection<TModel, TKey> : IFluxJsonDataCollection<TM
     public void CopyTo(TModel[] array, int arrayIndex)
     {
         ArgumentNullException.ThrowIfNull(array, nameof(array));
-        if (Items is null) return;
 
-        if (array is null) throw new ArgumentNullException(nameof(array), "Array cannot be null.");
+        if (Items is null) return;
 
         var subArrayLength = array.Length - arrayIndex;
         if (arrayIndex < 0 || arrayIndex >= array.Length || subArrayLength < Items.Count) 
@@ -126,6 +125,7 @@ internal class FluxJsonDataCollection<TModel, TKey> : IFluxJsonDataCollection<TM
     public bool Remove(TModel item)
     {
         ArgumentNullException.ThrowIfNull(item, nameof(item));
+
         if (Items is null) return false;
 
         var removed = Items.Remove(item);
