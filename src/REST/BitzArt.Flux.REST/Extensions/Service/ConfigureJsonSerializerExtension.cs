@@ -1,7 +1,6 @@
-﻿using BitzArt.Flux.REST;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Extension methods for configuring <see cref="JsonSerializerOptions"/>

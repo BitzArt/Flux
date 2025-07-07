@@ -1,7 +1,6 @@
-﻿using BitzArt.Flux.REST;
-using BitzArt.Flux.REST.Endpoints;
+﻿using BitzArt.Flux.Rest.Endpoints;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 public static partial class HttpRequestMessageResolverConfigurationExtensions
 {

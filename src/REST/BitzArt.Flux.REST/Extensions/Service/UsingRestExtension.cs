@@ -1,10 +1,8 @@
-﻿using BitzArt.Flux.REST;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Extension methods for configuring a REST Flux service.
@@ -18,10 +16,10 @@ public static class UsingRestExtension
         => protocolConfigurator.UsingRest(baseUrl, (builder) => builder.AddHttpMessageHandler<THandler>());
 
     /// <summary>
-    /// Configures the <see cref="IFluxServiceProtocolConfigurator"/> by configuring it to use a REST service.
+    /// Configures the service to use a REST Flux implementation.
     /// </summary>
     /// <returns>
-    /// A <see cref="IFluxRestServiceBuilder"/> for further service configuration.
+    /// A <see cref="IFluxRestServiceBuilder"/> for further REST service configuration.
     /// </returns>
     [SuppressMessage(
         "Performance",

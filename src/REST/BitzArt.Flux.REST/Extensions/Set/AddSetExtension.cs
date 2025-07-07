@@ -1,8 +1,7 @@
-﻿using BitzArt.Flux.REST;
-using BitzArt.Flux.Sets;
+﻿using BitzArt.Flux.Sets;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Extension methods for configuring set contexts with an <see cref="IFluxServiceBuilder"/>.

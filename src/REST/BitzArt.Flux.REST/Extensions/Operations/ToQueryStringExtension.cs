@@ -1,7 +1,6 @@
-﻿using BitzArt.Flux.REST;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Extension methods for converting operation descriptors to query strings.

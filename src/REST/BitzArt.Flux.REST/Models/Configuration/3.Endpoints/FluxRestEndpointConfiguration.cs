@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux.REST.Endpoints;
+﻿namespace BitzArt.Flux.Rest.Endpoints;
 
 internal abstract class FluxRestEndpointConfiguration
 {

@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Represents the HTTP methods that can be used in a RESTful API.

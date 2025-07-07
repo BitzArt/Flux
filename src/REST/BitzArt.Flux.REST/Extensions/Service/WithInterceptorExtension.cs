@@ -1,7 +1,6 @@
-﻿using BitzArt.Flux.REST;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Extension methods for configuring REST Flux service interceptors.

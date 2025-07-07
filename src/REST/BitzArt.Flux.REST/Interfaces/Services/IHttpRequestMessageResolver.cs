@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.Rest;
 
 internal interface IHttpRequestMessageResolver
 {

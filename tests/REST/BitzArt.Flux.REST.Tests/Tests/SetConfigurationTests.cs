@@ -1,6 +1,6 @@
-﻿using BitzArt.Flux.REST.Endpoints;
+﻿using BitzArt.Flux.Rest.Endpoints;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 public class SetConfigurationTests
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux.REST.Endpoints;
+namespace BitzArt.Flux.Rest.Endpoints;
 
 internal sealed class FluxRestPathEndpointConfiguration : FluxRestEndpointConfiguration
 {

@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Exception thrown when a REST operation fails.

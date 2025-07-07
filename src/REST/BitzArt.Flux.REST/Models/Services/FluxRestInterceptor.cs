@@ -1,4 +1,4 @@
-﻿namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Base class for intercepting HTTP requests and responses in a REST client pipeline.

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 internal class FluxRestServiceConfiguration
 {

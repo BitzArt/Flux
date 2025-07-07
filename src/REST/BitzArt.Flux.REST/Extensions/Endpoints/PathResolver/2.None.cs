@@ -1,6 +1,4 @@
-﻿using BitzArt.Flux.REST;
-
-namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Rest;
 
 public static partial class PathResolverConfigurationExtensions
 {

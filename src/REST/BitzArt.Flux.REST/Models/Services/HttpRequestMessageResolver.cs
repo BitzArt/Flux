@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections;
-using System.Linq;
 using System.Text.Json;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpRequestMessageResolver
 {
@@ -19,7 +18,7 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
     {
         var httpMethod = descriptor.GetExpectedHttpMethod();
         var uri = GetUri(setConfiguration, endpointPath, descriptor, pathComplete, queryComplete);
-        
+
         var body = GetBody(descriptor, setConfiguration.ServiceConfiguration.JsonSerializerOptions);
 
         var requestMessage = new HttpRequestMessage(httpMethod, uri);
@@ -184,8 +183,8 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
                         : $"[{kvp.Key}]: '{kvp.Value}';"));
 
             _logger.LogDebug("{replaced}\n{query}", replaced, queryString);
-                
-        }  
+
+        }
 
         (path, query) = Split(path);
 
@@ -218,7 +217,7 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
         var appliedParameters = new List<KeyValuePair<string, string>>(providedParameterCount);
 
         var parameterCounter = 0;
-        while(true)
+        while (true)
         {
             var parameterStartIndex = path.IndexOf('{');
             if (parameterStartIndex < 0)

@@ -1,7 +1,6 @@
-﻿using BitzArt.Flux.REST;
-using BitzArt.Pagination;
+﻿using BitzArt.Pagination;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 public static partial class PathResolverConfigurationExtensions
 {

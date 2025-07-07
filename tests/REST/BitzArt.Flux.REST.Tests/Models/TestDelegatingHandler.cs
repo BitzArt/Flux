@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 internal class TestDelegatingHandler : DelegatingHandler
 {
