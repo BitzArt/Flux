@@ -25,7 +25,6 @@ public static class WithKeyExtension
     /// </returns>
     public static IFluxJsonSetBuilder<TModel, TKey> WithKey<TModel, TKey>(this IFluxJsonSetBuilder<TModel, TKey> builder, Expression<Func<TModel, TKey>> expression)
         where TModel : class
-        where TKey : notnull
     {
         var options = builder.SetConfiguration.DataCollection;
 

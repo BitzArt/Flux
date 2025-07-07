@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux.Json;
 
-internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, FluxJsonSetConfiguration<TModel, TKey>>
+internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, FluxJsonSetConfiguration<TModel>>
     where TModel : class
     where TKey : notnull
 {
-    public FluxJsonSetContext(FluxJsonSetConfiguration<TModel, TKey> configuration, IServiceProvider serviceProvider, ILogger logger)
+    public FluxJsonSetContext(FluxJsonSetConfiguration<TModel> configuration, IServiceProvider serviceProvider, ILogger logger)
         : base(configuration, serviceProvider, logger)
     {
     }
@@ -50,7 +50,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     {
         Logger.LogInformation("GetAll {type}", typeof(TModel).Name);
 
-        return Task.FromResult<IEnumerable<TModel>>(Configuration.DataCollection.Items!);
+        return Task.FromResult((IEnumerable<TModel>)Configuration.DataCollection.Items!);
     }
 
     private Task<PageResult<TModel, PageRequest>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null)

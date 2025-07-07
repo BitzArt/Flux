@@ -2,7 +2,6 @@
 
 internal class FluxJsonSetBuilder<TModel, TKey> : IFluxJsonSetBuilder<TModel, TKey>
     where TModel : class
-    where TKey : notnull
 {
     public IFluxJsonServiceBuilder ServiceBuilder { get; set; }
     public FluxJsonSetConfiguration<TModel, TKey> SetConfiguration { get; set; }

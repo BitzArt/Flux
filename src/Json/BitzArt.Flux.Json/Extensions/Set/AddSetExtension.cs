@@ -19,7 +19,6 @@ public static class AddSetExtension
     /// <returns><see cref="IFluxJsonSetBuilder{TModel, TKey}"/> for further configuration.</returns>"/>
     public static IFluxJsonSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxJsonServiceBuilder serviceBuilder, object? setKey = null, ServiceLifetime lifetime = ServiceLifetime.Scoped)
         where TModel : class
-        where TKey : notnull
     {
         var serviceCollection = serviceBuilder.ServiceCollection;
         var builder = new FluxJsonSetBuilder<TModel, TKey>(serviceBuilder);

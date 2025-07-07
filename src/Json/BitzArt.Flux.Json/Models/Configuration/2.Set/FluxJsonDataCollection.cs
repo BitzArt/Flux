@@ -2,25 +2,21 @@
 
 namespace BitzArt.Flux.Json;
 
-internal class FluxJsonDataCollection<TModel, TKey> : IFluxJsonDataCollection<TModel>, IEnumerable<TModel>, ICollection<TModel>
+internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
     where TModel : class
-    where TKey : notnull
 {
-    internal Dictionary<TKey, TModel>? KeyedItems { get; private set; }
+    internal Dictionary<object, TModel>? KeyedItems { get; private set; }
 
-    private ICollection<TModel>? _items;
-    public ICollection<TModel>? Items
+    private ICollection<TModel> _items;
+
+    public void Set(ICollection<TModel> items)
     {
-        get => _items;
-        set
-        {
-            _items = value;
-            UpdateKeyedItems();
-        }
+        _items = items;
+        UpdateKeyedItems();
     }
 
-    private Func<TModel, TKey>? _keyPropertySelector;
-    internal Func<TModel, TKey>? KeyPropertySelector
+    private Func<TModel, object>? _keyPropertySelector;
+    public Func<TModel, object>? KeyPropertySelector
     {
         get => _keyPropertySelector;
         set
@@ -29,38 +25,6 @@ internal class FluxJsonDataCollection<TModel, TKey> : IFluxJsonDataCollection<TM
             UpdateKeyedItems();
         }
     }
-
-    Func<TModel, object>? IFluxJsonDataCollection<TModel>.KeyPropertySelector
-    {
-        get
-        {
-            if (KeyPropertySelector is null) return null;
-
-            return item => KeyPropertySelector(item);
-        }
-        set
-        {
-            if (value is null)
-            {
-                KeyPropertySelector = null;
-            }
-            else
-            {
-                KeyPropertySelector = item =>
-                {
-                    var key = value(item);
-
-                    if (key is not TKey typedKey)
-                        throw new InvalidCastException($"Cannot cast value of type {value?.GetType()} to {typeof(TKey)}");
-
-                    return typedKey;
-                };
-            }
-        }
-    }
-
-    public int Count => _items?.Count ?? 0;
-    public bool IsReadOnly => Items is not null && Items.IsReadOnly;
 
     private void UpdateKeyedItems()
     {
@@ -75,18 +39,10 @@ internal class FluxJsonDataCollection<TModel, TKey> : IFluxJsonDataCollection<TM
             item => item);
     }
 
-    public IEnumerator<TModel> GetEnumerator()
-    {
-        if (_items is null) throw new InvalidOperationException("Items collection is not initialized.");
-
-        return _items.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
     public void Add(TModel item)
     {
         ArgumentNullException.ThrowIfNull(item, nameof(item));
+
         if (Items is null)
             throw new InvalidOperationException("Items collection is not initialized. Cannot add item.");
 
@@ -134,5 +90,19 @@ internal class FluxJsonDataCollection<TModel, TKey> : IFluxJsonDataCollection<TM
             UpdateKeyedItems();
         }
         return removed;
+    }
+
+    public int Count => _items.Count;
+
+    public bool IsReadOnly => throw new NotImplementedException();
+
+    public IEnumerator<TModel> GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
