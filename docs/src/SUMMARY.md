@@ -17,3 +17,4 @@
   - [Pagination](rest/04.pagination.md)
   - [Advanced Scenarios](rest/05.advanced.md)
 - [Flux.JSON](json/01.introduction.md)
+  - [Configuration](json/02.configuration.md)
