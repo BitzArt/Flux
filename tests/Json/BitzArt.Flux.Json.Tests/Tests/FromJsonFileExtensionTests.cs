@@ -8,6 +8,7 @@ public class FromJsonFileExtensionTests
     [Fact]
     public async Task FromJsonFile_WithBasePath_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         services.AddFlux(flux =>
@@ -23,8 +24,10 @@ public class FromJsonFileExtensionTests
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }
@@ -32,6 +35,7 @@ public class FromJsonFileExtensionTests
     [Fact]
     public async Task FromJsonFile_BasePathDirectlyInSetStartingWithDot_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         services.AddFlux(flux =>
@@ -47,8 +51,10 @@ public class FromJsonFileExtensionTests
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }
@@ -56,6 +62,7 @@ public class FromJsonFileExtensionTests
     [Fact]
     public async Task FromJsonFile_BasePathDirectlyInSetStartingWithNoDot_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         services.AddFlux(flux =>
@@ -71,8 +78,10 @@ public class FromJsonFileExtensionTests
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }
@@ -80,6 +89,7 @@ public class FromJsonFileExtensionTests
     [Fact]
     public async Task FromJsonFile_BasePathGlobalByGettingCurrentDirectory_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         var currentDirectory = Directory.GetCurrentDirectory();
@@ -98,8 +108,10 @@ public class FromJsonFileExtensionTests
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }

@@ -1,9 +1,8 @@
-﻿using BitzArt.Pagination;
-using BitzArt.Flux.REST;
-using BitzArt.Flux.REST.Endpoints;
+﻿using BitzArt.Flux.Rest.Endpoints;
+using BitzArt.Pagination;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Rest;
 
 public static partial class PathResolverConfigurationExtensions
 {
@@ -114,9 +113,9 @@ public static partial class PathResolverConfigurationExtensions
         var endpointConfiguration = new FluxRestResolverEndpointConfiguration<TOperationDescriptor>(setConfiguration, methods, (descriptor, serviceProvider) =>
         {
             var requestMessageResolver = serviceProvider.GetRequiredService<IHttpRequestMessageResolver>();
-            
+
             var path = resolvePath.Invoke(descriptor, serviceProvider);
-            
+
             var requestMessage = requestMessageResolver.Resolve(setConfiguration, path, descriptor, true, queryComplete);
 
             return requestMessage;

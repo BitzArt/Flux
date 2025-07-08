@@ -1,8 +1,8 @@
-﻿using BitzArt.Flux.REST.Endpoints;
+﻿using BitzArt.Flux.Rest.Endpoints;
 using BitzArt.Pagination;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 public class PathEndpointConfigurationTests
 {

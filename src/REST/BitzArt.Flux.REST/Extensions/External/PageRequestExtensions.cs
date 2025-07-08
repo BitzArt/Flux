@@ -1,7 +1,7 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.AspNetCore.Http;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Extension methods for <see cref="PageRequest"/>.

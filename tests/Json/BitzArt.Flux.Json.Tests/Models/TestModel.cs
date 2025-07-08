@@ -9,4 +9,11 @@ internal class TestModel
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    public TestModel() { }
+    public TestModel(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 }

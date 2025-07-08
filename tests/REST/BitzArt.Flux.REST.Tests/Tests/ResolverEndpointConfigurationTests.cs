@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 public class ResolverEndpointConfigurationTests
 {

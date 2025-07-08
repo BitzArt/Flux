@@ -1,6 +1,6 @@
 ﻿using BitzArt.Flux;
 using BitzArt.Flux.MudBlazor;
-using BitzArt.Pagination;
+using BitzArt.Flux.Rest;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MudBlazor.SampleApp;

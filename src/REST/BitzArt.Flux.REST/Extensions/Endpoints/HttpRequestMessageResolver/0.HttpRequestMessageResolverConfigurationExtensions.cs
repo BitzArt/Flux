@@ -1,6 +1,4 @@
-﻿using BitzArt.Flux.REST;
-
-namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Rest;
 
 /// <summary>
 /// Extension methods for configuring <see cref="IFluxRestSetBuilder{TModel, TKey}"/>

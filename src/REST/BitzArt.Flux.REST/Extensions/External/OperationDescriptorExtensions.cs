@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace BitzArt.Flux.REST;
+namespace BitzArt.Flux.Rest;
 
 internal static class OperationDescriptorExtensions
 {

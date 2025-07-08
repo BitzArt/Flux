@@ -10,9 +10,7 @@ public interface IFluxJsonSetBuilder<TModel, TKey> : IFluxJsonServiceBuilder, IF
 {
     internal new IFluxJsonServiceBuilder ServiceBuilder { get; }
 
-    internal FluxJsonSetConfiguration SetConfiguration { get; }
-
-    internal IFluxJsonSetOptions<TModel> SetOptions { get; }
+    internal FluxJsonSetConfiguration<TModel, TKey> SetConfiguration { get; }
 
     // ================ Inherited members ================
 
