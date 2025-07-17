@@ -13,23 +13,21 @@ public static class FromJsonExtension
     /// <typeparam name="TModel">
     /// The model type of the set.
     /// </typeparam>
-    /// <typeparam name="TKey">
-    /// The key type of the set.
-    /// </typeparam>
     /// <param name="builder"></param>
     /// <param name="json">
     /// JSON string containing the dataset.
     /// </param>
     /// <returns>
-    /// The <see cref="IFluxJsonSetBuilder{TModel,TKey}"/> for further set configuration.
+    /// The <see cref="IFluxJsonSetBuilder{TModel}"/> for further set configuration.
     /// </returns>
-    public static IFluxJsonSetBuilder<TModel, TKey> FromJson<TModel, TKey>(this IFluxJsonSetBuilder<TModel, TKey> builder,
+    public static IFluxJsonSetBuilder<TModel> FromJson<TModel>(this IFluxJsonSetBuilder<TModel> builder,
         string json)
         where TModel : class
     {
-        builder.SetConfiguration.DataCollection.Items =
-            JsonSerializer.Deserialize<List<TModel>>(json, builder.ServiceConfiguration.JsonSerializerOptions)
+        var items = JsonSerializer.Deserialize<List<TModel>>(json, builder.ServiceConfiguration.JsonSerializerOptions)
             ?? throw new FluxJsonDeserializationException<List<TModel>>();
+        builder.SetConfiguration.DataCollection = new(items);
+            
 
         return builder;
     }

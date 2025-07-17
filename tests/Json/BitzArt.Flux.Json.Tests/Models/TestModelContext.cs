@@ -1,8 +1,7 @@
-﻿using BitzArt.Flux.Json;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 internal static class TestSetContext
 {
@@ -22,7 +21,7 @@ internal static class TestSetContext
                     json.Converters.Add(new JsonStringEnumConverter());
                     json.WriteIndented = true;
                 })
-                .AddSet<TestModel, int>()
+                .AddSet<TestModel>()
                     .FromJsonFile("test-model.set.json")
                     .WithKey(x => x.Id!.Value);
         });

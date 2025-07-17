@@ -50,14 +50,14 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     {
         Logger.LogInformation("GetAll {type}", typeof(TModel).Name);
 
-        return Task.FromResult((IEnumerable<TModel>)Configuration.DataCollection.Items!);
+        return Task.FromResult((IEnumerable<TModel>)Configuration.DataCollection.Items);
     }
 
     private Task<PageResult<TModel, PageRequest>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null)
     {
         Logger.LogInformation("GetPage {type}", typeof(TModel).Name);
 
-        return Task.FromResult(Configuration.DataCollection.Items!.ToPage(pageRequest));
+        return Task.FromResult(Configuration.DataCollection.Items.ToPage(pageRequest));
     }
 
     private Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null)

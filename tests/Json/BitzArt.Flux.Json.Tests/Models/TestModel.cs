@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 internal class TestModel
 {

@@ -1,7 +1,6 @@
-using BitzArt.Flux.Json;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 public class FromJsonFileExtensionTests
 {
@@ -15,7 +14,7 @@ public class FromJsonFileExtensionTests
         {
             flux.AddService("service 1")
                 .UsingJson("Data")
-                    .AddSet<TestModel, int>()
+                    .AddSet<TestModel>()
                     .FromJsonFile("test-model.set.json")
                     .WithKey(x => x.Id!.Value);
         });
@@ -42,7 +41,7 @@ public class FromJsonFileExtensionTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                    .AddSet<TestModel, int>()
+                    .AddSet<TestModel>()
                     .FromJsonFile("./Data/test-model.set.json")
                     .WithKey(x => x.Id!.Value);
         });
@@ -69,7 +68,7 @@ public class FromJsonFileExtensionTests
         {
             flux.AddService("service 1")
                 .UsingJson()
-                    .AddSet<TestModel, int>()
+                    .AddSet<TestModel>()
                     .FromJsonFile("Data/test-model.set.json")
                     .WithKey(x => x.Id!.Value);
         });
@@ -99,7 +98,7 @@ public class FromJsonFileExtensionTests
         {
             flux.AddService("service 1")
                 .UsingJson(dataDirectory)
-                    .AddSet<TestModel, int>()
+                    .AddSet<TestModel>()
                     .FromJsonFile("test-model.set.json")
                     .WithKey(x => x.Id!.Value);
         });

@@ -8,19 +8,6 @@ namespace BitzArt.Flux.Json;
 /// </summary>
 public static class UsingJsonExtension
 {
-    // AddService("my-service")
-    // .UsingJson()
-    // .ConfigureJsonSerializer(x =>
-    // {
-    //
-    // });
-
-    // AddService("my-service")
-    // .UsingJson("", x =>
-    // {
-    //
-    // });
-
     /// <summary>
     /// Configures the service to use a JSON Flux implementation.
     /// </summary>

@@ -13,22 +13,20 @@ public static class FromJsonFileExtension
     /// <typeparam name="TModel">
     /// The model type of the set.
     /// </typeparam>
-    /// <typeparam name="TKey">
-    /// The key type of the set.
-    /// </typeparam>
     /// <param name="builder"></param>
     /// <param name="filePath">
     /// The path to the JSON file containing the dataset.
     /// </param>
     /// <returns>
-    /// The <see cref="IFluxJsonSetBuilder{TModel,TKey}"/> for further set configuration.
+    /// The <see cref="IFluxJsonSetBuilder{TModel}"/> for further set configuration.
     /// </returns>
-    public static IFluxJsonSetBuilder<TModel, TKey> FromJsonFile<TModel, TKey>(this IFluxJsonSetBuilder<TModel, TKey> builder,
+    public static IFluxJsonSetBuilder<TModel> FromJsonFile<TModel>(this IFluxJsonSetBuilder<TModel> builder,
         string filePath)
         where TModel : class
     {
         var path = GetFilePath(filePath, builder.ServiceConfiguration.BaseFilePath);
-        builder.SetConfiguration.DataCollection.Items = TryGetItemsFromJsonFile<TModel>(path, builder.ServiceConfiguration.JsonSerializerOptions);
+        var items = TryGetItemsFromJsonFile<TModel>(path, builder.ServiceConfiguration.JsonSerializerOptions);
+        builder.SetConfiguration.DataCollection = new(items);
 
         return builder;
     }

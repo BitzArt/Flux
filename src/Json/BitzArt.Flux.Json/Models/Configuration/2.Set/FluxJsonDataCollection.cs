@@ -1,22 +1,42 @@
 ﻿using System.Collections;
+using System.Linq.Expressions;
 
 namespace BitzArt.Flux.Json;
 
 internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
     where TModel : class
 {
-    internal Dictionary<object, TModel>? KeyedItems { get; private set; }
-
-    private ICollection<TModel> _items;
-
-    public void Set(ICollection<TModel> items)
+    public FluxJsonDataCollection(ICollection<TModel> items)
     {
-        _items = items;
-        UpdateKeyedItems();
+        Items = items;
     }
 
-    private Func<TModel, object>? _keyPropertySelector;
-    public Func<TModel, object>? KeyPropertySelector
+    internal Dictionary<object, TModel>? KeyedItems { get; private set; }
+
+    private ICollection<TModel> _items = null!;
+    internal ICollection<TModel> Items
+    {
+        get
+        {
+            if (_items is null)
+                throw new InvalidOperationException("Items collection is not initialized. Cannot retrieve items.");
+
+            // ToList() is used to create a snapshot of the items collection.
+            // This ensures that any modifications made to the returned list do not affect the original collection.
+            var result = _items.ToList();
+
+            return result;
+        }
+
+        private set
+        {
+            _items = value ?? throw new ArgumentNullException(nameof(value), "Items collection cannot be null.");
+            UpdateKeyedItems();
+        }
+    }
+
+    private Func<TModel, object?>? _keyPropertySelector;
+    internal Func<TModel, object?>? KeyPropertySelector
     {
         get => _keyPropertySelector;
         set
@@ -43,18 +63,18 @@ internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
     {
         ArgumentNullException.ThrowIfNull(item, nameof(item));
 
-        if (Items is null)
+        if (_items is null)
             throw new InvalidOperationException("Items collection is not initialized. Cannot add item.");
 
-        Items.Add(item);
+        _items.Add(item);
         UpdateKeyedItems();
     }
 
     public void Clear()
     {
-        if (Items is null) return;
+        if (_items is null) return;
 
-        Items.Clear();
+        _items.Clear();
         UpdateKeyedItems();
     }
 
@@ -62,29 +82,29 @@ internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
     {
         ArgumentNullException.ThrowIfNull(item, nameof(item));
 
-        return Items is not null && Items.Contains(item);
+        return _items is not null && _items.Contains(item);
     }
 
     public void CopyTo(TModel[] array, int arrayIndex)
     {
         ArgumentNullException.ThrowIfNull(array, nameof(array));
 
-        if (Items is null) return;
+        if (_items is null) return;
 
         var subArrayLength = array.Length - arrayIndex;
-        if (arrayIndex < 0 || arrayIndex >= array.Length || subArrayLength < Items.Count) 
+        if (arrayIndex < 0 || arrayIndex >= array.Length || subArrayLength < _items.Count) 
             throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Array index is out of range.");
 
-        Items.CopyTo(array, arrayIndex);
+        _items.CopyTo(array, arrayIndex);
     }
 
     public bool Remove(TModel item)
     {
         ArgumentNullException.ThrowIfNull(item, nameof(item));
 
-        if (Items is null) return false;
+        if (_items is null) return false;
 
-        var removed = Items.Remove(item);
+        var removed = _items.Remove(item);
         if (removed)
         {
             UpdateKeyedItems();
@@ -94,15 +114,9 @@ internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
 
     public int Count => _items.Count;
 
-    public bool IsReadOnly => throw new NotImplementedException();
+    public bool IsReadOnly => _items.IsReadOnly;
 
-    public IEnumerator<TModel> GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    public IEnumerator<TModel> GetEnumerator() => _items.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

@@ -21,16 +21,30 @@ public static class WithKeyExtension
     /// The expression to select the key property.
     /// </param>
     /// <returns>
-    /// The <see cref="IFluxJsonSetBuilder{TModel,TKey}"/> for further set configuration.
+    /// The <see cref="IFluxJsonSetBuilder{TModel}"/> for further set configuration.
     /// </returns>
-    public static IFluxJsonSetBuilder<TModel, TKey> WithKey<TModel, TKey>(this IFluxJsonSetBuilder<TModel, TKey> builder, Expression<Func<TModel, TKey>> expression)
+    public static IFluxJsonSetBuilder<TModel> WithKey<TModel, TKey>(this IFluxJsonSetBuilder<TModel> builder, Expression<Func<TModel, TKey>> expression)
         where TModel : class
     {
         var options = builder.SetConfiguration.DataCollection;
 
-        var keyPropertySelector = expression.Compile();
-        options.KeyPropertySelector = keyPropertySelector;
+        options.KeyPropertySelector = expression.CastToObject().Compile();
 
         return builder;
+    }
+
+    public static Expression<Func<TModel, object>> CastToObject<TModel, TKey>(this Expression<Func<TModel, TKey>> expr)
+    {
+        var parameter = expr.Parameters[0];
+
+        Expression body = expr.Body;
+
+        // Если значение-тип, делаем boxing через Convert
+        if (body.Type.IsValueType)
+        {
+            body = Expression.Convert(body, typeof(object));
+        }
+
+        return Expression.Lambda<Func<TModel, object>>(body, parameter);
     }
 }

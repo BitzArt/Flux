@@ -1,6 +1,4 @@
-using BitzArt.Flux.Json;
-
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 public class JsonServiceTests
 {

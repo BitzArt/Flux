@@ -4,13 +4,12 @@
 /// Flux Json set builder.
 /// </summary>
 /// <typeparam name="TModel">Set model type.</typeparam>
-/// <typeparam name="TKey">Set key type.</typeparam>
-public interface IFluxJsonSetBuilder<TModel, TKey> : IFluxJsonServiceBuilder, IFluxSetBuilder<TModel, TKey>
+public interface IFluxJsonSetBuilder<TModel> : IFluxJsonServiceBuilder, IFluxSetBuilder<TModel, object>
     where TModel : class
 {
     internal new IFluxJsonServiceBuilder ServiceBuilder { get; }
 
-    internal FluxJsonSetConfiguration<TModel, TKey> SetConfiguration { get; }
+    internal FluxJsonSetConfiguration<TModel> SetConfiguration { get; }
 
     // ================ Inherited members ================
 
