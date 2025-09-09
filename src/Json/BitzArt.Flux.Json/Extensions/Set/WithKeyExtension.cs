@@ -33,7 +33,7 @@ public static class WithKeyExtension
         return builder;
     }
 
-    public static Expression<Func<TModel, object>> CastToObject<TModel, TKey>(this Expression<Func<TModel, TKey>> expr)
+    private static Expression<Func<TModel, object>> CastToObject<TModel, TKey>(this Expression<Func<TModel, TKey>> expr)
     {
         var parameter = expr.Parameters[0];
 
