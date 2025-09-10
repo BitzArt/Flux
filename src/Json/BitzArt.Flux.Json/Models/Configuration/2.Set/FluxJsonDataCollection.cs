@@ -38,7 +38,7 @@ internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
     private Func<TModel, object?>? _keyPropertySelector;
     internal Func<TModel, object?>? KeyPropertySelector
     {
-        get => _keyPropertySelector;
+        private get => _keyPropertySelector;
         set
         {
             _keyPropertySelector = value;
@@ -92,7 +92,7 @@ internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
         if (_items is null) return;
 
         var subArrayLength = array.Length - arrayIndex;
-        if (arrayIndex < 0 || arrayIndex >= array.Length || subArrayLength < _items.Count) 
+        if (arrayIndex < 0 || arrayIndex >= array.Length || subArrayLength < _items.Count)
             throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Array index is out of range.");
 
         _items.CopyTo(array, arrayIndex);
@@ -119,4 +119,15 @@ internal class FluxJsonDataCollection<TModel> : ICollection<TModel>
     public IEnumerator<TModel> GetEnumerator() => _items.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    internal TModel GetById(object id)
+    {
+        if (KeyedItems is null)
+            throw new InvalidOperationException("Keyed items are not initialized. Cannot retrieve item by ID.");
+
+        if (!KeyedItems.TryGetValue(id, out var item))
+            throw new FluxItemNotFoundException<TModel>(id);
+
+        return item;
+    }
 }

@@ -64,14 +64,9 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     {
         Logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
 
-        if (Configuration.DataCollection.KeyPropertySelector is null) throw new FluxKeyPropertyExpressionMissingException<TModel>();
-
         if (id is null) throw new ArgumentNullException(nameof(id), "The key cannot be null.");
 
-        if (Configuration.DataCollection.KeyedItems is null || !Configuration.DataCollection.KeyedItems.TryGetValue(id, out var existingItem))
-            throw new FluxItemNotFoundException<TModel>(id);
-
-        return Task.FromResult(existingItem);
+        return Task.FromResult(Configuration.DataCollection.GetById(id));
     }
 
     private Task<TModel> AddAsync(TModel model, IOperationParameterCollection? parameters = null)
