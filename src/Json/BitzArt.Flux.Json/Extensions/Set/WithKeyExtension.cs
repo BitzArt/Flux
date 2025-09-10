@@ -39,7 +39,7 @@ public static class WithKeyExtension
 
         Expression body = expr.Body;
 
-        // Если значение-тип, делаем boxing через Convert
+        // If the value is a value type, perform boxing via Convert
         if (body.Type.IsValueType)
         {
             body = Expression.Convert(body, typeof(object));
