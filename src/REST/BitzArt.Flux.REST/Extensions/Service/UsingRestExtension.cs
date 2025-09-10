@@ -16,7 +16,7 @@ public static class UsingRestExtension
         => protocolConfigurator.UsingRest(baseUrl, (builder) => builder.AddHttpMessageHandler<THandler>());
 
     /// <summary>
-    /// Configures the service to use a REST Flux implementation.
+    /// Configures the service to use REST Flux implementation.
     /// </summary>
     /// <returns>
     /// A <see cref="IFluxRestServiceBuilder"/> for further REST service configuration.
@@ -46,7 +46,7 @@ public static class UsingRestExtension
 
         configureHttpClient?.Invoke(httpClientBuilder);
 
-        protocolConfigurator.OnServiceProtocolConfigured(builder.ServiceName, builder);
+        protocolConfigurator.OnServiceProtocolConfigured(builder);
 
         return builder;
     }

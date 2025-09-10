@@ -28,23 +28,8 @@ public static class WithKeyExtension
     {
         var options = builder.SetConfiguration.DataCollection;
 
-        options.KeyPropertySelector = expression.CastToObject().Compile();
+        options.SetKeyPropertySelector(expression.Compile());
 
         return builder;
-    }
-
-    private static Expression<Func<TModel, object>> CastToObject<TModel, TKey>(this Expression<Func<TModel, TKey>> expr)
-    {
-        var parameter = expr.Parameters[0];
-
-        Expression body = expr.Body;
-
-        // If the value is a value type, perform boxing via Convert
-        if (body.Type.IsValueType)
-        {
-            body = Expression.Convert(body, typeof(object));
-        }
-
-        return Expression.Lambda<Func<TModel, object>>(body, parameter);
     }
 }

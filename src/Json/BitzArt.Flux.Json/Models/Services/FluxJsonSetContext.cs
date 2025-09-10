@@ -1,5 +1,4 @@
 ﻿using BitzArt.Flux.Sets;
-using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 
 namespace BitzArt.Flux.Json;
@@ -13,74 +12,39 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     {
     }
 
-    public override async Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
+    private FluxJsonDataCollection<TModel> Items => Configuration.DataCollection;
+
+    public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
         var operationName = descriptor.GetFriendlyOperationName();
 
         Logger.LogInformation("[{type}] {operationName}", typeof(TModel).Name, operationName);
 
-        var data = await ResolveDataAsync(descriptor, cancellationToken);
+        var data = ResolveDataAsync(descriptor, cancellationToken);
 
-        return data;
+        return Task.FromResult(data);
     }
 
-    private async Task<object?> ResolveDataAsync(OperationDescriptor descriptor, CancellationToken cancellationToken)
+    private object? ResolveDataAsync(OperationDescriptor descriptor, CancellationToken cancellationToken) => descriptor switch
     {
-        switch (descriptor)
-        {
-            case GetOperationDescriptor getOperation:
-                return await GetAsync((TKey)getOperation.Id!, getOperation.Parameters);
-            case GetAllOperationDescriptor getAllOperation:
-                return await GetAllAsync(getAllOperation.Parameters);
-            case GetPageOperationDescriptor pageOperation:
-                return await GetPageAsync(pageOperation.PageRequest, pageOperation.Parameters);
-            case AddOperationDescriptor addOperation:
-                return await AddAsync((TModel)addOperation.Value!, addOperation.Parameters);
-            case UpdateOperationDescriptor updateOperation:
-                if (updateOperation.Id is null)
-                    return await UpdateAsync((TModel)updateOperation.Value!, updateOperation.Partial, updateOperation.Parameters);
-                return await UpdateAsync((TKey)updateOperation.Id!, (TModel)updateOperation.Value!, updateOperation.Partial, updateOperation.Parameters);
-            default:
-                Logger.LogError("Unsupported operation type: {operationType}", descriptor.GetType().Name);
-                throw new NotSupportedException($"Operation type '{descriptor.GetType().Name}' is not supported in JSON set context.");
-        }
-    }
+        GetAllOperationDescriptor
+            => Items.GetAll(),
 
-    private Task<IEnumerable<TModel>> GetAllAsync(IOperationParameterCollection? parameters = null)
-    {
-        Logger.LogInformation("GetAll {type}", typeof(TModel).Name);
+        GetPageOperationDescriptor getPageOperation
+            => Items.GetAll().ToPage(getPageOperation.PageRequest),
 
-        return Task.FromResult((IEnumerable<TModel>)Configuration.DataCollection.Items);
-    }
+        GetOperationDescriptor getOperation
+            => Items.Get(getOperation.Id),
 
-    private Task<PageResult<TModel, PageRequest>> GetPageAsync(PageRequest pageRequest, IOperationParameterCollection? parameters = null)
-    {
-        Logger.LogInformation("GetPage {type}", typeof(TModel).Name);
+        AddOperationDescriptor addOperation
+            => Items.Add((TModel)addOperation.Value!),
 
-        return Task.FromResult(Configuration.DataCollection.Items.ToPage(pageRequest));
-    }
+        UpdateOperationDescriptor updateOperation when updateOperation.Partial == false
+            => Items.Update(updateOperation.Id, (TModel)updateOperation.Value!),
 
-    private Task<TModel> GetAsync(TKey id, IOperationParameterCollection? parameters = null)
-    {
-        Logger.LogInformation("Get {type}[{id}]", typeof(TModel).Name, id is not null ? id.ToString() : "_");
+        UpdateOperationDescriptor updateOperation when updateOperation.Partial == true
+            => throw new NotSupportedException("Partial updates are not supported in JSON set context."),
 
-        if (id is null) throw new ArgumentNullException(nameof(id), "The key cannot be null.");
-
-        return Task.FromResult(Configuration.DataCollection.GetById(id));
-    }
-
-    private Task<TModel> AddAsync(TModel model, IOperationParameterCollection? parameters = null)
-    {
-        throw new NotSupportedException();
-    }
-
-    private Task<TModel> UpdateAsync(TModel model, bool partial = false, IOperationParameterCollection? parameters = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    private Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, IOperationParameterCollection? parameters = null)
-    {
-        throw new NotImplementedException();
-    }
+        _ => throw new NotSupportedException($"Operation type '{descriptor.GetType().Name}' is not supported in JSON set context.")
+    };
 }

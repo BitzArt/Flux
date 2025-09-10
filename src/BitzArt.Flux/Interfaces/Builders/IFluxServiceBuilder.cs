@@ -26,5 +26,5 @@ public interface IFluxServiceBuilder : IFluxBuilder
 
     IServiceCollection IFluxBuilder.ServiceCollection => FluxBuilder.ServiceCollection;
     void IFluxBuilder.OnServiceAdded(string name) => FluxBuilder.OnServiceAdded(name);
-    void IFluxBuilder.OnServiceProtocolConfigured(string name, IFluxServiceBuilder terminatedBuilder) => FluxBuilder.OnServiceProtocolConfigured(name, terminatedBuilder);
+    void IFluxBuilder.OnServiceProtocolConfigured(IFluxServiceBuilder terminatedBuilder) => FluxBuilder.OnServiceProtocolConfigured(terminatedBuilder);
 }

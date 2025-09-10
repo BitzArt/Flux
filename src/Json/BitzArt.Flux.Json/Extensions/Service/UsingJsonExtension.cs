@@ -9,7 +9,7 @@ namespace BitzArt.Flux.Json;
 public static class UsingJsonExtension
 {
     /// <summary>
-    /// Configures the service to use a JSON Flux implementation.
+    /// Configures the service to use JSON Flux implementation.
     /// </summary>
     /// <param name="protocolConfigurator">Flux service protocol configurator.</param>
     /// <param name="baseFilePath">Base file path to use when resolving JSON files.</param>
@@ -26,7 +26,7 @@ public static class UsingJsonExtension
 
         builder.ServiceCollection.AddLogging();
 
-        protocolConfigurator.OnServiceProtocolConfigured(builder.ServiceName, builder);
+        protocolConfigurator.OnServiceProtocolConfigured(builder);
 
         return builder;
     }

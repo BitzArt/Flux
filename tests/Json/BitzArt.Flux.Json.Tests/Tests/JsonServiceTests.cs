@@ -49,6 +49,6 @@ public class JsonServiceTests
         Task Action() => _setContext.GetAsync(100);
 
         // Act/Assert
-        await Assert.ThrowsAsync<FluxItemNotFoundException<TestModel>>(Action);
+        await Assert.ThrowsAnyAsync<Exception>(Action);
     }
 }

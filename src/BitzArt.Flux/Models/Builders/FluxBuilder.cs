@@ -29,8 +29,10 @@ internal class FluxBuilder : IFluxBuilder, IDisposable
         }
     }
 
-    public void OnServiceProtocolConfigured(string name, IFluxServiceBuilder terminatedBuilder)
+    public void OnServiceProtocolConfigured(IFluxServiceBuilder terminatedBuilder)
     {
+        var name = terminatedBuilder.ServiceName;
+
         if (!_serviceRegistrations.TryGetValue(name, out var registration))
         {
             throw new UnreachableException($"Service '{name}' was not found and can not be marked as terminated.");

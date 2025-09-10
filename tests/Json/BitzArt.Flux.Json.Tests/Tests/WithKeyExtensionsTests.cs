@@ -12,11 +12,11 @@ public class WithKeyExtensionsTests
 
         services.AddFlux(flux =>
         {
-            flux.AddService("service 1")
+            flux.AddService("service1")
                 .UsingJson("Data")
                     .AddSet<TestModel>()
                     .FromJsonFile("test-model.set.json")
-                    .WithKey(x => x.Id!.Value);
+                    .WithKey(x => x.Id);
         });
 
         var serviceProvider = services.BuildServiceProvider();
