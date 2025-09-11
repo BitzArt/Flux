@@ -22,7 +22,7 @@ internal class FluxJsonDataCollection<TModel>
 
     public TModel Get(object? id)
     {
-        lock(_lock)
+        lock (_lock)
         {
             if (_keyMap is null)
             {
@@ -83,7 +83,7 @@ internal class FluxJsonDataCollection<TModel>
     {
         ArgumentNullException.ThrowIfNull(item, nameof(item));
 
-        lock(_lock)
+        lock (_lock)
         {
             var removed = _items.Remove(item);
 

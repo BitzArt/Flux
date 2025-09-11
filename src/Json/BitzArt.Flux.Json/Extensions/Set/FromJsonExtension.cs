@@ -24,8 +24,7 @@ public static class FromJsonExtension
         string json)
         where TModel : class
     {
-        var items = JsonSerializer.Deserialize<List<TModel>>(json, builder.ServiceConfiguration.JsonSerializerOptions)
-            ?? throw new FluxJsonDeserializationException<List<TModel>>();
+        var items = JsonSerializer.Deserialize<List<TModel>>(json, builder.ServiceConfiguration.JsonSerializerOptions)!;
         builder.SetConfiguration.DataCollection = new(items);
 
         return builder;

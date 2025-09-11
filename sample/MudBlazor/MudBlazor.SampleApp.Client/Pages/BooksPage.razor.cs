@@ -1,7 +1,6 @@
 ﻿using BitzArt.Flux;
 using BitzArt.Flux.MudBlazor;
 using Microsoft.AspNetCore.Components;
-using System.Web;
 
 namespace MudBlazor.SampleApp.Client.Pages;
 

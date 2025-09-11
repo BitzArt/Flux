@@ -32,22 +32,12 @@ public static class FromJsonFileExtension
     }
 
     private static List<TModel> TryGetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
-    {
-        try
-        {
-            return GetItemsFromJsonFile<TModel>(path, options);
-        }
-        catch (Exception ex)
-        {
-            throw new FluxJsonFileReadException(path, ex);
-        }
-    }
+        => GetItemsFromJsonFile<TModel>(path, options);
 
     private static List<TModel> GetItemsFromJsonFile<TModel>(string path, JsonSerializerOptions options)
     {
         var jsonString = File.ReadAllText(path);
-        var items = JsonSerializer.Deserialize<List<TModel>>(jsonString, options)
-            ?? throw new FluxJsonDeserializationException<List<TModel>>();
+        var items = JsonSerializer.Deserialize<List<TModel>>(jsonString, options)!;
 
         return items;
     }

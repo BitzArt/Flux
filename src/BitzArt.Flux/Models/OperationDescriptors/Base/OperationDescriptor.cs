@@ -27,7 +27,7 @@ public abstract class OperationDescriptor
         /// <summary>
         /// All <see cref="OperationDescriptor"/> types.
         /// </summary>
-        public static IEnumerable<Type> All =>  Base.Concat(Concrete).ToList().AsReadOnly();
+        public static IEnumerable<Type> All => Base.Concat(Concrete).ToList().AsReadOnly();
 
         /// <summary>
         /// Concrete <see cref="OperationDescriptor"/> types.
