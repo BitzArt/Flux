@@ -32,6 +32,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private bool _resetting = false;
 
+    private bool _forceReload = false;
+
     private bool _resetPageOnce = false;
 
     public int DefaultPageSize { get; set; } = 10;
@@ -174,6 +176,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _tableCurrentPageField.SetValue(Table, 0);
 
             _resetting = true;
+            _forceReload = forceReload;
             _logger.LogDebug("Resetting page for {Model} data provider.", typeof(TModel).Name);
 
             await Table.ReloadServerData();
@@ -184,6 +187,10 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         if (_resetting == true)
         {
             _resetting = false;
+
+            forceReload = _forceReload;
+            _forceReload = false;
+
             _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
         }
 
