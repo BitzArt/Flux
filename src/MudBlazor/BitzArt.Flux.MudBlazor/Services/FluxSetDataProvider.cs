@@ -15,7 +15,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public IFluxSetContext<TModel> SetContext { get; internal set; } = null!;
 
-    public Func<TableState, CancellationToken, Task<TableData<TModel>>> Data => GetDataAsync;
+    public Func<TableState, CancellationToken, Task<TableData<TModel>>> Data
+        => (tableState, cancellationToken) => GetDataAsync(tableState, false, cancellationToken);
 
     public Func<TableState, IOperationParameterCollection>? GetParameters { get; set; } = null;
 
@@ -53,13 +54,13 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
     }
 
-    public async Task ResetAndReloadAsync(bool ignoreCancellation = true)
+    public async Task ResetAndReloadAsync(bool ignoreCancellation = true, bool force = false)
     {
         ResetPage();
-        await ResetSortAndReloadAsync(ignoreCancellation);
+        await ResetSortAndReloadAsync(ignoreCancellation, force);
     }
 
-    public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true)
+    public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true, bool force = false)
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to reset sorting.");
@@ -75,20 +76,25 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
         else
         {
-            await ReloadTableAsync(ignoreCancellation);
+            await ReloadTableAsync(ignoreCancellation, force);
         }
     }
 
-    public async Task ResetPageAndReloadAsync(bool ignoreCancellation = true)
+    public async Task ResetPageAndReloadAsync(bool ignoreCancellation = true, bool force = false)
     {
         ResetPage();
-        await ReloadTableAsync(ignoreCancellation);
+        await ReloadTableAsync(ignoreCancellation, force);
     }
 
-    private async Task ReloadTableAsync(bool ignoreCancellation)
+    private async Task ReloadTableAsync(bool ignoreCancellation, bool force = false)
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
+
+        if (force)
+        {
+            await GetDataAsync(TableState, forceReload: true);
+        }
 
         await Table!.ReloadServerData().IgnoreCancellation(ignoreCancellation);
     }
@@ -108,16 +114,16 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public MudTable<TModel>? Table { get; set; }
 
-    public async Task<TableData<TModel>> GetDataAsync(CancellationToken cancellationToken = default)
-        => await GetDataAsync(TableState, cancellationToken);
+    public async Task<TableData<TModel>> GetDataAsync(bool forceReload = false, CancellationToken cancellationToken = default)
+        => await GetDataAsync(TableState, forceReload, cancellationToken);
 
-    public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default)
+    public async Task<TableData<TModel>> GetDataAsync(TableState state, bool forceReload = false, CancellationToken cancellationToken = default)
     {
         await AddOperationAsync();
 
         try
         {
-            var result = await GetDataInternalAsync(state, cancellationToken);
+            var result = await GetDataInternalAsync(state, forceReload, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             return result;
         }
@@ -154,7 +160,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return true;
     }
 
-    private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
+    private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, bool forceReload = false, CancellationToken cancellationToken = default)
     {
         IOperationParameterCollection? parameters = GetParameters?.Invoke(state);
 
@@ -181,7 +187,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
         }
 
-        if (CompareWithLastRequest(state, parameters))
+        if (forceReload == false && CompareWithLastRequest(state, parameters))
             return LastQuery!.Data.ToTableData();
 
         var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);

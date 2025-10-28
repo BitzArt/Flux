@@ -40,18 +40,18 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Resets table sorting to none, resets current page to 0, and then reloads the data.
     /// </summary>
-    public Task ResetAndReloadAsync(bool ignoreCancellation = true);
+    public Task ResetAndReloadAsync(bool ignoreCancellation = true, bool force = false);
 
     /// <summary>
     /// Resets table sorting to none and then reloads the data.
     /// </summary>
-    public Task ResetSortAndReloadAsync(bool ignoreCancellation = true);
+    public Task ResetSortAndReloadAsync(bool ignoreCancellation = true, bool force = false);
 
     /// <summary>
     /// Resets current page to 0 and then reloads the data.
     /// </summary>
     /// <returns></returns>
-    public Task ResetPageAndReloadAsync(bool ignoreCancellation = true);
+    public Task ResetPageAndReloadAsync(bool ignoreCancellation = true, bool force = false);
 
     /// <summary>
     /// Resets current page to 0 on next request.
@@ -96,10 +96,10 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Gets data from the server for a default TableState.
     /// </summary>
-    public Task<TableData<TModel>> GetDataAsync(CancellationToken cancellationToken = default);
+    public Task<TableData<TModel>> GetDataAsync(bool forceReload = false, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets data from the server.
     /// </summary>
-    public Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default);
+    public Task<TableData<TModel>> GetDataAsync(TableState state, bool forceReload = false, CancellationToken cancellationToken = default);
 }
