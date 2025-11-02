@@ -201,6 +201,32 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     public Task<TResponse> UpdateAsync<TResponse>(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken = default)
         => ExecuteAsync<TResponse>(descriptor, cancellationToken);
 
+    // ============================== RemoveAsync ==============================
+    
+    /// <inheritdoc/>
+    public Task RemoveAsync(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => RemoveAsync(new RemoveOperationDescriptor(id: null, parameters: parameters?.Parameters), cancellationToken);
+
+    /// <inheritdoc/>
+    public Task<TResponse> RemoveAsync<TResponse>(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => RemoveAsync<TResponse>(new RemoveOperationDescriptor(id: null, parameters: parameters?.Parameters), cancellationToken);
+    
+    /// <inheritdoc/>
+    public Task RemoveAsync(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => RemoveAsync(new RemoveOperationDescriptor(id: id, parameters: parameters?.Parameters), cancellationToken);
+
+    /// <inheritdoc/>
+    public Task<TResponse> RemoveAsync<TResponse>(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default)
+        => RemoveAsync<TResponse>(new RemoveOperationDescriptor(id: id, parameters: parameters?.Parameters), cancellationToken);
+    
+    /// <inheritdoc/>
+    public Task RemoveAsync(RemoveOperationDescriptor descriptor, CancellationToken cancellationToken = default)
+        => ExecuteAsync(descriptor, cancellationToken);
+
+    /// <inheritdoc/>
+    public Task<TResponse> RemoveAsync<TResponse>(RemoveOperationDescriptor descriptor, CancellationToken cancellationToken = default)
+        => ExecuteAsync<TResponse>(descriptor, cancellationToken);
+    
     // ============================== ExecuteAsync ==============================
 
     /// <inheritdoc/>

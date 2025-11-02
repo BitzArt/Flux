@@ -217,6 +217,39 @@ public interface IFluxSetContext<TModel, TKey>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task<TResponse> UpdateAsync<TResponse>(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken = default);
 
+    // ============================== RemoveAsync ==============================
+
+    /// <inheritdoc cref="RemoveAsync(TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task RemoveAsync(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="RemoveAsync{TResponse}(TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task<TResponse> RemoveAsync<TResponse>(OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="RemoveAsync{TResponse}(TKey, OperationParameterCollection?, CancellationToken)"/>
+    public Task RemoveAsync(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Remove an object from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="id">Unique identifier of the object to remove.</param>
+    /// <param name="parameters">Parameters used by the operation.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> RemoveAsync<TResponse>(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="RemoveAsync{TResponse}(RemoveOperationDescriptor, CancellationToken)"/>
+    public Task RemoveAsync(RemoveOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Remove an object from the set.
+    /// </summary>
+    /// <typeparam name="TResponse">Response type.</typeparam>
+    /// <param name="descriptor">Operation descriptor.</param>
+    /// <param name="cancellationToken">Cancellation token for this operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task<TResponse> RemoveAsync<TResponse>(RemoveOperationDescriptor descriptor, CancellationToken cancellationToken = default);
+    
     // ============================== ExecuteAsync ==============================
 
     /// <summary>
