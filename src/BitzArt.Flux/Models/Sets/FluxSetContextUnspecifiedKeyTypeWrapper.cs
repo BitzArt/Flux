@@ -130,6 +130,26 @@ internal class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey>(IFluxSetCon
     Task<TResponse> IFluxSetContext<TModel, object>.UpdateAsync<TResponse>(UpdateOperationDescriptor descriptor, CancellationToken cancellationToken)
         => InnerSetContext.UpdateAsync<TResponse>(descriptor, cancellationToken);
 
+    // ============================== RemoveAsync ==============================
+
+    Task IFluxSetContext<TModel, object>.RemoveAsync(OperationParameterCollection? parameters, CancellationToken cancellationToken)
+        => InnerSetContext.RemoveAsync(parameters, cancellationToken);
+
+    Task<TResponse> IFluxSetContext<TModel, object>.RemoveAsync<TResponse>(OperationParameterCollection? parameters, CancellationToken cancellationToken)
+        => InnerSetContext.RemoveAsync<TResponse>(parameters, cancellationToken);
+
+    Task IFluxSetContext<TModel, object>.RemoveAsync(object id, OperationParameterCollection? parameters, CancellationToken cancellationToken)
+        => InnerSetContext.RemoveAsync(ConvertKey(id), parameters, cancellationToken);
+
+    Task<TResponse> IFluxSetContext<TModel, object>.RemoveAsync<TResponse>(object id, OperationParameterCollection? parameters, CancellationToken cancellationToken)
+        => InnerSetContext.RemoveAsync<TResponse>(ConvertKey(id), parameters, cancellationToken);
+
+    Task IFluxSetContext<TModel, object>.RemoveAsync(RemoveOperationDescriptor descriptor, CancellationToken cancellationToken)
+        => InnerSetContext.RemoveAsync(descriptor, cancellationToken);
+
+    Task<TResponse> IFluxSetContext<TModel, object>.RemoveAsync<TResponse>(RemoveOperationDescriptor descriptor, CancellationToken cancellationToken)
+        => InnerSetContext.RemoveAsync<TResponse>(descriptor, cancellationToken);
+    
     // ============================== ExecuteAsync ==============================
 
     Task<TResponse> IFluxSetContext<TModel, object>.ExecuteAsync<TResponse>(OperationDescriptor descriptor, CancellationToken cancellationToken)
