@@ -2,7 +2,7 @@
 
 namespace BitzArt.Flux;
 
-/// <inheritdoc cref="IFluxSetContext{TModel, TKey}"/>
+/// <inheritdoc/>
 public interface IFluxSetContext<TModel> : IFluxSetContext<TModel, object>
     where TModel : class
 {
@@ -229,7 +229,7 @@ public interface IFluxSetContext<TModel, TKey>
     public Task RemoveAsync(TKey id, OperationParameterCollection? parameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Remove an object from the set.
+    /// Removes an object from the set.
     /// </summary>
     /// <typeparam name="TResponse">Response type.</typeparam>
     /// <param name="id">Unique identifier of the object to remove.</param>
@@ -242,7 +242,7 @@ public interface IFluxSetContext<TModel, TKey>
     public Task RemoveAsync(RemoveOperationDescriptor descriptor, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Remove an object from the set.
+    /// Removes an object from the set.
     /// </summary>
     /// <typeparam name="TResponse">Response type.</typeparam>
     /// <param name="descriptor">Operation descriptor.</param>

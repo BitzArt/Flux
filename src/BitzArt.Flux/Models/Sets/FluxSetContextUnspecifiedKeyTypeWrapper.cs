@@ -3,11 +3,15 @@
 namespace BitzArt.Flux.Sets;
 
 /// <summary>
+/// <para>
 /// A wrapper for <see cref="IFluxSetContext{TModel, TKey}"/> to allow injection as <see cref="IFluxSetContext{TModel}"/>
-/// (notice a lack of TKey generic parameter). <br />
+/// (notice a lack of the TKey generic parameter).
+/// </para>
+/// <para>
 /// It uses the actual registered set context with a specified key type internally
 /// and delegates all calls to it,
-/// while converting the key type to the specified type when necessary.
+/// while converting the provided key arguments to the actual context's specified key type.
+/// </para>
 /// </summary>
 internal class FluxSetContextUnspecifiedKeyTypeWrapper<TModel, TKey>(IFluxSetContext<TModel, TKey> setContext) : IFluxSetContext<TModel>
     where TModel : class
