@@ -26,7 +26,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BitzArt.LinqExtensions" Version="2.1.2" />
-		<PackageReference Include="BitzArt.Pagination" Version="1.19.2" />
+		<PackageReference Include="BitzArt.Pagination" Version="1.20.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.5" />
