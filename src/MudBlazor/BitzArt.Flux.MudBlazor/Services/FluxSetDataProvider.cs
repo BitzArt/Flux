@@ -98,7 +98,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             await GetDataAsync(TableState, forceReload: true);
         }
 
-        await Table!.ReloadServerData().IgnoreCancellation(ignoreCancellation);
+        await Table!.ReloadServerData().IgnoreCancellation(ignoreCancellation, false);
     }
 
     public void ResetPage()
