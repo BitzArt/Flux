@@ -20,7 +20,20 @@ public static class AddFluxSetDataProviderExtension
         Func<IServiceProvider, IFluxSetContext<TModel>>? setContextImplementationFactory = null)
         where TModel : class
     {
-        services.AddFluxSetDataProvider<PageResult<TModel, PageRequest>, TModel>(setContextImplementationFactory);
+        setContextImplementationFactory ??= (serviceProvider)
+            => serviceProvider.GetRequiredService<IFluxSetContext<TModel>>();
+
+        services.AddTransient<FluxSetDataProvider<TModel>>();
+
+        services.AddTransient<IFluxSetDataProvider<TModel>>(serviceProvider =>
+        {
+            var provider = serviceProvider.GetRequiredService<FluxSetDataProvider<TModel>>();
+            var setContext = setContextImplementationFactory!.Invoke(serviceProvider);
+            provider.SetContext = setContext;
+
+            return provider;
+        });
+
         return services;
     }
 
