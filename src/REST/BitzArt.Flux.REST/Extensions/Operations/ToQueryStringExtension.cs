@@ -25,6 +25,12 @@ public static class ToQueryStringExtension
             query = query.Add(parameters!.Value);
         }
 
+        var extensionParameters = GetParameters(descriptor.ExtensionParameters);
+        if (extensionParameters is not null)
+        {
+            query = query.Add(extensionParameters!.Value);
+        }
+
         var operationSpecific = GetOperationSpecific(descriptor);
         if (operationSpecific is not null)
         {

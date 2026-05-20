@@ -10,6 +10,8 @@ public abstract class OperationDescriptor
     /// </summary>
     public IOperationParameterCollection? Parameters { get; set; }
 
+    public IOperationParameterCollection? ExtensionParameters { get; set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationDescriptor"/> class.
     /// </summary>

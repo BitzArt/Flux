@@ -5,7 +5,13 @@ using System.Reflection;
 
 namespace BitzArt.Flux.MudBlazor;
 
-internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFluxSetDataProvider<TModel>
+internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : FluxSetDataProvider<PageResult<TModel, PageRequest>, TModel>(loggerFactory), IFluxSetDataProvider<TModel>
+    where TModel : class
+{
+    public sealed override Func<PageResult<TModel, PageRequest>, PageResult<TModel, PageRequest>> ResponseToPageConverter { get; set; } = x => x;
+}
+
+internal class FluxSetDataProvider<TRequest, TModel>(ILoggerFactory loggerFactory) : IFluxSetDataProvider<TRequest, TModel>
     where TModel : class
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger("Flux.MudBlazor");
@@ -26,7 +32,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public bool IsLoading { get; private set; }
 
-    public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
+    public event OnLoadingStateChanged<TRequest, TModel>? OnLoadingStateChanged;
 
     private int _currentOperationCount = 0;
 
@@ -55,6 +61,8 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             return DefaultTableState;
         }
     }
+
+    public virtual Func<TRequest, PageResult<TModel, PageRequest>> ResponseToPageConverter { get; set; } = null!;
 
     public async Task ResetAndReloadAsync(bool ignoreCancellation = true, bool force = false)
     {
@@ -197,9 +205,24 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         if (forceReload == false && CompareWithLastRequest(state, parameters))
             return LastQuery!.Data.ToTableData();
 
-        var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
-        var descriptor = new GetPageOperationDescriptor(pageRequest, parameters);
-        var page = await SetContext.GetPageAsync<PageResult<TModel, PageRequest>>(descriptor, cancellationToken);
+        if (ResponseToPageConverter is null)
+        {
+            throw new InvalidOperationException($"Unable to fetch data: {nameof(ResponseToPageConverter)} is not configured.");
+        }
+
+        var extensionParameters = new List<KeyValuePair<string, object>>()
+        {
+            new("offset", state.Page * state.PageSize),
+            new("limit", state.PageSize)
+        };
+
+        var descriptor = new GetOperationDescriptor(null, parameters)
+        {
+            ExtensionParameters = (new OperationParameterCollection(extensionParameters)).Parameters
+        };
+
+        var response = await SetContext.GetAsync<TRequest>(descriptor, cancellationToken);
+        var page = ResponseToPageConverter(response);
 
         LastQuery = new(state, parameters!, page);
         OnResult?.Invoke(new(this, LastQuery));

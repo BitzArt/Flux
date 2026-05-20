@@ -1,12 +1,18 @@
-﻿using MudBlazor;
+﻿using BitzArt.Pagination;
+using MudBlazor;
 
 namespace BitzArt.Flux.MudBlazor;
+
+public interface IFluxSetDataProvider<TModel> : IFluxSetDataProvider<PageResult<TModel, PageRequest>, TModel>
+    where TModel : class
+{
+}
 
 /// <summary>
 /// Used to provide data to a MudTable component.
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
-public interface IFluxSetDataProvider<TModel>
+public interface IFluxSetDataProvider<TRequest, TModel>
     where TModel : class
 {
     /// <summary>
@@ -29,8 +35,8 @@ public interface IFluxSetDataProvider<TModel>
     /// </summary>
     public event OnResultHandler<TModel>? OnResult;
 
-    /// <inheritdoc cref="OnLoadingStateChanged{TModel}"/>
-    public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
+    /// <inheritdoc cref="OnLoadingStateChanged{TRequest, TModel}"/>
+    public event OnLoadingStateChanged<TRequest, TModel>? OnLoadingStateChanged;
 
     /// <summary>
     /// Contains information about the last query made by this data provider.

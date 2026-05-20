@@ -39,7 +39,7 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
             ? endpointPath
             : GetPath(setConfiguration.ServiceConfiguration.BasePath, setConfiguration.Path, endpointPath, descriptor);
 
-        path = ApplyParameters(path, descriptor.Parameters, out var leftoverParameters, out var query);
+        path = ApplyParameters(path, descriptor, out var leftoverParameters, out var query);
 
         if (!queryComplete)
         {
@@ -96,6 +96,21 @@ internal class HttpRequestMessageResolver(ILoggerFactory loggerFactory) : IHttpR
         if (keyedDescriptor.Id is null) return null;
 
         return keyedDescriptor.Id?.ToString();
+    }
+
+    private string? ApplyParameters(
+        string? path,
+        OperationDescriptor descriptor,
+        out List<KeyValuePair<string, object>>? leftoverParameters,
+        out QueryString query)
+    {
+        path = ApplyParameters(path, descriptor.Parameters, out var primaryLeftoverParameters, out var primaryQuery);
+        path = ApplyParameters(path, descriptor.ExtensionParameters, out var extensionLeftoverParameters, out var extensionQuery);
+
+        leftoverParameters = [..primaryLeftoverParameters ?? [], ..extensionLeftoverParameters ?? []];
+        query = primaryQuery.Add(extensionQuery);
+
+        return path;
     }
 
     private string? ApplyParameters(
