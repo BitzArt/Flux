@@ -100,6 +100,11 @@ public interface IFluxSetDataProvider<TRequest, TModel>
     public TableState DefaultTableState { get; }
 
     /// <summary>
+    /// Should be set to convert a request of type <see cref="TRequest"/> to <see cref="PageResult{TModel, PageRequest}"/>.
+    /// </summary>
+    public Func<TRequest, PageResult<TModel, PageRequest>> ResponseToPageConverter { get; set; }
+
+    /// <summary>
     /// Gets data from the server for a default TableState.
     /// </summary>
     public Task<TableData<TModel>> GetDataAsync(bool forceReload = false, CancellationToken cancellationToken = default);
