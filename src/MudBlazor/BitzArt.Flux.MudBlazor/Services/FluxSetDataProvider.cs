@@ -210,18 +210,10 @@ internal class FluxSetDataProvider<TRequest, TModel>(ILoggerFactory loggerFactor
             throw new InvalidOperationException($"Unable to fetch data: {nameof(ResponseToPageConverter)} is not configured.");
         }
 
-        var extensionParameters = new List<KeyValuePair<string, object>>()
-        {
-            new("offset", state.Page * state.PageSize),
-            new("limit", state.PageSize)
-        };
+        var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
+        var descriptor = new GetPageOperationDescriptor(pageRequest, parameters);
 
-        var descriptor = new GetOperationDescriptor(null, parameters)
-        {
-            ExtensionParameters = (new OperationParameterCollection(extensionParameters)).Parameters
-        };
-
-        var response = await SetContext.GetAsync<TRequest>(descriptor, cancellationToken);
+        var response = await SetContext.GetPageAsync<TRequest>(descriptor, cancellationToken);
         var page = ResponseToPageConverter(response);
 
         LastQuery = new(state, parameters!, page);
