@@ -49,9 +49,6 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
         UpdateOperationDescriptor updateOperation when updateOperation.Partial == true
             => throw new NotSupportedException("Partial updates are not supported in JSON set context."),
 
-        RemoveOperationDescriptor removeOperation
-            => Items.Remove(removeOperation.Id),
-
         _ => throw new NotSupportedException($"Operation type '{descriptor.GetType().Name}' is not supported in JSON set context.")
     };
 }

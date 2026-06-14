@@ -79,25 +79,20 @@ internal class FluxJsonDataCollection<TModel>
         return item;
     }
 
-    public bool Remove(object? id)
+    public bool Remove(TModel item)
     {
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+
         lock (_lock)
         {
-            if (_keyMap is null)
-            {
-                throw new NotSupportedException($"Cannot remove item by id when no key property is configured for type {typeof(TModel).Name}.");
-            }
-
-            TModel existingItem = _keyMap.Get(id);
-
-            var removed = _items.Remove(existingItem);
+            var removed = _items.Remove(item);
 
             if (!removed)
             {
                 return false;
             }
 
-            _keyMap?.Remove(existingItem);
+            _keyMap?.Remove(item);
 
             return true;
         }
