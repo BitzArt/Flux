@@ -13,6 +13,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     }
 
     private FluxJsonDataCollection<TModel> Items => Configuration.DataCollection;
+    private Func<IQueryable<TModel>, OperationDescriptor, IQueryable<TModel>>? BuildQuery => Configuration.BuildQuery;
 
     public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
@@ -20,21 +21,24 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
 
         Logger.LogInformation("[{type}] {operationName}", typeof(TModel).Name, operationName);
 
-        var data = ResolveDataAsync(descriptor, cancellationToken);
+        var data = ResolveData(descriptor);
 
         return Task.FromResult(data);
     }
 
-    private object? ResolveDataAsync(OperationDescriptor descriptor, CancellationToken cancellationToken) => descriptor switch
+    private object? ResolveData(OperationDescriptor descriptor) => descriptor switch
     {
-        GetAllOperationDescriptor
-            => Items.GetAll(),
+        GetAllOperationDescriptor => BuildQuery is not null 
+            ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).ToList()
+            : Items.GetAll(),
 
-        GetPageOperationDescriptor getPageOperation
-            => Items.GetAll().ToPage(getPageOperation.PageRequest),
+        GetPageOperationDescriptor getPageOperation => BuildQuery is not null
+            ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).ToPage(getPageOperation.PageRequest)
+            : Items.GetAll().ToPage(getPageOperation.PageRequest),
 
-        GetOperationDescriptor getOperation
-            => Items.Get(getOperation.Id),
+        GetOperationDescriptor getOperation => BuildQuery is not null
+                ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).FirstOrDefault()
+                : Items.Get(getOperation.Id),
 
         AddOperationDescriptor addOperation
             => Items.Add((TModel)addOperation.Value!),
