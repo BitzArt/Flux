@@ -28,7 +28,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
 
     private object? ResolveData(OperationDescriptor descriptor) => descriptor switch
     {
-        GetAllOperationDescriptor => BuildQuery is not null 
+        GetAllOperationDescriptor => BuildQuery is not null
             ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).ToList()
             : Items.GetAll(),
 
@@ -37,8 +37,8 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
             : Items.GetAll().ToPage(getPageOperation.PageRequest),
 
         GetOperationDescriptor getOperation => BuildQuery is not null
-                ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).FirstOrDefault()
-                : Items.Get(getOperation.Id),
+            ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).FirstOrDefault()
+            : Items.Get(getOperation.Id),
 
         AddOperationDescriptor addOperation
             => Items.Add((TModel)addOperation.Value!),
