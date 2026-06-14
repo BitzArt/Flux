@@ -83,7 +83,12 @@ internal class FluxJsonDataCollection<TModel>
     {
         lock (_lock)
         {
-            TModel existingItem = Get(id);
+            if (_keyMap is null)
+            {
+                throw new NotSupportedException($"Cannot remove item by id when no key property is configured for type {typeof(TModel).Name}.");
+            }
+
+            TModel existingItem = _keyMap.Get(id);
 
             var removed = _items.Remove(existingItem);
 
