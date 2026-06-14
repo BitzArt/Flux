@@ -79,20 +79,20 @@ internal class FluxJsonDataCollection<TModel>
         return item;
     }
 
-    public bool Remove(TModel item)
+    public bool Remove(object? id)
     {
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
-
         lock (_lock)
         {
-            var removed = _items.Remove(item);
+            TModel existingItem = Get(id);
+
+            var removed = _items.Remove(existingItem);
 
             if (!removed)
             {
                 return false;
             }
 
-            _keyMap?.Remove(item);
+            _keyMap?.Remove(existingItem);
 
             return true;
         }
