@@ -13,7 +13,7 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     }
 
     private FluxJsonDataCollection<TModel> Items => Configuration.DataCollection;
-    private Func<IQueryable<TModel>, OperationDescriptor, IQueryable<TModel>>? BuildQuery => Configuration.BuildQuery;
+    private Func<IQueryable<TModel>, OperationDescriptor, IQueryable<TModel>>? EnrichQuery => Configuration.EnrichQuery;
 
     public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
@@ -28,16 +28,16 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
 
     private object? ResolveData(OperationDescriptor descriptor) => descriptor switch
     {
-        GetAllOperationDescriptor => BuildQuery is not null
-            ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).ToList()
+        GetAllOperationDescriptor => EnrichQuery is not null
+            ? EnrichQuery(Items.GetAll().AsQueryable(), descriptor).ToList()
             : Items.GetAll(),
 
-        GetPageOperationDescriptor getPageOperation => BuildQuery is not null
-            ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).ToPage(getPageOperation.PageRequest)
+        GetPageOperationDescriptor getPageOperation => EnrichQuery is not null
+            ? EnrichQuery(Items.GetAll().AsQueryable(), descriptor).ToPage(getPageOperation.PageRequest)
             : Items.GetAll().ToPage(getPageOperation.PageRequest),
 
-        GetOperationDescriptor getOperation => BuildQuery is not null
-            ? BuildQuery(Items.GetAll().AsQueryable(), descriptor).FirstOrDefault()
+        GetOperationDescriptor getOperation => EnrichQuery is not null
+            ? EnrichQuery(Items.GetAll().AsQueryable(), descriptor).FirstOrDefault()
             : Items.Get(getOperation.Id),
 
         AddOperationDescriptor addOperation
