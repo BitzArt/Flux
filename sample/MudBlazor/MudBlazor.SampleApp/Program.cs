@@ -9,23 +9,36 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Add MudBlazor services
         builder.Services.AddMudServices();
+
+        // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();
 
-        builder.Services.AddFlux("http://localhost:5213");
+        builder.Services.AddFlux("http://localhost:5096");
 
         var app = builder.Build();
 
-        app.UseWebAssemblyDebugging();
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseWebAssemblyDebugging();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+        }
+        app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 
-        app.UseStaticFiles();
         app.UseAntiforgery();
 
         app.MapDataEndpoints();
+
+        app.MapStaticAssets();
         app.MapRazorComponents<App>()
-             .AddInteractiveServerRenderMode()
+            .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()
             .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
 
