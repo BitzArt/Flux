@@ -1,6 +1,10 @@
 [book]
-title = "Flux - A Universal WebApi client"
+title = "Flux - A Universal Web API client"
+src = "src"
 
 [output.html]
 git-repository-url = "https://github.com/BitzArt/Flux"
-git-repository-icon = "fa-github"
+sidebar-header-nav = false
+
+[output.html.fold]
+enable = false
