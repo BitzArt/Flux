@@ -132,7 +132,7 @@ public class FluxJsonSetDataCollectionTests
         dataCollection.SetKeyPropertySelector(x => x.Id!.Value);
 
         // Act
-        var removed = dataCollection.Remove(itemToRemove);
+        var removed = dataCollection.Remove(itemToRemove.Id);
 
         // Assert
         Assert.True(removed);
@@ -140,19 +140,7 @@ public class FluxJsonSetDataCollectionTests
     }
 
     [Fact]
-    public void Remove_WhenItemIsNull_ShouldThrow()
-    {
-        // Arrange
-        var items = new List<TestModel> { new(1, "Item 1") };
-        var dataCollection = new FluxJsonDataCollection<TestModel>(items);
-        dataCollection.SetKeyPropertySelector(x => x.Id!.Value);
-
-        // Act/Assert
-        Assert.Throws<ArgumentNullException>(() => dataCollection.Remove(null!));
-    }
-
-    [Fact]
-    public void Remove_WhenItemIsNotAPartOfCollection_ShouldReturnFalse()
+    public void Remove_WhenItemIsNotAPartOfCollection_ShouldThrow()
     {
         // Arrange
         var itemToRemove = new TestModel(1, "Item 1");
@@ -160,10 +148,7 @@ public class FluxJsonSetDataCollectionTests
         var dataCollection = new FluxJsonDataCollection<TestModel>(items);
         dataCollection.SetKeyPropertySelector(x => x.Id!.Value);
 
-        // Act
-        var removed = dataCollection.Remove(itemToRemove);
-
-        // Assert
-        Assert.False(removed);
+        // Act + Assert
+        Assert.Throws<InvalidOperationException>(() => dataCollection.Remove(itemToRemove.Id));
     }
 }

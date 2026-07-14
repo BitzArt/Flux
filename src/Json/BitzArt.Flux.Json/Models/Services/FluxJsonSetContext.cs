@@ -28,17 +28,11 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
 
     private object? ResolveData(OperationDescriptor descriptor) => descriptor switch
     {
-        GetAllOperationDescriptor => EnrichQuery is not null
-            ? EnrichQuery(Items.GetAll().AsQueryable(), descriptor).ToList()
-            : Items.GetAll(),
+        GetAllOperationDescriptor => Items.AsQueryable(q => EnrichQuery?.Invoke(q, descriptor) ?? q).ToList(),
 
-        GetPageOperationDescriptor getPageOperation => EnrichQuery is not null
-            ? EnrichQuery(Items.GetAll().AsQueryable(), descriptor).ToPage(getPageOperation.PageRequest)
-            : Items.GetAll().ToPage(getPageOperation.PageRequest),
+        GetPageOperationDescriptor getPageOperation => Items.AsQueryable(q => EnrichQuery?.Invoke(q, descriptor) ?? q).ToPage(getPageOperation.PageRequest),
 
-        GetOperationDescriptor getOperation => EnrichQuery is not null
-            ? EnrichQuery(Items.GetAll().AsQueryable(), descriptor).FirstOrDefault()
-            : Items.Get(getOperation.Id),
+        GetOperationDescriptor getOperation => Items.Get(EnrichQuery is not null ? q => EnrichQuery.Invoke(q, descriptor) : null, getOperation.Id),
 
         AddOperationDescriptor addOperation
             => Items.Add((TModel)addOperation.Value!),
@@ -48,6 +42,10 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
 
         UpdateOperationDescriptor updateOperation when updateOperation.Partial == true
             => throw new NotSupportedException("Partial updates are not supported in JSON set context."),
+
+        RemoveOperationDescriptor removeOperation
+            => Items.Remove(removeOperation.Id) == false 
+            ? throw new InvalidOperationException($"No matching item of type {typeof(TModel).Name} was found.") : null,
 
         _ => throw new NotSupportedException($"Operation type '{descriptor.GetType().Name}' is not supported in JSON set context.")
     };

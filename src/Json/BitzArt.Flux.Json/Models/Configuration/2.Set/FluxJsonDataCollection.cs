@@ -20,30 +20,46 @@ internal class FluxJsonDataCollection<TModel>
 
     public IReadOnlyCollection<TModel> GetAll() => _items.AsReadOnly();
 
-    public TModel Get(object? id)
+    public IQueryable<TModel> AsQueryable(Func<IQueryable<TModel>, IQueryable<TModel>> enrichQuery)
+    {
+        return enrichQuery.Invoke(_items.AsQueryable());
+    }
+
+    public TModel? Get(object? id) => Get(null, id);
+
+    public TModel? Get(Func<IQueryable<TModel>, IQueryable<TModel>>? enrichQuery, object? id)
     {
         lock (_lock)
         {
             if (_keyMap is null)
             {
-                if (id is not null)
+                if (id is not null && enrichQuery is null)
                 {
                     throw new InvalidOperationException($"Cannot get item by id when no key property is configured for type {typeof(TModel).Name}.");
                 }
 
-                var count = _items.Count;
+                var resultingItems = enrichQuery is not null
+                    ? enrichQuery.Invoke(_items.AsQueryable())
+                    : _items.AsQueryable();
+
+                var count = resultingItems.Count();
 
                 if (count == 0)
                 {
-                    throw new InvalidOperationException($"No items of type {typeof(TModel).Name} are available.");
+                    return null;
                 }
 
                 if (count > 1)
                 {
-                    throw new InvalidOperationException($"Multiple items of type {typeof(TModel).Name} are available.");
+                    throw new InvalidOperationException($"Multiple matching items of type {typeof(TModel).Name} were found.");
                 }
 
-                return _items[0];
+                return resultingItems.First();
+            }
+
+            if (enrichQuery is not null)
+            {
+                return enrichQuery.Invoke(_items.AsQueryable()).SingleOrDefault();
             }
 
             return _keyMap.Get(id);
@@ -71,29 +87,48 @@ internal class FluxJsonDataCollection<TModel>
         }
 
         id ??= _keyMap.GetKey(item);
-        TModel existingItem = Get(id);
-
-        Remove(existingItem);
+        
+        TModel? existingItem = Get(null, id) 
+            ?? throw new InvalidOperationException($"No matching item of type {typeof(TModel).Name} was found.");
+        
+        _items.Remove(existingItem);
         Add(item);
 
         return item;
     }
 
-    public bool Remove(TModel item)
+    public bool Remove(object? id)
     {
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
-
         lock (_lock)
         {
-            var removed = _items.Remove(item);
+            if (_keyMap is null)
+            {
+                throw new NotSupportedException($"Cannot update item by id when no key property is configured for type {typeof(TModel).Name}.");
+            }
 
-            if (!removed)
+            if (id is null)
+            {
+                if (_items.Count == 0)
+                {
+                    return false;
+                }
+
+                if (_items.Count > 1)
+                {
+                    throw new InvalidOperationException($"Multiple matching items of type {typeof(TModel).Name} were found.");
+                }
+
+                return _items.Remove(_items.First());
+            }
+
+            TModel? existingItem = Get(null, id);
+
+            if (existingItem is null)
             {
                 return false;
             }
 
-            _keyMap?.Remove(item);
-
+            _items.Remove(existingItem);
             return true;
         }
     }
