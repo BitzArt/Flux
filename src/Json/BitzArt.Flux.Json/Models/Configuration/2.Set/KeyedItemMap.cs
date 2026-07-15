@@ -59,6 +59,39 @@ internal class KeyedItemMap<TModel, TKey> : KeyedItemMap<TModel>
         PersistItem(item);
     }
 
+    public override void Replace(object? id, TModel item)
+    {
+        if (id is not TKey key)
+        {
+            throw new ArgumentException($"Invalid key type. Expected '{typeof(TKey).Name}', but got '{id?.GetType().Name ?? "null"}'.", nameof(id));
+        }
+
+        if (!_keyedItems.ContainsKey(key))
+        {
+            throw new InvalidOperationException($"{typeof(TModel).Name} with key {id} was not found");
+        }
+
+        var replacementKey = _keyPropertySelector.Invoke(item);
+
+        if (replacementKey is not null
+            && !EqualityComparer<TKey>.Default.Equals(replacementKey, key)
+            && _keyedItems.ContainsKey(replacementKey))
+        {
+            throw new InvalidOperationException($"Duplicate key '{replacementKey}' found for type '{typeof(TModel).Name}'.");
+        }
+
+        _keyedItems.Remove(key);
+
+        if (replacementKey is null)
+        {
+            _keylessItems.Add(item);
+        }
+        else
+        {
+            _keyedItems[replacementKey] = item;
+        }
+    }
+
     public override bool Remove(TModel item)
     {
         var key = _keyPropertySelector.Invoke(item);
@@ -77,5 +110,6 @@ internal abstract class KeyedItemMap<TModel>
     public abstract object? GetKey(TModel item);
     public abstract TModel Get(object? id);
     public abstract void Add(TModel item);
+    public abstract void Replace(object? id, TModel item);
     public abstract bool Remove(TModel item);
 }

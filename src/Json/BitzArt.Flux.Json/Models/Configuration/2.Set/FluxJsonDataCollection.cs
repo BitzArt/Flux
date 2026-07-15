@@ -20,10 +20,8 @@ internal class FluxJsonDataCollection<TModel>
 
     public IReadOnlyCollection<TModel> GetAll() => _items.AsReadOnly();
 
-    public IQueryable<TModel> AsQueryable(Func<IQueryable<TModel>, IQueryable<TModel>> enrichQuery)
-    {
-        return enrichQuery.Invoke(_items.AsQueryable());
-    }
+    public IQueryable<TModel> AsQueryable(Func<IQueryable<TModel>, IQueryable<TModel>> enrichQuery) 
+        => enrichQuery.Invoke(_items.AsQueryable());
 
     public TModel? Get(object? id) => Get(null, id);
 
@@ -38,23 +36,16 @@ internal class FluxJsonDataCollection<TModel>
                     throw new InvalidOperationException($"Cannot get item by id when no key property is configured for type {typeof(TModel).Name}.");
                 }
 
-                var resultingItems = enrichQuery is not null
+                var resultingItems = (enrichQuery is not null
                     ? enrichQuery.Invoke(_items.AsQueryable())
-                    : _items.AsQueryable();
+                    : _items.AsQueryable()).ToList();
 
-                var count = resultingItems.Count();
-
-                if (count == 0)
+                return resultingItems.Count switch
                 {
-                    return null;
-                }
-
-                if (count > 1)
-                {
-                    throw new InvalidOperationException($"Multiple matching items of type {typeof(TModel).Name} were found.");
-                }
-
-                return resultingItems.First();
+                    0 => null,
+                    > 1 => throw new InvalidOperationException($"Multiple matching items of type {typeof(TModel).Name} were found."),
+                    _ => resultingItems.First()
+                };
             }
 
             if (enrichQuery is not null)
@@ -74,27 +65,31 @@ internal class FluxJsonDataCollection<TModel>
         {
             _items.Add(item);
             _keyMap?.Add(item);
-        }
 
-        return item;
+            return item;
+        }
     }
 
     public TModel Update(object? id, TModel item)
     {
-        if (_keyMap is null)
+        lock (_lock)
         {
-            throw new NotSupportedException($"Cannot update item by id when no key property is configured for type {typeof(TModel).Name}.");
+            if (_keyMap is null)
+            {
+                throw new NotSupportedException($"Cannot update item by id when no key property is configured for type {typeof(TModel).Name}.");
+            }
+
+            id ??= _keyMap.GetKey(item);
+
+            TModel? existingItem = Get(null, id)
+                ?? throw new InvalidOperationException($"No matching item of type {typeof(TModel).Name} was found.");
+
+            _keyMap.Replace(id, item);
+            _items.Remove(existingItem);
+            _items.Add(item);
+
+            return item;
         }
-
-        id ??= _keyMap.GetKey(item);
-        
-        TModel? existingItem = Get(null, id) 
-            ?? throw new InvalidOperationException($"No matching item of type {typeof(TModel).Name} was found.");
-        
-        _items.Remove(existingItem);
-        Add(item);
-
-        return item;
     }
 
     public bool Remove(object? id)
@@ -103,7 +98,7 @@ internal class FluxJsonDataCollection<TModel>
         {
             if (_keyMap is null)
             {
-                throw new NotSupportedException($"Cannot update item by id when no key property is configured for type {typeof(TModel).Name}.");
+                throw new NotSupportedException($"Cannot remove item by id when no key property is configured for type {typeof(TModel).Name}.");
             }
 
             if (id is null)

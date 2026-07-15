@@ -24,6 +24,7 @@ public static class EnrichQueryExtension
         Func<IQueryable<TModel>, OperationDescriptor, IQueryable<TModel>> enrichQuery)
         where TModel : class
     {
+        ArgumentNullException.ThrowIfNull(enrichQuery);
         builder.SetConfiguration.EnrichQuery = enrichQuery;
         return builder;
     }
