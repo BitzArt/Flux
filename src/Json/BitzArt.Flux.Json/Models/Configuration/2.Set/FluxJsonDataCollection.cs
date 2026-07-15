@@ -90,8 +90,7 @@ internal class FluxJsonDataCollection<TModel>
 
             id ??= _keyMap.GetKey(item);
 
-            TModel? existingItem = Get(null, id)
-                ?? throw new InvalidOperationException($"No matching item of type {typeof(TModel).Name} was found.");
+            var existingItem = _keyMap.Get(id);
 
             _keyMap.Replace(id, item);
             _items.Remove(existingItem);
@@ -127,12 +126,7 @@ internal class FluxJsonDataCollection<TModel>
                 return _items.Remove(itemToRemove);
             }
 
-            TModel? existingItem = Get(null, id);
-
-            if (existingItem is null)
-            {
-                return false;
-            }
+            var existingItem = _keyMap.Get(id);
 
             _keyMap.Remove(existingItem);
             _items.Remove(existingItem);
