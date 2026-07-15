@@ -63,8 +63,8 @@ internal class FluxJsonDataCollection<TModel>
 
         lock (_lock)
         {
-            _items.Add(item);
             _keyMap?.Add(item);
+            _items.Add(item);
 
             return item;
         }
@@ -113,7 +113,9 @@ internal class FluxJsonDataCollection<TModel>
                     throw new InvalidOperationException($"Multiple matching items of type {typeof(TModel).Name} were found.");
                 }
 
-                return _items.Remove(_items.First());
+                var itemToRemove = _items.First();
+                _keyMap.Remove(itemToRemove);
+                return _items.Remove(itemToRemove);
             }
 
             TModel? existingItem = Get(null, id);
@@ -123,6 +125,7 @@ internal class FluxJsonDataCollection<TModel>
                 return false;
             }
 
+            _keyMap.Remove(existingItem);
             _items.Remove(existingItem);
             return true;
         }
