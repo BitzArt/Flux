@@ -20,8 +20,17 @@ internal class FluxJsonDataCollection<TModel>
 
     public IReadOnlyCollection<TModel> GetAll() => _items.AsReadOnly();
 
-    public IQueryable<TModel> AsQueryable(Func<IQueryable<TModel>, IQueryable<TModel>> enrichQuery) 
-        => enrichQuery.Invoke(_items.AsQueryable());
+    public IQueryable<TModel> AsQueryable(Func<IQueryable<TModel>, IQueryable<TModel>> enrichQuery)
+    {
+        TModel[] items;
+
+        lock (_lock)
+        {
+            items = [.. _items];
+        }
+
+        return enrichQuery.Invoke(items.AsQueryable());
+    }
 
     public TModel? Get(object? id) => Get(null, id);
 
