@@ -3,6 +3,7 @@ title = "Flux - A Universal Web API client"
 src = "src"
 
 [output.html]
+additional-css = ["theme/custom.css"]
 git-repository-url = "https://github.com/BitzArt/Flux"
 sidebar-header-nav = false
 
