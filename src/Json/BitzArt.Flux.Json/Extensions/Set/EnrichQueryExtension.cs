@@ -19,12 +19,18 @@ public static class EnrichQueryExtension
     /// <param name="enrichQuery">
     /// Transformation that receives the current query and the descriptor for the read operation.
     /// </param>
-    /// <returns>The <see cref="IFluxJsonSetBuilder{TModel}"/> for further configuration.</returns>
+    /// <returns><see cref="IFluxJsonSetBuilder{TModel}"/> for further configuration.</returns>
     public static IFluxJsonSetBuilder<TModel> EnrichQuery<TModel>(this IFluxJsonSetBuilder<TModel> builder,
         Func<IQueryable<TModel>, OperationDescriptor, IQueryable<TModel>> enrichQuery)
         where TModel : class
     {
-        ArgumentNullException.ThrowIfNull(enrichQuery);
+        ArgumentNullException.ThrowIfNull(enrichQuery, nameof(enrichQuery));
+        
+        if (builder.SetConfiguration.EnrichQuery is not null)
+        {
+            throw new InvalidOperationException($"The set configuration for type {typeof(TModel).Name} already has an enrich query configured.");
+        }
+        
         builder.SetConfiguration.EnrichQuery = enrichQuery;
         return builder;
     }
