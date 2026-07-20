@@ -1,4 +1,0 @@
-interface:
-  display_name: "Technical Documentation"
-  short_description: "Technical documentation writing instructions"
-  default_prompt: "Use $tech-documentation to write technical documentation."
