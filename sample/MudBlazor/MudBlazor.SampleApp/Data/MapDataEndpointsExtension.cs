@@ -37,7 +37,7 @@ internal static class MapDataEndpointsExtension
 
             var orderDirection = desc ? OrderDirection.Descending : OrderDirection.Ascending;
 
-            q = string.IsNullOrWhiteSpace(order) 
+            q = string.IsNullOrWhiteSpace(order)
                 ? q.OrderBy(x => x.Id, orderDirection)
                 : q.Order(order, orderDirection);
 

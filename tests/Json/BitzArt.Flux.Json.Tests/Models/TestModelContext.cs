@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 internal static class TestSetContext
 {
@@ -14,17 +14,16 @@ internal static class TestSetContext
         services.AddFlux(flux =>
         {
             flux.AddService(serviceName)
-                .UsingJson()
-                    .WithBaseFilePath("Data")
-                    .ConfigureJson(json =>
-                    {
-                        json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                        json.Converters.Add(new JsonStringEnumConverter());
-                        json.WriteIndented = true;
-                    })
-                    .AddSet<TestModel, int>()
-                        .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!.Value);
+                .UsingJson("Data")
+                .ConfigureJsonSerializer(json =>
+                {
+                    json.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    json.Converters.Add(new JsonStringEnumConverter());
+                    json.WriteIndented = true;
+                })
+                .AddSet<TestModel>()
+                    .FromJsonFile("test-model.set.json")
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();

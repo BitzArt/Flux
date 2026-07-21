@@ -1,12 +1,18 @@
-﻿using MudBlazor;
+﻿using BitzArt.Pagination;
+using MudBlazor;
 
 namespace BitzArt.Flux.MudBlazor;
+
+public interface IFluxSetDataProvider<TModel> : IFluxSetDataProvider<PageResult<TModel, PageRequest>, TModel>
+    where TModel : class
+{
+}
 
 /// <summary>
 /// Used to provide data to a MudTable component.
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
-public interface IFluxSetDataProvider<TModel>
+public interface IFluxSetDataProvider<TRequest, TModel>
     where TModel : class
 {
     /// <summary>
@@ -22,15 +28,15 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Can be set to provide parameters for the request.
     /// </summary>
-    public Func<TableState, object[]>? GetParameters { get; set; }
+    public Func<TableState, IOperationParameterCollection>? GetParameters { get; set; }
 
     /// <summary>
     /// Event triggered when a request was completed and results are available.
     /// </summary>
     public event OnResultHandler<TModel>? OnResult;
 
-    /// <inheritdoc cref="OnLoadingStateChanged{TModel}"/>
-    public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
+    /// <inheritdoc cref="OnLoadingStateChanged{TRequest, TModel}"/>
+    public event OnLoadingStateChanged<TRequest, TModel>? OnLoadingStateChanged;
 
     /// <summary>
     /// Contains information about the last query made by this data provider.
@@ -40,18 +46,18 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Resets table sorting to none, resets current page to 0, and then reloads the data.
     /// </summary>
-    public Task ResetAndReloadAsync(bool ignoreCancellation = true);
+    public Task ResetAndReloadAsync(bool ignoreCancellation = true, bool force = false);
 
     /// <summary>
     /// Resets table sorting to none and then reloads the data.
     /// </summary>
-    public Task ResetSortAndReloadAsync(bool ignoreCancellation = true);
+    public Task ResetSortAndReloadAsync(bool ignoreCancellation = true, bool force = false);
 
     /// <summary>
     /// Resets current page to 0 and then reloads the data.
     /// </summary>
     /// <returns></returns>
-    public Task ResetPageAndReloadAsync(bool ignoreCancellation = true);
+    public Task ResetPageAndReloadAsync(bool ignoreCancellation = true, bool force = false);
 
     /// <summary>
     /// Resets current page to 0 on next request.
@@ -76,7 +82,7 @@ public interface IFluxSetDataProvider<TModel>
     /// <summary>
     /// Dynamically determine whether to reset page when processing a request based on last and new parameters or not.
     /// </summary>
-    public Func<object[], object[], bool>? ShouldResetPageOnParameters { get; set; }
+    public Func<IOperationParameterCollection?, IOperationParameterCollection?, bool>? ShouldResetPageOnParameters { get; set; }
 
     /// <summary>
     /// Identifies if the data provider is currently working on loading data.
@@ -94,12 +100,17 @@ public interface IFluxSetDataProvider<TModel>
     public TableState DefaultTableState { get; }
 
     /// <summary>
+    /// Should be set to convert a request of type <see cref="TRequest"/> to <see cref="PageResult{TModel, PageRequest}"/>.
+    /// </summary>
+    public Func<TRequest, PageResult<TModel, PageRequest>> ResponseToPageConverter { get; set; }
+
+    /// <summary>
     /// Gets data from the server for a default TableState.
     /// </summary>
-    public Task<TableData<TModel>> GetDataAsync(CancellationToken cancellationToken = default);
+    public Task<TableData<TModel>> GetDataAsync(bool forceReload = false, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets data from the server.
     /// </summary>
-    public Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default);
+    public Task<TableData<TModel>> GetDataAsync(TableState state, bool forceReload = false, CancellationToken cancellationToken = default);
 }

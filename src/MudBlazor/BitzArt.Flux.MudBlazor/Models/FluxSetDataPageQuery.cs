@@ -1,5 +1,4 @@
-﻿using BitzArt.Json;
-using BitzArt.Pagination;
+﻿using BitzArt.Pagination;
 using MudBlazor;
 using System.Text.Json.Serialization;
 
@@ -19,18 +18,18 @@ public record FluxSetDataPageQuery<TModel>
     /// <summary>
     /// Parameters of the request.
     /// </summary>
-    [JsonConverter(typeof(ItemConverter<TypedObjectJsonConverter<object>>))]
-    public object[] Parameters { get; set; } = null!;
+    [JsonConverter(typeof(OperationParameterCollectionJsonConverter))]
+    public IOperationParameterCollection Parameters { get; set; } = null!;
 
     /// <summary>
     /// Result data.
     /// </summary>
-    public PageResult<TModel> Data { get; set; } = null!;
+    public PageResult<TModel, PageRequest> Data { get; set; } = null!;
 
     /// <summary>
     /// Creates a new instance of <see cref="FluxSetDataPageQuery{TModel}"/>.
     /// </summary>
-    public FluxSetDataPageQuery(TableState tableState, object[] parameters, PageResult<TModel> data) : this()
+    public FluxSetDataPageQuery(TableState tableState, IOperationParameterCollection parameters, PageResult<TModel, PageRequest> data) : this()
     {
         TableState = tableState;
         Parameters = parameters;

@@ -1,7 +1,7 @@
 ﻿using BitzArt.Flux;
+using BitzArt.Pagination;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections;
 
 namespace MudBlazor;
 
@@ -34,10 +34,16 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
     /// A function that retrieves search request parameters.
     /// </summary>
     [Parameter]
-    public Func<string, CancellationToken, object>? GetParametersFunc { get; set; }
+    public Func<string, IOperationParameterCollection>? GetParameters { get; set; }
+
+    /// <summary>
+    /// A function that returns a task that retrieves search request parameters.
+    /// </summary>
+    [Parameter]
+    public Func<string, CancellationToken, Task<IOperationParameterCollection>>? GetParametersAsync { get; set; }
 
     /// <inheritdoc cref="MudAutocomplete{T}.SearchFunc"/>
-    public new Func<string, CancellationToken, Task<IEnumerable<T>>> SearchFunc
+    public new Func<string?, CancellationToken, Task<IEnumerable<T>>?>? SearchFunc
     {
         get
         {
@@ -45,12 +51,12 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
         }
         set
         {
-            throw new InvalidOperationException($"{nameof(MudFluxSetAutoComplete<T>)} does not allow configuring SearchFunc. Use {nameof(GetParametersFunc)} instead");
+            throw new InvalidOperationException($"{nameof(MudFluxSetAutoComplete<T>)} does not allow configuring SearchFunc. Use {nameof(GetParameters)} or {nameof(GetParametersAsync)} instead");
         }
     }
 
     [Inject]
-    private IServiceProvider _serviceProvider { get; set; } = null!;
+    private IServiceProvider ServiceProvider { get; set; } = null!;
 
     private IFluxSetContext<T>? _context;
     private IFluxSetContext<T> Context
@@ -59,7 +65,7 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
         {
             if (_context is not null) return _context;
 
-            var flux = _serviceProvider.GetRequiredService<IFluxContext>();
+            var flux = ServiceProvider.GetRequiredService<IFluxContext>();
 
             _context = flux.Set<T>(ServiceName, SetName);
 
@@ -75,8 +81,10 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
         base.SearchFunc = HandleSearchAsync;
     }
 
-    private Task<IEnumerable<T>> HandleSearchAsync(string searchText, CancellationToken cancellationToken)
+    private Task<IEnumerable<T>> HandleSearchAsync(string? searchText, CancellationToken cancellationToken)
     {
+        searchText ??= string.Empty;
+
         if (SearchHandler is null)
             return SearchAsync(searchText, cancellationToken);
 
@@ -85,27 +93,21 @@ public class MudFluxSetAutoComplete<T> : MudAutocomplete<T> where T : class
 
     private async Task<IEnumerable<T>> SearchAsync(string searchText, CancellationToken cancellationToken)
     {
-        var parameters = await GetParametersAsync(searchText, cancellationToken);
-        var page = await Context.GetPageAsync(0, MaxItems ?? 10, parameters);
+        var parameters = await RetrieveParametersAsync(searchText, cancellationToken);
+        var descriptor = new GetPageOperationDescriptor(new PageRequest(0, MaxItems ?? 10), parameters);
+        var page = await Context.GetPageAsync(descriptor, cancellationToken);
 
         return page.Items!;
     }
 
-    private async Task<object[]?> GetParametersAsync(string searchText, CancellationToken cancellationToken)
+    private async Task<IOperationParameterCollection?> RetrieveParametersAsync(string searchText, CancellationToken cancellationToken)
     {
-        if (GetParametersFunc is null)
-        {
-            return null;
-        }
+        var parameters = GetParameters is not null
+            ? GetParameters.Invoke(searchText)
+            : GetParametersAsync is not null
+                ? await GetParametersAsync.Invoke(searchText, cancellationToken)
+                : null;
 
-        var funcResult = GetParametersFunc.Invoke(searchText, cancellationToken);
-
-        return funcResult switch
-        {
-            IEnumerable<object> parameters => parameters.ToArray(),
-            Task<object[]> task => await task,
-            Task<IEnumerable<object>> task => (await task).ToArray(),
-            _ => throw new InvalidOperationException($"The result of GetParameters function should either be {nameof(IEnumerable<object>)}, {nameof(Task<object[]>)} or {nameof(Task<IEnumerable<object>>)}.")
-        };
+        return parameters;
     }
 }

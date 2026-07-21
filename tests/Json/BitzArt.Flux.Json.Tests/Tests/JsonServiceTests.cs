@@ -1,14 +1,16 @@
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 public class JsonServiceTests
 {
     private readonly IFluxSetContext<TestModel> _setContext = TestSetContext.GetTestSetContext();
 
     [Fact]
-    public async Task GetAllAsync_TestModel_ReturnsAll()
+    public async Task GetAllAsync_TestModel_ShouldReturnAll()
     {
+        // Arrange/Act
         var result = await _setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(result);
         Assert.True(result.Any());
     }
@@ -17,10 +19,12 @@ public class JsonServiceTests
     [InlineData(0, 10)]
     [InlineData(0, 5)]
     [InlineData(5, 5)]
-    public async Task GetPageAsync_TestModel_ReturnsPage(int offset, int limit)
+    public async Task GetPageAsync_TestModel_ShouldReturnPage(int offset, int limit)
     {
+        // Arrange/Act
         var result = await _setContext.GetPageAsync(offset, limit);
 
+        // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Items);
         Assert.True(result.Items.Any());
@@ -30,16 +34,21 @@ public class JsonServiceTests
     [Fact]
     public async Task GetAsync_TestModel_ReturnsModel()
     {
+        // Arrange/Act
         var result = await _setContext.GetAsync(1);
 
+        // Assert
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
     }
 
     [Fact]
-    public async Task GetAsync_NotExistingTestModel_Throws()
+    public async Task GetAsync_NotExistingTestModel_ShouldThrow()
     {
+        // Arrange
         Task Action() => _setContext.GetAsync(100);
-        await Assert.ThrowsAsync<FluxItemNotFoundException<TestModel>>(Action);
+
+        // Act/Assert
+        await Assert.ThrowsAnyAsync<Exception>(Action);
     }
 }

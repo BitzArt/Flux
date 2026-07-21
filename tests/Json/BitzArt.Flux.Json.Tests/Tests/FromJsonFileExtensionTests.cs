@@ -1,61 +1,67 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 public class FromJsonFileExtensionTests
 {
     [Fact]
-    public async Task FromJsonFile_WithBasePath_ReadsJsonData()
+    public async Task FromJsonFile_WithBasePath_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         services.AddFlux(flux =>
         {
             flux.AddService("service 1")
-                .UsingJson()
-                    .WithBaseFilePath("Data")
+                .UsingJson("Data")
                     .AddSet<TestModel>()
-                        .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                    .FromJsonFile("test-model.set.json")
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }
 
     [Fact]
-    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithDot_ReadsJsonData()
+    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithDot_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         services.AddFlux(flux =>
         {
             flux.AddService("service 1")
                 .UsingJson()
-                .AddSet<TestModel>()
+                    .AddSet<TestModel>()
                     .FromJsonFile("./Data/test-model.set.json")
-                    .WithKey(x => x.Id!);
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }
 
     [Fact]
-    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithNoDot_ReadsJsonData()
+    public async Task FromJsonFile_BasePathDirectlyInSetStartingWithNoDot_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         services.AddFlux(flux =>
@@ -63,23 +69,26 @@ public class FromJsonFileExtensionTests
             flux.AddService("service 1")
                 .UsingJson()
                     .AddSet<TestModel>()
-                        .FromJsonFile("Data/test-model.set.json")
-                        .WithKey(x => x.Id!);
+                    .FromJsonFile("Data/test-model.set.json")
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }
 
     [Fact]
-    public async Task FromJsonFile_BasePathGlobalByGettingCurrentDirectory_ReadsJsonData()
+    public async Task FromJsonFile_BasePathGlobalByGettingCurrentDirectory_ShouldReadJsonData()
     {
+        // Arrange
         var services = new ServiceCollection();
 
         var currentDirectory = Directory.GetCurrentDirectory();
@@ -88,19 +97,20 @@ public class FromJsonFileExtensionTests
         services.AddFlux(flux =>
         {
             flux.AddService("service 1")
-                .UsingJson()
-                    .WithBaseFilePath(dataDirectory)
+                .UsingJson(dataDirectory)
                     .AddSet<TestModel>()
-                        .FromJsonFile("test-model.set.json")
-                        .WithKey(x => x.Id!);
+                    .FromJsonFile("test-model.set.json")
+                    .WithKey(x => x.Id!.Value);
         });
 
         var serviceProvider = services.BuildServiceProvider();
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel>>();
 
+        // Act
         var data = await setContext.GetAllAsync();
 
+        // Assert
         Assert.NotNull(data);
         Assert.True(data.Any());
     }

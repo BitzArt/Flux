@@ -5,12 +5,13 @@ using System.Reflection;
 
 namespace BitzArt.Flux.MudBlazor;
 
-// TODO: ? Extract reset logic ?
-// TODO: ? Extract page state comparison logic ?
-// TODO: Cleanup and refactor
-// TODO: Forward CancellationToken
+internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : FluxSetDataProvider<PageResult<TModel, PageRequest>, TModel>(loggerFactory), IFluxSetDataProvider<TModel>
+    where TModel : class
+{
+    public sealed override Func<PageResult<TModel, PageRequest>, PageResult<TModel, PageRequest>> ResponseToPageConverter { get; set; } = x => x;
+}
 
-internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFluxSetDataProvider<TModel>
+internal class FluxSetDataProvider<TRequest, TModel>(ILoggerFactory loggerFactory) : IFluxSetDataProvider<TRequest, TModel>
     where TModel : class
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger("Flux.MudBlazor");
@@ -20,9 +21,10 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public IFluxSetContext<TModel> SetContext { get; internal set; } = null!;
 
-    public Func<TableState, CancellationToken, Task<TableData<TModel>>> Data => GetDataAsync;
+    public Func<TableState, CancellationToken, Task<TableData<TModel>>> Data
+        => (tableState, cancellationToken) => GetDataAsync(tableState, false, cancellationToken);
 
-    public Func<TableState, object[]>? GetParameters { get; set; } = null;
+    public Func<TableState, IOperationParameterCollection>? GetParameters { get; set; } = null;
 
     public event OnResultHandler<TModel>? OnResult;
 
@@ -30,11 +32,13 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public bool IsLoading { get; private set; }
 
-    public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
+    public event OnLoadingStateChanged<TRequest, TModel>? OnLoadingStateChanged;
 
     private int _currentOperationCount = 0;
 
     private bool _resetting = false;
+
+    private bool _forceReload = false;
 
     private bool _resetPageOnce = false;
 
@@ -58,13 +62,15 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
     }
 
-    public async Task ResetAndReloadAsync(bool ignoreCancellation = true)
+    public virtual Func<TRequest, PageResult<TModel, PageRequest>> ResponseToPageConverter { get; set; } = null!;
+
+    public async Task ResetAndReloadAsync(bool ignoreCancellation = true, bool force = false)
     {
         ResetPage();
-        await ResetSortAndReloadAsync(ignoreCancellation);
+        await ResetSortAndReloadAsync(ignoreCancellation, force);
     }
 
-    public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true)
+    public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true, bool force = false)
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to reset sorting.");
@@ -80,22 +86,27 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
         else
         {
-            await ReloadTableAsync(ignoreCancellation);
+            await ReloadTableAsync(ignoreCancellation, force);
         }
     }
 
-    public async Task ResetPageAndReloadAsync(bool ignoreCancellation = true)
+    public async Task ResetPageAndReloadAsync(bool ignoreCancellation = true, bool force = false)
     {
         ResetPage();
-        await ReloadTableAsync(ignoreCancellation);
+        await ReloadTableAsync(ignoreCancellation, force);
     }
 
-    private async Task ReloadTableAsync(bool ignoreCancellation)
+    private async Task ReloadTableAsync(bool ignoreCancellation, bool force = false)
     {
         if (Table is null) throw new InvalidOperationException(
             "Table component must be forwarded to the flux data provider for it to be able to trigger a reload.");
 
-        await Table!.ReloadServerData().IgnoreCancellation(ignoreCancellation);
+        if (force)
+        {
+            await GetDataAsync(TableState, forceReload: true);
+        }
+
+        await Table!.ReloadServerData().IgnoreCancellation(ignoreCancellation, false);
     }
 
     public void ResetPage()
@@ -109,20 +120,20 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     public bool ShouldResetPageOnOrderDirectionChanged { get; set; } = true;
 
-    public Func<object[], object[], bool>? ShouldResetPageOnParameters { get; set; } = null;
+    public Func<IOperationParameterCollection?, IOperationParameterCollection?, bool>? ShouldResetPageOnParameters { get; set; } = null;
 
     public MudTable<TModel>? Table { get; set; }
 
-    public async Task<TableData<TModel>> GetDataAsync(CancellationToken cancellationToken = default)
-        => await GetDataAsync(TableState, cancellationToken);
+    public async Task<TableData<TModel>> GetDataAsync(bool forceReload = false, CancellationToken cancellationToken = default)
+        => await GetDataAsync(TableState, forceReload, cancellationToken);
 
-    public async Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default)
+    public async Task<TableData<TModel>> GetDataAsync(TableState state, bool forceReload = false, CancellationToken cancellationToken = default)
     {
         await AddOperationAsync();
 
         try
         {
-            var result = await GetDataInternalAsync(state, cancellationToken);
+            var result = await GetDataInternalAsync(state, forceReload, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             return result;
         }
@@ -159,9 +170,9 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return true;
     }
 
-    private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
+    private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, bool forceReload = false, CancellationToken cancellationToken = default)
     {
-        object[] parameters = GetParameters is not null ? GetParameters(state) : [];
+        IOperationParameterCollection? parameters = GetParameters?.Invoke(state);
 
         if (ShouldReset(state, parameters))
         {
@@ -173,6 +184,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _tableCurrentPageField.SetValue(Table, 0);
 
             _resetting = true;
+            _forceReload = forceReload;
             _logger.LogDebug("Resetting page for {Model} data provider.", typeof(TModel).Name);
 
             await Table.ReloadServerData();
@@ -183,22 +195,34 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         if (_resetting == true)
         {
             _resetting = false;
-            _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
+
+            forceReload = _forceReload;
+            _forceReload = false;
+
+            _logger.LogDebug("Processing reset for {Model} data provider{force}.", typeof(TModel).Name, forceReload ? " [Force]" : string.Empty);
         }
 
-        if (CompareWithLastRequest(state, parameters)) 
+        if (forceReload == false && CompareWithLastRequest(state, parameters))
             return LastQuery!.Data.ToTableData();
 
-        var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
-        var page = await SetContext.GetPageAsync(pageRequest, parameters: parameters);
+        if (ResponseToPageConverter is null)
+        {
+            throw new InvalidOperationException($"Unable to fetch data: {nameof(ResponseToPageConverter)} is not configured.");
+        }
 
-        LastQuery = new(state, parameters, page);
+        var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
+        var descriptor = new GetPageOperationDescriptor(pageRequest, parameters);
+
+        var response = await SetContext.GetPageAsync<TRequest>(descriptor, cancellationToken);
+        var page = ResponseToPageConverter(response);
+
+        LastQuery = new(state, parameters!, page);
         OnResult?.Invoke(new(this, LastQuery));
 
         return page.ToTableData();
     }
 
-    private bool ShouldReset(TableState state, object[] newParameters)
+    private bool ShouldReset(TableState state, IOperationParameterCollection? newParameters)
     {
         // already resetting, do not loop infinitely
         if (_resetting) return false;
@@ -239,7 +263,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
     private bool ShouldResetDynamic() =>
         ShouldResetPage is not null && ShouldResetPage.Invoke() == true;
 
-    private bool ShouldResetDynamicOnParameters(object[] newParameters)
+    private bool ShouldResetDynamicOnParameters(IOperationParameterCollection? newParameters)
     {
         var lastParameters = LastQuery?.Parameters;
 
@@ -266,7 +290,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return false;
     }
 
-    private bool CompareWithLastRequest(TableState newState, object[] newParameters)
+    private bool CompareWithLastRequest(TableState newState, IOperationParameterCollection? newParameters)
     {
         // no last query, no comparison
         if (LastQuery is null) return false;
@@ -295,21 +319,13 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return true;
     }
 
-    private static bool CompareParameters(object[]? lastParameters, object[] newParameters)
+    private static bool CompareParameters(IOperationParameterCollection? lastParameters, IOperationParameterCollection? newParameters)
     {
-        // no last parameters, no comparison
-        if (lastParameters is null) return false;
-
-        // different number of parameters
-        if (lastParameters.Length != newParameters.Length) return false;
-
-        // compare each parameter
-        for (var i = 0; i < lastParameters.Length; i++)
+        if (newParameters is null)
         {
-            if (!lastParameters[i].Equals(newParameters[i])) return false;
+            return lastParameters is null;
         }
 
-        // no change detected
-        return true;
+        return newParameters.Equals(lastParameters);
     }
 }

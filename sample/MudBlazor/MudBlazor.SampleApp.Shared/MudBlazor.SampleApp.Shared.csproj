@@ -1,20 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>MudBlazor.SampleApp</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="BitzArt.Pagination" Version="1.15.1" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\src\REST\BitzArt.Flux.REST\BitzArt.Flux.REST.csproj" />
 	  <ProjectReference Include="..\..\..\src\MudBlazor\BitzArt.Flux.MudBlazor\BitzArt.Flux.MudBlazor.csproj" />
+	  <ProjectReference Include="..\..\..\src\REST\BitzArt.Flux.REST\BitzArt.Flux.REST.csproj" />
 	</ItemGroup>
 
 </Project>

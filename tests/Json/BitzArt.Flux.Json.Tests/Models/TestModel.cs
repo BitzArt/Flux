@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Json;
 
 internal class TestModel
 {
@@ -9,4 +9,11 @@ internal class TestModel
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    public TestModel() { }
+    public TestModel(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 }

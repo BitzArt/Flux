@@ -1,35 +1,47 @@
 using MudBlazor.SampleApp.Components;
 using MudBlazor.Services;
 
-namespace MudBlazor.SampleApp
+namespace MudBlazor.SampleApp;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add MudBlazor services
+        builder.Services.AddMudServices();
+
+        // Add services to the container.
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents()
+            .AddInteractiveWebAssemblyComponents();
+
+        builder.Services.AddFlux("http://localhost:5096");
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            builder.Services.AddMudServices();
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents()
-                .AddInteractiveWebAssemblyComponents();
-
-            builder.Services.AddFlux("http://localhost:5213");
-
-            var app = builder.Build();
-
             app.UseWebAssemblyDebugging();
-
-            app.UseStaticFiles();
-            app.UseAntiforgery();
-
-            app.MapDataEndpoints();
-            app.MapRazorComponents<App>()
-                 .AddInteractiveServerRenderMode()
-                .AddInteractiveWebAssemblyRenderMode()
-                .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
-
-            app.Run();
         }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+        }
+        app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+
+        app.UseAntiforgery();
+
+        app.MapDataEndpoints();
+
+        app.MapStaticAssets();
+        app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode()
+            .AddInteractiveWebAssemblyRenderMode()
+            .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
+
+        app.Run();
     }
 }
