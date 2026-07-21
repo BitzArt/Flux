@@ -3,17 +3,15 @@
 # Flux
 
 - [Introduction](01.introduction.md)
-- [Configure Flux](02.configure.md)
-- [Use Flux](03.use.md)
-- [Flux Implementations](04.implementations.md)
 
 ---
 
 # Implementations
 
 - [Flux.REST](rest/01.introduction.md)
-  - [Configuring endpoints](rest/02.endpoints.md)
-  - [Custom Variables](rest/03.variables.md)
-  - [Pagination](rest/04.pagination.md)
-  - [Advanced Scenarios](rest/05.advanced.md)
+  - [Endpoint Configuration](rest/02.endpoint-configuration.md)
+  - [Operation Parameters](rest/03.operation-parameters.md)
+  - [HTTP Client](rest/04.http-client.md)
+  - [JSON Serialization](rest/05.json-serialization.md)
+  - [Request Interception](rest/06.request-interception.md)
 - [Flux.JSON](json/01.introduction.md)
