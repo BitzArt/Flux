@@ -1,4 +1,5 @@
 ﻿using BitzArt.Flux.Rest.Endpoints;
+using BitzArt.Pagination;
 
 namespace BitzArt.Flux.Rest;
 
@@ -33,34 +34,21 @@ public static partial class PathEndpointConfigurationExtensions
         => builder.WithEndpoint(path, queryComplete, HttpMethods.Delete);
 
     /// <summary>
-    /// <para>
-    /// Configures the <see cref="IFluxRestSetBuilder{TModel, TKey}"/> to use a custom endpoint for the given <see cref="HttpMethods"/>.
-    /// </para>
-    /// <para>
-    /// <b>Note:</b> provide a base set path here (e.g. <c>"books"</c>). <br />
-    /// Endpoints using Id or PageRequest will automatically append the Id or PageRequest to this path
-    /// (e.g. <c>"books/1"</c> or <c>"books?limit=10"</c>).
-    /// </para>
+    /// Configures an endpoint path for operations that use any of the specified HTTP methods.
     /// </summary>
     /// <typeparam name="TModel">Set model type.</typeparam>
     /// <typeparam name="TKey">Set key type.</typeparam>
     /// <param name="builder">Flux REST set builder.</param>
-    /// <param name="path">Endpoint path.</param>
-    /// <param name="pathComplete">
-    /// Indicates whether the resolved path is complete, meaning it does not require additional parts to be appended
-    /// (e.g., Id part for operations that use Ids).
+    /// <param name="path">
+    /// Endpoint path appended after the Service and Set paths. When an operation targets a model by identifier,
+    /// Flux.REST appends that identifier to this path.
     /// </param>
     /// <param name="queryComplete">
-    /// <para>
-    /// Indicates whether the resolved path's HTTP query string is complete,
-    /// meaning it does not require additional query parameters to automatically be appended
-    /// (e.g., <see cref="PageRequest"/> parameters for operations that use pagination).
-    /// </para>
-    /// <para>
-    /// If <see langword="true"/>, unused named operation parameters will not automatically be appended to the query string.
-    /// </para>
-    /// <param name="methods">Allowed HTTP methods for this endpoint resolver.</param>
-    /// <returns><see cref="IFluxRestSetBuilder{TModel, TKey}"/> to allow chaining.</returns>
+    /// <see langword="true"/> to preserve the query in <paramref name="path"/> without appending unused named parameters
+    /// or <see cref="PageRequest"/> parameters; otherwise, <see langword="false"/>.
+    /// </param>
+    /// <param name="methods">HTTP methods that use this endpoint path.</param>
+    /// <returns>The supplied builder for method chaining.</returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string path, bool queryComplete = false, HttpMethods methods = HttpMethods.All)
         where TModel : class
     {
