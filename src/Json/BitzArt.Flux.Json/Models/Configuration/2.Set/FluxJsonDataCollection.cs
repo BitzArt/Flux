@@ -20,30 +20,37 @@ internal class FluxJsonDataCollection<TModel>
 
     public IReadOnlyCollection<TModel> GetAll() => _items.AsReadOnly();
 
-    public TModel Get(object? id)
+    public IQueryable<TModel> AsQueryable(Func<IQueryable<TModel>, IQueryable<TModel>> enrichQuery) 
+        => enrichQuery.Invoke(_items.AsQueryable());
+
+    public TModel? Get(object? id) => Get(null, id);
+
+    public TModel? Get(Func<IQueryable<TModel>, IQueryable<TModel>>? enrichQuery, object? id)
     {
         lock (_lock)
         {
             if (_keyMap is null)
             {
-                if (id is not null)
+                if (id is not null && enrichQuery is null)
                 {
                     throw new InvalidOperationException($"Cannot get item by id when no key property is configured for type {typeof(TModel).Name}.");
                 }
 
-                var count = _items.Count;
+                var resultingItems = (enrichQuery is not null
+                    ? enrichQuery.Invoke(_items.AsQueryable())
+                    : _items.AsQueryable()).ToList();
 
-                if (count == 0)
+                return resultingItems.Count switch
                 {
-                    throw new InvalidOperationException($"No items of type {typeof(TModel).Name} are available.");
-                }
+                    0 => null,
+                    > 1 => throw new InvalidOperationException($"Multiple matching items of type {typeof(TModel).Name} were found."),
+                    _ => resultingItems.First()
+                };
+            }
 
-                if (count > 1)
-                {
-                    throw new InvalidOperationException($"Multiple items of type {typeof(TModel).Name} are available.");
-                }
-
-                return _items[0];
+            if (enrichQuery is not null)
+            {
+                return enrichQuery.Invoke(_items.AsQueryable()).SingleOrDefault();
             }
 
             return _keyMap.Get(id);
@@ -56,44 +63,64 @@ internal class FluxJsonDataCollection<TModel>
 
         lock (_lock)
         {
-            _items.Add(item);
             _keyMap?.Add(item);
-        }
+            _items.Add(item);
 
-        return item;
+            return item;
+        }
     }
 
     public TModel Update(object? id, TModel item)
     {
-        if (_keyMap is null)
-        {
-            throw new NotSupportedException($"Cannot update item by id when no key property is configured for type {typeof(TModel).Name}.");
-        }
-
-        id ??= _keyMap.GetKey(item);
-        TModel existingItem = Get(id);
-
-        Remove(existingItem);
-        Add(item);
-
-        return item;
-    }
-
-    public bool Remove(TModel item)
-    {
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
-
         lock (_lock)
         {
-            var removed = _items.Remove(item);
-
-            if (!removed)
+            if (_keyMap is null)
             {
-                return false;
+                throw new NotSupportedException($"Cannot update item by id when no key property is configured for type {typeof(TModel).Name}.");
             }
 
-            _keyMap?.Remove(item);
+            id ??= _keyMap.GetKey(item);
 
+            var existingItem = _keyMap.Get(id);
+
+            _keyMap.Replace(id, item);
+            _items.Remove(existingItem);
+            _items.Add(item);
+
+            return item;
+        }
+    }
+
+    public bool Remove(object? id)
+    {
+        lock (_lock)
+        {
+            if (_keyMap is null)
+            {
+                throw new NotSupportedException($"Cannot remove item by id when no key property is configured for type {typeof(TModel).Name}.");
+            }
+
+            if (id is null)
+            {
+                if (_items.Count == 0)
+                {
+                    return false;
+                }
+
+                if (_items.Count > 1)
+                {
+                    throw new InvalidOperationException($"Multiple matching items of type {typeof(TModel).Name} were found.");
+                }
+
+                var itemToRemove = _items.First();
+                _keyMap.Remove(itemToRemove);
+                return _items.Remove(itemToRemove);
+            }
+
+            var existingItem = _keyMap.Get(id);
+
+            _keyMap.Remove(existingItem);
+            _items.Remove(existingItem);
             return true;
         }
     }

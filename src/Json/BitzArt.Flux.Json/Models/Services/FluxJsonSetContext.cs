@@ -8,11 +8,10 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
     where TKey : notnull
 {
     public FluxJsonSetContext(FluxJsonSetConfiguration<TModel> configuration, IServiceProvider serviceProvider, ILogger logger)
-        : base(configuration, serviceProvider, logger)
-    {
-    }
+        : base(configuration, serviceProvider, logger) { }
 
     private FluxJsonDataCollection<TModel> Items => Configuration.DataCollection;
+    private Func<IQueryable<TModel>, OperationDescriptor, IQueryable<TModel>>? EnrichQuery => Configuration.EnrichQuery;
 
     public override Task<object?> ExecuteAsync(OperationDescriptor descriptor, Type? responseType, CancellationToken cancellationToken = default)
     {
@@ -20,24 +19,20 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
 
         Logger.LogInformation("[{type}] {operationName}", typeof(TModel).Name, operationName);
 
-        var data = ResolveDataAsync(descriptor, cancellationToken);
+        var data = ResolveData(descriptor);
 
         return Task.FromResult(data);
     }
 
-    private object? ResolveDataAsync(OperationDescriptor descriptor, CancellationToken cancellationToken) => descriptor switch
+    private object? ResolveData(OperationDescriptor descriptor) => descriptor switch
     {
-        GetAllOperationDescriptor
-            => Items.GetAll(),
+        GetAllOperationDescriptor => Items.AsQueryable(q => EnrichQuery is not null ? ApplyQueryEnrichment(q, descriptor) : q).ToList(),
 
-        GetPageOperationDescriptor getPageOperation
-            => Items.GetAll().ToPage(getPageOperation.PageRequest),
+        GetPageOperationDescriptor getPageOperation => Items.AsQueryable(q => EnrichQuery is not null ? ApplyQueryEnrichment(q, descriptor) : q).ToPage(getPageOperation.PageRequest),
 
-        GetOperationDescriptor getOperation
-            => Items.Get(getOperation.Id),
+        GetOperationDescriptor getOperation => Items.Get(EnrichQuery is not null ? q => ApplyQueryEnrichment(q, descriptor) : null, getOperation.Id),
 
-        AddOperationDescriptor addOperation
-            => Items.Add((TModel)addOperation.Value!),
+        AddOperationDescriptor addOperation => Items.Add((TModel)addOperation.Value!),
 
         UpdateOperationDescriptor updateOperation when updateOperation.Partial == false
             => Items.Update(updateOperation.Id, (TModel)updateOperation.Value!),
@@ -45,6 +40,13 @@ internal class FluxJsonSetContext<TModel, TKey> : FluxSetContext<TModel, TKey, F
         UpdateOperationDescriptor updateOperation when updateOperation.Partial == true
             => throw new NotSupportedException("Partial updates are not supported in JSON set context."),
 
+        RemoveOperationDescriptor removeOperation
+            => Items.Remove(removeOperation.Id) == false 
+            ? throw new InvalidOperationException($"No matching item of type {typeof(TModel).Name} was found.") : null,
+
         _ => throw new NotSupportedException($"Operation type '{descriptor.GetType().Name}' is not supported in JSON set context.")
     };
+
+    private IQueryable<TModel> ApplyQueryEnrichment(IQueryable<TModel> query, OperationDescriptor descriptor) => 
+        EnrichQuery!.Invoke(query, descriptor) ?? throw new InvalidOperationException("The configured query transformation returned null.");
 }

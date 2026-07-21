@@ -15,6 +15,8 @@ internal class FluxJsonSetConfiguration<TModel>
         set => _dataCollection = value;
     }
 
+    public Func<IQueryable<TModel>, OperationDescriptor, IQueryable<TModel>>? EnrichQuery { get; set; }
+
     public FluxJsonSetConfiguration(FluxJsonServiceConfiguration serviceConfiguration)
     {
         ServiceConfiguration = serviceConfiguration;
